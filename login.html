@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Log In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:  #0a0a0a; --dark: #111318; --card: #16191f;
+      --border: #252932; --muted: #3a3f4a; --text-dim: #8b9099;
+      --text:   #dde2eb; --white: #f4f6fa;
+      --gold:   #c9a84c; --gold-dim: #8a6e2f;
+      --green:  #27ae60; --red: #e74c3c;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'Space Mono', monospace;
+    }
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+      background: var(--dark);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      bottom: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .brand-logo {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      letter-spacing: 3px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .brand-logo span { color: var(--gold); }
+
+    .founder-quote {
+      position: relative;
+      z-index: 1;
+    }
+    .quote-mark {
+      font-family: var(--font-display);
+      font-size: 6rem;
+      color: var(--gold);
+      opacity: 0.15;
+      line-height: 0.5;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .quote-text {
+      font-size: 1.3rem;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+    .quote-text em {
+      font-style: normal;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .author-avatar {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+    .author-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--white);
+    }
+    .author-title {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 32px;
+    }
+    .stat-item { text-align: left; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+      font-family: var(--font-mono);
+    }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+    }
+    .auth-box {
+      width: 100%;
+      max-width: 400px;
+    }
+    .lang-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 40px;
+      justify-content: flex-end;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .auth-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+    .auth-title {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      letter-spacing: 2px;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .auth-sub {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 36px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+    }
+    .field input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: var(--gold); }
+    .field input::placeholder { color: var(--muted); }
+
+    .field-error {
+      font-size: 0.75rem;
+      color: var(--red);
+      margin-top: 6px;
+      display: none;
+      font-family: var(--font-mono);
+    }
+    .field-error.show { display: block; }
+
+    .forgot-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -12px;
+      margin-bottom: 24px;
+    }
+    .forgot-row a {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .forgot-row a:hover { color: var(--gold); }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      border-radius: 6px;
+      padding: 14px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .btn-submit:hover { background: #e0b85a; transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+    .btn-submit.loading .spinner { display: block; }
+
+    .global-error {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.2);
+      color: var(--red);
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      margin-bottom: 20px;
+      display: none;
+      font-family: var(--font-mono);
+    }
+    .global-error.show { display: block; }
+
+    .divider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .divider-row::before, .divider-row::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider-row span {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .switch-row {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+    .switch-row a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .switch-row a:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+      .right-panel { padding: 32px 24px; align-items: flex-start; padding-top: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LEFT — Brand + Quote -->
+  <div class="left-panel">
+    <a href="/index.html" class="brand-logo">FORGE<span>IQ</span></a>
+
+    <div class="founder-quote">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">
+        In 2018 I was <em>290 lbs</em>, battling addiction, high blood pressure, and looking 20 years older than I was.
+        Fitness did not just change my body — it saved my life.
+        I built FORGEIQ so you do not have to figure it out alone.
+      </p>
+      <div class="quote-author">
+        <div class="author-avatar">ML</div>
+        <div>
+          <div class="author-name">Dr. Michael Lovato, EdD</div>
+          <div class="author-title">Co-Founder · Army Veteran · Down 98 lbs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">98</div>
+        <div class="stat-label">Lbs Lost</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">30+</div>
+        <div class="stat-label">AI Certs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">20+</div>
+        <div class="stat-label">Yrs Leadership</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT — Login Form -->
+  <div class="right-panel">
+    <div class="auth-box">
+
+      <div class="lang-row">
+        <button class="lang-btn active" onclick="switchLang('en')">EN</button>
+        <button class="lang-btn" onclick="switchLang('es')">ES</button>
+        <button class="lang-btn" onclick="switchLang('pt')">PT</button>
+      </div>
+
+      <div class="auth-label" data-i18n="auth.login_title">Welcome Back</div>
+      <h1 class="auth-title">LOG IN</h1>
+      <p class="auth-sub" data-i18n="auth.login_sub">Your coach is ready.</p>
+
+      <div class="global-error" id="globalError"></div>
+
+      <div class="field">
+        <label data-i18n="auth.email_label">Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+        <div class="field-error" id="emailError"></div>
+      </div>
+
+      <div class="field">
+        <label data-i18n="auth.password_label">Password</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+        <div class="field-error" id="passwordError"></div>
+      </div>
+
+      <div class="forgot-row">
+        <a href="#" data-i18n="auth.forgot">Forgot password?</a>
+      </div>
+
+      <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
+        <span data-i18n="auth.login_btn">Log In</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="divider-row"><span>or</span></div>
+
+      <div class="switch-row">
+        <span data-i18n="auth.no_account">Don't have an account?</span>
+        <a href="/signup.html" data-i18n="auth.signup_link"> Sign up free</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (SupabaseClient.isLoggedIn()) {
+      window.location.href = '/dashboard.html';
+    }
+
+    async function handleLogin() {
+      const btn   = document.getElementById('loginBtn');
+      const email = document.getElementById('email').value.trim();
+      const pass  = document.getElementById('password').value;
+      const globalErr = document.getElementById('globalError');
+
+      // Clear errors
+      document.getElementById('emailError').classList.remove('show');
+      document.getElementById('passwordError').classList.remove('show');
+      globalErr.classList.remove('show');
+
+      // Validate
+      let valid = true;
+      if (!email || !email.includes('@')) {
+        document.getElementById('emailError').textContent = AdaptFit.t('errors.invalid_email');
+        document.getElementById('emailError').classList.add('show');
+        valid = false;
+      }
+      if (!pass || pass.length < 8) {
+        document.getElementById('passwordError').textContent = AdaptFit.t('errors.password_short');
+        document.getElementById('passwordError').classList.add('show');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Submit
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      try {
+        const result = await SupabaseClient.signIn(email, pass);
+        if (result.access_token) {
+          const profile = await SupabaseClient.getProfile();
+          if (!profile || !profile.onboarding_complete) {
+            window.location.href = '/onboarding.html';
+          } else {
+            window.location.href = '/dashboard.html';
+          }
+        } else {
+          globalErr.textContent = AdaptFit.t('errors.login_failed');
+          globalErr.classList.add('show');
+        }
+      } catch (e) {
+        globalErr.textContent = AdaptFit.t('errors.generic');
+        globalErr.classList.add('show');
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleLogin();
+    });
+
+    async function switchLang(lang) {
+      await AdaptFit.loadLanguage(lang);
+      document.querySelectorAll('.lang-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent === lang.toUpperCase());
+      });
+    }
+  </script>
+</body>
+</html>

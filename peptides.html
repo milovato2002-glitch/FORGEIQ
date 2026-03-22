@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Peptide Education Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
+      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
+      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
+      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#c0392b;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+    }
+    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
+
+    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .nav-logo { font-family:var(--font-d); font-size:1.5rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:4px; }
+    .nav-link { color:var(--text-dim); text-decoration:none; font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:7px 12px; border-radius:4px; transition:all 0.2s; font-family:var(--font-m); }
+    .nav-link:hover { color:var(--white); background:rgba(255,255,255,0.04); }
+    .nav-link.active { color:var(--purple); background:rgba(142,95,191,0.06); }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .nav-user { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:0.85rem; color:var(--black); text-decoration:none; }
+
+    .page { max-width:900px; margin:0 auto; padding:32px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:20px; }
+
+    /* ── HERO ── */
+    .page-hero { margin-bottom:28px; }
+    .debora-byline { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+    .debora-av { width:52px; height:52px; background:linear-gradient(135deg,#5a3d8a,var(--purple)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:1.2rem; color:var(--white); flex-shrink:0; }
+    .debora-info strong { display:block; font-size:0.92rem; color:var(--white); font-weight:600; }
+    .debora-info span { font-size:0.75rem; color:var(--text-dim); font-family:var(--font-m); }
+    .page-title { font-family:var(--font-d); font-size:2.8rem; letter-spacing:1px; color:var(--white); line-height:1; margin-bottom:10px; }
+    .page-title em { font-style:normal; color:var(--purple); }
+    .page-intro { font-size:0.95rem; color:var(--text-dim); line-height:1.8; max-width:620px; }
+
+    /* ── DISCLAIMER ── */
+    .big-disclaimer { background:rgba(192,57,43,0.04); border:2px solid rgba(192,57,43,0.2); border-radius:12px; padding:24px 28px; margin-bottom:24px; }
+    .big-disclaimer-title { font-family:var(--font-d); font-size:1.4rem; letter-spacing:1px; color:var(--red); margin-bottom:12px; display:flex; align-items:center; gap:10px; }
+    .big-disclaimer p { font-size:0.85rem; color:var(--text-dim); line-height:1.8; margin-bottom:8px; }
+    .big-disclaimer p:last-child { margin-bottom:0; }
+    .big-disclaimer strong { color:var(--text); }
+
+    /* ── SECTION STYLES ── */
+    .section-label { font-family:var(--font-m); font-size:0.62rem; color:var(--purple); text-transform:uppercase; letter-spacing:3px; margin-bottom:16px; }
+    .section-title { font-family:var(--font-d); font-size:1.8rem; letter-spacing:1px; color:var(--white); margin-bottom:10px; }
+    .section-body { font-size:0.88rem; color:var(--text-dim); line-height:1.85; }
+    .section-body strong { color:var(--text); }
+    .section-body p { margin-bottom:12px; }
+
+    /* ── CATEGORY CARDS ── */
+    .category-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+    .cat-card { background:var(--dark); border:1px solid var(--border); border-radius:10px; padding:20px; transition:border-color 0.2s; }
+    .cat-card:hover { border-color:var(--muted); }
+    .cat-icon  { font-size:1.6rem; margin-bottom:10px; display:block; }
+    .cat-name  { font-weight:700; font-size:0.9rem; color:var(--white); margin-bottom:6px; }
+    .cat-desc  { font-size:0.8rem; color:var(--text-dim); line-height:1.6; margin-bottom:10px; }
+    .cat-examples { font-family:var(--font-m); font-size:0.62rem; color:var(--purple); }
+    .cat-status { display:inline-block; margin-top:8px; padding:3px 8px; border-radius:3px; font-family:var(--font-m); font-size:0.58px; font-size:0.58rem; text-transform:uppercase; letter-spacing:1px; }
+    .status-rx      { background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.2); color:var(--red); }
+    .status-otc     { background:rgba(34,168,90,0.08); border:1px solid rgba(34,168,90,0.2); color:var(--green); }
+    .status-research{ background:rgba(36,113,163,0.08); border:1px solid rgba(36,113,163,0.2); color:#5dade2; }
+    .status-varies  { background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); color:var(--gold); }
+
+    /* ── GLP-1 SECTION ── */
+    .glp1-card { background:rgba(34,168,90,0.03); border:1px solid rgba(34,168,90,0.15); border-radius:12px; padding:24px; margin-bottom:20px; }
+    .glp1-label { font-family:var(--font-m); font-size:0.62rem; color:var(--green); text-transform:uppercase; letter-spacing:3px; margin-bottom:14px; }
+
+    /* ── RESEARCH LINKS ── */
+    .research-links { display:flex; flex-direction:column; gap:10px; }
+    .research-link { background:var(--dark); border:1px solid var(--border); border-radius:8px; padding:14px 16px; display:flex; align-items:flex-start; gap:14px; text-decoration:none; transition:border-color 0.2s; }
+    .research-link:hover { border-color:var(--purple); }
+    .rl-source { font-family:var(--font-m); font-size:0.6rem; color:var(--purple); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; flex-shrink:0; width:80px; }
+    .rl-title  { font-size:0.82rem; color:var(--text); font-weight:500; margin-bottom:3px; }
+    .rl-desc   { font-size:0.75rem; color:var(--text-dim); }
+    .rl-arrow  { margin-left:auto; color:var(--text-dim); flex-shrink:0; margin-top:2px; }
+
+    /* ── DEBORA'S NOTE ── */
+    .debora-note { background:rgba(142,95,191,0.04); border:1px solid rgba(142,95,191,0.15); border-radius:12px; padding:24px; margin-bottom:20px; }
+    .debora-note-label { font-family:var(--font-m); font-size:0.62rem; color:#bf7fe0; text-transform:uppercase; letter-spacing:3px; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .debora-quote { font-size:1rem; color:var(--text); line-height:1.8; font-style:italic; margin-bottom:16px; }
+    .debora-quote::before { content:'"'; font-family:var(--font-d); font-size:3rem; color:var(--purple); opacity:0.2; line-height:0; vertical-align:-0.5em; margin-right:4px; }
+
+    /* ── CONSULT CTA ── */
+    .consult-cta { background:var(--dark); border:1px solid var(--border); border-radius:12px; padding:24px; text-align:center; margin-bottom:20px; }
+    .consult-cta h3 { font-family:var(--font-d); font-size:1.6rem; letter-spacing:1px; color:var(--white); margin-bottom:8px; }
+    .consult-cta p { font-size:0.85rem; color:var(--text-dim); line-height:1.6; margin-bottom:16px; }
+    .btn-ask-coach { background:var(--gold); color:var(--black); border:none; border-radius:6px; padding:12px 28px; font-family:var(--font-b); font-weight:700; font-size:0.82rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; text-decoration:none; display:inline-block; }
+    .btn-ask-coach:hover { background:var(--gold-lt); }
+
+    @media(max-width:700px) {
+      .page{padding:20px 16px;}
+      .category-grid{grid-template-columns:1fr;}
+      .nav-links{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/dashboard.html" class="nav-logo">FORGE<span>IQ</span></a>
+  <div class="nav-links">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/supplements.html" class="nav-link">Supplements</a>
+    <a href="/peptides.html" class="nav-link active">Peptide Education</a>
+    <a href="/goals.html" class="nav-link">Goals</a>
+  </div>
+  <div class="nav-right">
+    <a href="/profile.html" class="nav-user" id="navUser">?</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="debora-byline">
+      <div class="debora-av">DL</div>
+      <div class="debora-info">
+        <strong>Debora Lovato</strong>
+        <span>Co-Founder · NASM CNC · Licensed Esthetician · Wellness Director</span>
+      </div>
+    </div>
+    <div class="page-title">Peptide<br/><em>Education</em> Hub</div>
+    <p class="page-intro" style="margin-top:12px;">
+      Peptides are one of the most talked-about topics in wellness right now — and also one of the most misunderstood. My goal here is simple: give you real information, from real sources, so you can have an educated conversation with your doctor. I am not prescribing anything. I am empowering you.
+    </p>
+  </div>
+
+  <!-- BIG DISCLAIMER -->
+  <div class="big-disclaimer">
+    <div class="big-disclaimer-title">⚠️ Important — Please Read</div>
+    <p><strong>This page is educational information only.</strong> FORGEIQ, Dr. Michael Lovato, and Debora Lovato are not medical doctors and do not prescribe, recommend, endorse, or sell any peptide or compound.</p>
+    <p>Many peptides are <strong>prescription-only, unregulated research compounds, or prohibited in sport</strong> (WADA banned list). Some have limited human safety data. The information below is sourced from peer-reviewed research and government health databases for educational purposes.</p>
+    <p><strong>Always consult a licensed physician before using any peptide, hormone, or prescription compound.</strong> This is especially important if you are on GLP-1 medications, blood thinners, immunosuppressants, or have any chronic health condition.</p>
+  </div>
+
+  <!-- WHAT ARE PEPTIDES -->
+  <div class="card">
+    <div class="section-label">The Basics</div>
+    <div class="section-title">What Are Peptides?</div>
+    <div class="section-body">
+      <p>Peptides are short chains of amino acids — the same building blocks that make up proteins. Your body naturally produces thousands of peptides that act as signaling molecules, telling cells to do things like repair tissue, release hormones, regulate inflammation, and control appetite.</p>
+      <p>The peptides being discussed in wellness circles are typically <strong>synthetic versions</strong> of naturally occurring peptides, designed to mimic or enhance your body's own signaling. Think of them as highly targeted biological messengers.</p>
+      <p>GLP-1 receptor agonists — semaglutide (Ozempic, Wegovy) and tirzepatide (Mounjaro) — are themselves peptide-based drugs, which is why there is so much overlap between the GLP-1 world and the broader peptide conversation.</p>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="card">
+    <div class="section-label">Categories of Peptides</div>
+    <div class="section-title">Understanding the Landscape</div>
+    <div class="category-grid">
+      <div class="cat-card">
+        <span class="cat-icon">💉</span>
+        <div class="cat-name">GLP-1 Receptor Agonists</div>
+        <div class="cat-desc">The most mainstream peptides — originally diabetes drugs now widely used for weight management. Semaglutide and tirzepatide fall here.</div>
+        <div class="cat-examples">Examples: Semaglutide, Tirzepatide, Liraglutide</div>
+        <span class="cat-status status-rx">Prescription Only (USA)</span>
+      </div>
+      <div class="cat-card">
+        <span class="cat-icon">🧬</span>
+        <div class="cat-name">Growth Hormone Secretagogues</div>
+        <div class="cat-desc">Stimulate the pituitary to release more growth hormone. Popular in anti-aging and body composition optimization communities.</div>
+        <div class="cat-examples">Examples: Ipamorelin, CJC-1295, Sermorelin</div>
+        <span class="cat-status status-varies">Varies — some Rx, some research</span>
+      </div>
+      <div class="cat-card">
+        <span class="cat-icon">🔧</span>
+        <div class="cat-name">Tissue Repair Peptides</div>
+        <div class="cat-desc">Studied for accelerated healing of tendons, ligaments, and gut lining. Popular among athletes recovering from injury — highly relevant for our community.</div>
+        <div class="cat-examples">Examples: BPC-157, TB-500, GHK-Cu</div>
+        <span class="cat-status status-research">Research Compounds — Not FDA Approved</span>
+      </div>
+      <div class="cat-card">
+        <span class="cat-icon">✨</span>
+        <div class="cat-name">Skin & Aesthetic Peptides</div>
+        <div class="cat-desc">Used in professional esthetics for collagen stimulation, skin repair, and anti-aging. Many are available in topical form without a prescription.</div>
+        <div class="cat-examples">Examples: Argireline, Matrixyl, GHK-Cu (topical), Palmitoyl</div>
+        <span class="cat-status status-otc">Many available OTC (topical)</span>
+      </div>
+      <div class="cat-card">
+        <span class="cat-icon">🧠</span>
+        <div class="cat-name">Cognitive & Mood Peptides</div>
+        <div class="cat-desc">Studied for neuroprotection, mood regulation, and stress response. Some overlap with veteran and PTSD wellness communities.</div>
+        <div class="cat-examples">Examples: Selank, Semax, Dihexa</div>
+        <span class="cat-status status-research">Research Compounds — Limited Human Data</span>
+      </div>
+      <div class="cat-card">
+        <span class="cat-icon">❤️</span>
+        <div class="cat-name">Cardiovascular & Metabolic</div>
+        <div class="cat-desc">Studied for blood pressure regulation, metabolic optimization, and cardiovascular protection. Significant overlap with GLP-1 population benefits.</div>
+        <div class="cat-examples">Examples: AOD-9604, SS-31, MOTS-c</div>
+        <span class="cat-status status-research">Largely Research Stage</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLP-1 CONNECTION -->
+  <div class="glp1-card">
+    <div class="glp1-label">The GLP-1 + Peptide Connection</div>
+    <div class="section-body">
+      <p><strong>If you are on a GLP-1 medication, you are already using a peptide-based drug.</strong> Semaglutide and tirzepatide work by mimicking naturally occurring GLP-1 and GIP hormones — peptides your gut produces after eating.</p>
+      <p>Understanding this helps contextualize why so many GLP-1 users become interested in the broader peptide space. The mechanisms are similar — targeted biological signaling — and the goals often overlap: body composition, metabolic health, and longevity.</p>
+      <p>From my esthetics perspective, the most practical overlap is with <strong>tissue repair and skin peptides</strong>. Post-GLP-1 skin laxity is real, and peptide-based topical treatments combined with professional treatments are part of a comprehensive approach to body confidence after significant weight loss.</p>
+    </div>
+  </div>
+
+  <!-- DEBORA'S NOTE -->
+  <div class="debora-note">
+    <div class="debora-note-label">✨ Debora's Wellness Perspective</div>
+    <div class="debora-quote">
+      As a licensed esthetician, I see the results of body transformation every day — and the skin tells a story the scale does not. Peptide science in esthetics is one of the most exciting developments I have followed in my career. Topical peptides, used correctly, are a legitimate tool for supporting skin health through transformation. That is my lane. For anything injectable or systemic, that conversation belongs with your physician — and I will always say that clearly.
+    </div>
+    <div class="section-body">
+      <p><strong>What I do in my practice:</strong> Topical peptide treatments for collagen stimulation, skin elasticity, and post-weight-loss laxity. GHK-Cu, Argireline, and Matrixyl are among the best-studied ingredients for professional esthetic applications. Combined with collagen supplementation and resistance training — which builds the underlying muscle — comprehensive body confidence is achievable.</p>
+      <p><strong>What I always say:</strong> The most powerful thing you can do for your skin after a transformation is eat enough protein, do your resistance training, and stay hydrated. Everything else is supportive — not a replacement.</p>
+    </div>
+  </div>
+
+  <!-- RESEARCH LINKS -->
+  <div class="card">
+    <div class="section-label">Research & Education Resources</div>
+    <div class="section-title">Learn From Primary Sources</div>
+    <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:20px;line-height:1.6;">These are authoritative educational resources — not endorsements or treatment recommendations. Read widely. Ask informed questions. Work with your physician.</p>
+    <div class="research-links">
+      <a href="https://pubmed.ncbi.nlm.nih.gov/?term=GLP-1+receptor+agonist+weight+loss" target="_blank" rel="noopener noreferrer" class="research-link">
+        <div class="rl-source">PubMed</div>
+        <div><div class="rl-title">GLP-1 Receptor Agonists — Clinical Research Database</div><div class="rl-desc">Peer-reviewed studies on semaglutide, tirzepatide, and related compounds for weight management and metabolic health.</div></div>
+        <div class="rl-arrow">↗</div>
+      </a>
+      <a href="https://www.ncbi.nlm.nih.gov/pmc/search/?term=BPC-157+healing" target="_blank" rel="noopener noreferrer" class="research-link">
+        <div class="rl-source">NIH / PMC</div>
+        <div><div class="rl-title">BPC-157 — Tissue Repair Research Literature</div><div class="rl-desc">Current research on BPC-157 for tendon, ligament, and gut repair. Note: primarily animal studies — human data is limited.</div></div>
+        <div class="rl-arrow">↗</div>
+      </a>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/?term=collagen+peptides+skin+elasticity" target="_blank" rel="noopener noreferrer" class="research-link">
+        <div class="rl-source">PubMed</div>
+        <div><div class="rl-title">Collagen Peptides — Skin Elasticity & Joint Health Evidence</div><div class="rl-desc">Research on hydrolyzed collagen peptides for skin laxity, joint support, and connective tissue health after weight loss.</div></div>
+        <div class="rl-arrow">↗</div>
+      </a>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/?term=ipamorelin+growth+hormone+secretagogue" target="_blank" rel="noopener noreferrer" class="research-link">
+        <div class="rl-source">PubMed</div>
+        <div><div class="rl-title">Growth Hormone Secretagogues — Research Overview</div><div class="rl-desc">Studies on Ipamorelin, CJC-1295, and Sermorelin for GH release, body composition, and recovery.</div></div>
+        <div class="rl-arrow">↗</div>
+      </a>
+      <a href="https://www.fda.gov/drugs/drug-safety-and-availability/fda-issues-warning-letters-illegally-marketed-peptide-products" target="_blank" rel="noopener noreferrer" class="research-link">
+        <div class="rl-source">FDA</div>
+        <div><div class="rl-title">FDA Warning on Illegally Marketed Peptide Products</div><div class="rl-desc">Important regulatory context. Understanding what is and is not FDA-approved is essential for consumer safety.</div></div>
+        <div class="rl-arrow">↗</div>
+      </a>
+      <a href="https://www.wada-ama.org/en/prohibited-list" target="_blank" rel="noopener noreferrer" class="research-link">
+        <div class="rl-source">WADA</div>
+        <div><div class="rl-title">World Anti-Doping Agency — Prohibited List</div><div class="rl-desc">Athletes subject to drug testing must verify all compounds here. Many peptides are on the prohibited list.</div></div>
+        <div class="rl-arrow">↗</div>
+      </a>
+      <a href="https://www.healthline.com/health/what-are-peptides" target="_blank" rel="noopener noreferrer" class="research-link">
+        <div class="rl-source">Healthline</div>
+        <div><div class="rl-title">What Are Peptides? An Accessible Overview</div><div class="rl-desc">A well-reviewed consumer guide to peptide basics, medically reviewed by licensed professionals.</div></div>
+        <div class="rl-arrow">↗</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- CONSULT CTA -->
+  <div class="consult-cta">
+    <h3>Questions About Your Specific Situation?</h3>
+    <p>Ask your FORGEIQ AI coach — powered by Claude — for educational context about how any of these topics relate to your fitness goals, your GLP-1 protocol, or your recovery. Your coach will always direct you to a physician for medical decisions.</p>
+    <a href="/dashboard.html" class="btn-ask-coach">Ask Your AI Coach</a>
+  </div>
+
+  <!-- FINAL DISCLAIMER -->
+  <div style="background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px;">
+    <p style="font-family:var(--font-m);font-size:0.62rem;color:var(--muted);line-height:1.8;text-align:center;">
+      FORGEIQ Peptide Education Hub — For Educational Purposes Only.<br/>
+      Nothing on this page constitutes medical advice, diagnosis, or treatment recommendations.<br/>
+      Dr. Michael Lovato, EdD and Debora Lovato are not licensed physicians.<br/>
+      Always consult a qualified healthcare provider before using any peptide, supplement, or medication.<br/>
+      © 2025 FORGEIQ · Adaptive Intelligence Learning Group LLC
+    </p>
+  </div>
+
+</div>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script>
+  const user = SupabaseClient.getUser();
+  document.getElementById('navUser').textContent = user?.user_metadata?.full_name?.charAt(0).toUpperCase() || 'M';
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "forgeiq",
+  "version": "1.0.0",
+  "description": "FORGEIQ — AI Fitness Coaching Built for Your Reality",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo 'FORGEIQ running on Netlify'"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Dr. Michael Lovato, EdD — Adaptive Intelligence Learning Group LLC",
+  "license": "UNLICENSED"
+}

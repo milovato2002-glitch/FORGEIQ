@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Build Your Plan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:  #0a0a0a; --dark: #111318; --card: #16191f;
+      --border: #252932; --muted: #3a3f4a; --text-dim: #8b9099;
+      --text:   #dde2eb; --white: #f4f6fa;
+      --gold:   #c9a84c; --gold-dim: #8a6e2f;
+      --green:  #27ae60; --red: #e74c3c; --blue: #2980b9;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'Space Mono', monospace;
+    }
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .brand-logo span { color: var(--gold); }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      padding: 0 40px;
+      background: var(--dark);
+      border-bottom: 1px solid var(--border);
+    }
+    .progress-steps {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      padding: 16px 0;
+      gap: 0;
+    }
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      flex-shrink: 0;
+      transition: all 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+    .step-dot.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+    .step-dot.done   { border-color: var(--green); background: var(--green); color: var(--black); }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .step-line.done { background: var(--green); }
+    .step-labels {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      padding-bottom: 12px;
+    }
+    .step-label-item {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+    .step-label-item.active { color: var(--gold); }
+    .step-label-item.done   { color: var(--green); }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+    }
+    .step-container {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    /* ── STEP PANEL ── */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+    .step-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+    .step-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 1px;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+    .step-sub {
+      font-size: 0.92rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 36px;
+      font-weight: 300;
+    }
+
+    /* ── OPTION CARDS ── */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+    .options-grid.single-col { grid-template-columns: 1fr; }
+
+    .option-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      user-select: none;
+    }
+    .option-card:hover { border-color: var(--muted); }
+    .option-card.selected {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.06);
+    }
+    .option-card.selected-green {
+      border-color: var(--green);
+      background: rgba(39,174,96,0.06);
+    }
+    .option-card.selected-blue {
+      border-color: var(--blue);
+      background: rgba(41,128,185,0.06);
+    }
+
+    .option-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .option-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--white);
+    }
+    .option-desc {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    .option-check {
+      margin-left: auto;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      transition: all 0.2s;
+    }
+    .option-card.selected .option-check,
+    .option-card.selected-green .option-check,
+    .option-card.selected-blue .option-check {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    /* ── FLAGS (checkboxes) ── */
+    .flag-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+    .flag-item {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .flag-item:hover { border-color: var(--muted); }
+    .flag-item.checked { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+    .flag-item.checked.alert { border-color: var(--blue); background: rgba(41,128,185,0.05); }
+
+    .flag-checkbox {
+      width: 20px; height: 20px;
+      border-radius: 4px;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      transition: all 0.2s;
+    }
+    .flag-item.checked .flag-checkbox {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--black);
+    }
+    .flag-item.checked.alert .flag-checkbox {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--white);
+    }
+
+    /* ── PTSD ALERT BOX ── */
+    .ptsd-box {
+      background: rgba(41,128,185,0.07);
+      border: 1px solid rgba(41,128,185,0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: none;
+    }
+    .ptsd-box.show { display: block; animation: fadeIn 0.3s ease; }
+    .ptsd-box p {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .ptsd-box p strong { color: #5dade2; }
+    .ptsd-box .crisis-links {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #5dade2;
+    }
+
+    /* ── NAVIGATION BUTTONS ── */
+    .step-nav {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn-back {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 13px 24px;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-back:hover { border-color: var(--muted); color: var(--white); }
+    .btn-next {
+      flex: 1;
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      padding: 14px 24px;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .btn-next:hover { background: #e0b85a; }
+    .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+    .spinner {
+      display: none;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      position: absolute; right: 16px; top: 50%;
+      transform: translateY(-50%);
+    }
+    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+    .btn-next.loading .spinner { display: block; }
+
+    @media (max-width: 600px) {
+      header { padding: 16px 20px; }
+      .progress-wrap { padding: 0 20px; }
+      main { padding: 32px 20px; }
+      .options-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/index.html" class="brand-logo">FORGE<span>IQ</span></a>
+    <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);">
+      Step <span id="stepNum">1</span> of 5
+    </div>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-steps">
+      <div class="step-dot active" id="dot-1">1</div>
+      <div class="step-line" id="line-1"></div>
+      <div class="step-dot" id="dot-2">2</div>
+      <div class="step-line" id="line-2"></div>
+      <div class="step-dot" id="dot-3">3</div>
+      <div class="step-line" id="line-3"></div>
+      <div class="step-dot" id="dot-4">4</div>
+      <div class="step-line" id="line-4"></div>
+      <div class="step-dot" id="dot-5">5</div>
+    </div>
+    <div class="step-labels">
+      <div class="step-label-item active" id="label-1">Language</div>
+      <div class="step-label-item" id="label-2">Goal</div>
+      <div class="step-label-item" id="label-3">Level</div>
+      <div class="step-label-item" id="label-4">Profile</div>
+      <div class="step-label-item" id="label-5">Ready</div>
+    </div>
+  </div>
+
+  <main>
+    <div class="step-container">
+
+      <!-- ── STEP 1: LANGUAGE ── -->
+      <div class="step-panel active" id="step-1">
+        <div class="step-eyebrow">Step 1 of 5</div>
+        <h2 class="step-title">Choose Your Language</h2>
+        <p class="step-sub">FORGEIQ coaches you in your language — natively, from day one.</p>
+        <div class="options-grid">
+          <div class="option-card selected" onclick="selectLang('en', this)">
+            <div class="option-icon">🇺🇸</div>
+            <div>
+              <div class="option-label">English</div>
+              <div class="option-desc">Default language</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectLang('es', this)">
+            <div class="option-icon">🇪🇸</div>
+            <div>
+              <div class="option-label">Español</div>
+              <div class="option-desc">Spanish</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectLang('pt', this)">
+            <div class="option-icon">🇧🇷</div>
+            <div>
+              <div class="option-label">Português</div>
+              <div class="option-desc">Brazilian Portuguese</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn-next" onclick="goNext()">
+            <span data-i18n="onboarding.next">Next</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: PRIMARY GOAL ── -->
+      <div class="step-panel" id="step-2">
+        <div class="step-eyebrow">Step 2 of 5</div>
+        <h2 class="step-title" data-i18n="onboarding.goal_label">What Is Your Primary Goal?</h2>
+        <p class="step-sub">Your AI coach builds every session around this. You can update it anytime.</p>
+        <div class="options-grid">
+          <div class="option-card" onclick="selectGoal('weight_loss', this)">
+            <div class="option-icon">🔥</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.goal_weight">Weight Loss</div>
+              <div class="option-desc">Burn fat, build confidence</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('muscle_gain', this)">
+            <div class="option-icon">💪</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.goal_muscle">Build Muscle</div>
+              <div class="option-desc">Strength and size</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('endurance', this)">
+            <div class="option-icon">🏃</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.goal_endurance">Endurance</div>
+              <div class="option-desc">Cardio and stamina</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('general_fitness', this)">
+            <div class="option-icon">🎯</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.goal_general">General Fitness</div>
+              <div class="option-desc">Overall health</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card selected-green" onclick="selectGoal('glp1_support', this)">
+            <div class="option-icon">💊</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.goal_glp1">GLP-1 / AOM Support</div>
+              <div class="option-desc">Muscle preservation on meds</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('rehab', this)">
+            <div class="option-icon">🦾</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.goal_rehab">Injury Rehab</div>
+              <div class="option-desc">Train around limitations</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn-back" onclick="goBack()">← Back</button>
+          <button class="btn-next" onclick="goNext()" id="nextGoal" disabled>
+            <span data-i18n="onboarding.next">Next</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: FITNESS LEVEL ── -->
+      <div class="step-panel" id="step-3">
+        <div class="step-eyebrow">Step 3 of 5</div>
+        <h2 class="step-title" data-i18n="onboarding.level_label">What Is Your Fitness Level?</h2>
+        <p class="step-sub">Be honest — your AI coach uses this to calibrate intensity. There is no wrong answer.</p>
+        <div class="options-grid single-col">
+          <div class="option-card" onclick="selectLevel('beginner', this)">
+            <div class="option-icon">🌱</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.level_beginner">Beginner</div>
+              <div class="option-desc">Just starting out or returning after a long break</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectLevel('intermediate', this)">
+            <div class="option-icon">⚡</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.level_intermediate">Intermediate</div>
+              <div class="option-desc">Training consistently for 6+ months</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectLevel('advanced', this)">
+            <div class="option-icon">🏆</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.level_advanced">Advanced</div>
+              <div class="option-desc">Experienced athlete, specific performance goals</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn-back" onclick="goBack()">← Back</button>
+          <button class="btn-next" onclick="goNext()" id="nextLevel" disabled>
+            <span data-i18n="onboarding.next">Next</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: HEALTH FLAGS ── -->
+      <div class="step-panel" id="step-4">
+        <div class="step-eyebrow">Step 4 of 5</div>
+        <h2 class="step-title" data-i18n="onboarding.flags_label">Tell Us More About You</h2>
+        <p class="step-sub">Check everything that applies. Your AI coach uses this to protect you and personalize every session. Select none if nothing applies.</p>
+
+        <div class="flag-list">
+          <div class="flag-item" onclick="toggleFlag('glp1', this)">
+            <div class="flag-checkbox">✓</div>
+            <div class="option-icon">💊</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.flag_glp1">I am on a GLP-1 medication</div>
+              <div class="option-desc">Ozempic, Wegovy, Mounjaro, Zepbound, or similar</div>
+            </div>
+          </div>
+          <div class="flag-item" onclick="toggleFlag('veteran', this)">
+            <div class="flag-checkbox">✓</div>
+            <div class="option-icon">🎖️</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.flag_veteran">I am a veteran or active military</div>
+              <div class="option-desc">Your service shapes how we coach you</div>
+            </div>
+          </div>
+          <div class="flag-item" onclick="toggleFlag('injury', this)">
+            <div class="flag-checkbox">✓</div>
+            <div class="option-icon">🦾</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.flag_injury">I am training with an injury or post-surgery</div>
+              <div class="option-desc">Torn muscle, joint replacement, chronic pain, or limited mobility</div>
+            </div>
+          </div>
+          <div class="flag-item alert" id="ptsdFlag" onclick="toggleFlag('ptsd', this)">
+            <div class="flag-checkbox">✓</div>
+            <div class="option-icon">🧠</div>
+            <div>
+              <div class="option-label" data-i18n="onboarding.flag_ptsd">I am managing a mental health condition</div>
+              <div class="option-desc">Including PTSD, anxiety, depression — your coach adjusts its approach</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PTSD Acknowledgment Box -->
+        <div class="ptsd-box" id="ptsdBox">
+          <p>
+            <strong>You are not alone.</strong> FORGEIQ was built by a combat veteran who has navigated PTSD firsthand.
+            Your AI coach is trained to use grounding language, respect your boundaries, and treat movement as a tool for regulation — not just performance.
+          </p>
+          <p>
+            If you are ever in crisis, please reach out:
+          </p>
+          <div class="crisis-links">
+            Veterans Crisis Line: 988 (Press 1) &nbsp;|&nbsp; Crisis Text Line: Text HOME to 741741
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn-back" onclick="goBack()">← Back</button>
+          <button class="btn-next" onclick="goNext()">
+            <span data-i18n="onboarding.next">Next</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── STEP 5: CONFIRMATION ── -->
+      <div class="step-panel" id="step-5">
+        <div class="step-eyebrow">You Are Ready</div>
+        <h2 class="step-title">Your Plan<br/>Is Being Built</h2>
+        <p class="step-sub">Your AI coach has everything it needs. Here is a summary of your profile before we launch your dashboard.</p>
+
+        <!-- Powered by Claude trust moment -->
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.12);border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+          <div style="width:36px;height:36px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#c9a84c" stroke-width="1.5"/><circle cx="7" cy="7" r="2.5" fill="#c9a84c"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;">Powered by Claude · Anthropic</div>
+            <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.5;">Your AI coach runs on Claude — the same AI trusted by researchers, clinicians, and Fortune 500 companies. Built for you by Dr. Michael & Debora Lovato.</div>
+          </div>
+        </div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:32px;">
+          <div style="border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
+            <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">Your Profile</div>
+            <div style="font-size:1.1rem;font-weight:600;color:var(--white);" id="summaryName">—</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div>
+              <div style="font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-family:var(--font-mono);margin-bottom:4px;">Goal</div>
+              <div style="font-weight:600;color:var(--white);font-size:0.9rem;" id="summaryGoal">—</div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-family:var(--font-mono);margin-bottom:4px;">Level</div>
+              <div style="font-weight:600;color:var(--white);font-size:0.9rem;" id="summaryLevel">—</div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-family:var(--font-mono);margin-bottom:4px;">Language</div>
+              <div style="font-weight:600;color:var(--white);font-size:0.9rem;" id="summaryLang">—</div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-family:var(--font-mono);margin-bottom:4px;">Coaching Mode</div>
+              <div style="font-weight:600;color:var(--gold);font-size:0.9rem;" id="summaryMode">Standard</div>
+            </div>
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);" id="flagsSummary"></div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn-back" onclick="goBack()">← Edit</button>
+          <button class="btn-next" onclick="finishOnboarding()" id="finishBtn">
+            <span data-i18n="onboarding.finish">Build My Plan</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    // Require auth
+    // SupabaseClient.requireAuth(); // Uncomment when Supabase is live
+
+    let currentStep = 1;
+    const TOTAL_STEPS = 5;
+
+    const profile = {
+      lang: 'en',
+      primary_goal: '',
+      fitness_level: '',
+      flags: [],
+      user_type: 'general'
+    };
+
+    // ── Step navigation ────────────────────────────────────────────
+    function goNext() {
+      if (currentStep < TOTAL_STEPS) {
+        if (currentStep === 4) buildSummary();
+        setStep(currentStep + 1);
+      }
+    }
+
+    function goBack() {
+      if (currentStep > 1) setStep(currentStep - 1);
+    }
+
+    function setStep(n) {
+      document.getElementById(`step-${currentStep}`).classList.remove('active');
+      document.getElementById(`dot-${currentStep}`).classList.remove('active');
+      document.getElementById(`dot-${currentStep}`).classList.add('done');
+      document.getElementById(`dot-${currentStep}`).textContent = '✓';
+      if (currentStep < TOTAL_STEPS) {
+        document.getElementById(`line-${currentStep}`).classList.add('done');
+      }
+      document.getElementById(`label-${currentStep}`).classList.remove('active');
+      document.getElementById(`label-${currentStep}`).classList.add('done');
+
+      currentStep = n;
+      document.getElementById(`step-${currentStep}`).classList.add('active');
+      document.getElementById(`dot-${currentStep}`).classList.remove('done');
+      document.getElementById(`dot-${currentStep}`).classList.add('active');
+      document.getElementById(`dot-${currentStep}`).textContent = currentStep;
+      document.getElementById(`label-${currentStep}`).classList.add('active');
+      document.getElementById(`label-${currentStep}`).classList.remove('done');
+      document.getElementById('stepNum').textContent = currentStep;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Selections ─────────────────────────────────────────────────
+    function selectLang(lang, el) {
+      document.querySelectorAll('#step-1 .option-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      profile.lang = lang;
+      AdaptFit.loadLanguage(lang);
+    }
+
+    function selectGoal(goal, el) {
+      document.querySelectorAll('#step-2 .option-card').forEach(c => {
+        c.classList.remove('selected', 'selected-green');
+      });
+      el.classList.add(goal === 'glp1_support' ? 'selected-green' : 'selected');
+      profile.primary_goal = goal;
+      if (goal === 'glp1_support' || goal === 'rehab') {
+        profile.user_type = goal === 'glp1_support' ? 'glp1_aom' : 'general';
+      }
+      document.getElementById('nextGoal').disabled = false;
+    }
+
+    function selectLevel(level, el) {
+      document.querySelectorAll('#step-3 .option-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      profile.fitness_level = level;
+      document.getElementById('nextLevel').disabled = false;
+    }
+
+    function toggleFlag(flag, el) {
+      el.classList.toggle('checked');
+      if (el.classList.contains('checked')) {
+        if (!profile.flags.includes(flag)) profile.flags.push(flag);
+      } else {
+        profile.flags = profile.flags.filter(f => f !== flag);
+      }
+      // PTSD acknowledgment
+      if (flag === 'ptsd') {
+        document.getElementById('ptsdBox').classList.toggle('show', el.classList.contains('checked'));
+      }
+      // Update user type
+      if (profile.flags.includes('veteran')) profile.user_type = 'veteran';
+      if (profile.flags.includes('glp1'))    profile.user_type = 'glp1_aom';
+    }
+
+    // ── Summary ────────────────────────────────────────────────────
+    function buildSummary() {
+      const user = SupabaseClient.getUser();
+      document.getElementById('summaryName').textContent =
+        user?.user_metadata?.full_name || 'Your Profile';
+
+      const goalMap = {
+        weight_loss: 'Weight Loss', muscle_gain: 'Build Muscle',
+        endurance: 'Endurance', general_fitness: 'General Fitness',
+        glp1_support: 'GLP-1 / AOM Support', rehab: 'Injury Rehab'
+      };
+      const levelMap = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
+      const langMap  = { en: 'English', es: 'Español', pt: 'Português' };
+      const modeMap  = { glp1_aom: 'GLP-1 Specialized', veteran: 'Veteran Track', general: 'Standard AI Coaching' };
+
+      document.getElementById('summaryGoal').textContent  = goalMap[profile.primary_goal]  || '—';
+      document.getElementById('summaryLevel').textContent = levelMap[profile.fitness_level] || '—';
+      document.getElementById('summaryLang').textContent  = langMap[profile.lang]           || 'English';
+      document.getElementById('summaryMode').textContent  = modeMap[profile.user_type]      || 'Standard AI Coaching';
+
+      const flagLabels = { glp1: '💊 GLP-1 Medication', veteran: '🎖️ Veteran / Military', injury: '🦾 Injury / Post-Surgery', ptsd: '🧠 Mental Health Support' };
+      const flagsEl = document.getElementById('flagsSummary');
+      if (profile.flags.length > 0) {
+        flagsEl.innerHTML = profile.flags.map(f =>
+          `<span style="display:inline-block;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.15);color:var(--gold);padding:4px 10px;border-radius:4px;font-size:0.72rem;font-family:var(--font-mono);margin:3px;">${flagLabels[f] || f}</span>`
+        ).join('');
+      } else {
+        flagsEl.innerHTML = '<span style="font-size:0.8rem;color:var(--text-dim);">No special flags selected</span>';
+      }
+    }
+
+    // ── Finish ─────────────────────────────────────────────────────
+    async function finishOnboarding() {
+      const btn = document.getElementById('finishBtn');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      // Save to local storage immediately
+      AdaptFit.setProfile({
+        ...profile,
+        onboarding_complete: true,
+        lang: profile.lang
+      });
+
+      // Save to Supabase
+      try {
+        await SupabaseClient.saveProfile({
+          primary_goal:        profile.primary_goal,
+          fitness_level:       profile.fitness_level,
+          user_type:           profile.user_type,
+          health_flags:        profile.flags,
+          onboarding_complete: true
+        });
+      } catch (e) {
+        console.warn('Supabase save skipped (offline or not configured):', e);
+      }
+
+      window.location.href = '/dashboard.html';
+    }
+  </script>
+</body>
+</html>

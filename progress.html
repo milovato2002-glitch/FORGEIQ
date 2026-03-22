@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Progress</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
+      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
+      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
+      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#c0392b;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+    }
+    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
+
+    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .nav-logo { font-family:var(--font-d); font-size:1.5rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:4px; }
+    .nav-link { color:var(--text-dim); text-decoration:none; font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:7px 12px; border-radius:4px; transition:all 0.2s; font-family:var(--font-m); }
+    .nav-link:hover { color:var(--white); background:rgba(255,255,255,0.04); }
+    .nav-link.active { color:var(--gold); background:rgba(201,168,76,0.06); }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .nav-user { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:0.85rem; color:var(--black); cursor:pointer; text-decoration:none; }
+
+    .page { max-width:960px; margin:0 auto; padding:32px; display:grid; grid-template-columns:1fr 320px; gap:20px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:22px; margin-bottom:20px; }
+    .card-label { font-family:var(--font-m); font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:3px; margin-bottom:16px; }
+
+    /* ── LOG ENTRY ── */
+    .log-card { background:var(--dark); border:1px solid var(--border); border-radius:12px; padding:22px; margin-bottom:20px; position:relative; }
+    .log-card::before { content:''; position:absolute; top:-1px; left:20px; right:20px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+
+    .metric-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+    .metric-field label { font-family:var(--font-m); font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:6px; }
+    .metric-input-wrap { display:flex; align-items:center; gap:8px; }
+    .metric-input {
+      flex:1; background:var(--card); border:1px solid var(--border); border-radius:5px;
+      color:var(--white); font-family:var(--font-b); font-size:0.9rem; padding:10px 12px;
+      outline:none; transition:border-color 0.2s;
+    }
+    .metric-input:focus { border-color:var(--gold); }
+    .metric-unit { font-family:var(--font-m); font-size:0.65rem; color:var(--text-dim); white-space:nowrap; }
+    .btn-log { width:100%; background:var(--gold); color:var(--black); border:none; border-radius:5px; padding:12px; font-family:var(--font-b); font-weight:700; font-size:0.82rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+    .btn-log:hover { background:var(--gold-lt); }
+
+    /* ── CHARTS ── */
+    .chart-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px; }
+    .chart-title { font-family:var(--font-d); font-size:1.3rem; letter-spacing:1px; color:var(--white); margin-bottom:4px; }
+    .chart-sub   { font-size:0.75rem; color:var(--text-dim); margin-bottom:16px; font-family:var(--font-m); }
+    .chart-wrap  { position:relative; height:180px; }
+
+    /* ── STATS ── */
+    .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+    .stat-box { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px; text-align:center; }
+    .stat-val  { font-family:var(--font-d); font-size:1.8rem; color:var(--gold); letter-spacing:1px; line-height:1; }
+    .stat-lbl  { font-family:var(--font-m); font-size:0.55rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-top:5px; }
+    .stat-delta{ font-size:0.72rem; margin-top:3px; }
+    .delta-pos { color:var(--green); }
+    .delta-neg { color:var(--red); }
+
+    /* ── MEASUREMENTS TABLE ── */
+    .measurements-table { width:100%; border-collapse:collapse; }
+    .measurements-table th { font-family:var(--font-m); font-size:0.58rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); }
+    .measurements-table td { padding:10px 12px; border-bottom:1px solid rgba(34,38,47,0.5); font-size:0.82rem; }
+    .measurements-table td.date-col { font-family:var(--font-m); font-size:0.65rem; color:var(--text-dim); }
+    .measurements-table td.val-col  { font-weight:500; color:var(--white); }
+    .measurements-table td.delta-col{ font-family:var(--font-m); font-size:0.65rem; }
+    .empty-table { text-align:center; padding:32px; color:var(--text-dim); font-size:0.82rem; }
+    .del-row { background:transparent; border:none; color:var(--muted); cursor:pointer; padding:2px 6px; transition:color 0.2s; }
+    .del-row:hover { color:var(--red); }
+
+    /* GLP-1 NOTICE */
+    .glp1-notice { background:rgba(34,168,90,0.05); border:1px solid rgba(34,168,90,0.15); border-radius:8px; padding:14px 16px; margin-bottom:16px; font-size:0.82rem; color:var(--text-dim); line-height:1.6; display:none; }
+    .glp1-notice.show { display:block; }
+    .glp1-notice strong { color:var(--green); }
+
+    /* MILESTONES */
+    .milestone-list { display:flex; flex-direction:column; gap:10px; }
+    .milestone-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
+    .milestone-item:last-child { border-bottom:none; }
+    .ms-icon { font-size:1.3rem; flex-shrink:0; }
+    .ms-label { font-size:0.82rem; color:var(--text); font-weight:500; }
+    .ms-val   { font-family:var(--font-m); font-size:0.72rem; color:var(--text-dim); margin-top:2px; }
+    .ms-badge { margin-left:auto; padding:4px 10px; border-radius:3px; font-family:var(--font-m); font-size:0.58rem; text-transform:uppercase; letter-spacing:1px; }
+    .ms-done  { background:rgba(34,168,90,0.1); border:1px solid rgba(34,168,90,0.2); color:var(--green); }
+    .ms-todo  { background:rgba(201,168,76,0.06); border:1px solid var(--border); color:var(--text-dim); }
+
+    /* TOAST */
+    .toast { position:fixed; bottom:28px; right:28px; background:var(--green); color:var(--white); padding:12px 20px; border-radius:6px; font-family:var(--font-m); font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; display:none; z-index:200; }
+
+    @media(max-width:800px) {
+      .page{grid-template-columns:1fr;padding:20px 16px;}
+      .nav-links{display:none;}
+      .stats-row{grid-template-columns:1fr 1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/dashboard.html" class="nav-logo">FORGE<span>IQ</span></a>
+  <div class="nav-links">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/workout-log.html" class="nav-link">Workouts</a>
+    <a href="/nutrition.html" class="nav-link">Nutrition</a>
+    <a href="/challenge.html" class="nav-link">Challenge</a>
+    <a href="/progress.html" class="nav-link active">Progress</a>
+  </div>
+  <div class="nav-right">
+    <a href="/profile.html" class="nav-user" id="navUser">?</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- MAIN COL -->
+  <div>
+
+    <!-- Stats Summary -->
+    <div class="stats-row" id="statsRow"></div>
+
+    <!-- Weight Chart -->
+    <div class="chart-card">
+      <div class="chart-title">Body Weight Trend</div>
+      <div class="chart-sub">Scale weight over time — use alongside measurements for full picture</div>
+      <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
+    </div>
+
+    <!-- Measurements Chart -->
+    <div class="chart-card">
+      <div class="chart-title">Body Measurements</div>
+      <div class="chart-sub" id="measChartSub">Waist measurement trend — tape measure tells the real story</div>
+      <select id="measSelect" style="background:var(--dark);border:1px solid var(--border);border-radius:4px;color:var(--white);font-family:var(--font-m);font-size:0.65rem;padding:5px 10px;outline:none;margin-bottom:12px;cursor:pointer;" onchange="renderMeasChart()">
+        <option value="waist">Waist</option>
+        <option value="hips">Hips</option>
+        <option value="chest">Chest</option>
+        <option value="arm_r">Right Arm</option>
+        <option value="thigh_r">Right Thigh</option>
+      </select>
+      <div class="chart-wrap"><canvas id="measChart"></canvas></div>
+    </div>
+
+    <!-- History Table -->
+    <div class="card">
+      <div class="card-label">Measurement History</div>
+      <div id="historyTable"></div>
+    </div>
+
+  </div>
+
+  <!-- SIDE COL -->
+  <div>
+
+    <!-- Log Entry -->
+    <div class="log-card">
+      <div class="card-label">Log Today's Metrics</div>
+
+      <div class="glp1-notice" id="glp1Notice">
+        <strong>GLP-1 Protocol Active.</strong> Track measurements, not just scale weight. Muscle is denser than fat — the tape measure shows progress the scale hides.
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-field">
+          <label>Body Weight</label>
+          <div class="metric-input-wrap">
+            <input class="metric-input" type="number" id="fieldWeight" placeholder="0.0" step="0.1" />
+            <span class="metric-unit">lbs</span>
+          </div>
+        </div>
+        <div class="metric-field">
+          <label>Waist</label>
+          <div class="metric-input-wrap">
+            <input class="metric-input" type="number" id="fieldWaist" placeholder="0.0" step="0.25" />
+            <span class="metric-unit">in</span>
+          </div>
+        </div>
+        <div class="metric-field">
+          <label>Hips</label>
+          <div class="metric-input-wrap">
+            <input class="metric-input" type="number" id="fieldHips" placeholder="0.0" step="0.25" />
+            <span class="metric-unit">in</span>
+          </div>
+        </div>
+        <div class="metric-field">
+          <label>Chest</label>
+          <div class="metric-input-wrap">
+            <input class="metric-input" type="number" id="fieldChest" placeholder="0.0" step="0.25" />
+            <span class="metric-unit">in</span>
+          </div>
+        </div>
+        <div class="metric-field">
+          <label>Right Arm</label>
+          <div class="metric-input-wrap">
+            <input class="metric-input" type="number" id="fieldArmR" placeholder="0.0" step="0.25" />
+            <span class="metric-unit">in</span>
+          </div>
+        </div>
+        <div class="metric-field">
+          <label>Right Thigh</label>
+          <div class="metric-input-wrap">
+            <input class="metric-input" type="number" id="fieldThighR" placeholder="0.0" step="0.25" />
+            <span class="metric-unit">in</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-field" style="margin-bottom:16px;">
+        <label>Notes (optional)</label>
+        <input class="metric-input" type="text" id="fieldNotes" placeholder="How are you feeling? Any changes noticed?" style="width:100%;" />
+      </div>
+
+      <button class="btn-log" onclick="logEntry()">Log Today's Metrics</button>
+    </div>
+
+    <!-- Milestones -->
+    <div class="card">
+      <div class="card-label">Milestones</div>
+      <div class="milestone-list" id="milestoneList"></div>
+    </div>
+
+    <!-- Debora note -->
+    <div style="background:rgba(142,95,191,0.04);border:1px solid rgba(142,95,191,0.12);border-radius:10px;padding:18px;margin-bottom:20px;">
+      <div style="font-family:var(--font-m);font-size:0.6rem;color:#bf7fe0;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;">Debora's Note</div>
+      <p style="font-size:0.82rem;color:var(--text-dim);line-height:1.7;">As your body transforms, skin needs support. Post-weight-loss skin laxity is normal and addressable. Resistance training builds the muscle underneath. Professional esthetics treatments address the surface. Both matter. You are not done — you are becoming.</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script>
+  const profile = AdaptFit.getProfile();
+  const isGLP1  = (profile.flags || []).includes('glp1');
+  let weightChartInst = null, measChartInst = null;
+
+  const CHART_OPTS = {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ grid:{color:'#22262f'}, ticks:{color:'#7a8290',font:{family:'Space Mono',size:9}} },
+      y:{ grid:{color:'#22262f'}, ticks:{color:'#7a8290',font:{family:'Space Mono',size:9}} }
+    }
+  };
+
+  // ── Storage ───────────────────────────────────────────────────
+  function getEntries() {
+    try { return JSON.parse(localStorage.getItem('forgeiq_progress') || '[]'); }
+    catch { return []; }
+  }
+  function saveEntries(e) { localStorage.setItem('forgeiq_progress', JSON.stringify(e)); }
+
+  // ── Init ──────────────────────────────────────────────────────
+  function init() {
+    const name = SupabaseClient.getUser()?.user_metadata?.full_name?.charAt(0).toUpperCase() || 'M';
+    document.getElementById('navUser').textContent = name;
+    if (isGLP1) document.getElementById('glp1Notice').classList.add('show');
+    renderAll();
+  }
+
+  function renderAll() {
+    const entries = getEntries();
+    renderStats(entries);
+    renderWeightChart(entries);
+    renderMeasChart();
+    renderHistoryTable(entries);
+    renderMilestones(entries);
+  }
+
+  // ── Log entry ─────────────────────────────────────────────────
+  function logEntry() {
+    const weight = parseFloat(document.getElementById('fieldWeight').value) || null;
+    const waist  = parseFloat(document.getElementById('fieldWaist').value)  || null;
+    const hips   = parseFloat(document.getElementById('fieldHips').value)   || null;
+    const chest  = parseFloat(document.getElementById('fieldChest').value)  || null;
+    const arm_r  = parseFloat(document.getElementById('fieldArmR').value)   || null;
+    const thigh_r= parseFloat(document.getElementById('fieldThighR').value) || null;
+    const notes  = document.getElementById('fieldNotes').value.trim();
+
+    if (!weight && !waist && !hips && !chest && !arm_r && !thigh_r) {
+      showToast('Enter at least one measurement'); return;
+    }
+
+    const entries = getEntries();
+    entries.push({
+      date: new Date().toISOString().split('T')[0],
+      ts:   Date.now(),
+      weight, waist, hips, chest, arm_r, thigh_r, notes
+    });
+    saveEntries(entries);
+
+    // Clear fields
+    ['fieldWeight','fieldWaist','fieldHips','fieldChest','fieldArmR','fieldThighR','fieldNotes'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+
+    // Save body weight to profile for nutrition targets
+    if (weight) AdaptFit.setProfile({ body_weight_lbs: weight });
+
+    renderAll();
+    showToast('Metrics logged ✓');
+  }
+
+  // ── Stats ─────────────────────────────────────────────────────
+  function renderStats(entries) {
+    const weights = entries.filter(e => e.weight).map(e => e.weight);
+    const waists  = entries.filter(e => e.waist).map(e => e.waist);
+
+    const startW  = weights[0] || null;
+    const curW    = weights[weights.length-1] || null;
+    const lostW   = startW && curW ? Math.round((startW - curW) * 10) / 10 : null;
+    const startWa = waists[0] || null;
+    const curWa   = waists[waists.length-1] || null;
+    const lostWa  = startWa && curWa ? Math.round((startWa - curWa) * 10) / 10 : null;
+
+    document.getElementById('statsRow').innerHTML = [
+      { label:'Current Weight', val: curW ? `${curW}` : '—', unit:'lbs', delta: lostW ? `${lostW > 0 ? '−' : '+'}${Math.abs(lostW)} lbs from start` : null, pos: lostW > 0 },
+      { label:'Waist Change',   val: lostWa ? `${Math.abs(lostWa)}` : '—', unit:'in lost', delta: curWa ? `Current: ${curWa}"` : null, pos: true },
+      { label:'Entries Logged', val: entries.length, unit:'total', delta: entries.length > 0 ? `Last: ${entries[entries.length-1]?.date}` : null, pos: true }
+    ].map(s => `
+      <div class="stat-box">
+        <div class="stat-val">${s.val}</div>
+        <div class="stat-lbl">${s.unit}<br/>${s.label}</div>
+        ${s.delta ? `<div class="stat-delta ${s.pos ? 'delta-pos' : 'delta-neg'}">${s.delta}</div>` : ''}
+      </div>`).join('');
+  }
+
+  // ── Charts ────────────────────────────────────────────────────
+  function renderWeightChart(entries) {
+    const data = entries.filter(e => e.weight).map(e => ({ x: e.date, y: e.weight }));
+    if (weightChartInst) weightChartInst.destroy();
+    weightChartInst = new Chart(document.getElementById('weightChart'), {
+      type:'line',
+      data:{ labels: data.map(d => d.x), datasets:[{ data: data.map(d => d.y), borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,0.06)', tension:0.4, fill:true, pointBackgroundColor:'#c9a84c', pointRadius:4 }] },
+      options:{ ...CHART_OPTS, plugins:{ ...CHART_OPTS.plugins, tooltip:{ callbacks:{ label: ctx => `${ctx.raw} lbs` } } } }
+    });
+  }
+
+  function renderMeasChart() {
+    const field  = document.getElementById('measSelect').value;
+    const entries= getEntries();
+    const data   = entries.filter(e => e[field]).map(e => ({ x: e.date, y: e[field] }));
+    const colorMap = { waist:'#2471a3', hips:'#8e5fbf', chest:'#22a85a', arm_r:'#c9a84c', thigh_r:'#e67e22' };
+    const color  = colorMap[field] || '#c9a84c';
+    if (measChartInst) measChartInst.destroy();
+    measChartInst = new Chart(document.getElementById('measChart'), {
+      type:'line',
+      data:{ labels: data.map(d => d.x), datasets:[{ data: data.map(d => d.y), borderColor: color, backgroundColor: color.replace(')',',0.06)').replace('rgb','rgba').replace('#','rgba(').replace('2471a3','36,113,163').replace('8e5fbf','142,95,191').replace('22a85a','34,168,90').replace('c9a84c','201,168,76').replace('e67e22','230,126,34'), tension:0.4, fill:true, pointBackgroundColor: color, pointRadius:4 }] },
+      options:{ ...CHART_OPTS, plugins:{ ...CHART_OPTS.plugins, tooltip:{ callbacks:{ label: ctx => `${ctx.raw}"` } } } }
+    });
+  }
+
+  // ── History table ─────────────────────────────────────────────
+  function renderHistoryTable(entries) {
+    const wrap = document.getElementById('historyTable');
+    if (!entries.length) { wrap.innerHTML = '<div class="empty-table">No metrics logged yet. Add your starting point above.</div>'; return; }
+    const rows = [...entries].reverse();
+    wrap.innerHTML = `
+      <table class="measurements-table">
+        <thead><tr>
+          <th>Date</th><th>Weight</th><th>Waist</th><th>Hips</th><th>Notes</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${rows.map((e,i) => {
+            const prev = rows[i+1];
+            const wDelta = prev?.weight && e.weight ? Math.round((e.weight - prev.weight)*10)/10 : null;
+            return `<tr>
+              <td class="date-col">${e.date}</td>
+              <td class="val-col">${e.weight ? e.weight+'lbs' : '—'}${wDelta ? `<span class="stat-delta ${wDelta<0?'delta-pos':'delta-neg'}" style="display:inline;margin-left:6px;font-size:0.65rem;">${wDelta>0?'+':''}${wDelta}</span>` : ''}</td>
+              <td class="val-col">${e.waist ? e.waist+'"' : '—'}</td>
+              <td class="val-col">${e.hips ? e.hips+'"' : '—'}</td>
+              <td style="font-size:0.75rem;color:var(--text-dim);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.notes||'—'}</td>
+              <td><button class="del-row" onclick="deleteEntry(${entries.indexOf(e)})">✕</button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  function deleteEntry(idx) {
+    const entries = getEntries();
+    entries.splice(idx, 1);
+    saveEntries(entries);
+    renderAll();
+  }
+
+  // ── Milestones ────────────────────────────────────────────────
+  function renderMilestones(entries) {
+    const weights = entries.filter(e => e.weight).map(e => e.weight);
+    const start   = weights[0] || null;
+    const cur     = weights[weights.length-1] || null;
+    const lost    = start && cur ? start - cur : 0;
+
+    const milestones = [
+      { icon:'📍', label:'Starting Point Logged', val:'First entry recorded', done: entries.length > 0 },
+      { icon:'🔥', label:'5 lbs Lost',   val:`${Math.round(lost)} lbs down so far`, done: lost >= 5 },
+      { icon:'💪', label:'10 lbs Lost',  val:`${Math.round(lost)} lbs down so far`, done: lost >= 10 },
+      { icon:'🏆', label:'25 lbs Lost',  val:`${Math.round(lost)} lbs down so far`, done: lost >= 25 },
+      { icon:'⭐', label:'50 lbs Lost',  val:`${Math.round(lost)} lbs down so far`, done: lost >= 50 },
+      { icon:'🎖️', label:'10 Entries Logged', val:`${entries.length} total entries`, done: entries.length >= 10 },
+      { icon:'📏', label:'1 Inch Off Waist', val:'Measurement milestone', done: entries.some(e => e.waist) && (() => { const w=entries.filter(e=>e.waist).map(e=>e.waist); return w.length>1&&w[0]-w[w.length-1]>=1; })() }
+    ];
+
+    document.getElementById('milestoneList').innerHTML = milestones.map(m => `
+      <div class="milestone-item">
+        <div class="ms-icon">${m.icon}</div>
+        <div>
+          <div class="ms-label">${m.label}</div>
+          <div class="ms-val">${m.val}</div>
+        </div>
+        <div class="ms-badge ${m.done ? 'ms-done' : 'ms-todo'}">${m.done ? '✓ Done' : 'Locked'}</div>
+      </div>`).join('');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
+  }
+
+  init();
+</script>
+</body>
+</html>

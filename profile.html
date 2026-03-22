@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — My Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
+      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
+      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
+      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#c0392b;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+    }
+    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
+
+    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:16px 32px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .nav-logo { font-family:var(--font-d); font-size:1.6rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-right { display:flex; align-items:center; gap:16px; }
+    .nav-back { font-size:0.75rem; color:var(--text-dim); text-decoration:none; letter-spacing:1px; text-transform:uppercase; font-family:var(--font-m); transition:color 0.2s; }
+    .nav-back:hover { color:var(--gold); }
+
+    .page { max-width:900px; margin:0 auto; padding:40px 32px; }
+
+    /* ── HEADER ── */
+    .profile-header {
+      display:flex; align-items:center; gap:28px;
+      background:var(--card); border:1px solid var(--border); border-radius:16px;
+      padding:32px; margin-bottom:28px; position:relative;
+    }
+    .profile-header::before { content:''; position:absolute; top:-1px; left:24px; right:24px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+    .profile-av {
+      width:80px; height:80px; border-radius:50%;
+      background:linear-gradient(135deg,var(--gold-dim),var(--gold));
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-d); font-size:2rem; color:var(--black); flex-shrink:0;
+    }
+    .profile-av.partner { background:linear-gradient(135deg,#5a3d8a,var(--purple)); color:var(--white); }
+    .profile-info { flex:1; }
+    .profile-name { font-family:var(--font-d); font-size:2rem; letter-spacing:1px; color:var(--white); margin-bottom:4px; }
+    .profile-email { font-size:0.82rem; color:var(--text-dim); margin-bottom:12px; font-family:var(--font-m); }
+    .profile-badges { display:flex; flex-wrap:wrap; gap:8px; }
+    .badge { padding:4px 10px; border-radius:3px; font-family:var(--font-m); font-size:0.58rem; text-transform:uppercase; letter-spacing:1px; }
+    .badge-gold   { background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.15); color:var(--gold); }
+    .badge-green  { background:rgba(34,168,90,0.08);  border:1px solid rgba(34,168,90,0.15);  color:var(--green); }
+    .badge-blue   { background:rgba(36,113,163,0.08); border:1px solid rgba(36,113,163,0.15); color:#5dade2; }
+    .badge-purple { background:rgba(142,95,191,0.08); border:1px solid rgba(142,95,191,0.15); color:#bf7fe0; }
+    .badge-red    { background:rgba(192,57,43,0.08);  border:1px solid rgba(192,57,43,0.15);  color:#e74c3c; }
+
+    /* ── OPT PHASE CARD ── */
+    .opt-card {
+      background:var(--card); border:1px solid var(--gold); border-radius:12px;
+      padding:28px; margin-bottom:28px; position:relative; overflow:hidden;
+    }
+    .opt-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-dim)); }
+    .opt-label { font-family:var(--font-m); font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:3px; margin-bottom:10px; }
+    .opt-phase { font-family:var(--font-d); font-size:2rem; letter-spacing:1px; color:var(--white); margin-bottom:8px; }
+    .opt-desc  { font-size:0.88rem; color:var(--text-dim); line-height:1.7; margin-bottom:16px; }
+    .opt-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .opt-metric { background:var(--dark); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; }
+    .opt-metric-val  { font-family:var(--font-d); font-size:1.2rem; color:var(--gold); letter-spacing:1px; }
+    .opt-metric-label{ font-family:var(--font-m); font-size:0.58rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+    .opt-phases-row { display:flex; gap:8px; margin-top:16px; }
+    .opt-phase-dot { flex:1; height:6px; border-radius:3px; background:var(--border); }
+    .opt-phase-dot.active { background:var(--gold); }
+    .opt-phase-dot.done   { background:var(--green); }
+
+    /* ── SECTIONS ── */
+    .section { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:20px; }
+    .section-hd { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+    .section-label { font-family:var(--font-m); font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:3px; }
+    .edit-btn { background:transparent; border:1px solid var(--border); color:var(--text-dim); padding:6px 14px; border-radius:4px; font-family:var(--font-m); font-size:0.62rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; }
+    .edit-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .save-btn { background:var(--gold); border:none; color:var(--black); padding:6px 14px; border-radius:4px; font-family:var(--font-m); font-size:0.62rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:all 0.2s; display:none; }
+    .save-btn:hover { background:var(--gold-lt); }
+
+    /* ── FORM FIELDS ── */
+    .field-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .field { margin-bottom:0; }
+    .field label { display:block; font-family:var(--font-m); font-size:0.62rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:7px; }
+    .field input, .field select {
+      width:100%; background:var(--dark); border:1px solid var(--border); border-radius:6px;
+      color:var(--white); font-family:var(--font-b); font-size:0.9rem; padding:11px 14px;
+      outline:none; transition:border-color 0.2s;
+    }
+    .field input:focus, .field select:focus { border-color:var(--gold); }
+    .field input:disabled, .field select:disabled { opacity:0.6; cursor:not-allowed; }
+    .field select option { background:var(--card); }
+
+    /* ── FLAGS ── */
+    .flags-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .flag-toggle {
+      background:var(--dark); border:2px solid var(--border); border-radius:8px;
+      padding:14px 16px; display:flex; align-items:center; gap:12px;
+      cursor:pointer; transition:all 0.2s; user-select:none;
+    }
+    .flag-toggle.active.glp1   { border-color:var(--green);  background:rgba(34,168,90,0.05); }
+    .flag-toggle.active.vet    { border-color:var(--gold);   background:rgba(201,168,76,0.05); }
+    .flag-toggle.active.inj    { border-color:var(--blue);   background:rgba(36,113,163,0.05); }
+    .flag-toggle.active.ptsd   { border-color:var(--purple); background:rgba(142,95,191,0.05); }
+    .flag-icon  { font-size:1.3rem; }
+    .flag-title { font-weight:600; font-size:0.82rem; color:var(--white); }
+    .flag-desc  { font-size:0.72rem; color:var(--text-dim); margin-top:2px; }
+    .flag-check { margin-left:auto; width:20px; height:20px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:0.6rem; flex-shrink:0; transition:all 0.2s; }
+    .flag-toggle.active .flag-check { background:var(--gold); border-color:var(--gold); color:var(--black); }
+
+    /* ── STATS ── */
+    .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .stat-card { background:var(--dark); border:1px solid var(--border); border-radius:8px; padding:18px; text-align:center; }
+    .stat-num   { font-family:var(--font-d); font-size:2rem; color:var(--gold); letter-spacing:1px; line-height:1; }
+    .stat-label { font-family:var(--font-m); font-size:0.58rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-top:6px; }
+
+    /* ── LANGUAGE ── */
+    .lang-options { display:flex; gap:12px; }
+    .lang-card {
+      flex:1; background:var(--dark); border:2px solid var(--border); border-radius:8px;
+      padding:16px; text-align:center; cursor:pointer; transition:all 0.2s;
+    }
+    .lang-card.active { border-color:var(--gold); background:rgba(201,168,76,0.05); }
+    .lang-flag  { font-size:1.8rem; margin-bottom:6px; }
+    .lang-name  { font-weight:600; font-size:0.88rem; color:var(--white); }
+    .lang-native{ font-size:0.72rem; color:var(--text-dim); margin-top:2px; }
+
+    /* ── DANGER ZONE ── */
+    .danger-section { background:rgba(192,57,43,0.04); border:1px solid rgba(192,57,43,0.15); border-radius:12px; padding:24px; margin-bottom:20px; }
+    .danger-section .section-label { color:var(--red); }
+    .danger-desc { font-size:0.85rem; color:var(--text-dim); margin-bottom:16px; line-height:1.6; }
+    .btn-danger { background:transparent; border:1px solid rgba(192,57,43,0.3); color:var(--red); padding:10px 20px; border-radius:6px; font-family:var(--font-m); font-size:0.65rem; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:all 0.2s; }
+    .btn-danger:hover { background:rgba(192,57,43,0.1); border-color:var(--red); }
+
+    /* SUCCESS TOAST */
+    .toast { position:fixed; bottom:32px; right:32px; background:var(--green); color:var(--white); padding:14px 22px; border-radius:8px; font-family:var(--font-m); font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; display:none; z-index:200; animation:slideIn 0.3s ease; }
+    @keyframes slideIn { from{transform:translateY(20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+
+    @media(max-width:640px) {
+      .page{padding:24px 16px;}
+      .profile-header{flex-direction:column;text-align:center;}
+      .field-row{grid-template-columns:1fr;}
+      .opt-metrics{grid-template-columns:1fr 1fr;}
+      .flags-grid{grid-template-columns:1fr;}
+      .stats-grid{grid-template-columns:1fr 1fr;}
+      .lang-options{flex-direction:column;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/dashboard.html" class="nav-logo">FORGE<span>IQ</span></a>
+  <div class="nav-right">
+    <a href="/dashboard.html" class="nav-back">← Dashboard</a>
+    <button class="edit-btn" id="globalEditBtn" onclick="toggleEdit()">Edit Profile</button>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+    <div class="profile-av" id="profileAv">?</div>
+    <div class="profile-info">
+      <div class="profile-name" id="profileName">Loading...</div>
+      <div class="profile-email" id="profileEmail">—</div>
+      <div class="profile-badges" id="profileBadges"></div>
+    </div>
+  </div>
+
+  <!-- OPT PHASE -->
+  <div class="opt-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="opt-label" style="margin-bottom:0;">NASM OPT Model — Current Phase</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.2);border:1px solid rgba(201,168,76,0.15);padding:4px 10px;border-radius:100px;">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#c9a84c" stroke-width="1.2"/><circle cx="5" cy="5" r="1.8" fill="#c9a84c"/></svg>
+        <span style="font-family:var(--font-m);font-size:0.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Powered by</span>
+        <span style="font-family:var(--font-m);font-size:0.62rem;color:var(--gold);font-weight:700;letter-spacing:1px;">Claude</span>
+      </div>
+    </div>
+    <div class="opt-phase" id="optPhaseName">Phase 1 — Stabilization Endurance</div>
+    <div class="opt-desc" id="optPhaseDesc">Building your neuromuscular foundation. Focus: core stability, postural control, movement quality. This is where all lasting strength begins.</div>
+    <div class="opt-metrics" id="optMetrics"></div>
+    <div class="opt-phases-row" id="optPhaseDots"></div>
+  </div>
+
+  <!-- PERSONAL INFO -->
+  <div class="section">
+    <div class="section-hd">
+      <div class="section-label">Personal Information</div>
+      <div style="display:flex;gap:8px;">
+        <button class="save-btn" id="saveInfoBtn" onclick="savePersonalInfo()">Save Changes</button>
+        <button class="edit-btn" onclick="toggleSection('info')">Edit</button>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="fieldName" disabled />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="fieldEmail" disabled />
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Primary Goal</label>
+        <select id="fieldGoal" disabled>
+          <option value="weight_loss">Weight Loss</option>
+          <option value="muscle_gain">Build Muscle</option>
+          <option value="endurance">Endurance</option>
+          <option value="general_fitness">General Fitness</option>
+          <option value="glp1_support">GLP-1 / AOM Support</option>
+          <option value="rehab">Injury Rehab / Recovery</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Fitness Level</label>
+        <select id="fieldLevel" disabled>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEALTH FLAGS -->
+  <div class="section">
+    <div class="section-hd">
+      <div class="section-label">Coaching Profile Flags</div>
+      <div style="display:flex;gap:8px;">
+        <button class="save-btn" id="saveFlagsBtn" onclick="saveFlags()">Save Changes</button>
+        <button class="edit-btn" onclick="toggleSection('flags')">Edit</button>
+      </div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:16px;line-height:1.6;">These flags shape how your AI coach speaks to you, what exercises it prescribes, and which NASM protocols it applies. Update them anytime.</p>
+    <div class="flags-grid">
+      <div class="flag-toggle glp1" id="flag-glp1" onclick="toggleFlag('glp1')">
+        <div class="flag-icon">💊</div>
+        <div>
+          <div class="flag-title">GLP-1 / AOM Medication</div>
+          <div class="flag-desc">Ozempic, Wegovy, Mounjaro, or similar</div>
+        </div>
+        <div class="flag-check">✓</div>
+      </div>
+      <div class="flag-toggle vet" id="flag-veteran" onclick="toggleFlag('veteran')">
+        <div class="flag-icon">🎖️</div>
+        <div>
+          <div class="flag-title">Veteran / Military</div>
+          <div class="flag-desc">Active or veteran service member</div>
+        </div>
+        <div class="flag-check">✓</div>
+      </div>
+      <div class="flag-toggle inj" id="flag-injury" onclick="toggleFlag('injury')">
+        <div class="flag-icon">🦾</div>
+        <div>
+          <div class="flag-title">Injury / Post-Surgery</div>
+          <div class="flag-desc">Training with physical limitations</div>
+        </div>
+        <div class="flag-check">✓</div>
+      </div>
+      <div class="flag-toggle ptsd" id="flag-ptsd" onclick="toggleFlag('ptsd')">
+        <div class="flag-icon">🧠</div>
+        <div>
+          <div class="flag-title">Mental Health Support</div>
+          <div class="flag-desc">Anxiety, depression, PTSD</div>
+        </div>
+        <div class="flag-check">✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="section">
+    <div class="section-hd">
+      <div class="section-label">Training Stats</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="statStreak">0</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statWorkouts">0</div>
+        <div class="stat-label">Sessions Logged</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statDays">0</div>
+        <div class="stat-label">Days Active</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LANGUAGE -->
+  <div class="section">
+    <div class="section-hd">
+      <div class="section-label">Language / Idioma / Língua</div>
+    </div>
+    <div class="lang-options">
+      <div class="lang-card" id="lang-en" onclick="setLang('en')">
+        <div class="lang-flag">🇺🇸</div>
+        <div class="lang-name">English</div>
+        <div class="lang-native">English</div>
+      </div>
+      <div class="lang-card" id="lang-es" onclick="setLang('es')">
+        <div class="lang-flag">🇪🇸</div>
+        <div class="lang-name">Spanish</div>
+        <div class="lang-native">Español</div>
+      </div>
+      <div class="lang-card" id="lang-pt" onclick="setLang('pt')">
+        <div class="lang-flag">🇧🇷</div>
+        <div class="lang-name">Portuguese</div>
+        <div class="lang-native">Português</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DANGER ZONE -->
+  <div class="danger-section">
+    <div class="section-label" style="color:var(--red);font-family:var(--font-m);font-size:0.62rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:12px;">Account</div>
+    <p class="danger-desc">Sign out of your account on this device. Your data and progress are saved to your account and will be here when you return.</p>
+    <button class="btn-danger" onclick="SupabaseClient.signOut()">Sign Out</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">✓ Profile updated</div>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script>
+  // SupabaseClient.requireAuth();
+
+  const OPT_PHASES = [
+    {
+      name: 'Phase 1 — Stabilization Endurance',
+      desc: 'Building your neuromuscular foundation. Focus: core stability, postural control, movement quality. This is where all lasting strength begins.',
+      sets: '1–3', reps: '12–20', intensity: '50–70%', rest: '0–90s', phase: 1
+    },
+    {
+      name: 'Phase 2 — Strength Endurance',
+      desc: 'Functional strength while maintaining stability. Superset format: strength exercise paired with stabilization movement.',
+      sets: '2–4', reps: '8–12', intensity: '70–80%', rest: '0–60s', phase: 2
+    },
+    {
+      name: 'Phase 3 — Muscular Development',
+      desc: 'Hypertrophy focus — building muscle size and definition. Critical for GLP-1 users to preserve lean mass during weight loss.',
+      sets: '3–5', reps: '6–12', intensity: '75–85%', rest: '0–60s', phase: 3
+    },
+    {
+      name: 'Phase 4 — Maximal Strength',
+      desc: 'Maximum force production for advanced athletes. Requires Phase 1–3 completion and movement quality assessment.',
+      sets: '4–6', reps: '1–5', intensity: '85–100%', rest: '3–5 min', phase: 4
+    },
+    {
+      name: 'Phase 5 — Power',
+      desc: 'Explosive speed-strength for performance athletes. Rate of force development and reactive neuromuscular training.',
+      sets: '3–5', reps: '1–10', intensity: '85–100%', rest: '3–5 min', phase: 5
+    }
+  ];
+
+  let profile = AdaptFit.getProfile();
+  let user    = SupabaseClient.getUser();
+  let editSection = null;
+  let activeFlags = [...(profile.flags || [])];
+
+  function init() {
+    const name  = user?.user_metadata?.full_name || profile.full_name || 'Coach';
+    const email = user?.email || '—';
+    const init  = name.charAt(0).toUpperCase();
+
+    document.getElementById('profileAv').textContent    = init;
+    document.getElementById('profileName').textContent  = name;
+    document.getElementById('profileEmail').textContent = email;
+    document.getElementById('fieldName').value  = name;
+    document.getElementById('fieldEmail').value = email;
+    document.getElementById('fieldGoal').value  = profile.primary_goal  || 'general_fitness';
+    document.getElementById('fieldLevel').value = profile.fitness_level || 'beginner';
+
+    buildBadges();
+    buildOPTPhase();
+    buildFlags();
+    buildStats();
+    setActiveLang(profile.lang || 'en');
+  }
+
+  function buildBadges() {
+    const flags = profile.flags || [];
+    const badgeMap = {
+      glp1:    { label: 'GLP-1 Mode',      cls: 'badge-green'  },
+      veteran: { label: 'Veteran Track',    cls: 'badge-gold'   },
+      injury:  { label: 'Injury Adaptive',  cls: 'badge-blue'   },
+      ptsd:    { label: 'Mental Health',    cls: 'badge-purple' }
+    };
+    const goalMap = {
+      weight_loss: 'Weight Loss', muscle_gain: 'Muscle Gain',
+      glp1_support: 'GLP-1 Support', rehab: 'Injury Rehab',
+      endurance: 'Endurance', general_fitness: 'General Fitness'
+    };
+    const wrap = document.getElementById('profileBadges');
+    wrap.innerHTML = '';
+    const goalBadge = document.createElement('span');
+    goalBadge.className = 'badge badge-gold';
+    goalBadge.textContent = goalMap[profile.primary_goal] || 'General Fitness';
+    wrap.appendChild(goalBadge);
+    flags.forEach(f => {
+      if (badgeMap[f]) {
+        const b = document.createElement('span');
+        b.className = `badge ${badgeMap[f].cls}`;
+        b.textContent = badgeMap[f].label;
+        wrap.appendChild(b);
+      }
+    });
+  }
+
+  function buildOPTPhase() {
+    const flags = activeFlags;
+    const level = profile.fitness_level || 'beginner';
+    let phaseIdx = 0;
+    if (flags.includes('glp1') || flags.includes('injury')) phaseIdx = 0;
+    else if (level === 'beginner')     phaseIdx = 0;
+    else if (level === 'intermediate') phaseIdx = 1;
+    else if (level === 'advanced')     phaseIdx = 2;
+
+    const phase = OPT_PHASES[phaseIdx];
+    document.getElementById('optPhaseName').textContent = phase.name;
+    document.getElementById('optPhaseDesc').textContent = phase.desc;
+
+    document.getElementById('optMetrics').innerHTML = `
+      <div class="opt-metric"><div class="opt-metric-val">${phase.sets}</div><div class="opt-metric-label">Sets</div></div>
+      <div class="opt-metric"><div class="opt-metric-val">${phase.reps}</div><div class="opt-metric-label">Reps</div></div>
+      <div class="opt-metric"><div class="opt-metric-val">${phase.intensity}</div><div class="opt-metric-label">Intensity</div></div>
+      <div class="opt-metric"><div class="opt-metric-val">${phase.rest}</div><div class="opt-metric-label">Rest</div></div>
+    `;
+
+    const dots = document.getElementById('optPhaseDots');
+    dots.innerHTML = OPT_PHASES.map((p, i) =>
+      `<div class="opt-phase-dot ${i < phaseIdx ? 'done' : i === phaseIdx ? 'active' : ''}"></div>`
+    ).join('');
+  }
+
+  function buildFlags() {
+    ['glp1','veteran','injury','ptsd'].forEach(f => {
+      const el = document.getElementById(`flag-${f}`);
+      if (el) {
+        el.classList.toggle('active', activeFlags.includes(f));
+        el.style.pointerEvents = 'none';
+      }
+    });
+  }
+
+  function buildStats() {
+    const log = profile.activity_log || {};
+    const streak = AdaptFit.getStreak();
+    document.getElementById('statStreak').textContent   = streak;
+    document.getElementById('statWorkouts').textContent = Object.keys(log).length;
+    document.getElementById('statDays').textContent     = Object.keys(log).length;
+  }
+
+  function toggleEdit() {
+    const editing = document.getElementById('globalEditBtn').textContent === 'Edit Profile';
+    document.getElementById('globalEditBtn').textContent = editing ? 'Cancel' : 'Edit Profile';
+    document.querySelectorAll('.save-btn').forEach(b => b.style.display = editing ? 'block' : 'none');
+    document.querySelectorAll('.section .edit-btn').forEach(b => b.style.display = editing ? 'none' : 'block');
+    ['fieldName','fieldGoal','fieldLevel'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = !editing;
+    });
+    document.querySelectorAll('.flag-toggle').forEach(el => el.style.pointerEvents = editing ? 'auto' : 'none');
+  }
+
+  function toggleSection(sec) {
+    const isInfo  = sec === 'info';
+    const fields  = isInfo ? ['fieldName','fieldGoal','fieldLevel'] : [];
+    const saveBtn = document.getElementById(isInfo ? 'saveInfoBtn' : 'saveFlagsBtn');
+    const editing = saveBtn.style.display !== 'block';
+    saveBtn.style.display = editing ? 'block' : 'none';
+    fields.forEach(id => { const el = document.getElementById(id); if (el) el.disabled = !editing; });
+    if (sec === 'flags') {
+      document.querySelectorAll('.flag-toggle').forEach(el => el.style.pointerEvents = editing ? 'auto' : 'none');
+    }
+  }
+
+  function toggleFlag(f) {
+    const el = document.getElementById(`flag-${f}`);
+    if (!el) return;
+    el.classList.toggle('active');
+    if (activeFlags.includes(f)) { activeFlags = activeFlags.filter(x => x !== f); }
+    else { activeFlags.push(f); }
+    buildOPTPhase();
+  }
+
+  async function savePersonalInfo() {
+    const name  = document.getElementById('fieldName').value.trim();
+    const goal  = document.getElementById('fieldGoal').value;
+    const level = document.getElementById('fieldLevel').value;
+    AdaptFit.setProfile({ full_name: name, primary_goal: goal, fitness_level: level });
+    try { await SupabaseClient.saveProfile({ primary_goal: goal, fitness_level: level }); } catch(e) {}
+    profile = AdaptFit.getProfile();
+    buildBadges(); buildOPTPhase();
+    toggleSection('info');
+    showToast('Personal info updated');
+  }
+
+  async function saveFlags() {
+    AdaptFit.setProfile({ flags: activeFlags });
+    try { await SupabaseClient.saveProfile({ health_flags: activeFlags }); } catch(e) {}
+    profile = AdaptFit.getProfile();
+    buildBadges(); buildOPTPhase();
+    toggleSection('flags');
+    showToast('Coaching profile updated');
+  }
+
+  function setActiveLang(lang) {
+    ['en','es','pt'].forEach(l => {
+      document.getElementById(`lang-${l}`)?.classList.toggle('active', l === lang);
+    });
+  }
+
+  async function setLang(lang) {
+    await AdaptFit.loadLanguage(lang);
+    AdaptFit.setProfile({ lang });
+    setActiveLang(lang);
+    showToast(`Language updated`);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '✓ ' + msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
+  }
+
+  init();
+</script>
+</body>
+</html>

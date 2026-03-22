@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Goals & Benchmarks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
+      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
+      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
+      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#c0392b;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+    }
+    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
+
+    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .nav-logo { font-family:var(--font-d); font-size:1.5rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:4px; }
+    .nav-link { color:var(--text-dim); text-decoration:none; font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:7px 12px; border-radius:4px; transition:all 0.2s; font-family:var(--font-m); }
+    .nav-link:hover { color:var(--white); background:rgba(255,255,255,0.04); }
+    .nav-link.active { color:var(--gold); background:rgba(201,168,76,0.06); }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .nav-user { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:0.85rem; color:var(--black); text-decoration:none; }
+
+    .page { max-width:1000px; margin:0 auto; padding:32px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:20px; }
+    .card-label { font-family:var(--font-m); font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:3px; margin-bottom:16px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { margin-bottom:28px; }
+    .page-title { font-family:var(--font-d); font-size:2.8rem; letter-spacing:1px; color:var(--white); line-height:1; margin-bottom:8px; }
+    .page-title em { font-style:normal; color:var(--gold); }
+    .page-sub { font-size:0.92rem; color:var(--text-dim); line-height:1.6; max-width:560px; }
+
+    /* ── OPT ROADMAP ── */
+    .opt-roadmap { display:flex; gap:0; margin-bottom:28px; position:relative; }
+    .opt-roadmap::before { content:''; position:absolute; top:20px; left:20px; right:20px; height:2px; background:var(--border); z-index:0; }
+    .opt-phase-step { flex:1; text-align:center; position:relative; z-index:1; cursor:pointer; }
+    .phase-circle { width:40px; height:40px; border-radius:50%; border:2px solid var(--border); background:var(--dark); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:1rem; color:var(--text-dim); margin:0 auto 8px; transition:all 0.3s; }
+    .opt-phase-step.active .phase-circle { border-color:var(--gold); background:rgba(201,168,76,0.1); color:var(--gold); }
+    .opt-phase-step.done .phase-circle   { border-color:var(--green); background:var(--green); color:var(--black); }
+    .phase-name { font-family:var(--font-m); font-size:0.55rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; line-height:1.4; }
+    .opt-phase-step.active .phase-name { color:var(--gold); }
+    .opt-phase-step.done .phase-name   { color:var(--green); }
+
+    /* ── SMART GOAL BUILDER ── */
+    .goal-builder { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+    .gb-field label { font-family:var(--font-m); font-size:0.62rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:7px; }
+    .gb-input, .gb-select, .gb-textarea {
+      width:100%; background:var(--dark); border:1px solid var(--border); border-radius:6px;
+      color:var(--white); font-family:var(--font-b); font-size:0.88rem; padding:11px 14px;
+      outline:none; transition:border-color 0.2s;
+    }
+    .gb-input:focus, .gb-select:focus, .gb-textarea:focus { border-color:var(--gold); }
+    .gb-input::placeholder { color:var(--muted); }
+    .gb-select option { background:var(--card); }
+    .gb-textarea { resize:vertical; min-height:80px; }
+    .gb-full { grid-column:1/-1; }
+
+    .smart-pills { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+    .smart-pill { padding:6px 14px; border-radius:100px; font-family:var(--font-m); font-size:0.62rem; text-transform:uppercase; letter-spacing:1px; border:1px solid var(--border); color:var(--text-dim); cursor:default; }
+    .smart-pill.s { border-color:var(--gold);   color:var(--gold);   background:rgba(201,168,76,0.07); }
+    .smart-pill.m { border-color:var(--green);  color:var(--green);  background:rgba(34,168,90,0.07); }
+    .smart-pill.a { border-color:var(--blue);   color:#5dade2;       background:rgba(36,113,163,0.07); }
+    .smart-pill.r { border-color:var(--purple); color:#bf7fe0;       background:rgba(142,95,191,0.07); }
+    .smart-pill.t { border-color:var(--red);    color:#e74c3c;       background:rgba(192,57,43,0.07); }
+
+    .btn-add-goal { width:100%; background:var(--gold); color:var(--black); border:none; border-radius:6px; padding:13px; font-family:var(--font-b); font-weight:700; font-size:0.85rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+    .btn-add-goal:hover { background:var(--gold-lt); }
+
+    /* ── AI SUGGESTION ── */
+    .ai-suggestion { background:rgba(201,168,76,0.04); border:1px solid rgba(201,168,76,0.15); border-radius:10px; padding:18px 20px; margin-bottom:20px; display:none; }
+    .ai-suggestion.show { display:block; animation:fadeIn 0.3s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);} }
+    .ai-sug-label { font-family:var(--font-m); font-size:0.6rem; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+    .ai-sug-label::before { content:'⚡'; }
+    .ai-sug-text { font-size:0.88rem; color:var(--text); line-height:1.7; }
+
+    /* ── ACTIVE GOALS ── */
+    .goals-list { display:flex; flex-direction:column; gap:14px; }
+    .goal-card { background:var(--dark); border:1px solid var(--border); border-radius:10px; padding:20px; position:relative; transition:all 0.2s; }
+    .goal-card:hover { border-color:var(--muted); }
+    .goal-card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+    .goal-name { font-weight:600; font-size:0.95rem; color:var(--white); margin-bottom:4px; }
+    .goal-meta { font-family:var(--font-m); font-size:0.62rem; color:var(--text-dim); }
+    .goal-actions { display:flex; gap:8px; }
+    .goal-check-btn { background:transparent; border:1px solid var(--border); color:var(--text-dim); padding:5px 12px; border-radius:4px; font-family:var(--font-m); font-size:0.58rem; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:all 0.2s; }
+    .goal-check-btn:hover { border-color:var(--green); color:var(--green); }
+    .goal-del-btn { background:transparent; border:none; color:var(--muted); cursor:pointer; padding:5px 8px; transition:color 0.2s; font-size:0.85rem; }
+    .goal-del-btn:hover { color:var(--red); }
+
+    .goal-progress-bar { height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin-bottom:8px; }
+    .goal-progress-fill { height:100%; border-radius:3px; transition:width 0.5s ease; }
+    .goal-progress-fill.gold   { background:var(--gold); }
+    .goal-progress-fill.green  { background:var(--green); }
+    .goal-progress-fill.blue   { background:var(--blue); }
+    .goal-progress-fill.purple { background:var(--purple); }
+    .goal-progress-labels { display:flex; justify-content:space-between; font-family:var(--font-m); font-size:0.6rem; color:var(--text-dim); }
+
+    .goal-benchmarks { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+    .benchmark-label { font-family:var(--font-m); font-size:0.58rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .benchmarks-row { display:flex; gap:8px; flex-wrap:wrap; }
+    .benchmark-chip { padding:4px 10px; border-radius:4px; font-size:0.72rem; display:flex; align-items:center; gap:6px; }
+    .benchmark-chip.done { background:rgba(34,168,90,0.08); border:1px solid rgba(34,168,90,0.15); color:var(--green); }
+    .benchmark-chip.todo { background:var(--card); border:1px solid var(--border); color:var(--text-dim); cursor:pointer; transition:all 0.2s; }
+    .benchmark-chip.todo:hover { border-color:var(--gold); color:var(--gold); }
+
+    .check-in-section { background:rgba(34,168,90,0.04); border:1px solid rgba(34,168,90,0.12); border-radius:8px; padding:14px 16px; margin-top:14px; }
+    .check-in-label { font-family:var(--font-m); font-size:0.6rem; color:var(--green); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+    .check-in-options { display:flex; gap:8px; }
+    .check-in-btn { flex:1; background:var(--dark); border:1px solid var(--border); color:var(--text-dim); padding:8px 4px; border-radius:4px; font-family:var(--font-m); font-size:0.58rem; text-transform:uppercase; letter-spacing:1px; cursor:pointer; text-align:center; transition:all 0.2s; }
+    .check-in-btn:hover { border-color:var(--green); color:var(--green); }
+    .check-in-btn.selected { background:rgba(34,168,90,0.08); border-color:var(--green); color:var(--green); }
+
+    .empty-goals { text-align:center; padding:48px 32px; color:var(--text-dim); }
+    .empty-goals .empty-icon { font-size:3rem; margin-bottom:16px; }
+    .empty-goals p { font-size:0.88rem; line-height:1.6; }
+
+    /* TOAST */
+    .toast { position:fixed; bottom:28px; right:28px; background:var(--green); color:var(--white); padding:12px 20px; border-radius:6px; font-family:var(--font-m); font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; display:none; z-index:200; }
+
+    @media(max-width:700px) {
+      .page{padding:20px 16px;}
+      .goal-builder{grid-template-columns:1fr;}
+      .nav-links{display:none;}
+      .opt-roadmap::before{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/dashboard.html" class="nav-logo">FORGE<span>IQ</span></a>
+  <div class="nav-links">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/workout-log.html" class="nav-link">Workouts</a>
+    <a href="/nutrition.html" class="nav-link">Nutrition</a>
+    <a href="/challenge.html" class="nav-link">Challenge</a>
+    <a href="/progress.html" class="nav-link">Progress</a>
+    <a href="/goals.html" class="nav-link active">Goals</a>
+  </div>
+  <div class="nav-right">
+    <a href="/profile.html" class="nav-user" id="navUser">?</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <div class="page-title">Your <em>Goals</em> &<br/>Benchmarks</div>
+    <p class="page-sub">SMART goals aligned to your NASM OPT phase. Set the target. Build the benchmarks. Your AI coach adjusts every session around what you are working toward.</p>
+  </div>
+
+  <!-- OPT ROADMAP -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-label">NASM OPT Progression Roadmap</div>
+    <div class="opt-roadmap" id="optRoadmap">
+      <div class="opt-phase-step active" id="phase-1">
+        <div class="phase-circle">1</div>
+        <div class="phase-name">Stabilization<br/>Endurance</div>
+      </div>
+      <div class="opt-phase-step" id="phase-2">
+        <div class="phase-circle">2</div>
+        <div class="phase-name">Strength<br/>Endurance</div>
+      </div>
+      <div class="opt-phase-step" id="phase-3">
+        <div class="phase-circle">3</div>
+        <div class="phase-name">Muscular<br/>Development</div>
+      </div>
+      <div class="opt-phase-step" id="phase-4">
+        <div class="phase-circle">4</div>
+        <div class="phase-name">Maximal<br/>Strength</div>
+      </div>
+      <div class="opt-phase-step" id="phase-5">
+        <div class="phase-circle">5</div>
+        <div class="phase-name">Power</div>
+      </div>
+    </div>
+    <p style="font-size:0.8rem;color:var(--text-dim);margin-top:8px;font-family:var(--font-m);" id="optPhaseNote">Your current phase shapes every goal benchmark below. Goals auto-adjust as you progress.</p>
+  </div>
+
+  <!-- SMART GOAL BUILDER -->
+  <div class="card">
+    <div class="card-label">Build a SMART Goal</div>
+    <div class="smart-pills">
+      <div class="smart-pill s">S — Specific</div>
+      <div class="smart-pill m">M — Measurable</div>
+      <div class="smart-pill a">A — Achievable</div>
+      <div class="smart-pill r">R — Relevant</div>
+      <div class="smart-pill t">T — Time-bound</div>
+    </div>
+    <div class="goal-builder">
+      <div class="gb-field">
+        <label>Goal Category</label>
+        <select class="gb-select" id="goalCategory" onchange="generateAISuggestion()">
+          <option value="">Select category...</option>
+          <option value="strength">Strength — lift heavier, get stronger</option>
+          <option value="body_comp">Body Composition — lose fat, gain muscle</option>
+          <option value="endurance">Endurance — cardio, stamina</option>
+          <option value="weight">Scale Weight</option>
+          <option value="measurement">Body Measurement</option>
+          <option value="habit">Habit & Consistency</option>
+          <option value="nutrition">Nutrition Adherence</option>
+          <option value="glp1">GLP-1 Support Goal</option>
+          <option value="rehab">Injury Rehab Milestone</option>
+        </select>
+      </div>
+      <div class="gb-field">
+        <label>Specific Goal (S)</label>
+        <input class="gb-input" id="goalSpecific" type="text" placeholder="e.g. Squat 225 lbs for 5 reps" />
+      </div>
+      <div class="gb-field">
+        <label>Current Baseline (M)</label>
+        <input class="gb-input" id="goalBaseline" type="text" placeholder="e.g. Currently squatting 185 lbs" />
+      </div>
+      <div class="gb-field">
+        <label>Target Value (M)</label>
+        <input class="gb-input" id="goalTarget" type="text" placeholder="e.g. 225 lbs × 5 reps" />
+      </div>
+      <div class="gb-field">
+        <label>Target Date (T)</label>
+        <input class="gb-input" id="goalDate" type="date" />
+      </div>
+      <div class="gb-field">
+        <label>Why This Goal Matters (R)</label>
+        <input class="gb-input" id="goalWhy" type="text" placeholder="e.g. Build muscle while on GLP-1 medication" />
+      </div>
+      <div class="gb-field gb-full">
+        <label>Notes (optional)</label>
+        <textarea class="gb-textarea" id="goalNotes" placeholder="Any context your AI coach should know — injuries, medications, history..."></textarea>
+      </div>
+    </div>
+
+    <!-- AI Suggestion -->
+    <div class="ai-suggestion" id="aiSuggestion">
+      <div class="ai-sug-label">AI Coach Suggestion — Powered by Claude</div>
+      <div class="ai-sug-text" id="aiSugText"></div>
+    </div>
+
+    <button class="btn-add-goal" onclick="addGoal()">Add Goal & Generate Benchmarks</button>
+  </div>
+
+  <!-- ACTIVE GOALS -->
+  <div class="card">
+    <div class="card-label">Active Goals</div>
+    <div class="goals-list" id="goalsList"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script>
+  const profile = AdaptFit.getProfile();
+  const flags   = profile.flags || [];
+
+  // ── OPT Phase display ────────────────────────────────────────
+  function initOPTPhase() {
+    const level = profile.fitness_level || 'beginner';
+    let phase = 1;
+    if (flags.includes('glp1') || flags.includes('injury')) phase = 1;
+    else if (level === 'intermediate') phase = 2;
+    else if (level === 'advanced')     phase = 3;
+
+    const notes = {
+      1: 'Phase 1 — Stabilization Endurance. Goal benchmarks focus on movement quality, consistency, and foundational strength.',
+      2: 'Phase 2 — Strength Endurance. Benchmarks target functional strength gains and progressive loading.',
+      3: 'Phase 3 — Muscular Development. Benchmarks emphasize hypertrophy, volume, and muscle preservation.',
+      4: 'Phase 4 — Maximal Strength. Benchmarks target 1RM improvements and peak force output.',
+      5: 'Phase 5 — Power. Benchmarks focus on rate of force development and athletic performance.'
+    };
+
+    for (let i = 1; i <= 5; i++) {
+      const el = document.getElementById(`phase-${i}`);
+      if (!el) continue;
+      el.classList.remove('active','done');
+      if (i < phase)      el.classList.add('done');
+      else if (i === phase) el.classList.add('active');
+    }
+    document.getElementById('optPhaseNote').textContent = notes[phase] || notes[1];
+
+    const user = SupabaseClient.getUser();
+    const name = user?.user_metadata?.full_name?.charAt(0).toUpperCase() || 'M';
+    document.getElementById('navUser').textContent = name;
+  }
+
+  // ── AI suggestion on category select ─────────────────────────
+  const SUGGESTIONS = {
+    strength:    'Based on your OPT phase, focus on progressive overload — increase weight by 2.5–5% or add 1 rep every 2 sessions. Track your best set per exercise. NASM recommends 4–6 weeks per phase before advancing.',
+    body_comp:   'Body composition goals require both resistance training AND nutrition alignment. NASM CNC recommendation: track protein daily (0.85–1g/lb), resistance train 3–4x/week, and measure weekly — not daily. Scale weight fluctuates; tape measure tells the truth.',
+    weight:      'Scale weight alone is misleading — especially on GLP-1. Set a measurement alongside this goal. NASM recommendation: aim for 0.5–1 lb/week loss to maximize muscle preservation. Faster is not better.',
+    measurement: 'Measurements are the most accurate progress indicator. NASM recommendation: measure weekly at the same time, same conditions. Waist and hip measurements are the most clinically meaningful markers.',
+    habit:       'Consistency is the foundation of every NASM phase. Research shows 66 days to build an automatic habit. Start with a minimum effective dose — 3 sessions per week is enough to drive adaptation.',
+    nutrition:   'NASM CNC: nutrition adherence is the #1 predictor of body composition change. Set a protein target first, then total calories. Track 5 out of 7 days minimum for meaningful data.',
+    glp1:        'GLP-1 protocol goal: muscle preservation through resistance training is non-negotiable. Set both a training goal (sessions/week) AND a protein goal (1–1.2g/lb). Monitor measurements monthly — scale weight will drop faster than expected.',
+    rehab:       'NASM CES protocol: progress through Inhibit → Lengthen → Activate → Integrate before loading. Set conservative strength benchmarks. Pain-free movement is the first milestone — everything else follows.',
+    endurance:   'NASM PES recommendation: build aerobic base before adding intensity. Track weekly volume (total minutes or miles) before adding speed. Recovery days are programmed, not skipped.'
+  };
+
+  function generateAISuggestion() {
+    const cat = document.getElementById('goalCategory').value;
+    if (!cat) return;
+    const sug = document.getElementById('aiSuggestion');
+    document.getElementById('aiSugText').textContent = SUGGESTIONS[cat] || '';
+    sug.classList.add('show');
+  }
+
+  // ── Benchmark templates by category ──────────────────────────
+  const BENCHMARKS = {
+    strength:    ['Complete 3 sessions this week', 'Log all sets and weights', 'Hit target reps at current weight', 'Add 2.5 lbs next session', 'Complete 4-week progression'],
+    body_comp:   ['Log protein 5 of 7 days', 'Complete 3 resistance sessions', 'Take weekly measurements', 'Hit daily step goal', 'Stay within calorie target 5 days'],
+    weight:      ['Weigh in same time weekly', 'Log food 5 days this week', 'Complete 3 workouts', 'Drink daily water target', 'No more than 1 lb/week loss target'],
+    measurement: ['Measure waist weekly', 'Measure hips weekly', 'Log in progress tracker', 'Compare monthly photos', 'Track with tape not scale'],
+    habit:       ['Show up 3x this week', 'Log every session', '14-day consistency streak', '30-day consistency streak', 'Never miss Monday'],
+    nutrition:   ['Hit protein target 5 days', 'Log breakfast daily', 'Meal prep Sunday', 'Drink water goal daily', 'Zero fast food this week'],
+    glp1:        ['Resistance train 3x this week', 'Hit 1g+ protein per lb', 'Log body measurements', 'Take electrolytes daily', 'No skipped protein meals'],
+    rehab:       ['Complete mobility work daily', 'Pain-free through ROM', 'Add resistance band work', 'Full session no pain', 'Clear for next phase'],
+    endurance:   ['Complete cardio session', 'Add 5 min this week', 'Track heart rate zones', 'Log miles/minutes', 'Maintain target pace']
+  };
+
+  // ── Storage ───────────────────────────────────────────────────
+  function getGoals() {
+    try { return JSON.parse(localStorage.getItem('forgeiq_goals') || '[]'); }
+    catch { return []; }
+  }
+  function saveGoals(g) { localStorage.setItem('forgeiq_goals', JSON.stringify(g)); }
+
+  // ── Add goal ──────────────────────────────────────────────────
+  function addGoal() {
+    const cat      = document.getElementById('goalCategory').value;
+    const specific = document.getElementById('goalSpecific').value.trim();
+    const baseline = document.getElementById('goalBaseline').value.trim();
+    const target   = document.getElementById('goalTarget').value.trim();
+    const date     = document.getElementById('goalDate').value;
+    const why      = document.getElementById('goalWhy').value.trim();
+    const notes    = document.getElementById('goalNotes').value.trim();
+
+    if (!cat || !specific) { showToast('Add a category and specific goal'); return; }
+
+    const goals = getGoals();
+    const benchmarks = (BENCHMARKS[cat] || []).map(b => ({ label: b, done: false }));
+
+    goals.push({
+      id:        Date.now(),
+      cat, specific, baseline, target, date, why, notes,
+      benchmarks,
+      progress:  0,
+      checkIns:  [],
+      created:   new Date().toISOString().split('T')[0]
+    });
+    saveGoals(goals);
+
+    // Reset form
+    ['goalCategory','goalSpecific','goalBaseline','goalTarget','goalDate','goalWhy','goalNotes'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('aiSuggestion').classList.remove('show');
+
+    renderGoals();
+    showToast('Goal added with benchmarks ✓');
+  }
+
+  // ── Render goals ──────────────────────────────────────────────
+  const COLORS = ['gold','green','blue','purple','gold','green'];
+  const CAT_ICONS = { strength:'🏋️', body_comp:'🔥', weight:'⚖️', measurement:'📏', habit:'🎯', nutrition:'🥗', glp1:'💊', rehab:'🦾', endurance:'🏃' };
+  const CAT_LABELS = { strength:'Strength', body_comp:'Body Composition', weight:'Weight', measurement:'Measurements', habit:'Habit', nutrition:'Nutrition', glp1:'GLP-1 Goal', rehab:'Injury Rehab', endurance:'Endurance' };
+
+  function renderGoals() {
+    const goals = getGoals();
+    const wrap  = document.getElementById('goalsList');
+    if (!goals.length) {
+      wrap.innerHTML = `<div class="empty-goals"><div class="empty-icon">🎯</div><p>No goals set yet.<br/>Use the builder above to set your first SMART goal and generate NASM-aligned benchmarks.</p></div>`;
+      return;
+    }
+    wrap.innerHTML = goals.map((g, gi) => {
+      const doneBenchmarks = g.benchmarks.filter(b => b.done).length;
+      const totalBenchmarks = g.benchmarks.length;
+      const pct = totalBenchmarks ? Math.round((doneBenchmarks / totalBenchmarks) * 100) : 0;
+      const color = COLORS[gi % COLORS.length];
+      const daysLeft = g.date ? Math.ceil((new Date(g.date) - new Date()) / (1000*60*60*24)) : null;
+      const lastCheckIn = g.checkIns?.slice(-1)[0];
+
+      return `
+      <div class="goal-card">
+        <div class="goal-card-top">
+          <div>
+            <div class="goal-name">${CAT_ICONS[g.cat] || '🎯'} ${g.specific}</div>
+            <div class="goal-meta">
+              ${CAT_LABELS[g.cat] || g.cat}
+              ${g.target ? ` · Target: ${g.target}` : ''}
+              ${daysLeft !== null ? ` · ${daysLeft > 0 ? daysLeft + ' days left' : 'Past target date'}` : ''}
+            </div>
+          </div>
+          <div class="goal-actions">
+            <button class="goal-check-btn" onclick="openCheckIn(${gi})">Check In</button>
+            <button class="goal-del-btn" onclick="deleteGoal(${gi})">✕</button>
+          </div>
+        </div>
+
+        <div class="goal-progress-bar">
+          <div class="goal-progress-fill ${color}" style="width:${pct}%"></div>
+        </div>
+        <div class="goal-progress-labels">
+          <span>${doneBenchmarks} of ${totalBenchmarks} benchmarks complete</span>
+          <span>${pct}%</span>
+        </div>
+
+        ${g.why ? `<div style="font-size:0.78rem;color:var(--text-dim);margin-top:10px;font-style:italic;">"${g.why}"</div>` : ''}
+
+        <div class="goal-benchmarks">
+          <div class="benchmark-label">NASM-Aligned Benchmarks</div>
+          <div class="benchmarks-row">
+            ${g.benchmarks.map((b, bi) => `
+              <div class="benchmark-chip ${b.done ? 'done' : 'todo'}" onclick="toggleBenchmark(${gi},${bi})">
+                ${b.done ? '✓' : '○'} ${b.label}
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <div class="check-in-section" id="checkIn-${gi}" style="display:none;">
+          <div class="check-in-label">Weekly Check-In — How is this goal going?</div>
+          <div class="check-in-options">
+            <div class="check-in-btn" onclick="logCheckIn(${gi},'on_track',this)">On Track 🟢</div>
+            <div class="check-in-btn" onclick="logCheckIn(${gi},'close',this)">Getting There 🟡</div>
+            <div class="check-in-btn" onclick="logCheckIn(${gi},'struggling',this)">Struggling 🔴</div>
+            <div class="check-in-btn" onclick="logCheckIn(${gi},'crushed',this)">Crushed It 🏆</div>
+          </div>
+          ${lastCheckIn ? `<div style="font-family:var(--font-m);font-size:0.6rem;color:var(--text-dim);margin-top:8px;">Last check-in: ${lastCheckIn.date} — ${lastCheckIn.status.replace('_',' ')}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function toggleBenchmark(gi, bi) {
+    const goals = getGoals();
+    goals[gi].benchmarks[bi].done = !goals[gi].benchmarks[bi].done;
+    goals[gi].progress = Math.round((goals[gi].benchmarks.filter(b=>b.done).length / goals[gi].benchmarks.length) * 100);
+    saveGoals(goals);
+    renderGoals();
+  }
+
+  function deleteGoal(gi) {
+    if (!confirm('Delete this goal?')) return;
+    const goals = getGoals();
+    goals.splice(gi, 1);
+    saveGoals(goals);
+    renderGoals();
+    showToast('Goal removed');
+  }
+
+  function openCheckIn(gi) {
+    const el = document.getElementById(`checkIn-${gi}`);
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function logCheckIn(gi, status, btn) {
+    const goals = getGoals();
+    if (!goals[gi].checkIns) goals[gi].checkIns = [];
+    goals[gi].checkIns.push({ date: new Date().toISOString().split('T')[0], status });
+    saveGoals(goals);
+    document.querySelectorAll(`#checkIn-${gi} .check-in-btn`).forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    showToast('Check-in logged ✓');
+    setTimeout(() => renderGoals(), 800);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
+  }
+
+  initOPTPhase();
+  renderGoals();
+</script>
+</body>
+</html>
