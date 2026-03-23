@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Live Feed & Content</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
+      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
+      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
+      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#e74c3c;
+      --yt-red:#FF0000;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+    }
+    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
+
+    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .nav-logo { font-family:var(--font-d); font-size:1.5rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:4px; }
+    .nav-link { color:var(--text-dim); text-decoration:none; font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:7px 12px; border-radius:4px; transition:all 0.2s; font-family:var(--font-m); }
+    .nav-link:hover { color:var(--white); background:rgba(255,255,255,0.04); }
+    .nav-link.active { color:var(--gold); background:rgba(201,168,76,0.06); }
+    .nav-user { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:0.85rem; color:var(--black); text-decoration:none; }
+
+    .page { max-width:1100px; margin:0 auto; padding:32px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:20px; }
+    .card-label { font-family:var(--font-m); font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:3px; margin-bottom:16px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { margin-bottom:32px; }
+    .page-title { font-family:var(--font-d); font-size:2.8rem; letter-spacing:1px; color:var(--white); line-height:1; margin-bottom:8px; }
+    .page-title em { font-style:normal; color:var(--gold); }
+    .page-sub { font-size:0.92rem; color:var(--text-dim); line-height:1.6; max-width:560px; }
+
+    /* ── CHANNEL BANNER ── */
+    .channel-banner { background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(201,168,76,0.02)); border:1px solid rgba(201,168,76,0.15); border-radius:14px; padding:28px; margin-bottom:24px; display:flex; align-items:center; gap:24px; }
+    .channel-avatar { width:72px; height:72px; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:1.6rem; color:var(--black); flex-shrink:0; }
+    .channel-info { flex:1; }
+    .channel-name { font-family:var(--font-d); font-size:1.8rem; letter-spacing:2px; color:var(--white); margin-bottom:4px; }
+    .channel-handle { font-family:var(--font-m); font-size:0.7rem; color:var(--text-dim); margin-bottom:10px; }
+    .channel-desc { font-size:0.85rem; color:var(--text-dim); line-height:1.6; }
+    .channel-actions { display:flex; gap:10px; flex-direction:column; align-items:flex-end; }
+    .btn-subscribe { background:var(--yt-red); color:var(--white); border:none; border-radius:6px; padding:12px 24px; font-family:var(--font-b); font-weight:700; font-size:0.82rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; text-decoration:none; display:flex; align-items:center; gap:8px; }
+    .btn-subscribe:hover { background:#cc0000; }
+    .coming-soon-badge { background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.15); color:var(--gold); padding:4px 10px; border-radius:4px; font-family:var(--font-m); font-size:0.58rem; text-transform:uppercase; letter-spacing:1px; }
+
+    /* ── FEATURED VIDEO ── */
+    .featured-section { margin-bottom:28px; }
+    .featured-embed { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:10px; background:var(--dark); }
+    .featured-embed iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px; }
+    .featured-meta { margin-top:14px; }
+    .featured-title { font-family:var(--font-d); font-size:1.4rem; letter-spacing:1px; color:var(--white); margin-bottom:6px; }
+    .featured-desc { font-size:0.85rem; color:var(--text-dim); line-height:1.6; }
+
+    /* ── VIDEO GRID ── */
+    .video-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
+    .video-thumb { background:var(--dark); border:1px solid var(--border); border-radius:10px; overflow:hidden; cursor:pointer; transition:all 0.2s; text-decoration:none; display:block; }
+    .video-thumb:hover { border-color:var(--gold); transform:translateY(-2px); }
+    .thumb-img { position:relative; padding-bottom:56.25%; background:var(--muted); overflow:hidden; }
+    .thumb-img img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; }
+    .thumb-placeholder { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; }
+    .thumb-play { width:44px; height:44px; background:rgba(255,0,0,0.85); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .thumb-play::after { content:'▶'; color:white; font-size:1rem; margin-left:3px; }
+    .thumb-label { font-family:var(--font-m); font-size:0.6rem; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1px; }
+    .thumb-info { padding:14px; }
+    .thumb-title { font-size:0.85rem; font-weight:600; color:var(--white); margin-bottom:6px; line-height:1.4; }
+    .thumb-meta { font-family:var(--font-m); font-size:0.6rem; color:var(--text-dim); display:flex; gap:10px; }
+    .thumb-tag { background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.1); color:var(--gold); padding:2px 7px; border-radius:3px; font-size:0.58rem; }
+
+    /* ── CONTENT CATEGORIES ── */
+    .category-tabs { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+    .cat-tab { background:var(--dark); border:1px solid var(--border); color:var(--text-dim); padding:7px 16px; border-radius:100px; font-family:var(--font-m); font-size:0.62rem; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:all 0.2s; }
+    .cat-tab:hover { border-color:var(--muted); }
+    .cat-tab.active { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.06); }
+
+    /* ── SOCIAL LINKS ── */
+    .social-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px; }
+    .social-card { background:var(--dark); border:1px solid var(--border); border-radius:10px; padding:20px; text-align:center; text-decoration:none; transition:all 0.2s; }
+    .social-card:hover { transform:translateY(-2px); }
+    .social-card.yt:hover  { border-color:var(--yt-red); }
+    .social-card.ig:hover  { border-color:#e1306c; }
+    .social-card.fb:hover  { border-color:#1877f2; }
+    .social-icon { font-size:2rem; margin-bottom:10px; display:block; }
+    .social-name { font-family:var(--font-d); font-size:1.1rem; letter-spacing:1px; color:var(--white); margin-bottom:4px; }
+    .social-handle { font-family:var(--font-m); font-size:0.62rem; color:var(--text-dim); margin-bottom:10px; }
+    .social-action { font-family:var(--font-m); font-size:0.6rem; text-transform:uppercase; letter-spacing:1px; }
+    .social-card.yt .social-action  { color:var(--yt-red); }
+    .social-card.ig .social-action  { color:#e1306c; }
+    .social-card.fb .social-action  { color:#1877f2; }
+
+    /* ── NEWSLETTER ── */
+    .newsletter { background:rgba(201,168,76,0.04); border:1px solid rgba(201,168,76,0.12); border-radius:12px; padding:28px; text-align:center; margin-bottom:20px; }
+    .newsletter h3 { font-family:var(--font-d); font-size:1.8rem; letter-spacing:1px; color:var(--white); margin-bottom:8px; }
+    .newsletter p { font-size:0.85rem; color:var(--text-dim); margin-bottom:20px; line-height:1.6; }
+    .newsletter-form { display:flex; gap:10px; max-width:400px; margin:0 auto; }
+    .newsletter-input { flex:1; background:var(--dark); border:1px solid var(--border); border-radius:6px; color:var(--white); font-family:var(--font-b); font-size:0.88rem; padding:11px 14px; outline:none; transition:border-color 0.2s; }
+    .newsletter-input:focus { border-color:var(--gold); }
+    .newsletter-input::placeholder { color:var(--muted); }
+    .btn-subscribe-email { background:var(--gold); color:var(--black); border:none; border-radius:6px; padding:11px 20px; font-family:var(--font-b); font-weight:700; font-size:0.82rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+    .btn-subscribe-email:hover { background:var(--gold-lt); }
+
+    /* ── COMING SOON OVERLAY ── */
+    .coming-soon { position:relative; }
+    .coming-soon-overlay { position:absolute; inset:0; background:rgba(8,8,9,0.75); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; backdrop-filter:blur(2px); z-index:5; }
+    .coming-soon-overlay .cs-icon { font-size:2.5rem; }
+    .coming-soon-overlay .cs-text { font-family:var(--font-d); font-size:1.4rem; letter-spacing:2px; color:var(--gold); }
+    .coming-soon-overlay .cs-sub { font-family:var(--font-m); font-size:0.62rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
+
+    @media(max-width:700px) {
+      .page{padding:20px 16px;}
+      .video-grid{grid-template-columns:1fr;}
+      .social-grid{grid-template-columns:1fr;}
+      .channel-banner{flex-direction:column;text-align:center;}
+      .channel-actions{align-items:center;}
+      .nav-links{display:none;}
+      .newsletter-form{flex-direction:column;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/dashboard.html" class="nav-logo">FORGE<span>IQ</span></a>
+  <div class="nav-links">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/workout-log.html" class="nav-link">Workouts</a>
+    <a href="/nutrition.html" class="nav-link">Nutrition</a>
+    <a href="/challenge.html" class="nav-link">Challenge</a>
+    <a href="/feed.html" class="nav-link active">Live Feed</a>
+    <a href="/goals.html" class="nav-link">Goals</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="/profile.html" class="nav-user" id="navUser">M</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-title">FORGEIQ <em>Live</em><br/>Content Hub</div>
+    <p class="page-sub">Workout demos, coaching content, GLP-1 education, and real transformation stories — straight from Dr. Michael & Debora Lovato.</p>
+  </div>
+
+  <!-- CHANNEL BANNER -->
+  <div class="channel-banner">
+    <div class="channel-avatar">FQ</div>
+    <div class="channel-info">
+      <div class="channel-name">FORGEIQ</div>
+      <div class="channel-handle">@FORGEIQ · YouTube Channel — Coming Soon</div>
+      <div class="channel-desc">Workout tutorials with NASM form cues. GLP-1 fitness education. Real transformation stories. Debora's skin & wellness content. Built by coaches who lived it.</div>
+    </div>
+    <div class="channel-actions">
+      <a href="https://youtube.com/@FORGEIQ" target="_blank" rel="noopener noreferrer" class="btn-subscribe">
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="white"><path d="M19.6 2.2A2.5 2.5 0 0017.8.4C16.3 0 10 0 10 0S3.7 0 2.2.4A2.5 2.5 0 00.4 2.2C0 3.7 0 7 0 7s0 3.3.4 4.8A2.5 2.5 0 002.2 13.6C3.7 14 10 14 10 14s6.3 0 7.8-.4a2.5 2.5 0 001.8-1.8C20 10.3 20 7 20 7s0-3.3-.4-4.8zM8 10V4l5.2 3L8 10z"/></svg>
+        Subscribe on YouTube
+      </a>
+      <div class="coming-soon-badge">Channel launching soon</div>
+    </div>
+  </div>
+
+  <!-- CATEGORY TABS -->
+  <div class="category-tabs">
+    <div class="cat-tab active" onclick="filterCategory('all',this)">All Content</div>
+    <div class="cat-tab" onclick="filterCategory('workout',this)">Workouts</div>
+    <div class="cat-tab" onclick="filterCategory('glp1',this)">GLP-1 Education</div>
+    <div class="cat-tab" onclick="filterCategory('nutrition',this)">Nutrition</div>
+    <div class="cat-tab" onclick="filterCategory('skin',this)">Skin & Wellness</div>
+    <div class="cat-tab" onclick="filterCategory('mindset',this)">Mindset</div>
+  </div>
+
+  <!-- FEATURED VIDEO -->
+  <div class="card featured-section">
+    <div class="card-label">Featured — Watch Now</div>
+    <div class="coming-soon" id="featuredSection">
+      <div class="featured-embed">
+        <!-- SWAP THIS: Replace VIDEO_ID with your YouTube video ID when ready -->
+        <!-- Example: https://www.youtube.com/watch?v=VIDEO_ID -->
+        <iframe
+          src="https://www.youtube.com/embed/nEQQle9-0NA?rel=0&modestbranding=1"
+          allowfullscreen
+          loading="lazy"
+          title="FORGEIQ — How to Squat with Perfect Form">
+        </iframe>
+      </div>
+      <div class="featured-meta">
+        <div class="featured-title">Perfect Squat Form — NASM Protocol</div>
+        <div class="featured-desc">Dr. Michael Lovato breaks down the squat from setup to lockout — covering all 5 NASM form cues, common mistakes, and modifications for GLP-1 clients and those with knee concerns.</div>
+      </div>
+      <div class="coming-soon-overlay">
+        <div class="cs-icon">🎬</div>
+        <div class="cs-text">Coming Soon</div>
+        <div class="cs-sub">Your FORGEIQ videos will appear here</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO GRID -->
+  <div class="card">
+    <div class="card-label">Latest Videos</div>
+    <div class="video-grid" id="videoGrid">
+
+      <div class="video-thumb coming-soon" style="position:relative;" data-cat="workout">
+        <div class="thumb-img">
+          <div class="thumb-placeholder">
+            <div class="thumb-play"></div>
+            <div class="thumb-label">Workout</div>
+          </div>
+        </div>
+        <div class="thumb-info">
+          <div class="thumb-title">Deadlift Masterclass — From Setup to Lockout</div>
+          <div class="thumb-meta"><span>Dr. Michael Lovato</span><span class="thumb-tag">Strength</span></div>
+        </div>
+        <div class="coming-soon-overlay"><div class="cs-icon">🏋️</div><div class="cs-text">Coming Soon</div></div>
+      </div>
+
+      <div class="video-thumb coming-soon" style="position:relative;" data-cat="glp1">
+        <div class="thumb-img">
+          <div class="thumb-placeholder">
+            <div class="thumb-play"></div>
+            <div class="thumb-label">GLP-1</div>
+          </div>
+        </div>
+        <div class="thumb-info">
+          <div class="thumb-title">GLP-1 & Muscle Loss — What Nobody Tells You</div>
+          <div class="thumb-meta"><span>Dr. Michael Lovato</span><span class="thumb-tag">GLP-1</span></div>
+        </div>
+        <div class="coming-soon-overlay"><div class="cs-icon">💊</div><div class="cs-text">Coming Soon</div></div>
+      </div>
+
+      <div class="video-thumb coming-soon" style="position:relative;" data-cat="skin">
+        <div class="thumb-img">
+          <div class="thumb-placeholder">
+            <div class="thumb-play"></div>
+            <div class="thumb-label">Wellness</div>
+          </div>
+        </div>
+        <div class="thumb-info">
+          <div class="thumb-title">Skin Laxity After Weight Loss — Debora Explains</div>
+          <div class="thumb-meta"><span>Debora Lovato</span><span class="thumb-tag">Skin</span></div>
+        </div>
+        <div class="coming-soon-overlay"><div class="cs-icon">✨</div><div class="cs-text">Coming Soon</div></div>
+      </div>
+
+      <div class="video-thumb coming-soon" style="position:relative;" data-cat="nutrition">
+        <div class="thumb-img">
+          <div class="thumb-placeholder">
+            <div class="thumb-play"></div>
+            <div class="thumb-label">Nutrition</div>
+          </div>
+        </div>
+        <div class="thumb-info">
+          <div class="thumb-title">Protein Timing for GLP-1 Clients — NASM CNC Protocol</div>
+          <div class="thumb-meta"><span>Debora Lovato</span><span class="thumb-tag">Nutrition</span></div>
+        </div>
+        <div class="coming-soon-overlay"><div class="cs-icon">🥗</div><div class="cs-text">Coming Soon</div></div>
+      </div>
+
+      <div class="video-thumb coming-soon" style="position:relative;" data-cat="workout">
+        <div class="thumb-img">
+          <div class="thumb-placeholder">
+            <div class="thumb-play"></div>
+            <div class="thumb-label">Workout</div>
+          </div>
+        </div>
+        <div class="thumb-info">
+          <div class="thumb-title">Full Body NASM Phase 1 Workout — Beginner Friendly</div>
+          <div class="thumb-meta"><span>Dr. Michael Lovato</span><span class="thumb-tag">NASM OPT</span></div>
+        </div>
+        <div class="coming-soon-overlay"><div class="cs-icon">🎯</div><div class="cs-text">Coming Soon</div></div>
+      </div>
+
+      <div class="video-thumb coming-soon" style="position:relative;" data-cat="mindset">
+        <div class="thumb-img">
+          <div class="thumb-placeholder">
+            <div class="thumb-play"></div>
+            <div class="thumb-label">Mindset</div>
+          </div>
+        </div>
+        <div class="thumb-info">
+          <div class="thumb-title">98 lbs Lost — My Story of Sobriety, PTSD & Discipline</div>
+          <div class="thumb-meta"><span>Dr. Michael Lovato</span><span class="thumb-tag">Mindset</span></div>
+        </div>
+        <div class="coming-soon-overlay"><div class="cs-icon">🎖️</div><div class="cs-text">Coming Soon</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SOCIAL LINKS -->
+  <div class="card">
+    <div class="card-label">Follow FORGEIQ</div>
+    <div class="social-grid">
+      <a href="https://youtube.com/@FORGEIQ" target="_blank" rel="noopener noreferrer" class="social-card yt">
+        <span class="social-icon">▶️</span>
+        <div class="social-name">YouTube</div>
+        <div class="social-handle">@FORGEIQ</div>
+        <div class="social-action">Subscribe →</div>
+      </a>
+      <a href="https://instagram.com/forgeiq" target="_blank" rel="noopener noreferrer" class="social-card ig">
+        <span class="social-icon">📸</span>
+        <div class="social-name">Instagram</div>
+        <div class="social-handle">@forgeiq</div>
+        <div class="social-action">Follow →</div>
+      </a>
+      <a href="https://facebook.com/forgeiq" target="_blank" rel="noopener noreferrer" class="social-card fb">
+        <span class="social-icon">👥</span>
+        <div class="social-name">Facebook</div>
+        <div class="social-handle">FORGEIQ Community</div>
+        <div class="social-action">Join →</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- EMAIL NEWSLETTER -->
+  <div class="newsletter">
+    <h3>Never Miss a Drop</h3>
+    <p>New workouts, GLP-1 updates, and coaching content delivered to your inbox. No spam. Unsubscribe anytime.</p>
+    <div class="newsletter-form">
+      <input class="newsletter-input" type="email" id="newsletterEmail" placeholder="your@email.com" />
+      <button class="btn-subscribe-email" onclick="subscribeEmail()">Subscribe</button>
+    </div>
+    <p style="font-size:0.72rem;color:var(--muted);margin-top:12px;font-family:var(--font-m);">
+      By subscribing you agree to our privacy policy. We never sell your data.
+    </p>
+  </div>
+
+</div>
+
+<!-- Crisp Live Chat -->
+<script type="text/javascript">
+  window.$crisp=[];
+  window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";
+  (function(){
+    var d=document;
+    var s=d.createElement("script");
+    s.src="https://client.crisp.chat/l.js";
+    s.async=1;
+    d.getElementsByTagName("head")[0].appendChild(s);
+  })();
+</script>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script>
+  const user = SupabaseClient.getUser();
+  document.getElementById('navUser').textContent = user?.user_metadata?.full_name?.charAt(0).toUpperCase() || 'M';
+
+  function filterCategory(cat, el) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.video-thumb').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  function subscribeEmail() {
+    const email = document.getElementById('newsletterEmail').value.trim();
+    if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
+    // Store locally — connect to your email service (Mailchimp, ConvertKit, etc.) later
+    const subs = JSON.parse(localStorage.getItem('forgeiq_subscribers') || '[]');
+    if (!subs.includes(email)) { subs.push(email); localStorage.setItem('forgeiq_subscribers', JSON.stringify(subs)); }
+    document.getElementById('newsletterEmail').value = '';
+    alert('You are subscribed! We will be in touch when new content drops.');
+  }
+
+  // ── TO SWAP IN YOUR REAL YOUTUBE CHANNEL ─────────────────────────
+  // When your channel is live, update these three things:
+  //
+  // 1. Channel handle in channel-banner: @FORGEIQ → @YourRealHandle
+  // 2. Featured video embed src: replace VIDEO_ID with your video ID
+  // 3. Remove the .coming-soon-overlay divs from your real videos
+  // 4. Social links: update href to your real YouTube/Instagram/Facebook URLs
+  //
+  // YouTube Video ID is the part after ?v= in the URL
+  // Example: https://youtube.com/watch?v=ABC123 → ID is ABC123
+</script>
+</body>
+</html>
