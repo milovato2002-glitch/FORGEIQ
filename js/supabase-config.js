@@ -11,8 +11,10 @@
 // ─────────────────────────────────────────────────────────────────
 
 const FORGEIQ_CONFIG = {
-  supabaseUrl:  window.__SUPABASE_URL__  || '',
-  supabaseKey:  window.__SUPABASE_KEY__  || '',
+  
+  supabaseUrl:  'https://fxbzjuefctqsoypwhlha.supabase.co',
+  supabaseKey:  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4YnpqdWVmY3Rxc295cHdobGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMTUwMzcsImV4cCI6MjA4OTc5MTAzN30.QfKJ41fhuwd8-3e354jMlgUkh_Z7uDDWxl6xgTyF6Oc',
+
   appName:      'FORGEIQ',
   appVersion:   '1.0.0',
   supportEmail: 'support@forgeiq.app',
