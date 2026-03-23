@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Book a Session</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- Calendly Widget CSS -->
+  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
+      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
+      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
+      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#c0392b;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+    }
+    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
+
+    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .nav-logo { font-family:var(--font-d); font-size:1.5rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:4px; }
+    .nav-link { color:var(--text-dim); text-decoration:none; font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:7px 12px; border-radius:4px; transition:all 0.2s; font-family:var(--font-m); }
+    .nav-link:hover { color:var(--white); background:rgba(255,255,255,0.04); }
+    .nav-link.active { color:var(--gold); background:rgba(201,168,76,0.06); }
+    .nav-user { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:0.85rem; color:var(--black); text-decoration:none; }
+
+    .page { max-width:1100px; margin:0 auto; padding:32px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:20px; }
+    .card-label { font-family:var(--font-m); font-size:0.62rem; color:var(--gold); text-transform:uppercase; letter-spacing:3px; margin-bottom:16px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { margin-bottom:32px; }
+    .page-title { font-family:var(--font-d); font-size:2.8rem; letter-spacing:1px; color:var(--white); line-height:1; margin-bottom:8px; }
+    .page-title em { font-style:normal; color:var(--gold); }
+    .page-sub { font-size:0.92rem; color:var(--text-dim); line-height:1.6; max-width:560px; }
+
+    /* ── COACHES ── */
+    .coaches-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px; }
+    .coach-card { background:var(--dark); border:1px solid var(--border); border-radius:12px; padding:22px; display:flex; gap:16px; align-items:flex-start; }
+    .coach-card.michael { border-color:rgba(201,168,76,0.2); }
+    .coach-card.debora  { border-color:rgba(142,95,191,0.2); }
+    .coach-av { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:1.3rem; flex-shrink:0; }
+    .coach-av.m { background:linear-gradient(135deg,var(--gold-dim),var(--gold)); color:var(--black); }
+    .coach-av.d { background:linear-gradient(135deg,#5a3d8a,var(--purple)); color:var(--white); }
+    .coach-name { font-weight:700; font-size:0.95rem; color:var(--white); margin-bottom:3px; }
+    .coach-title { font-family:var(--font-m); font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .coach-creds { font-size:0.78rem; color:var(--text-dim); line-height:1.6; }
+    .coach-tag { display:inline-block; margin-top:8px; padding:3px 8px; border-radius:3px; font-family:var(--font-m); font-size:0.55rem; text-transform:uppercase; letter-spacing:1px; }
+    .coach-tag.gold   { background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.15); color:var(--gold); }
+    .coach-tag.purple { background:rgba(142,95,191,0.08); border:1px solid rgba(142,95,191,0.15); color:#bf7fe0; }
+
+    /* ── SERVICE CARDS ── */
+    .services-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:28px; }
+    .service-card { background:var(--dark); border:2px solid var(--border); border-radius:12px; padding:22px; cursor:pointer; transition:all 0.25s; position:relative; }
+    .service-card:hover { transform:translateY(-3px); }
+    .service-card.michael-svc:hover { border-color:var(--gold); }
+    .service-card.debora-svc:hover  { border-color:var(--purple); }
+    .service-card.couple-svc:hover  { border-color:var(--green); }
+    .service-card.free-svc:hover    { border-color:var(--green); }
+    .service-card.selected.michael-svc { border-color:var(--gold); background:rgba(201,168,76,0.04); }
+    .service-card.selected.debora-svc  { border-color:var(--purple); background:rgba(142,95,191,0.04); }
+    .service-card.selected.couple-svc  { border-color:var(--green); background:rgba(34,168,90,0.04); }
+    .service-card.selected.free-svc    { border-color:var(--green); background:rgba(34,168,90,0.04); }
+    .service-icon { font-size:2rem; margin-bottom:12px; display:block; }
+    .service-name { font-weight:700; font-size:0.95rem; color:var(--white); margin-bottom:4px; }
+    .service-coach { font-family:var(--font-m); font-size:0.6rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
+    .service-coach.m { color:var(--gold); }
+    .service-coach.d { color:#bf7fe0; }
+    .service-coach.b { color:var(--green); }
+    .service-desc { font-size:0.8rem; color:var(--text-dim); line-height:1.6; margin-bottom:14px; }
+    .service-meta { display:flex; justify-content:space-between; align-items:center; }
+    .service-duration { font-family:var(--font-m); font-size:0.62rem; color:var(--text-dim); }
+    .service-price { font-family:var(--font-d); font-size:1.2rem; letter-spacing:1px; }
+    .service-price.gold   { color:var(--gold); }
+    .service-price.purple { color:#bf7fe0; }
+    .service-price.green  { color:var(--green); }
+    .service-selected-badge { position:absolute; top:-10px; right:12px; background:var(--green); color:var(--white); padding:2px 10px; border-radius:3px; font-family:var(--font-m); font-size:0.55rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; display:none; }
+    .service-card.selected .service-selected-badge { display:block; }
+
+    /* ── FREE BADGE ── */
+    .free-badge { background:rgba(34,168,90,0.08); border:1px solid rgba(34,168,90,0.15); color:var(--green); padding:2px 8px; border-radius:3px; font-family:var(--font-m); font-size:0.58rem; text-transform:uppercase; letter-spacing:1px; }
+
+    /* ── CALENDLY SECTION ── */
+    .booking-section { display:none; }
+    .booking-section.show { display:block; animation:fadeIn 0.3s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);} }
+    .booking-header { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+    .booking-service-name { font-family:var(--font-d); font-size:1.6rem; letter-spacing:1px; color:var(--white); }
+    .booking-coach-name { font-family:var(--font-m); font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
+    .calendly-container { background:var(--white); border-radius:10px; overflow:hidden; min-height:650px; }
+    .calendly-placeholder { background:var(--dark); border:1px solid var(--border); border-radius:10px; min-height:500px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px; text-align:center; padding:40px; }
+    .cal-placeholder-icon { font-size:3rem; }
+    .cal-placeholder-title { font-family:var(--font-d); font-size:1.8rem; letter-spacing:1px; color:var(--white); }
+    .cal-placeholder-sub { font-size:0.85rem; color:var(--text-dim); line-height:1.6; max-width:400px; }
+    .cal-placeholder-link { display:inline-block; background:var(--gold); color:var(--black); padding:12px 28px; border-radius:6px; font-family:var(--font-b); font-weight:700; font-size:0.82rem; letter-spacing:1px; text-transform:uppercase; text-decoration:none; transition:all 0.2s; margin-top:8px; }
+    .cal-placeholder-link:hover { background:var(--gold-lt); }
+
+    /* ── WHAT TO EXPECT ── */
+    .expect-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:20px; }
+    .expect-card { background:var(--dark); border:1px solid var(--border); border-radius:8px; padding:16px; text-align:center; }
+    .expect-icon { font-size:1.6rem; margin-bottom:8px; display:block; }
+    .expect-title { font-weight:600; font-size:0.85rem; color:var(--white); margin-bottom:4px; }
+    .expect-desc { font-size:0.75rem; color:var(--text-dim); line-height:1.5; }
+
+    /* ── FAQ ── */
+    .faq-list { display:flex; flex-direction:column; gap:10px; }
+    .faq-item { background:var(--dark); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+    .faq-q { padding:16px 20px; font-weight:600; font-size:0.88rem; color:var(--white); cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background 0.2s; }
+    .faq-q:hover { background:rgba(255,255,255,0.02); }
+    .faq-q .faq-arrow { color:var(--gold); transition:transform 0.2s; font-size:0.75rem; }
+    .faq-q.open .faq-arrow { transform:rotate(180deg); }
+    .faq-a { padding:0 20px; max-height:0; overflow:hidden; transition:all 0.3s ease; font-size:0.83rem; color:var(--text-dim); line-height:1.7; }
+    .faq-a.open { padding:0 20px 16px; max-height:200px; }
+
+    @media(max-width:900px) {
+      .services-grid{grid-template-columns:1fr 1fr;}
+      .coaches-row{grid-template-columns:1fr;}
+      .expect-grid{grid-template-columns:1fr;}
+    }
+    @media(max-width:600px) {
+      .page{padding:20px 16px;}
+      .services-grid{grid-template-columns:1fr;}
+      .nav-links{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/dashboard.html" class="nav-logo">FORGE<span>IQ</span></a>
+  <div class="nav-links">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/workout-log.html" class="nav-link">Workouts</a>
+    <a href="/nutrition.html" class="nav-link">Nutrition</a>
+    <a href="/feed.html" class="nav-link">Live Feed</a>
+    <a href="/booking.html" class="nav-link active">Book a Session</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="/profile.html" class="nav-user" id="navUser">M</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-title">Book a <em>Session</em><br/>With Your Coaches</div>
+    <p class="page-sub">Real coaching from real people who have lived it. Select a service below and book directly on our calendar — no middleman, no gatekeeping.</p>
+  </div>
+
+  <!-- COACHES -->
+  <div class="coaches-row">
+    <div class="coach-card michael">
+      <div class="coach-av m">ML</div>
+      <div>
+        <div class="coach-name">Dr. Michael P. Lovato, EdD</div>
+        <div class="coach-title">Co-Founder · Head Strength Coach</div>
+        <div class="coach-creds">EdD Organizational Leadership · Army Combat Engineer · NASM CNC/CES/PES · 30+ AI Certifications · 98 lbs lost · DEKA FIT competitor · Superintendent · AILG CEO</div>
+        <span class="coach-tag gold">Strength · GLP-1 · Veterans · Injury Rehab</span>
+      </div>
+    </div>
+    <div class="coach-card debora">
+      <div class="coach-av d">DL</div>
+      <div>
+        <div class="coach-name">Debora Lovato</div>
+        <div class="coach-title">Co-Founder · Nutrition & Wellness Director</div>
+        <div class="coach-creds">NASM CNC/CES/PES · Licensed Esthetician · Laser Certified · Tattoo Removal · Massage · Post-weight-loss skin laxity specialist · GLP-1 aesthetic expert</div>
+        <span class="coach-tag purple">Nutrition · Skin · GLP-1 Wellness · Couples</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICE CARDS -->
+  <div class="card">
+    <div class="card-label">Select Your Service</div>
+    <div class="services-grid">
+
+      <div class="service-card free-svc" onclick="selectService(this,'discovery')">
+        <div class="service-selected-badge">Selected ✓</div>
+        <span class="service-icon">🤝</span>
+        <div class="service-name">Free Discovery Call</div>
+        <div class="service-coach b">Dr. Michael Lovato</div>
+        <div class="service-desc">Not sure where to start? Let's talk. 20 minutes to understand your goals, your history, and which FORGEIQ services fit you best. No pressure. No pitch.</div>
+        <div class="service-meta">
+          <span class="service-duration">⏱ 20 minutes</span>
+          <span class="service-price green">FREE</span>
+        </div>
+      </div>
+
+      <div class="service-card michael-svc" onclick="selectService(this,'strength')">
+        <div class="service-selected-badge">Selected ✓</div>
+        <span class="service-icon">🏋️</span>
+        <div class="service-name">1-on-1 Strength Coaching</div>
+        <div class="service-coach m">Dr. Michael Lovato · EdD · NASM</div>
+        <div class="service-desc">Personalized strength programming built around your OPT phase, injury history, and goals. NASM-certified protocol. Real results from a coach who earned his own.</div>
+        <div class="service-meta">
+          <span class="service-duration">⏱ 60 minutes</span>
+          <span class="service-price gold">Book Now</span>
+        </div>
+      </div>
+
+      <div class="service-card michael-svc" onclick="selectService(this,'glp1')">
+        <div class="service-selected-badge">Selected ✓</div>
+        <span class="service-icon">💊</span>
+        <div class="service-name">GLP-1 Fitness Consultation</div>
+        <div class="service-coach m">Dr. Michael Lovato · EdD · NASM</div>
+        <div class="service-desc">Specialized programming for clients on semaglutide, tirzepatide, or other GLP-1 medications. Muscle preservation, fatigue management, progressive overload protocol.</div>
+        <div class="service-meta">
+          <span class="service-duration">⏱ 45 minutes</span>
+          <span class="service-price gold">Book Now</span>
+        </div>
+      </div>
+
+      <div class="service-card debora-svc" onclick="selectService(this,'nutrition')">
+        <div class="service-selected-badge">Selected ✓</div>
+        <span class="service-icon">🥗</span>
+        <div class="service-name">Nutrition Consultation</div>
+        <div class="service-coach d">Debora Lovato · NASM CNC</div>
+        <div class="service-desc">NASM Certified Nutrition Coach consultation. Macro targets, meal timing, supplement protocol, and GLP-1 nutrition adjustments tailored to your body and your goals.</div>
+        <div class="service-meta">
+          <span class="service-duration">⏱ 45 minutes</span>
+          <span class="service-price purple">Book Now</span>
+        </div>
+      </div>
+
+      <div class="service-card debora-svc" onclick="selectService(this,'skin')">
+        <div class="service-selected-badge">Selected ✓</div>
+        <span class="service-icon">✨</span>
+        <div class="service-name">Skin & Wellness Consult</div>
+        <div class="service-coach d">Debora Lovato · Esthetician</div>
+        <div class="service-desc">Post-weight-loss skin laxity, GLP-1 aesthetic side effects, collagen protocol, and body confidence coaching. Licensed esthetician with deep expertise in transformation skin care.</div>
+        <div class="service-meta">
+          <span class="service-duration">⏱ 30 minutes</span>
+          <span class="service-price purple">Book Now</span>
+        </div>
+      </div>
+
+      <div class="service-card couple-svc" onclick="selectService(this,'couples')">
+        <div class="service-selected-badge">Selected ✓</div>
+        <span class="service-icon">👫</span>
+        <div class="service-name">Couples Coaching Session</div>
+        <div class="service-coach b">Dr. Michael & Debora Lovato</div>
+        <div class="service-desc">Both coaches. Both of you. Separate programs, shared mission. Fitness transforms relationships — we have lived it. Build your plan together with the people who built theirs.</div>
+        <div class="service-meta">
+          <span class="service-duration">⏱ 60 minutes</span>
+          <span class="service-price green">Book Now</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CALENDLY BOOKING SECTION -->
+  <div class="booking-section" id="bookingSection">
+    <div class="card">
+      <div class="booking-header">
+        <div>
+          <div class="card-label" style="margin-bottom:4px;">You Selected</div>
+          <div class="booking-service-name" id="bookingServiceName">Service Name</div>
+          <div class="booking-coach-name" id="bookingCoachName">Coach Name</div>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────────────────────────────────
+           CALENDLY EMBED
+           TO CONNECT YOUR REAL CALENDLY:
+           1. Log into calendly.com
+           2. Go to your Event Type
+           3. Copy your event link — looks like:
+              https://calendly.com/YOUR_USERNAME/event-name
+           4. Replace the href in each cal-placeholder-link below
+              with your real Calendly link for that service
+           ───────────────────────────────────────────────────────────── -->
+      <div class="calendly-placeholder" id="calendlyPlaceholder">
+        <div class="cal-placeholder-icon" id="calIcon">📅</div>
+        <div class="cal-placeholder-title">Ready to Book</div>
+        <div class="cal-placeholder-sub" id="calDesc">Click the button below to open our booking calendar and select your time.</div>
+        <a href="https://calendly.com/YOUR_CALENDLY_USERNAME" target="_blank" rel="noopener noreferrer" class="cal-placeholder-link" id="calLink">
+          Open Booking Calendar →
+        </a>
+        <p style="font-family:var(--font-m);font-size:0.6rem;color:var(--muted);margin-top:12px;">Powered by Calendly · Secure booking · Instant confirmation</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT TO EXPECT -->
+  <div class="card">
+    <div class="card-label">What to Expect</div>
+    <div class="expect-grid">
+      <div class="expect-card">
+        <span class="expect-icon">📋</span>
+        <div class="expect-title">Before Your Session</div>
+        <div class="expect-desc">You will receive a confirmation email with a short intake form. Takes 5 minutes. Helps us prepare a personalized session with zero wasted time.</div>
+      </div>
+      <div class="expect-card">
+        <span class="expect-icon">🎯</span>
+        <div class="expect-title">During Your Session</div>
+        <div class="expect-desc">Real coaching from real coaches. No scripts. No generic advice. Every session is built around your specific situation, history, and goals.</div>
+      </div>
+      <div class="expect-card">
+        <span class="expect-icon">📈</span>
+        <div class="expect-title">After Your Session</div>
+        <div class="expect-desc">You will receive a follow-up summary with your action items, program recommendations, and next steps. Your FORGEIQ AI coach updates based on your session.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="card">
+    <div class="card-label">Frequently Asked Questions</div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">Do I need to be a FORGEIQ subscriber to book? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">No — coaching sessions are available to anyone. FORGEIQ app subscribers receive priority booking and a discount on all paid sessions.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">Are sessions virtual or in person? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">All sessions are currently conducted virtually via Zoom or Google Meet. In-person sessions at Best Fitness are available by arrangement — ask during your discovery call.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">What if I am on a GLP-1 medication — is there a specific session for me? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Yes — the GLP-1 Fitness Consultation with Dr. Lovato is specifically designed for clients on semaglutide, tirzepatide, or similar medications. We cover muscle preservation, fatigue management, protein targets, and a progressive exercise protocol built around your medication schedule.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">Can I book for both myself and my partner? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">The Couples Coaching Session is designed for exactly that — both of you on one call with both coaches. You each get a separate program and a shared challenge goal to work on together.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">What is your cancellation policy? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">We ask for 24 hours notice for cancellations or reschedules. Life happens — just communicate and we will make it work. No-shows on paid sessions are non-refundable.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">I have injuries — can you still help me? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Absolutely. Dr. Lovato holds the NASM Corrective Exercise Specialist (CES) certification and has personal experience with torn shoulder, knee surgery, torn bicep, plantar fasciitis, and arthritis. We build around what you have — not what you had.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Crisp Live Chat -->
+<script type="text/javascript">
+  window.$crisp=[];
+  window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";
+  (function(){
+    var d=document;
+    var s=d.createElement("script");
+    s.src="https://client.crisp.chat/l.js";
+    s.async=1;
+    d.getElementsByTagName("head")[0].appendChild(s);
+  })();
+</script>
+<!-- Calendly Widget JS -->
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script>
+  const user = SupabaseClient.getUser();
+  document.getElementById('navUser').textContent = user?.user_metadata?.full_name?.charAt(0).toUpperCase() || 'M';
+
+  // ── Service config ──────────────────────────────────────────────
+  // SWAP THESE with your real Calendly links when ready
+  // Go to calendly.com → your event → copy the link
+  const SERVICES = {
+    discovery: {
+      name: 'Free Discovery Call',
+      coach: 'Dr. Michael Lovato, EdD',
+      icon: '🤝',
+      desc: '20-minute call to understand your goals and find the right program for you.',
+      link: 'https://calendly.com/YOUR_USERNAME/discovery-call'
+    },
+    strength: {
+      name: '1-on-1 Strength Coaching',
+      coach: 'Dr. Michael Lovato, EdD · NASM CES/PES',
+      icon: '🏋️',
+      desc: 'Personalized 60-minute strength coaching session with NASM-certified protocol.',
+      link: 'https://calendly.com/YOUR_USERNAME/strength-coaching'
+    },
+    glp1: {
+      name: 'GLP-1 Fitness Consultation',
+      coach: 'Dr. Michael Lovato, EdD · NASM',
+      icon: '💊',
+      desc: 'Specialized 45-minute consultation for clients on GLP-1 medications.',
+      link: 'https://calendly.com/YOUR_USERNAME/glp1-consultation'
+    },
+    nutrition: {
+      name: 'Nutrition Consultation',
+      coach: 'Debora Lovato · NASM CNC',
+      icon: '🥗',
+      desc: 'NASM-certified 45-minute nutrition coaching session with Debora.',
+      link: 'https://calendly.com/YOUR_USERNAME/nutrition-consultation'
+    },
+    skin: {
+      name: 'Skin & Wellness Consult',
+      coach: 'Debora Lovato · Licensed Esthetician',
+      icon: '✨',
+      desc: '30-minute wellness consultation for post-transformation skin and body confidence.',
+      link: 'https://calendly.com/YOUR_USERNAME/skin-wellness'
+    },
+    couples: {
+      name: 'Couples Coaching Session',
+      coach: 'Dr. Michael & Debora Lovato',
+      icon: '👫',
+      desc: '60-minute couples session with both coaches — two programs, one mission.',
+      link: 'https://calendly.com/YOUR_USERNAME/couples-coaching'
+    }
+  };
+
+  function selectService(el, serviceKey) {
+    // Deselect all
+    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+
+    const svc = SERVICES[serviceKey];
+    document.getElementById('bookingServiceName').textContent = svc.name;
+    document.getElementById('bookingCoachName').textContent = svc.coach;
+    document.getElementById('calIcon').textContent = svc.icon;
+    document.getElementById('calDesc').textContent = svc.desc;
+    document.getElementById('calLink').href = svc.link;
+
+    const section = document.getElementById('bookingSection');
+    section.classList.add('show');
+    setTimeout(() => section.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+  }
+
+  function toggleFAQ(el) {
+    const answer = el.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('open'));
+    if (!isOpen) { answer.classList.add('open'); el.classList.add('open'); }
+  }
+</script>
+</body>
+</html>
