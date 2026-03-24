@@ -1,5 +1,4 @@
-toml[build]
-  base = ""
+[build]
   publish = "."
   functions = "netlify/functions"
   command = "npm install"
@@ -18,3 +17,4 @@ toml[build]
   from = "/signup"
   to = "/signup.html"
   status = 200
+```
