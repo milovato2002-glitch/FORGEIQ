@@ -17,4 +17,3 @@
   from = "/signup"
   to = "/signup.html"
   status = 200
-```
