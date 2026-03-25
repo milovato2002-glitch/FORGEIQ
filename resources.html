@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Resources and Links</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
+      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
+      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
+      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#c0392b;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+    }
+    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
+    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .nav-logo { font-family:var(--font-d); font-size:1.5rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:4px; }
+    .nav-link { color:var(--text-dim); text-decoration:none; font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:7px 12px; border-radius:4px; transition:all 0.2s; font-family:var(--font-m); }
+    .nav-link:hover { color:var(--white); }
+    .nav-link.active { color:var(--gold); background:rgba(201,168,76,0.06); }
+    .nav-user { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:0.85rem; color:var(--black); text-decoration:none; }
+    .page { max-width:1000px; margin:0 auto; padding:32px; }
+    .page-title { font-family:var(--font-d); font-size:2.8rem; letter-spacing:1px; color:var(--white); line-height:1; margin-bottom:8px; }
+    .page-title em { font-style:normal; color:var(--gold); }
+    .section-hd { font-family:var(--font-d); font-size:1.6rem; letter-spacing:1px; color:var(--white); margin:32px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+    .resource-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin-bottom:12px; }
+    .res-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; transition:border-color 0.2s; }
+    .res-card:hover { border-color:var(--gold); }
+    .res-name { font-weight:700; font-size:0.9rem; color:var(--white); margin-bottom:4px; }
+    .res-desc { font-size:0.78rem; color:var(--text-dim); line-height:1.5; margin-bottom:10px; }
+    .res-link { display:inline-block; font-family:var(--font-m); font-size:0.6rem; color:var(--gold); text-transform:uppercase; letter-spacing:1px; text-decoration:none; transition:color 0.2s; }
+    .res-link:hover { color:var(--gold-lt); }
+    .crisis-card { background:rgba(192,57,43,0.06); border:2px solid rgba(192,57,43,0.25); border-radius:12px; padding:24px; text-align:center; margin-bottom:20px; }
+    .crisis-card h3 { font-family:var(--font-d); font-size:2rem; color:var(--red); letter-spacing:1px; margin-bottom:8px; }
+    .crisis-card p { font-size:0.88rem; color:var(--text-dim); line-height:1.6; }
+    .crisis-card a { color:var(--white); font-weight:700; text-decoration:underline; }
+    @media(max-width:700px) { .page{padding:20px 16px;} .nav-links{display:none;} .resource-grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
+  <div class="nav-links">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/workout-log.html" class="nav-link">Workouts</a>
+    <a href="/nutrition.html" class="nav-link">Nutrition</a>
+    <a href="/resources.html" class="nav-link active">Resources</a>
+    <a href="/booking.html" class="nav-link">Book</a>
+  </div>
+  <div><a href="/profile.html" class="nav-user">?</a></div>
+</nav>
+
+<div class="page">
+
+  <div style="margin-bottom:28px;">
+    <div class="page-title">Resources and <em>Links</em></div>
+    <p style="font-size:0.92rem;color:var(--text-dim);line-height:1.6;max-width:560px;">Curated resources from authoritative sources. All links open in a new tab. Knowledge is power — use it.</p>
+  </div>
+
+  <!-- VETERAN CRISIS -->
+  <div class="crisis-card">
+    <h3>Veterans Crisis Line</h3>
+    <p><a href="tel:988">Call 988, Press 1</a> | Text 838255 | <a href="https://www.veteranscrisisline.net/get-help-now/chat/" target="_blank" rel="noopener">Online Chat</a></p>
+    <p style="margin-top:8px;">Free, confidential support 24/7 for Veterans and their loved ones.</p>
+  </div>
+
+  <!-- NUTRITION DATABASES -->
+  <div class="section-hd">Nutrition Databases</div>
+  <div class="resource-grid">
+    <div class="res-card"><div class="res-name">USDA FoodData Central</div><div class="res-desc">Official US government food composition database. The gold standard for macro and micronutrient data.</div><a href="https://fdc.nal.usda.gov" target="_blank" rel="noopener" class="res-link">Visit fdc.nal.usda.gov &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Cronometer</div><div class="res-desc">Comprehensive nutrient tracking with micronutrient detail. Excellent for GLP-1 users monitoring deficiencies.</div><a href="https://cronometer.com" target="_blank" rel="noopener" class="res-link">Visit cronometer.com &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Examine.com</div><div class="res-desc">Evidence-based supplement and nutrition research. Independent, unbiased analysis of studies.</div><a href="https://examine.com" target="_blank" rel="noopener" class="res-link">Visit examine.com &rarr;</a></div>
+    <div class="res-card"><div class="res-name">MyFitnessPal</div><div class="res-desc">Large food database for calorie and macro tracking. Community-driven with barcode scanning.</div><a href="https://www.myfitnesspal.com" target="_blank" rel="noopener" class="res-link">Visit myfitnesspal.com &rarr;</a></div>
+  </div>
+
+  <!-- RESEARCH -->
+  <div class="section-hd">Research and Science</div>
+  <div class="resource-grid">
+    <div class="res-card"><div class="res-name">PubMed</div><div class="res-desc">NIH database of biomedical literature. The primary source for peer-reviewed fitness and nutrition research.</div><a href="https://pubmed.ncbi.nlm.nih.gov" target="_blank" rel="noopener" class="res-link">Visit pubmed.ncbi.nlm.nih.gov &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Google Scholar</div><div class="res-desc">Broad academic search engine covering journals, theses, and conference papers across all disciplines.</div><a href="https://scholar.google.com" target="_blank" rel="noopener" class="res-link">Visit scholar.google.com &rarr;</a></div>
+    <div class="res-card"><div class="res-name">NSCA Research</div><div class="res-desc">National Strength and Conditioning Association. Leading organization for strength and conditioning science.</div><a href="https://www.nsca.com" target="_blank" rel="noopener" class="res-link">Visit nsca.com &rarr;</a></div>
+    <div class="res-card"><div class="res-name">NIH Exercise Resources</div><div class="res-desc">National Institutes of Health exercise and physical activity guidelines and research.</div><a href="https://www.nih.gov" target="_blank" rel="noopener" class="res-link">Visit nih.gov &rarr;</a></div>
+  </div>
+
+  <!-- CERTIFICATION BODIES -->
+  <div class="section-hd">Certification Bodies</div>
+  <div class="resource-grid">
+    <div class="res-card"><div class="res-name">NASM</div><div class="res-desc">National Academy of Sports Medicine. Our primary certification body for OPT model, CNC, CES, and PES.</div><a href="https://www.nasm.org" target="_blank" rel="noopener" class="res-link">Visit nasm.org &rarr;</a></div>
+    <div class="res-card"><div class="res-name">ACE</div><div class="res-desc">American Council on Exercise. Research-backed certifications and continuing education.</div><a href="https://www.acefitness.org" target="_blank" rel="noopener" class="res-link">Visit acefitness.org &rarr;</a></div>
+    <div class="res-card"><div class="res-name">ISSA</div><div class="res-desc">International Sports Sciences Association. Online fitness certifications and specializations.</div><a href="https://www.issaonline.com" target="_blank" rel="noopener" class="res-link">Visit issaonline.com &rarr;</a></div>
+    <div class="res-card"><div class="res-name">NSCA</div><div class="res-desc">National Strength and Conditioning Association. CSCS and NSCA-CPT certifications.</div><a href="https://www.nsca.com" target="_blank" rel="noopener" class="res-link">Visit nsca.com &rarr;</a></div>
+    <div class="res-card"><div class="res-name">USAPL</div><div class="res-desc">USA Powerlifting. Competitive powerlifting federation and drug-tested events.</div><a href="https://www.usapowerlifting.com" target="_blank" rel="noopener" class="res-link">Visit usapowerlifting.com &rarr;</a></div>
+    <div class="res-card"><div class="res-name">USPA</div><div class="res-desc">United States Powerlifting Association. Multi-federation powerlifting competition.</div><a href="https://www.uspa.net" target="_blank" rel="noopener" class="res-link">Visit uspa.net &rarr;</a></div>
+    <div class="res-card"><div class="res-name">CrossFit</div><div class="res-desc">CrossFit methodology, affiliate gym locator, and competition information.</div><a href="https://www.crossfit.com" target="_blank" rel="noopener" class="res-link">Visit crossfit.com &rarr;</a></div>
+  </div>
+
+  <!-- GOVERNMENT HEALTH -->
+  <div class="section-hd">Government Health Resources</div>
+  <div class="resource-grid">
+    <div class="res-card"><div class="res-name">CDC Physical Activity Guidelines</div><div class="res-desc">Federal guidelines for physical activity across all age groups and fitness levels.</div><a href="https://www.cdc.gov/physical-activity-basics/" target="_blank" rel="noopener" class="res-link">Visit cdc.gov &rarr;</a></div>
+    <div class="res-card"><div class="res-name">ACSM Guidelines</div><div class="res-desc">American College of Sports Medicine exercise testing and prescription guidelines.</div><a href="https://www.acsm.org" target="_blank" rel="noopener" class="res-link">Visit acsm.org &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Mayo Clinic Fitness</div><div class="res-desc">Evidence-based fitness information from one of the most trusted medical institutions.</div><a href="https://www.mayoclinic.org" target="_blank" rel="noopener" class="res-link">Visit mayoclinic.org &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Harvard Health Fitness</div><div class="res-desc">Harvard Medical School health and fitness education for the public.</div><a href="https://www.health.harvard.edu" target="_blank" rel="noopener" class="res-link">Visit health.harvard.edu &rarr;</a></div>
+  </div>
+
+  <!-- TOP COACHES BY CATEGORY -->
+  <div class="section-hd">Top Coaches by Category (YouTube)</div>
+  <div class="resource-grid">
+    <div class="res-card"><div class="res-name">Strength and Powerlifting</div><div class="res-desc">Brian Shaw, Stefi Cohen, Alan Thrall, Juggernaut Training Systems</div><a href="https://www.youtube.com/results?search_query=powerlifting+coaching" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Olympic Lifting</div><div class="res-desc">Catalyst Athletics, Hookgrip, Dmitry Klokov</div><a href="https://www.youtube.com/results?search_query=olympic+weightlifting+technique" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Bodybuilding and Hypertrophy</div><div class="res-desc">Jeff Nippard, Renaissance Periodization, Jonnie Candito</div><a href="https://www.youtube.com/results?search_query=hypertrophy+training+science" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">GLP-1 and Weight Loss Science</div><div class="res-desc">Glucose Goddess, obesity medicine educators</div><a href="https://www.youtube.com/results?search_query=GLP-1+weight+loss+science" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Mobility and Recovery</div><div class="res-desc">Kelly Starrett, Tom Morrison, GMB Fitness</div><a href="https://www.youtube.com/results?search_query=mobility+recovery+training" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Nutrition Science</div><div class="res-desc">Layne Norton, Renaissance Periodization nutrition</div><a href="https://www.youtube.com/results?search_query=nutrition+science+evidence+based" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Running and Cardio</div><div class="res-desc">The Running Channel, USATF coaches</div><a href="https://www.youtube.com/results?search_query=running+coaching+technique" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Functional Fitness and Hyrox</div><div class="res-desc">Hyrox official, functional fitness educators</div><a href="https://www.youtube.com/results?search_query=hyrox+functional+fitness" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Senior and 50+ Fitness</div><div class="res-desc">Strength for seniors educators, ACSM senior resources</div><a href="https://www.youtube.com/results?search_query=senior+fitness+over+50+strength" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+    <div class="res-card"><div class="res-name">Mental Health and Fitness</div><div class="res-desc">Fitness and mental health researchers, veteran fitness programs</div><a href="https://www.youtube.com/results?search_query=mental+health+fitness+veterans" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
+  </div>
+
+  <!-- VETERAN AND FIRST RESPONDER -->
+  <div class="section-hd">Veteran and First Responder Resources</div>
+  <div class="resource-grid">
+    <div class="res-card" style="border-color:rgba(201,168,76,0.2);"><div class="res-name">VA Whole Health Program</div><div class="res-desc">Comprehensive veteran health and wellness through the VA system.</div><a href="https://www.va.gov/wholehealth/" target="_blank" rel="noopener" class="res-link">Visit va.gov &rarr;</a></div>
+    <div class="res-card" style="border-color:rgba(201,168,76,0.2);"><div class="res-name">Team Red White and Blue</div><div class="res-desc">Connecting veterans through physical and social activity.</div><a href="https://www.teamrwb.org" target="_blank" rel="noopener" class="res-link">Visit teamrwb.org &rarr;</a></div>
+    <div class="res-card" style="border-color:rgba(201,168,76,0.2);"><div class="res-name">Stack Up</div><div class="res-desc">Supporting veterans through gaming, fitness, and community.</div><a href="https://www.stackup.org" target="_blank" rel="noopener" class="res-link">Visit stackup.org &rarr;</a></div>
+    <div class="res-card" style="border-color:rgba(201,168,76,0.2);"><div class="res-name">First Responder Wellness</div><div class="res-desc">Mental health and fitness resources for first responders and their families.</div><a href="https://www.youtube.com/results?search_query=first+responder+wellness+program" target="_blank" rel="noopener" class="res-link">Search Resources &rarr;</a></div>
+  </div>
+
+</div>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+</body>
+</html>

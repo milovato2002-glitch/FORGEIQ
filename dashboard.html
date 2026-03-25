@@ -453,14 +453,16 @@
 
   <nav>
     <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
-    <div style="display:flex;gap:4px;">
+    <div style="display:flex;gap:4px;flex-wrap:wrap;">
       <a href="/dashboard.html" style="color:var(--gold);text-decoration:none;font-size:0.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;background:rgba(201,168,76,0.07);font-family:var(--font-mono);">Dashboard</a>
       <a href="/workout-log.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Workouts</a>
       <a href="/nutrition.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Nutrition</a>
-      <a href="/challenge.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Challenge</a>
+      <a href="/glp1.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">GLP-1</a>
+      <a href="/injuries.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Injuries</a>
+      <a href="/debora.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Debora</a>
+      <a href="/resources.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Resources</a>
+      <a href="/booking.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Book</a>
       <a href="/progress.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Progress</a>
-      <a href="/goals.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Goals</a>
-      <a href="/supplements.html" style="color:var(--text-dim);text-decoration:none;font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:4px;transition:all 0.2s;font-family:var(--font-mono);" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--text-dim)'">Supplements</a>
     </div>
     <div class="nav-right">
       <div class="nav-mode-badge mode-general" id="modeBadge">Standard</div>
@@ -479,7 +481,55 @@
       <!-- Greeting -->
       <div class="greeting-card">
         <h1 id="greeting">Good morning, <span id="firstName">Coach</span></h1>
-        <p class="greeting-sub" id="greetingSub">Your coach has your workout ready. Let's see how you're feeling first.</p>
+        <p class="greeting-sub" id="greetingSub">Your coach has your workout ready.</p>
+      </div>
+
+      <!-- Daily Motivational Quote -->
+      <div style="background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:20px 24px;position:relative;">
+        <div style="font-family:var(--font-display);font-size:2.5rem;color:rgba(201,168,76,0.15);line-height:0;position:absolute;top:16px;left:16px;">"</div>
+        <p style="font-size:0.92rem;color:var(--text);line-height:1.7;font-style:italic;padding-left:24px;" id="dailyQuote"></p>
+        <p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:10px;padding-left:24px;" id="quoteAuthor"></p>
+      </div>
+
+      <!-- Weekly Summary Card -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:2rem;color:var(--gold);letter-spacing:1px;line-height:1;" id="weekWorkouts">0</div>
+          <div style="font-family:var(--font-mono);font-size:0.58rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Workouts This Week</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:2rem;color:var(--green);letter-spacing:1px;line-height:1;" id="weekCheckins">0</div>
+          <div style="font-family:var(--font-mono);font-size:0.58rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Goals Checked In</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:2rem;color:var(--gold);letter-spacing:1px;line-height:1;" id="currentStreak">0</div>
+          <div style="font-family:var(--font-mono);font-size:0.58rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Day Streak</div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="/debora.html" style="flex:1;min-width:140px;background:rgba(142,95,191,0.04);border:1px solid rgba(142,95,191,0.15);border-radius:8px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#8e5fbf'" onmouseout="this.style.borderColor='rgba(142,95,191,0.15)'">
+          <span style="font-size:1.2rem;">✨</span>
+          <div>
+            <div style="font-weight:600;font-size:0.82rem;color:var(--white);">Debora Lovato</div>
+            <div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Wellness and Skin</div>
+          </div>
+        </a>
+        <a href="/injuries.html" style="flex:1;min-width:140px;background:rgba(36,113,163,0.04);border:1px solid rgba(36,113,163,0.15);border-radius:8px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#2471a3'" onmouseout="this.style.borderColor='rgba(36,113,163,0.15)'">
+          <span style="font-size:1.2rem;">🦾</span>
+          <div>
+            <div style="font-weight:600;font-size:0.82rem;color:var(--white);">Injury Resources</div>
+            <div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Train Around It</div>
+          </div>
+        </a>
+        <a href="/glp1.html" style="flex:1;min-width:140px;background:rgba(34,168,90,0.04);border:1px solid rgba(34,168,90,0.15);border-radius:8px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#22a85a'" onmouseout="this.style.borderColor='rgba(34,168,90,0.15)'">
+          <span style="font-size:1.2rem;">💊</span>
+          <div>
+            <div style="font-weight:600;font-size:0.82rem;color:var(--white);">GLP-1 Hub</div>
+            <div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Education Center</div>
+          </div>
+        </a>
       </div>
 
       <!-- Readiness Check-In -->
@@ -837,7 +887,65 @@
       addMessage('coach', 'Session logged. Great work today — consistency is the whole game.');
     }
 
+    // ── Motivational Quotes ────────────────────────────────────────
+    const QUOTES = [
+      { text: "We never have to quit.", author: "Dr. Michael Lovato" },
+      { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
+      { text: "The body achieves what the mind believes.", author: "Napoleon Hill" },
+      { text: "You do not have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+      { text: "Pain is temporary. Quitting lasts forever.", author: "Lance Armstrong" },
+      { text: "Strength does not come from what you can do. It comes from overcoming the things you once thought you could not.", author: "Rikki Rogers" },
+      { text: "The only bad workout is the one that did not happen.", author: "FORGEIQ" },
+      { text: "Fitness transforms couples — and confident people build stronger relationships.", author: "Michael and Debora Lovato" },
+      { text: "Train around injuries, not through them. Adapt. Overcome. Never stop.", author: "Dr. Michael Lovato" },
+      { text: "Every meal counts on GLP-1 — nutrient density is non-negotiable.", author: "Debora Lovato" },
+      { text: "The iron never lies. Two hundred pounds is always two hundred pounds.", author: "Henry Rollins" },
+      { text: "Take care of your body. It is the only place you have to live.", author: "Jim Rohn" },
+      { text: "What seems impossible today will one day become your warm-up.", author: "FORGEIQ" },
+      { text: "You are one workout away from a good mood.", author: "FORGEIQ" },
+      { text: "Success is not about perfection. It is about consistency.", author: "Dr. Michael Lovato" },
+      { text: "The transformation does not end when the weight comes off. That is where it begins.", author: "Debora Lovato" },
+      { text: "I built FORGEIQ because it empowers people to know we never have to quit.", author: "Dr. Michael Lovato" },
+      { text: "Muscles are built in the gym, meals are built in the kitchen, confidence is built by showing up.", author: "FORGEIQ" },
+      { text: "Do not count the days. Make the days count.", author: "Muhammad Ali" },
+      { text: "Your body can stand almost anything. It is your mind you have to convince.", author: "FORGEIQ" },
+      { text: "Fall down seven times, stand up eight.", author: "Japanese Proverb" },
+      { text: "Fitness did not just transform our bodies — it transformed our relationship.", author: "Michael and Debora Lovato" },
+      { text: "The only person you need to be better than is the person you were yesterday.", author: "FORGEIQ" },
+      { text: "Turning 50 with torn shoulder, knee surgery, arthritis — and still training. That is the mission.", author: "Dr. Michael Lovato" },
+      { text: "Protein first. Always protein first.", author: "Debora Lovato" },
+      { text: "Mental health is health. The gym is therapy. The barbell does not judge.", author: "Dr. Michael Lovato" },
+      { text: "You are never alone. That is the whole point.", author: "FORGEIQ" },
+      { text: "Progress is progress, no matter how small.", author: "FORGEIQ" },
+      { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+      { text: "Hard work beats talent when talent does not work hard.", author: "Tim Notke" }
+    ];
+
+    function loadDailyQuote() {
+      var dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      var quote = QUOTES[dayOfYear % QUOTES.length];
+      document.getElementById("dailyQuote").textContent = quote.text;
+      document.getElementById("quoteAuthor").textContent = "— " + quote.author;
+    }
+
+    function loadWeeklySummary() {
+      var actLog = profile.activity_log || {};
+      var now = new Date();
+      var weekStart = new Date(now);
+      weekStart.setDate(now.getDate() - now.getDay());
+      weekStart.setHours(0,0,0,0);
+      var weekCount = 0;
+      Object.keys(actLog).forEach(function(dateStr) {
+        if (new Date(dateStr) >= weekStart) weekCount++;
+      });
+      document.getElementById("weekWorkouts").textContent = weekCount;
+      document.getElementById("weekCheckins").textContent = weekCount;
+      document.getElementById("currentStreak").textContent = AdaptFit.getStreak();
+    }
+
     // ── Run ────────────────────────────────────────────────────────
+    loadDailyQuote();
+    loadWeeklySummary();
     initDashboard();
   </script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>

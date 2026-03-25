@@ -399,12 +399,19 @@
       const res  = await fetch('/.netlify/functions/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'food_search', query })
+        body: JSON.stringify({ action: 'food_search', query: query.trim() })
       });
+      if (!res.ok) {
+        throw new Error('Server returned ' + res.status);
+      }
       const data = await res.json();
+      if (data.error) {
+        document.getElementById('searchResults').innerHTML = '<div class="no-results">Search error: ' + data.error + '</div>';
+        return;
+      }
       renderResults(data.foods || []);
     } catch(e) {
-      document.getElementById('searchResults').innerHTML = '<div class="no-results">Search unavailable. Add USDA_API_KEY to Netlify environment variables.</div>';
+      document.getElementById('searchResults').innerHTML = '<div class="no-results">Search unavailable. Check your connection or try again.</div>';
     } finally {
       spinner.style.display = 'none';
       document.querySelector('.search-icon').style.display = 'block';

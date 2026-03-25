@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Debora Lovato</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
+      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
+      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
+      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#c0392b;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+    }
+    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
+    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .nav-logo { font-family:var(--font-d); font-size:1.5rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:4px; }
+    .nav-link { color:var(--text-dim); text-decoration:none; font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:7px 12px; border-radius:4px; transition:all 0.2s; font-family:var(--font-m); }
+    .nav-link:hover { color:var(--white); }
+    .nav-link.active { color:var(--purple); background:rgba(142,95,191,0.06); }
+    .nav-user { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:0.85rem; color:var(--black); text-decoration:none; }
+    .page { max-width:900px; margin:0 auto; padding:32px; }
+
+    /* HERO */
+    .hero-section { text-align:center; margin-bottom:40px; }
+    .hero-av { width:200px; height:200px; border-radius:50%; border:3px solid var(--gold); background:linear-gradient(135deg,#5a3d8a,var(--purple)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:4rem; color:var(--white); margin:0 auto 24px; }
+    .hero-name { font-family:var(--font-d); font-size:3rem; letter-spacing:2px; color:var(--white); margin-bottom:6px; }
+    .hero-subtitle { font-size:1rem; color:var(--text-dim); margin-bottom:20px; }
+    .cred-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+    .cred-pill { padding:5px 12px; border-radius:4px; font-family:var(--font-m); font-size:0.58rem; text-transform:uppercase; letter-spacing:1px; background:rgba(142,95,191,0.08); border:1px solid rgba(142,95,191,0.2); color:#bf7fe0; }
+
+    /* SECTIONS */
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:20px; }
+    .section-label { font-family:var(--font-m); font-size:0.62rem; color:var(--purple); text-transform:uppercase; letter-spacing:3px; margin-bottom:16px; }
+    .section-title { font-family:var(--font-d); font-size:1.8rem; letter-spacing:1px; color:var(--white); margin-bottom:10px; }
+    .section-body { font-size:0.88rem; color:var(--text-dim); line-height:1.85; }
+    .section-body strong { color:var(--text); }
+
+    /* SPECIALTIES */
+    .spec-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+    .spec-card { background:var(--dark); border:1px solid var(--border); border-radius:10px; padding:20px; transition:border-color 0.2s; }
+    .spec-card:hover { border-color:var(--purple); }
+    .spec-icon { font-size:1.6rem; margin-bottom:10px; display:block; }
+    .spec-name { font-weight:700; font-size:0.9rem; color:var(--white); margin-bottom:8px; }
+    .spec-desc { font-size:0.8rem; color:var(--text-dim); line-height:1.6; }
+
+    /* SERVICES */
+    .svc-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .svc-card { background:var(--dark); border:1px solid rgba(142,95,191,0.15); border-radius:10px; padding:22px; }
+    .svc-name { font-family:var(--font-d); font-size:1.3rem; letter-spacing:1px; color:var(--white); margin-bottom:6px; }
+    .svc-desc { font-size:0.82rem; color:var(--text-dim); line-height:1.6; margin-bottom:14px; }
+    .svc-btn { display:inline-block; background:var(--gold); color:var(--black); padding:10px 20px; border-radius:4px; text-decoration:none; font-family:var(--font-b); font-weight:700; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s; }
+    .svc-btn:hover { background:var(--gold-lt); }
+
+    /* POWERED BY */
+    .powered-badge { text-align:center; margin-top:32px; padding:20px; }
+    .powered-badge span { font-family:var(--font-m); font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px; }
+
+    @media(max-width:700px) { .page{padding:20px 16px;} .nav-links{display:none;} .spec-grid,.svc-grid{grid-template-columns:1fr;} .hero-av{width:140px;height:140px;font-size:3rem;} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
+  <div class="nav-links">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/glp1.html" class="nav-link">GLP-1 Hub</a>
+    <a href="/peptides.html" class="nav-link">Peptides</a>
+    <a href="/debora.html" class="nav-link active">Debora</a>
+    <a href="/booking.html" class="nav-link">Book</a>
+  </div>
+  <div><a href="/profile.html" class="nav-user">?</a></div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero-section">
+    <div class="hero-av">DL</div>
+    <div class="hero-name">Debora Lovato</div>
+    <div class="hero-subtitle">Co-Founder of FORGEIQ</div>
+    <div class="cred-pills">
+      <span class="cred-pill">NASM CNC</span>
+      <span class="cred-pill">NASM CES</span>
+      <span class="cred-pill">NASM PES</span>
+      <span class="cred-pill">Licensed Esthetician</span>
+      <span class="cred-pill">Laser Certified</span>
+      <span class="cred-pill">Tattoo Removal</span>
+      <span class="cred-pill">Massage</span>
+      <span class="cred-pill">Facials</span>
+      <span class="cred-pill">Wellness Coach</span>
+    </div>
+  </div>
+
+  <!-- HER STORY -->
+  <div class="card">
+    <div class="section-label">Her Story</div>
+    <div class="section-body">
+      <p>Debora has always been driven by one thing — helping the people around her become the best version of themselves. Not just physically, but in their confidence, their skin, and their sense of self.</p>
+      <p>She is passionate about fitness and self-confidence as a whole, supporting everyone around her, helping couples thrive together. Her approach combines the science of nutrition and exercise with the art of aesthetic wellness — because <strong>transformation is not just about the scale.</strong></p>
+      <p>Together with her husband Dr. Michael Lovato, she built FORGEIQ on the belief that fitness transforms couples — and that when two people challenge themselves together, they discover strength they did not know existed.</p>
+      <p>As a <strong>licensed esthetician, laser technician, and NASM-certified nutrition and wellness coach</strong>, she addresses the full picture of transformation — including the dimensions every other fitness app ignores. Post-weight-loss skin laxity. GLP-1 aesthetic side effects. The confidence that comes from feeling at home in your body.</p>
+    </div>
+  </div>
+
+  <!-- SPECIALTIES -->
+  <div class="card">
+    <div class="section-label">Specialties</div>
+    <div class="spec-grid">
+      <div class="spec-card">
+        <span class="spec-icon">💊</span>
+        <div class="spec-name">GLP-1 Skin Laxity Treatments</div>
+        <div class="spec-desc">When weight loss happens fast — especially on GLP-1 medications — skin does not always keep up. Debora specializes in protocols that address post-weight-loss skin changes through professional treatments, topical peptides, and evidence-based skin care.</div>
+      </div>
+      <div class="spec-card">
+        <span class="spec-icon">✨</span>
+        <div class="spec-name">Post-Weight-Loss Skin Care</div>
+        <div class="spec-desc">The transformation does not end when the weight comes off. Laser treatments, radiofrequency, collagen support, and personalized skin care protocols to help your outside match how you feel inside.</div>
+      </div>
+      <div class="spec-card">
+        <span class="spec-icon">💎</span>
+        <div class="spec-name">Body Confidence Coaching</div>
+        <div class="spec-desc">Confidence is not a destination. It is a practice. Debora works with clients to rebuild their relationship with their body through every stage of transformation.</div>
+      </div>
+      <div class="spec-card">
+        <span class="spec-icon">👫</span>
+        <div class="spec-name">Couples Wellness</div>
+        <div class="spec-desc">When two people commit to their health together, everything changes. Nutrition planning, accountability, and wellness protocols designed for partners who want to grow together.</div>
+      </div>
+      <div class="spec-card" style="grid-column:span 2;">
+        <span class="spec-icon">🥗</span>
+        <div class="spec-name">Nutrition Coaching</div>
+        <div class="spec-desc">NASM Certified Nutrition Coach with a focus on high-protein protocols, GLP-1-specific nutrition, and sustainable eating patterns that support both performance and aesthetics. Every meal counts — especially when appetite is suppressed.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="card">
+    <div class="section-label">Services Offered</div>
+    <div class="section-title">Work With Debora</div>
+    <div class="svc-grid" style="margin-top:16px;">
+      <div class="svc-card">
+        <div class="svc-name">1-on-1 Nutrition Coaching</div>
+        <div class="svc-desc">Custom meal planning, macro targets, supplement guidance, and ongoing accountability. Built for your body, your goals, and your lifestyle.</div>
+        <a href="/booking.html" class="svc-btn">Book a Session</a>
+      </div>
+      <div class="svc-card">
+        <div class="svc-name">Skin Wellness Consultation</div>
+        <div class="svc-desc">Assessment and protocol for post-weight-loss or GLP-1 skin changes. Professional guidance on treatments, topical peptides, and daily care.</div>
+        <a href="/booking.html" class="svc-btn">Book a Session</a>
+      </div>
+      <div class="svc-card">
+        <div class="svc-name">Couples Wellness Package</div>
+        <div class="svc-desc">Joint nutrition and wellness planning for partners. Shared goals, separate protocols, one mission. Grow stronger together.</div>
+        <a href="/booking.html" class="svc-btn">Book a Session</a>
+      </div>
+      <div class="svc-card">
+        <div class="svc-name">GLP-1 Support Protocol</div>
+        <div class="svc-desc">Comprehensive nutrition, skin, and wellness guidance for medication users. Everything you need to optimize your GLP-1 journey.</div>
+        <a href="/booking.html" class="svc-btn">Book a Session</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- POWERED BY -->
+  <div class="powered-badge">
+    <div style="font-family:var(--font-d);font-size:1.4rem;letter-spacing:3px;color:var(--white);margin-bottom:6px;">FORGE<span style="color:var(--gold);">IQ</span></div>
+    <span>Powered by FORGEIQ &middot; Adaptive Intelligence Learning Group LLC</span>
+  </div>
+
+</div>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+</body>
+</html>

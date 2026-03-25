@@ -225,6 +225,26 @@
     .pc-btn.green  { background: var(--green); color: var(--white); border: none; }
     .pc-btn.green:hover { background: #28c96e; }
 
+    /* TESTIMONIALS */
+    .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 44px; }
+    .testimonial-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; position: relative; }
+    .testimonial-card::before { content: '"'; font-family: var(--font-d); font-size: 4rem; color: rgba(201,168,76,0.12); position: absolute; top: 10px; left: 20px; line-height: 1; }
+    .testimonial-text { font-size: 0.88rem; color: var(--text-dim); line-height: 1.8; font-style: italic; margin-bottom: 20px; padding-top: 20px; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .testimonial-av { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dim), var(--gold)); display: flex; align-items: center; justify-content: center; font-family: var(--font-d); font-size: 0.85rem; color: var(--black); }
+    .testimonial-name { font-weight: 600; font-size: 0.85rem; color: var(--white); }
+    .testimonial-role { font-family: var(--font-m); font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* INDEX FAQ */
+    .index-faq { display: flex; flex-direction: column; gap: 12px; margin-top: 44px; max-width: 780px; margin-left: auto; margin-right: auto; }
+    .ifaq-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .ifaq-q { padding: 20px 24px; font-weight: 600; font-size: 0.92rem; color: var(--white); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+    .ifaq-q:hover { background: rgba(255,255,255,0.02); }
+    .ifaq-q .ifaq-arrow { color: var(--gold); transition: transform 0.2s; }
+    .ifaq-q.open .ifaq-arrow { transform: rotate(180deg); }
+    .ifaq-a { padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease; font-size: 0.88rem; color: var(--text-dim); line-height: 1.8; }
+    .ifaq-a.open { padding: 0 24px 20px; max-height: 300px; }
+
     /* CTA */
     .cta-sec { text-align: center; padding: 130px 48px; position: relative; overflow: hidden; }
     .cta-sec::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,168,76,0.04) 0%, transparent 70%); }
@@ -271,6 +291,7 @@
     @media (max-width: 600px) {
       .modes-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 3.4rem; }
+      .testimonial-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -407,35 +428,50 @@
     <h2 class="sec-title fu" data-i18n="modes.title">Built for <em>Your</em> Reality</h2>
     <p class="sec-sub fu" data-i18n="modes.subtitle">Most apps are built for the average person. You are not average.</p>
     <div class="modes-grid">
+      <div class="mode-card mc-gen fu">
+        <span class="mode-icon">🏗️</span>
+        <h3>Build Your Foundation</h3>
+        <p>NASM Phase 1 fundamentals. Core stability, movement quality, and the neuromuscular base that makes everything else possible. Where every lasting transformation begins.</p>
+      </div>
       <div class="mode-card mc-glp1 fu">
         <span class="mode-icon">💊</span>
-        <h3 data-i18n="modes.glp1_title">GLP-1 / AOM Support</h3>
-        <p>Muscle preservation, fatigue-aware programming, and AI nutrition guidance built specifically for clients on weight-loss medications. The only app built for this population.</p>
+        <h3>Weight Loss and Medication Support</h3>
+        <p>GLP-1 muscle preservation, fatigue-aware programming, and AI nutrition guidance built specifically for clients on weight-loss medications. The only app built for this population.</p>
+      </div>
+      <div class="mode-card mc-gen fu">
+        <span class="mode-icon">🔥</span>
+        <h3>Body Recomposition</h3>
+        <p>Lose fat and build muscle simultaneously. Strategic nutrition, progressive resistance training, and AI-driven programming that optimizes both goals at once.</p>
+      </div>
+      <div class="mode-card mc-gen fu">
+        <span class="mode-icon">⚡</span>
+        <h3>Athletic Performance</h3>
+        <p>NASM PES protocol. SAQ training, sport-specific programming, and competition prep. Phase 3-5 for athletes who need to perform, not just look good.</p>
       </div>
       <div class="mode-card mc-vet fu">
         <span class="mode-icon">🎖️</span>
-        <h3 data-i18n="modes.veteran_title">Veteran & Military</h3>
-        <p>Built by a combat engineer who came home carrying more than equipment. Discipline-driven programming that respects your service, your injuries, and the battles that do not show up on an MRI.</p>
+        <h3>Discipline-Driven Training</h3>
+        <p>Built by a combat engineer who came home carrying more than equipment. Mission-oriented programming that respects your service and your relentless drive to be better.</p>
       </div>
       <div class="mode-card mc-inj fu">
         <span class="mode-icon">🦾</span>
-        <h3 data-i18n="modes.injury_title">Injury-Adaptive Training</h3>
-        <p>Torn shoulder. Knee surgery. Arthritis. Foot surgery. These are not reasons to stop — they are data points your AI coach uses to protect you while pushing you forward.</p>
+        <h3>Pain-Free Performance</h3>
+        <p>Torn shoulder. Knee surgery. Arthritis. These are not reasons to stop — they are data points your AI coach uses to protect you while pushing you forward. NASM CES protocols built in.</p>
       </div>
       <div class="mode-card mc-cpl fu">
         <span class="mode-icon">👫</span>
-        <h3>Couples Training</h3>
+        <h3>Train Together</h3>
         <p>Fitness builds confidence — and confident people build stronger relationships. Separate AI profiles, shared challenges, one mission. Forge together.</p>
       </div>
       <div class="mode-card mc-skin fu">
-        <span class="mode-icon">✨</span>
-        <h3>Skin & Body Confidence</h3>
-        <p>Debora's specialty. Post-weight-loss skin laxity, GLP-1 aesthetic side effects, and body confidence coaching — the dimension of transformation nobody else addresses.</p>
+        <span class="mode-icon">💎</span>
+        <h3>50+ Strong</h3>
+        <p>Joint health priority, longer recovery windows, and age-defying strength. Dr. Lovato turns 50 this year and trains harder than ever. Phase 1-2 with smart progression.</p>
       </div>
       <div class="mode-card mc-gen fu">
-        <span class="mode-icon">🎯</span>
-        <h3 data-i18n="modes.general_title">General Fitness</h3>
-        <p data-i18n="modes.general_desc">Goal-driven, AI-personalized programming for any level, any schedule, any starting point. Always progressive. Never stagnant.</p>
+        <span class="mode-icon">🧠</span>
+        <h3>Mental Health and Recovery</h3>
+        <p>Fitness as therapy. Anxiety, depression, PTSD — acknowledged first, then channeled into discipline. Crisis support integrated. You are never alone.</p>
       </div>
     </div>
   </div>
@@ -613,6 +649,81 @@
   </div>
 </section>
 
+<!-- ═══ TESTIMONIALS ═══ -->
+<section id="testimonials">
+  <div class="wrap padded">
+    <div class="eyebrow fu">Testimonials</div>
+    <h2 class="sec-title fu">Real People. <em>Real Results.</em></h2>
+    <p class="sec-sub fu">Transformation stories from the FORGEIQ community. Your story could be next.</p>
+    <div class="testimonial-grid">
+      <div class="testimonial-card fu">
+        <div class="testimonial-text">FORGEIQ understood my situation from day one. On GLP-1 and losing muscle fast — the AI coach adjusted everything for muscle preservation. Down 45 lbs and stronger than before I started the medication.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-av">JM</div>
+          <div>
+            <div class="testimonial-name">Your Story Here</div>
+            <div class="testimonial-role">GLP-1 User · Weight Loss and Medication Support</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fu">
+        <div class="testimonial-text">After 20 years in the Army, I thought my body was done. FORGEIQ showed me how to train around my injuries instead of giving up. Dr. Lovato gets it because he lives it. Three months in and I feel 10 years younger.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-av" style="background:linear-gradient(135deg,var(--gold-dim),var(--gold));">RC</div>
+          <div>
+            <div class="testimonial-name">Your Story Here</div>
+            <div class="testimonial-role">Veteran · Discipline-Driven Training</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fu">
+        <div class="testimonial-text">My husband and I started FORGEIQ together. Different fitness levels, same mission. The couples mode gave us separate programs but shared goals. We have never been closer — or stronger.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-av" style="background:linear-gradient(135deg,#5a3d8a,var(--purple));color:var(--white);">SL</div>
+          <div>
+            <div class="testimonial-name">Your Story Here</div>
+            <div class="testimonial-role">Couple · Train Together</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ FAQ ═══ -->
+<section id="faq">
+  <div class="wrap padded">
+    <div class="eyebrow fu">FAQ</div>
+    <h2 class="sec-title fu">Common <em>Questions</em></h2>
+    <div class="index-faq">
+      <div class="ifaq-item fu">
+        <div class="ifaq-q" onclick="toggleIndexFAQ(this)">Is this app for beginners or experienced athletes? <span class="ifaq-arrow">▼</span></div>
+        <div class="ifaq-a">Both. FORGEIQ uses the NASM Optimum Performance Training model to meet you exactly where you are. Beginners start with Phase 1 (Stabilization) and progress naturally. Advanced athletes can train in Phase 3-5 with sport-specific protocols. Your AI coach adapts to your level automatically.</div>
+      </div>
+      <div class="ifaq-item fu">
+        <div class="ifaq-q" onclick="toggleIndexFAQ(this)">How does the AI coach work? <span class="ifaq-arrow">▼</span></div>
+        <div class="ifaq-a">Your AI coach is powered by Claude (by Anthropic) and trained on the expertise of Dr. Michael Lovato and Debora Lovato. It knows your goals, your injuries, your medication status, and your fitness level. Every workout recommendation, nutrition suggestion, and coaching message is personalized to your specific situation. It is not a generic chatbot — it is a coach that remembers you.</div>
+      </div>
+      <div class="ifaq-item fu">
+        <div class="ifaq-q" onclick="toggleIndexFAQ(this)">Is FORGEIQ designed for GLP-1 users? <span class="ifaq-arrow">▼</span></div>
+        <div class="ifaq-a">Yes — FORGEIQ is one of the only fitness platforms specifically designed for people on GLP-1 medications like Ozempic, Wegovy, Mounjaro, and Zepbound. The AI coach prioritizes muscle preservation, adjusts protein targets to 1-1.2g per pound of bodyweight, manages fatigue-aware programming, and Debora provides skin and wellness support for post-weight-loss changes.</div>
+      </div>
+      <div class="ifaq-item fu">
+        <div class="ifaq-q" onclick="toggleIndexFAQ(this)">Can my partner and I use the app together? <span class="ifaq-arrow">▼</span></div>
+        <div class="ifaq-a">Absolutely. The Train Together mode gives each partner their own AI profile, their own programming based on their individual fitness level and goals, and shared challenges you can complete together. Dr. Michael and Debora built this from their own experience — fitness transformed their relationship, and they built FORGEIQ to do the same for others.</div>
+      </div>
+      <div class="ifaq-item fu">
+        <div class="ifaq-q" onclick="toggleIndexFAQ(this)">What makes FORGEIQ different from other fitness apps? <span class="ifaq-arrow">▼</span></div>
+        <div class="ifaq-a">Three things. First, it is built by coaches who have lived it — injury, weight loss, mental health challenges, and transformation. Second, the AI is trained on real NASM protocols, not generic fitness advice. Third, it addresses the dimensions other apps ignore: GLP-1 medication support, skin and body confidence (through Debora), veteran and mental health coaching, couples training, and injury-adaptive programming. FORGEIQ is not a workout generator — it is a coaching platform.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- ═══ CTA ═══ -->
 <section class="cta-sec">
   <h2>MAKE THE<br/><em>DECISION.</em></h2>
@@ -656,6 +767,14 @@
 
 <script src="/js/app.js"></script>
 <script>
+  function toggleIndexFAQ(el) {
+    var answer = el.nextElementSibling;
+    var isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.ifaq-a').forEach(function(a) { a.classList.remove('open'); });
+    document.querySelectorAll('.ifaq-q').forEach(function(q) { q.classList.remove('open'); });
+    if (!isOpen) { answer.classList.add('open'); el.classList.add('open'); }
+  }
+
   async function switchLang(lang) {
     await AdaptFit.loadLanguage(lang);
     document.querySelectorAll('.lang-btn').forEach(b => {

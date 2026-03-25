@@ -111,6 +111,20 @@
     .overload-last { font-size:0.75rem; color:var(--text-dim); margin-top:2px; font-family:var(--font-m); }
     .overload-rec  { font-size:0.75rem; color:var(--green); margin-top:2px; font-family:var(--font-m); }
 
+    /* VIDEO EMBED */
+    .video-section { margin-bottom:20px; }
+    .video-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; }
+    .video-card .card-label { margin-bottom:12px; }
+    .video-wrap { position:relative; width:100%; padding-bottom:56.25%; border-radius:8px; overflow:hidden; background:var(--dark); }
+    .video-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+    .video-search-row { display:flex; gap:10px; margin-bottom:14px; }
+    .video-search-input { flex:1; background:var(--dark); border:1px solid var(--border); border-radius:6px; color:var(--white); font-family:var(--font-b); font-size:0.9rem; padding:11px 14px; outline:none; transition:border-color 0.2s; }
+    .video-search-input:focus { border-color:var(--gold); }
+    .video-search-input::placeholder { color:var(--muted); }
+    .btn-video-search { background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.2); color:var(--gold); padding:11px 18px; border-radius:6px; font-family:var(--font-m); font-size:0.65rem; text-transform:uppercase; letter-spacing:1px; cursor:pointer; white-space:nowrap; transition:all 0.2s; }
+    .btn-video-search:hover { background:rgba(201,168,76,0.18); }
+    .video-placeholder { text-align:center; padding:48px 20px; color:var(--text-dim); font-size:0.85rem; }
+
     /* TOAST */
     .toast { position:fixed; bottom:32px; right:32px; background:var(--green); color:var(--white); padding:14px 22px; border-radius:8px; font-family:var(--font-m); font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; display:none; z-index:200; }
 
@@ -157,6 +171,19 @@
         ${['Squat','Bench Press','Deadlift','Row','Shoulder Press','Pull-Up','Lunge','Plank'].map(e =>
           `<button onclick="quickAdd('${e}')" style="background:var(--dark);border:1px solid var(--border);color:var(--text-dim);padding:5px 10px;border-radius:4px;font-size:0.72rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">${e}</button>`
         ).join('')}
+      </div>
+    </div>
+
+    <!-- Exercise Video Demo -->
+    <div class="video-section" id="videoSection" style="display:none;">
+      <div class="video-card">
+        <div class="card-label">Exercise Demo Video</div>
+        <div id="videoEmbed">
+          <div class="video-wrap">
+            <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-family:var(--font-m);font-size:0.58rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Powered by YouTube</div>
       </div>
     </div>
 
@@ -253,6 +280,7 @@
   function quickAdd(name) {
     document.getElementById('exNameInput').value = name;
     addExercise();
+    loadExerciseVideo(name);
   }
 
   function addExercise() {
@@ -262,7 +290,41 @@
     const exId = Date.now();
     currentSession.push({ id: exId, name, sets: [{ reps: '', weight: '' }] });
     renderSessionExercises(prev);
+    loadExerciseVideo(name);
     document.getElementById('exNameInput').value = '';
+  }
+
+  const EXERCISE_VIDEOS = {
+    'squat': 'nEQQle9-0NA', 'barbell back squat': 'nEQQle9-0NA', 'back squat': 'nEQQle9-0NA',
+    'bench press': 'rT7DgCr-3pg', 'barbell bench press': 'rT7DgCr-3pg', 'flat bench': 'rT7DgCr-3pg',
+    'deadlift': 'r4MzxtBKyNE', 'barbell deadlift': 'r4MzxtBKyNE', 'conventional deadlift': 'r4MzxtBKyNE',
+    'overhead press': '_RlRDWO2jfg', 'shoulder press': '_RlRDWO2jfg', 'ohp': '_RlRDWO2jfg', 'military press': '_RlRDWO2jfg',
+    'row': '3GBDFeeqITk', 'barbell row': '3GBDFeeqITk', 'bent over row': '3GBDFeeqITk',
+    'pull-up': 'eGo4IYlbE5g', 'pull up': 'eGo4IYlbE5g', 'pullup': 'eGo4IYlbE5g', 'chin up': 'eGo4IYlbE5g',
+    'lunge': 'QOVaHwm-Q6U', 'walking lunge': 'QOVaHwm-Q6U', 'lunges': 'QOVaHwm-Q6U',
+    'plank': 'ASdvN_XEl_c', 'front plank': 'ASdvN_XEl_c',
+    'romanian deadlift': 'jEy_czb3RKA', 'rdl': 'jEy_czb3RKA',
+    'lat pulldown': 'CAwf7n6Luuc', 'cable row': 'GZbfZ033f74',
+    'bicep curl': 'ykJmrZ5v0Oo', 'dumbbell curl': 'ykJmrZ5v0Oo', 'curl': 'ykJmrZ5v0Oo',
+    'tricep extension': 'nRiJVZDpdL0', 'skull crusher': 'nRiJVZDpdL0',
+    'leg press': 'IZxyjW7MPJQ', 'hip thrust': 'SEdqd1n0cvg',
+    'dumbbell press': 'VmB1G1K7v94', 'incline press': 'SrqOu55lrYU',
+    'face pull': 'rep-qVOkqgk', 'lateral raise': 'v_ZkxWzYnAk'
+  };
+
+  function loadExerciseVideo(exerciseName) {
+    const section = document.getElementById('videoSection');
+    const frame = document.getElementById('videoFrame');
+    const key = exerciseName.toLowerCase().trim();
+    const videoId = EXERCISE_VIDEOS[key];
+    if (videoId) {
+      frame.src = 'https://www.youtube.com/embed/' + videoId + '?rel=0';
+      section.style.display = 'block';
+    } else {
+      const searchUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(exerciseName + ' exercise form');
+      document.getElementById('videoEmbed').innerHTML = '<div class="video-placeholder">No saved demo for this exercise. <a href="' + searchUrl + '" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;">Search YouTube for ' + exerciseName + '</a></div>';
+      section.style.display = 'block';
+    }
   }
 
   function getPreviousBest(name) {

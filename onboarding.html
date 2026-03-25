@@ -408,51 +408,75 @@
         <h2 class="step-title" data-i18n="onboarding.goal_label">What Is Your Primary Goal?</h2>
         <p class="step-sub">Your AI coach builds every session around this. You can update it anytime.</p>
         <div class="options-grid">
-          <div class="option-card" onclick="selectGoal('weight_loss', this)">
-            <div class="option-icon">🔥</div>
+          <div class="option-card" onclick="selectGoal('build_foundation', this)">
+            <div class="option-icon">🏗️</div>
             <div>
-              <div class="option-label" data-i18n="onboarding.goal_weight">Weight Loss</div>
-              <div class="option-desc">Burn fat, build confidence</div>
+              <div class="option-label">Build Your Foundation</div>
+              <div class="option-desc">Start strong with NASM Phase 1 fundamentals</div>
             </div>
             <div class="option-check">✓</div>
           </div>
-          <div class="option-card" onclick="selectGoal('muscle_gain', this)">
-            <div class="option-icon">💪</div>
-            <div>
-              <div class="option-label" data-i18n="onboarding.goal_muscle">Build Muscle</div>
-              <div class="option-desc">Strength and size</div>
-            </div>
-            <div class="option-check">✓</div>
-          </div>
-          <div class="option-card" onclick="selectGoal('endurance', this)">
-            <div class="option-icon">🏃</div>
-            <div>
-              <div class="option-label" data-i18n="onboarding.goal_endurance">Endurance</div>
-              <div class="option-desc">Cardio and stamina</div>
-            </div>
-            <div class="option-check">✓</div>
-          </div>
-          <div class="option-card" onclick="selectGoal('general_fitness', this)">
-            <div class="option-icon">🎯</div>
-            <div>
-              <div class="option-label" data-i18n="onboarding.goal_general">General Fitness</div>
-              <div class="option-desc">Overall health</div>
-            </div>
-            <div class="option-check">✓</div>
-          </div>
-          <div class="option-card selected-green" onclick="selectGoal('glp1_support', this)">
+          <div class="option-card selected-green" onclick="selectGoal('weight_loss_support', this)">
             <div class="option-icon">💊</div>
             <div>
-              <div class="option-label" data-i18n="onboarding.goal_glp1">GLP-1 / AOM Support</div>
-              <div class="option-desc">Muscle preservation on meds</div>
+              <div class="option-label">Weight Loss and Medication Support</div>
+              <div class="option-desc">GLP-1, nutrition, and muscle preservation</div>
             </div>
             <div class="option-check">✓</div>
           </div>
-          <div class="option-card" onclick="selectGoal('rehab', this)">
+          <div class="option-card" onclick="selectGoal('body_recomp', this)">
+            <div class="option-icon">🔥</div>
+            <div>
+              <div class="option-label">Body Recomposition</div>
+              <div class="option-desc">Lose fat and build muscle simultaneously</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('athletic_performance', this)">
+            <div class="option-icon">⚡</div>
+            <div>
+              <div class="option-label">Athletic Performance</div>
+              <div class="option-desc">Sport-specific training and competition prep</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('discipline_driven', this)">
+            <div class="option-icon">🎖️</div>
+            <div>
+              <div class="option-label">Discipline-Driven Training</div>
+              <div class="option-desc">Mission-oriented, no excuses, veteran mindset</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('pain_free_performance', this)">
             <div class="option-icon">🦾</div>
             <div>
-              <div class="option-label" data-i18n="onboarding.goal_rehab">Injury Rehab</div>
-              <div class="option-desc">Train around limitations</div>
+              <div class="option-label">Pain-Free Performance</div>
+              <div class="option-desc">Train around injuries with NASM CES protocols</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('train_together', this)">
+            <div class="option-icon">👫</div>
+            <div>
+              <div class="option-label">Train Together</div>
+              <div class="option-desc">Couples and partner training</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('fifty_plus', this)">
+            <div class="option-icon">💎</div>
+            <div>
+              <div class="option-label">50+ Strong</div>
+              <div class="option-desc">Joint health, longevity, and age-defying strength</div>
+            </div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" onclick="selectGoal('mental_health_recovery', this)">
+            <div class="option-icon">🧠</div>
+            <div>
+              <div class="option-label">Mental Health and Recovery</div>
+              <div class="option-desc">Fitness as therapy for anxiety, depression, PTSD</div>
             </div>
             <div class="option-check">✓</div>
           </div>
@@ -688,10 +712,10 @@
       document.querySelectorAll('#step-2 .option-card').forEach(c => {
         c.classList.remove('selected', 'selected-green');
       });
-      el.classList.add(goal === 'glp1_support' ? 'selected-green' : 'selected');
+      el.classList.add(goal === 'weight_loss_support' ? 'selected-green' : 'selected');
       profile.primary_goal = goal;
-      if (goal === 'glp1_support' || goal === 'rehab') {
-        profile.user_type = goal === 'glp1_support' ? 'glp1_aom' : 'general';
+      if (goal === 'weight_loss_support' || goal === 'pain_free_performance') {
+        profile.user_type = goal === 'weight_loss_support' ? 'glp1_aom' : 'general';
       }
       document.getElementById('nextGoal').disabled = false;
     }
@@ -726,9 +750,11 @@
         user?.user_metadata?.full_name || 'Your Profile';
 
       const goalMap = {
-        weight_loss: 'Weight Loss', muscle_gain: 'Build Muscle',
-        endurance: 'Endurance', general_fitness: 'General Fitness',
-        glp1_support: 'GLP-1 / AOM Support', rehab: 'Injury Rehab'
+        build_foundation: 'Build Your Foundation', weight_loss_support: 'Weight Loss and Medication Support',
+        body_recomp: 'Body Recomposition', athletic_performance: 'Athletic Performance',
+        discipline_driven: 'Discipline-Driven Training', pain_free_performance: 'Pain-Free Performance',
+        train_together: 'Train Together', fifty_plus: '50+ Strong',
+        mental_health_recovery: 'Mental Health and Recovery'
       };
       const levelMap = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
       const langMap  = { en: 'English', es: 'Español', pt: 'Português' };
