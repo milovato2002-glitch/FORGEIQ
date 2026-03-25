@@ -208,12 +208,15 @@
       <div class="field">
         <label>Primary Goal</label>
         <select id="fieldGoal" disabled>
-          <option value="weight_loss">Weight Loss</option>
-          <option value="muscle_gain">Build Muscle</option>
-          <option value="endurance">Endurance</option>
-          <option value="general_fitness">General Fitness</option>
-          <option value="glp1_support">GLP-1 / AOM Support</option>
-          <option value="rehab">Injury Rehab / Recovery</option>
+          <option value="build_foundation">Build Your Foundation</option>
+          <option value="weight_loss_support">Weight Loss and Medication Support</option>
+          <option value="body_recomp">Body Recomposition</option>
+          <option value="athletic_performance">Athletic Performance</option>
+          <option value="discipline_driven">Discipline-Driven Training</option>
+          <option value="pain_free_performance">Pain-Free Performance</option>
+          <option value="train_together">Train Together</option>
+          <option value="fifty_plus">50+ Strong</option>
+          <option value="mental_health_recovery">Mental Health and Recovery</option>
         </select>
       </div>
       <div class="field">
@@ -396,9 +399,11 @@
       ptsd:    { label: 'Mental Health',    cls: 'badge-purple' }
     };
     const goalMap = {
-      weight_loss: 'Weight Loss', muscle_gain: 'Muscle Gain',
-      glp1_support: 'GLP-1 Support', rehab: 'Injury Rehab',
-      endurance: 'Endurance', general_fitness: 'General Fitness'
+      build_foundation: 'Build Your Foundation', weight_loss_support: 'Weight Loss and Medication Support',
+      body_recomp: 'Body Recomposition', athletic_performance: 'Athletic Performance',
+      discipline_driven: 'Discipline-Driven Training', pain_free_performance: 'Pain-Free Performance',
+      train_together: 'Train Together', fifty_plus: '50+ Strong',
+      mental_health_recovery: 'Mental Health and Recovery'
     };
     const wrap = document.getElementById('profileBadges');
     wrap.innerHTML = '';

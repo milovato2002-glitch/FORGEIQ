@@ -94,9 +94,33 @@
     .btn-ask-coach { background:var(--gold); color:var(--black); border:none; border-radius:6px; padding:12px 28px; font-family:var(--font-b); font-weight:700; font-size:0.82rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; text-decoration:none; display:inline-block; }
     .btn-ask-coach:hover { background:var(--gold-lt); }
 
+    /* ── SEARCH BAR ── */
+    .peptide-search-wrap { position:relative; margin-bottom:24px; }
+    .peptide-search { width:100%; background:var(--dark); border:1px solid var(--border); border-radius:8px; color:var(--white); font-family:var(--font-b); font-size:0.95rem; padding:14px 44px 14px 16px; outline:none; transition:border-color 0.2s; }
+    .peptide-search:focus { border-color:var(--purple); }
+    .peptide-search::placeholder { color:var(--muted); }
+    .peptide-search-icon { position:absolute; right:16px; top:50%; transform:translateY(-50%); color:var(--text-dim); pointer-events:none; }
+
+    /* ── PEPTIDE LIBRARY CARDS ── */
+    .peptide-library { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+    .peptide-card { background:var(--dark); border:1px solid var(--border); border-radius:10px; padding:20px; transition:border-color 0.2s; }
+    .peptide-card:hover { border-color:var(--purple); }
+    .peptide-card-name { font-family:var(--font-d); font-size:1.3rem; letter-spacing:1px; color:var(--white); margin-bottom:8px; }
+    .peptide-card-what { font-size:0.82rem; color:var(--text-dim); line-height:1.7; margin-bottom:10px; }
+    .peptide-detail { font-size:0.78rem; color:var(--text-dim); line-height:1.7; margin-bottom:6px; }
+    .peptide-detail strong { color:var(--text); }
+    .peptide-wada { display:inline-block; margin-top:8px; padding:3px 8px; border-radius:3px; font-family:var(--font-m); font-size:0.55rem; text-transform:uppercase; letter-spacing:1px; }
+    .wada-banned { background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.2); color:var(--red); }
+    .wada-clear  { background:rgba(34,168,90,0.08); border:1px solid rgba(34,168,90,0.2); color:var(--green); }
+    .wada-check  { background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); color:var(--gold); }
+
+    /* ── TOPICAL SECTION ── */
+    .topical-card { background:rgba(142,95,191,0.04); border:1px solid rgba(142,95,191,0.15); border-radius:12px; padding:24px; margin-bottom:20px; }
+
     @media(max-width:700px) {
       .page{padding:20px 16px;}
       .category-grid{grid-template-columns:1fr;}
+      .peptide-library{grid-template-columns:1fr;}
       .nav-links{display:none;}
     }
   </style>
@@ -139,6 +163,12 @@
     <p><strong>This page is educational information only.</strong> FORGEIQ, Dr. Michael Lovato, and Debora Lovato are not medical doctors and do not prescribe, recommend, endorse, or sell any peptide or compound.</p>
     <p>Many peptides are <strong>prescription-only, unregulated research compounds, or prohibited in sport</strong> (WADA banned list). Some have limited human safety data. The information below is sourced from peer-reviewed research and government health databases for educational purposes.</p>
     <p><strong>Always consult a licensed physician before using any peptide, hormone, or prescription compound.</strong> This is especially important if you are on GLP-1 medications, blood thinners, immunosuppressants, or have any chronic health condition.</p>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div class="peptide-search-wrap">
+    <input class="peptide-search" type="text" id="peptideSearch" placeholder="Search peptides — BPC-157, Ipamorelin, GHK-Cu..." oninput="filterPeptides(this.value)" />
+    <span class="peptide-search-icon">🔍</span>
   </div>
 
   <!-- WHAT ARE PEPTIDES -->
@@ -224,6 +254,161 @@
     </div>
   </div>
 
+  <!-- EXPANDED PEPTIDE LIBRARY -->
+  <div class="card" id="peptideLibrary">
+    <div class="section-label">Expanded Peptide Library</div>
+    <div class="section-title">Individual Peptide Profiles</div>
+    <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:20px;line-height:1.6;">Each profile covers what the peptide is, proposed mechanisms, what people claim, the science reality, and WADA status. Educational only — no recommendations.</p>
+    <div class="peptide-library">
+
+      <div class="peptide-card" data-name="bpc-157 bpc157 tissue repair gut healing">
+        <div class="peptide-card-name">BPC-157</div>
+        <div class="peptide-card-what">Body Protection Compound — a synthetic peptide derived from a protein found in human gastric juice.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Promotes angiogenesis (new blood vessel formation), modulates nitric oxide, and supports tendon/ligament repair signaling.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Accelerated healing of tendons, ligaments, gut lining, and muscle tears. Some report rapid recovery from injury.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Promising animal studies. Very limited human clinical data. Most evidence is preclinical (rats, mice). No FDA approval.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> If a client asks, acknowledge interest, explain the research gap, and emphasize that NASM CES corrective exercise is the evidence-based approach for injury recovery.</div>
+        <span class="peptide-wada wada-check">WADA: Not explicitly listed but check current list</span>
+      </div>
+
+      <div class="peptide-card" data-name="tb-500 tb500 thymosin beta tissue repair">
+        <div class="peptide-card-name">TB-500</div>
+        <div class="peptide-card-what">Synthetic version of Thymosin Beta-4 — a naturally occurring peptide involved in cell migration and tissue repair.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Promotes cell migration to injury sites, reduces inflammation, supports wound healing and tissue remodeling.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Enhanced recovery from muscle tears, tendon injuries, and general inflammation. Often paired with BPC-157.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Animal studies show wound healing benefits. Limited human trials. Not FDA approved for any indication.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Recovery is multifactorial — sleep, nutrition, and progressive loading matter more than any single compound.</div>
+        <span class="peptide-wada wada-banned">WADA: Banned in competition</span>
+      </div>
+
+      <div class="peptide-card" data-name="ipamorelin growth hormone secretagogue anti-aging">
+        <div class="peptide-card-name">Ipamorelin</div>
+        <div class="peptide-card-what">A selective growth hormone secretagogue that stimulates the pituitary gland to release growth hormone.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Mimics ghrelin at the GH secretagogue receptor, triggering GH release without significantly affecting cortisol or prolactin.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Improved body composition, better sleep, enhanced recovery, anti-aging effects, increased lean mass.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Some clinical data supports GH release. Long-term safety data is limited. Available through some TRT/anti-aging clinics with prescription.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> GH optimization starts with sleep quality, resistance training, and nutrition. Compounds are supplementary at best.</div>
+        <span class="peptide-wada wada-banned">WADA: Banned — growth hormone releasing peptide</span>
+      </div>
+
+      <div class="peptide-card" data-name="cjc-1295 cjc1295 growth hormone ghrh">
+        <div class="peptide-card-name">CJC-1295</div>
+        <div class="peptide-card-what">A synthetic analog of growth hormone releasing hormone (GHRH) with extended half-life via DAC modification.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Stimulates sustained GH release from the pituitary. Often combined with Ipamorelin for synergistic effect.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Body fat reduction, increased lean mass, improved recovery, deeper sleep, and anti-aging benefits.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Clinical studies show measurable GH elevation. Safety profile less established than approved GH therapies. Not FDA approved.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Clients should know that progressive overload and adequate protein (0.7-1g/lb) naturally optimize GH response.</div>
+        <span class="peptide-wada wada-banned">WADA: Banned — GHRH analog</span>
+      </div>
+
+      <div class="peptide-card" data-name="sermorelin growth hormone ghrh anti-aging">
+        <div class="peptide-card-name">Sermorelin</div>
+        <div class="peptide-card-what">A synthetic version of the first 29 amino acids of GHRH. One of the earliest GH-releasing peptides used clinically.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Stimulates natural GH production and release from the pituitary in a pulsatile pattern.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Improved sleep, body composition, energy levels, and skin quality. Considered milder than direct GH therapy.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Was FDA-approved for pediatric GH deficiency (since discontinued for commercial reasons). Reasonable safety data exists. Available through anti-aging clinics.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Focus on lifestyle factors that naturally support GH: deep sleep, high-intensity resistance training, and reduced sugar intake.</div>
+        <span class="peptide-wada wada-banned">WADA: Banned — GHRH analog</span>
+      </div>
+
+      <div class="peptide-card" data-name="aod-9604 aod9604 fat loss weight loss">
+        <div class="peptide-card-name">AOD-9604</div>
+        <div class="peptide-card-what">Anti-Obesity Drug 9604 — a modified fragment of human growth hormone (amino acids 177-191).</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Stimulates lipolysis (fat breakdown) and inhibits lipogenesis (fat formation) without affecting IGF-1 or insulin.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Targeted fat loss without the side effects of full GH therapy. Marketed for body composition improvement.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Phase 2 clinical trials showed modest weight loss effects. Did not proceed to Phase 3. Limited published data. Not FDA approved.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Caloric deficit through nutrition and progressive training remains the gold standard for fat loss. No peptide replaces fundamentals.</div>
+        <span class="peptide-wada wada-banned">WADA: Banned</span>
+      </div>
+
+      <div class="peptide-card" data-name="hexarelin growth hormone secretagogue ghrp">
+        <div class="peptide-card-name">Hexarelin</div>
+        <div class="peptide-card-what">A synthetic growth hormone releasing peptide (GHRP) — one of the strongest GH secretagogues available.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Stimulates GH release via the ghrelin receptor. Also studied for cardioprotective effects.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Significant GH elevation, improved body composition, cardiac benefits, and enhanced recovery.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Studies confirm strong GH release but also show rapid desensitization (tolerance develops). Cardiac benefits shown in animal models.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Tolerance issues make this impractical for long-term use. Natural GH optimization through training is sustainable.</div>
+        <span class="peptide-wada wada-banned">WADA: Banned — GHRP</span>
+      </div>
+
+      <div class="peptide-card" data-name="ghrp-2 ghrp2 growth hormone releasing peptide">
+        <div class="peptide-card-name">GHRP-2</div>
+        <div class="peptide-card-what">Growth Hormone Releasing Peptide-2 — a synthetic agonist of the ghrelin receptor.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Stimulates GH release and also increases appetite via ghrelin pathway activation.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Strong GH elevation, improved sleep, muscle recovery, and increased appetite (beneficial for underweight clients).</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Well-studied in clinical settings. Does increase GH and cortisol. Appetite stimulation can be a significant side effect.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> The appetite increase can work against clients in a fat loss phase. For GLP-1 users, this creates a direct conflict.</div>
+        <span class="peptide-wada wada-banned">WADA: Banned — GHRP</span>
+      </div>
+
+      <div class="peptide-card" data-name="ghrp-6 ghrp6 growth hormone appetite">
+        <div class="peptide-card-name">GHRP-6</div>
+        <div class="peptide-card-what">Growth Hormone Releasing Peptide-6 — another ghrelin receptor agonist with stronger appetite-stimulating effects.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Similar to GHRP-2 but with more pronounced hunger signaling. Stimulates GH release and gastric motility.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> GH elevation, recovery enhancement, and significant appetite increase. Sometimes used to help underweight individuals gain weight.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Confirmed GH release in studies. Strong appetite stimulation is the primary distinguishing feature. Not ideal for weight management goals.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Directly contradicts GLP-1 goals. Appetite stimulation in a weight loss context is counterproductive.</div>
+        <span class="peptide-wada wada-banned">WADA: Banned — GHRP</span>
+      </div>
+
+      <div class="peptide-card" data-name="pt-141 pt141 bremelanotide sexual wellness">
+        <div class="peptide-card-name">PT-141</div>
+        <div class="peptide-card-what">Bremelanotide — a melanocortin receptor agonist. FDA-approved as Vyleesi for hypoactive sexual desire disorder in premenopausal women.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Acts on melanocortin-4 receptors in the brain to influence sexual arousal pathways. Does not work through vascular mechanisms.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Enhanced sexual desire and function for both men and women. Sometimes marketed in wellness/anti-aging clinics.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> FDA-approved (as Vyleesi) for a specific indication. Side effects include nausea and flushing. Off-label use for men is not FDA approved.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Sexual wellness is part of overall health. Exercise itself is one of the best evidence-based approaches to improving sexual function.</div>
+        <span class="peptide-wada wada-check">WADA: Check current list — melanocortin agonists may be monitored</span>
+      </div>
+
+      <div class="peptide-card" data-name="epithalon epitalon telomere anti-aging longevity">
+        <div class="peptide-card-name">Epithalon</div>
+        <div class="peptide-card-what">A synthetic tetrapeptide studied for its potential effects on telomerase activation and longevity.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Proposed to activate telomerase, the enzyme that maintains telomere length — associated with cellular aging.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Anti-aging at the cellular level, improved sleep quality, enhanced immune function, and longevity benefits.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Based primarily on Russian research by Dr. Vladimir Khavinson. Limited Western peer-reviewed data. Intriguing hypothesis but insufficient clinical evidence.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Longevity science points to exercise, sleep, and nutrition as the most evidence-based interventions. Telomere research is early-stage.</div>
+        <span class="peptide-wada wada-check">WADA: Not explicitly listed — verify current list</span>
+      </div>
+
+      <div class="peptide-card" data-name="ll-37 antimicrobial immune defense cathelicidin">
+        <div class="peptide-card-name">LL-37</div>
+        <div class="peptide-card-what">A human cathelicidin antimicrobial peptide — part of the innate immune system.</div>
+        <div class="peptide-detail"><strong>Proposed Mechanism:</strong> Disrupts microbial membranes, modulates immune response, and promotes wound healing. Naturally produced by immune cells.</div>
+        <div class="peptide-detail"><strong>What People Claim:</strong> Enhanced immune defense, improved wound healing, anti-biofilm activity, and potential anti-cancer properties.</div>
+        <div class="peptide-detail"><strong>Science Reality:</strong> Well-characterized in immunology research. Therapeutic applications are in early clinical stages. Synthetic versions available through research suppliers.</div>
+        <div class="peptide-detail"><strong>Trainer Talking Points:</strong> Immune health is best supported by adequate sleep, vitamin D, zinc, exercise, and stress management. Peptide immune modulators are research-stage.</div>
+        <span class="peptide-wada wada-check">WADA: Not explicitly listed — verify current list</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOPICAL PEPTIDES IN SKINCARE — DEBORA ESTHETICS -->
+  <div class="topical-card">
+    <div class="debora-note-label">✨ Topical Peptides in Skincare — Debora's Esthetics Angle</div>
+    <div class="section-body">
+      <p>As a licensed esthetician, this is where peptides and my professional practice intersect directly. <strong>Topical peptides</strong> are among the most exciting ingredients in modern esthetics — backed by real research and used in professional-grade skincare.</p>
+
+      <p style="margin-top:14px;"><strong>Copper Peptides (GHK-Cu):</strong> One of the best-studied topical peptides. GHK-Cu promotes collagen synthesis, reduces inflammation, and supports wound healing. I use copper peptide serums in my practice for clients experiencing post-weight-loss skin changes and post-procedure recovery. Studies in the Journal of Cosmetic Dermatology confirm its collagen-stimulating properties.</p>
+
+      <p style="margin-top:14px;"><strong>Argireline (Acetyl Hexapeptide-3):</strong> Often called "topical Botox" — it works by inhibiting neurotransmitter release at the neuromuscular junction, reducing the appearance of expression lines. It does not replace Botox but is a reasonable daily maintenance ingredient.</p>
+
+      <p style="margin-top:14px;"><strong>Matrixyl (Palmitoyl Pentapeptide-4):</strong> Stimulates collagen I and III production. One of the most evidence-backed anti-aging peptides in skincare. Multiple clinical trials demonstrate wrinkle reduction with consistent use.</p>
+
+      <p style="margin-top:14px;"><strong>Palmitoyl Tripeptide-1 and Tetrapeptide-7:</strong> Work synergistically to reduce inflammation and stimulate extracellular matrix repair. Found in many professional-grade anti-aging formulations.</p>
+
+      <p style="margin-top:14px;"><strong>My Protocol for Post-Weight-Loss Skin:</strong> Combine topical copper peptides + collagen supplementation (15-20g hydrolyzed collagen daily) + resistance training (builds the underlying muscle structure) + professional treatments (laser, radiofrequency, microneedling) + hydration and patience. Transformation is a process, not an event.</p>
+    </div>
+  </div>
+
+  <!-- COMPLIANCE DISCLAIMER -->
+  <div class="big-disclaimer">
+    <div class="big-disclaimer-title">⚠️ Compliance Notice</div>
+    <p><strong>No vendor links, no product recommendations, no purchase suggestions.</strong> FORGEIQ does not sell, distribute, or endorse any peptide product. All information is sourced from peer-reviewed research and government health databases.</p>
+    <p>Many peptides discussed on this page are <strong>not FDA-approved for human use</strong>, are classified as research compounds, or are <strong>banned by WADA for competitive athletes</strong>. Always verify the current regulatory status of any compound with your healthcare provider and relevant governing body.</p>
+  </div>
+
   <!-- RESEARCH LINKS -->
   <div class="card">
     <div class="section-label">Research & Education Resources</div>
@@ -293,6 +478,15 @@
 <script>
   const user = SupabaseClient.getUser();
   document.getElementById('navUser').textContent = user?.user_metadata?.full_name?.charAt(0).toUpperCase() || 'M';
+
+  function filterPeptides(query) {
+    const q = query.toLowerCase().trim();
+    const cards = document.querySelectorAll('.peptide-card');
+    cards.forEach(function(card) {
+      const name = (card.getAttribute('data-name') || '') + ' ' + card.textContent.toLowerCase();
+      card.style.display = (!q || name.includes(q)) ? '' : 'none';
+    });
+  }
 </script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 </body>
