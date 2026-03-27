@@ -1,0 +1,2513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Train</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-primary, #0a1628);
+      color: var(--text-primary, #e8edf5);
+      font-family: 'Barlow', sans-serif;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    .top-nav {
+      background: var(--bg-secondary, #0e1e36);
+      border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 60px;
+    }
+    .nav-left { display: flex; align-items: center; gap: 16px; }
+    .back-btn {
+      background: none; border: none; color: var(--text-secondary, #8fa3c0);
+      font-size: 1.2rem; cursor: pointer; padding: 4px 8px; transition: color 0.2s;
+    }
+    .back-btn:hover { color: var(--gold, #f0a500); }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      color: #e8edf5;
+    }
+    .nav-logo span { color: var(--gold, #f0a500); }
+    .nav-center { display: flex; align-items: center; gap: 0; }
+    .nav-link {
+      color: var(--text-secondary, #8fa3c0);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 18px 16px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+    .nav-link:hover { color: #e8edf5; }
+    .nav-link.active {
+      color: var(--gold, #f0a500);
+      border-bottom-color: var(--gold, #f0a500);
+    }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .lang-toggle {
+      display: flex; gap: 0; border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 6px; overflow: hidden;
+    }
+    .lang-btn {
+      background: none; border: none; color: var(--text-muted, #4a6080);
+      font-size: 0.65rem; font-weight: 600; padding: 5px 10px; cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; transition: all 0.2s;
+    }
+    .lang-btn.active { background: var(--gold-dim, rgba(240,165,0,0.12)); color: var(--gold, #f0a500); }
+    .lang-btn:hover { color: var(--gold, #f0a500); }
+    .btn-login {
+      background: none; border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      color: var(--gold, #f0a500); font-size: 0.72rem; font-weight: 600;
+      padding: 7px 18px; border-radius: 6px; cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px;
+      text-transform: uppercase; transition: all 0.2s;
+    }
+    .btn-login:hover { background: var(--gold-dim, rgba(240,165,0,0.12)); }
+    .btn-start {
+      background: var(--gold, #f0a500); border: none;
+      color: #0a1628; font-size: 0.72rem; font-weight: 700;
+      padding: 7px 18px; border-radius: 6px; cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px;
+      text-transform: uppercase; transition: all 0.2s;
+    }
+    .btn-start:hover { background: var(--gold-hover, #ffb820); }
+
+    /* ── SUB TABS ── */
+    .sub-tabs {
+      background: var(--bg-secondary, #0e1e36);
+      border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: 0 32px;
+    }
+    .sub-tab {
+      background: none; border: none;
+      color: var(--text-secondary, #8fa3c0);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 14px 32px;
+      border-bottom: 2px solid transparent;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .sub-tab:hover { color: #e8edf5; }
+    .sub-tab.active {
+      color: var(--gold, #f0a500);
+      border-bottom-color: var(--gold, #f0a500);
+    }
+
+    /* ── MAIN CONTENT ── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 32px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card-gold {
+      border-color: var(--border-gold, rgba(240,165,0,0.18));
+    }
+    .card-header {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+      color: #e8edf5;
+      margin-bottom: 12px;
+    }
+    .card-sub {
+      font-size: 0.85rem;
+      color: var(--text-secondary, #8fa3c0);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      color: #e8edf5;
+      margin-bottom: 16px;
+    }
+    .section-title em { font-style: normal; color: var(--gold, #f0a500); }
+
+    /* ── BUTTONS ── */
+    .btn-gold {
+      background: var(--gold, #f0a500);
+      border: none; color: #0a1628;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 0.85rem;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 12px 32px; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-gold:hover { background: var(--gold-hover, #ffb820); transform: translateY(-1px); }
+    .btn-outline {
+      background: none;
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      color: var(--gold, #f0a500);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600; font-size: 0.78rem;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 8px 20px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-outline:hover { background: var(--gold-dim, rgba(240,165,0,0.12)); }
+    .btn-sm {
+      font-size: 0.72rem; padding: 6px 14px;
+    }
+    .btn-teal {
+      background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.25);
+      color: #2dd4bf; font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600; font-size: 0.72rem; letter-spacing: 1px;
+      text-transform: uppercase; padding: 6px 14px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-teal:hover { background: rgba(45,212,191,0.2); }
+    .btn-red {
+      background: rgba(230,57,70,0.12); border: 1px solid rgba(230,57,70,0.25);
+      color: #e63946;
+    }
+
+    /* ── FILTER BUTTONS ── */
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .filter-btn {
+      background: var(--bg-secondary, #0e1e36);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      color: var(--text-secondary, #8fa3c0);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 7px 16px; border-radius: 20px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--gold, #f0a500); color: var(--gold, #f0a500); }
+    .filter-btn.active {
+      background: var(--gold-dim, rgba(240,165,0,0.12));
+      border-color: var(--gold, #f0a500);
+      color: var(--gold, #f0a500);
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-secondary, #8fa3c0);
+      margin-bottom: 6px; display: block;
+    }
+    .form-select, .form-input {
+      width: 100%;
+      background: var(--bg-secondary, #0e1e36);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      color: var(--text-primary, #e8edf5);
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.88rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-select:focus, .form-input:focus {
+      border-color: var(--gold, #f0a500);
+    }
+    .form-select option { background: #0e1e36; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    .form-textarea {
+      width: 100%; min-height: 80px; resize: vertical;
+      background: var(--bg-secondary, #0e1e36);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      color: var(--text-primary, #e8edf5);
+      font-family: 'Barlow', sans-serif; font-size: 0.88rem;
+      padding: 10px 14px; border-radius: 8px; outline: none;
+    }
+    .form-textarea:focus { border-color: var(--gold, #f0a500); }
+
+    /* ── WORKOUT LIBRARY GRID ── */
+    .workout-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+    .workout-card {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 10px; padding: 18px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .workout-card:hover { border-color: var(--gold, #f0a500); transform: translateY(-2px); }
+    .workout-card-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+      letter-spacing: 1px; color: #e8edf5; margin-bottom: 6px;
+    }
+    .workout-card-meta {
+      font-size: 0.75rem; color: var(--text-muted, #4a6080);
+      display: flex; gap: 12px; margin-bottom: 8px;
+    }
+    .workout-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 0.6rem; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+    .tag-push { background: rgba(240,165,0,0.12); color: #f0a500; }
+    .tag-pull { background: rgba(45,212,191,0.12); color: #2dd4bf; }
+    .tag-legs { background: rgba(45,220,83,0.12); color: #2dc653; }
+    .tag-full { background: rgba(244,162,97,0.12); color: #f4a261; }
+    .tag-cardio { background: rgba(230,57,70,0.12); color: #e63946; }
+    .tag-mobility { background: rgba(139,92,246,0.12); color: #8b5cf6; }
+    .tag-custom { background: rgba(143,163,192,0.12); color: #8fa3c0; }
+
+    /* ── ACTIVE WORKOUT OVERLAY ── */
+    .workout-overlay {
+      display: none; position: fixed; inset: 0;
+      background: var(--bg-primary, #0a1628);
+      z-index: 200; overflow-y: auto;
+    }
+    .workout-overlay.active { display: flex; flex-direction: column; }
+    .wo-header {
+      background: var(--bg-secondary, #0e1e36);
+      border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      padding: 16px 24px; display: flex;
+      align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 210;
+    }
+    .wo-exit {
+      background: rgba(230,57,70,0.12); border: 1px solid rgba(230,57,70,0.25);
+      color: #e63946; font-size: 1.2rem; width: 40px; height: 40px;
+      border-radius: 8px; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .wo-exit:hover { background: rgba(230,57,70,0.25); }
+    .wo-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem;
+      letter-spacing: 1px; color: #e8edf5; text-align: center;
+    }
+    .wo-timer {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem;
+      font-weight: 600; color: var(--gold, #f0a500); letter-spacing: 1px;
+    }
+    .wo-progress-bar {
+      height: 4px; background: var(--bg-secondary, #0e1e36);
+      position: relative;
+    }
+    .wo-progress-fill {
+      height: 100%; background: var(--gold, #f0a500);
+      transition: width 0.3s ease;
+    }
+    .wo-progress-labels {
+      display: flex; justify-content: space-between;
+      padding: 6px 24px; font-size: 0.65rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted, #4a6080);
+    }
+    .wo-progress-labels span.current { color: var(--gold, #f0a500); font-weight: 700; }
+    .wo-body { flex: 1; max-width: 700px; margin: 0 auto; padding: 24px; width: 100%; }
+    .exercise-card {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 12px; padding: 24px; margin-bottom: 20px;
+    }
+    .exercise-name {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+      letter-spacing: 1px; color: #e8edf5; margin-bottom: 4px;
+    }
+    .exercise-cue {
+      font-style: italic; font-size: 0.82rem;
+      color: var(--teal, #2dd4bf); margin-bottom: 12px;
+    }
+    .exercise-prev {
+      font-size: 0.72rem; color: var(--text-muted, #4a6080);
+      margin-bottom: 16px;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.5px;
+    }
+    .set-table { width: 100%; margin-bottom: 16px; }
+    .set-table th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted, #4a6080);
+      text-align: left; padding: 6px 8px;
+      border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+    }
+    .set-table td { padding: 8px 8px; vertical-align: middle; }
+    .set-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.82rem; font-weight: 600; color: var(--text-secondary, #8fa3c0);
+    }
+    .set-input {
+      width: 70px; background: var(--bg-secondary, #0e1e36);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      color: var(--text-primary, #e8edf5);
+      font-family: 'Barlow', sans-serif; font-size: 0.88rem;
+      padding: 8px 10px; border-radius: 6px; text-align: center; outline: none;
+    }
+    .set-input:focus { border-color: var(--gold, #f0a500); }
+    .set-check {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--bg-secondary, #0e1e36);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      color: var(--text-muted, #4a6080); font-size: 1.1rem;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.2s;
+    }
+    .set-check:hover { border-color: var(--green, #2dc653); color: var(--green, #2dc653); }
+    .set-check.done {
+      background: rgba(45,198,83,0.15); border-color: var(--green, #2dc653);
+      color: var(--green, #2dc653);
+    }
+    .exercise-actions { display: flex; gap: 10px; margin-top: 8px; }
+    .wo-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px; border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      background: var(--bg-secondary, #0e1e36);
+    }
+
+    /* ── REST TIMER OVERLAY ── */
+    .rest-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(10,22,40,0.92); z-index: 250;
+      flex-direction: column; align-items: center; justify-content: center;
+    }
+    .rest-overlay.active { display: flex; }
+    .rest-time {
+      font-family: 'Bebas Neue', sans-serif; font-size: 6rem;
+      color: var(--gold, #f0a500); letter-spacing: 2px;
+    }
+    .rest-label {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-secondary, #8fa3c0); margin-bottom: 8px;
+    }
+    .rest-skip {
+      margin-top: 24px; background: none;
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      color: var(--gold, #f0a500); font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; padding: 10px 28px;
+      border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    }
+    .rest-skip:hover { background: var(--gold-dim, rgba(240,165,0,0.12)); }
+
+    /* ── ASK COACH MINI OVERLAY ── */
+    .coach-mini {
+      display: none; position: fixed; bottom: 80px; right: 24px;
+      width: 360px; max-height: 400px;
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      border-radius: 12px; z-index: 260;
+      flex-direction: column; overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .coach-mini.active { display: flex; }
+    .coach-mini-header {
+      padding: 12px 16px; display: flex; align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+    }
+    .coach-mini-header span {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.82rem;
+      font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--gold, #f0a500);
+    }
+    .coach-mini-close {
+      background: none; border: none; color: var(--text-muted, #4a6080);
+      font-size: 1rem; cursor: pointer;
+    }
+    .coach-mini-body {
+      flex: 1; padding: 12px 16px; overflow-y: auto;
+      font-size: 0.82rem; color: var(--text-secondary, #8fa3c0);
+      line-height: 1.6;
+    }
+    .coach-mini-input {
+      display: flex; gap: 8px; padding: 12px;
+      border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+    }
+    .coach-mini-input input {
+      flex: 1; background: var(--bg-secondary, #0e1e36);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      color: var(--text-primary, #e8edf5); font-family: 'Barlow', sans-serif;
+      font-size: 0.82rem; padding: 8px 12px; border-radius: 6px; outline: none;
+    }
+    .coach-mini-input input:focus { border-color: var(--gold, #f0a500); }
+    .coach-mini-input button {
+      background: var(--gold, #f0a500); border: none; color: #0a1628;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase;
+      padding: 8px 16px; border-radius: 6px; cursor: pointer;
+    }
+
+    /* ── EXIT CONFIRM MODAL ── */
+    .exit-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(10,22,40,0.85); z-index: 270;
+      align-items: center; justify-content: center;
+    }
+    .exit-modal.active { display: flex; }
+    .exit-modal-box {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      border-radius: 12px; padding: 32px; text-align: center;
+      max-width: 400px; width: 90%;
+    }
+    .exit-modal-box h3 {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem;
+      letter-spacing: 1px; color: #e8edf5; margin-bottom: 10px;
+    }
+    .exit-modal-box p {
+      font-size: 0.88rem; color: var(--text-secondary, #8fa3c0);
+      margin-bottom: 20px; line-height: 1.5;
+    }
+    .exit-modal-btns { display: flex; gap: 12px; justify-content: center; }
+
+    /* ── WORKOUT COMPLETE ── */
+    .workout-complete {
+      display: none; position: fixed; inset: 0;
+      background: var(--bg-primary, #0a1628); z-index: 200;
+      overflow-y: auto;
+    }
+    .workout-complete.active { display: block; }
+    .wc-inner {
+      max-width: 600px; margin: 0 auto; padding: 48px 24px;
+      text-align: center;
+    }
+    .wc-badge {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--gold-dim, rgba(240,165,0,0.12));
+      border: 2px solid var(--gold, #f0a500);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 2rem;
+    }
+    .wc-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem;
+      letter-spacing: 1px; color: #e8edf5; margin-bottom: 8px;
+    }
+    .wc-subtitle {
+      font-size: 0.92rem; color: var(--text-secondary, #8fa3c0);
+      margin-bottom: 28px;
+    }
+    .wc-stats {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+      margin-bottom: 28px;
+    }
+    .wc-stat {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 10px; padding: 16px;
+    }
+    .wc-stat-val {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+      color: var(--gold, #f0a500); letter-spacing: 1px;
+    }
+    .wc-stat-label {
+      font-size: 0.68rem; color: var(--text-muted, #4a6080);
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .wc-quote {
+      background: var(--bg-card, #142444);
+      border-left: 3px solid var(--gold, #f0a500);
+      border-radius: 0 10px 10px 0;
+      padding: 20px 24px; margin-bottom: 28px;
+      text-align: left;
+    }
+    .wc-quote p {
+      font-style: italic; font-size: 0.92rem;
+      color: var(--text-primary, #e8edf5); line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .wc-quote cite {
+      font-size: 0.75rem; color: var(--gold, #f0a500);
+      font-style: normal; font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.5px;
+    }
+    .wc-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── NUTRITION TAB ── */
+    .phase-banner {
+      border-radius: 10px; padding: 16px 20px;
+      margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .phase-banner.amber {
+      background: rgba(244,162,97,0.1);
+      border: 1px solid rgba(244,162,97,0.25);
+    }
+    .phase-banner.green {
+      background: rgba(45,198,83,0.1);
+      border: 1px solid rgba(45,198,83,0.25);
+    }
+    .phase-banner .icon { font-size: 1.3rem; }
+    .phase-banner .text {
+      font-size: 0.82rem; font-weight: 500;
+      line-height: 1.5;
+    }
+    .phase-banner.amber .text { color: var(--amber, #f4a261); }
+    .phase-banner.green .text { color: var(--green, #2dc653); }
+
+    .macro-rings { display: flex; gap: 24px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+    .macro-ring { text-align: center; }
+    .macro-ring svg { width: 100px; height: 100px; }
+    .macro-ring-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-secondary, #8fa3c0);
+      margin-top: 6px;
+    }
+    .macro-ring-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem; color: #e8edf5;
+    }
+
+    .water-tracker { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .water-glass {
+      width: 36px; height: 44px; border-radius: 4px 4px 8px 8px;
+      border: 2px solid var(--border-subtle, rgba(255,255,255,0.07));
+      background: var(--bg-secondary, #0e1e36);
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: flex-end; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+    .water-glass.filled {
+      border-color: rgba(45,212,191,0.4);
+    }
+    .water-fill {
+      width: 100%; background: rgba(45,212,191,0.35);
+      transition: height 0.3s ease; height: 0;
+    }
+    .water-glass.filled .water-fill { height: 100%; }
+
+    .calorie-display {
+      text-align: center; margin-bottom: 20px;
+    }
+    .calorie-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem; color: #e8edf5;
+      letter-spacing: 2px; line-height: 1;
+    }
+    .calorie-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--text-muted, #4a6080);
+    }
+    .calorie-target {
+      font-size: 0.82rem; color: var(--text-secondary, #8fa3c0);
+    }
+
+    .nutrition-actions { display: flex; gap: 12px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+
+    /* ── LOG MEAL MODAL ── */
+    .meal-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(10,22,40,0.88); z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .meal-modal.active { display: flex; }
+    .meal-modal-box {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      border-radius: 12px; width: 90%; max-width: 500px;
+      max-height: 80vh; overflow-y: auto;
+    }
+    .meal-modal-header {
+      padding: 20px 24px; display: flex; align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+    }
+    .meal-modal-header h3 {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem;
+      letter-spacing: 1px; color: #e8edf5;
+    }
+    .meal-modal-close {
+      background: none; border: none; color: var(--text-muted, #4a6080);
+      font-size: 1.2rem; cursor: pointer;
+    }
+    .meal-tabs {
+      display: flex; border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+    }
+    .meal-tab {
+      flex: 1; background: none; border: none;
+      color: var(--text-secondary, #8fa3c0);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 12px; cursor: pointer; transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    .meal-tab.active { color: var(--gold, #f0a500); border-bottom-color: var(--gold, #f0a500); }
+    .meal-panel { display: none; padding: 20px 24px; }
+    .meal-panel.active { display: block; }
+    .search-results {
+      max-height: 200px; overflow-y: auto; margin-top: 12px;
+    }
+    .search-result-item {
+      padding: 10px 12px; border-radius: 6px; cursor: pointer;
+      font-size: 0.85rem; color: var(--text-primary, #e8edf5);
+      transition: background 0.15s;
+    }
+    .search-result-item:hover { background: var(--bg-secondary, #0e1e36); }
+    .search-result-macros {
+      font-size: 0.7rem; color: var(--text-muted, #4a6080); margin-top: 2px;
+    }
+    .barcode-placeholder {
+      text-align: center; padding: 40px 20px;
+      color: var(--text-muted, #4a6080); font-size: 0.88rem;
+    }
+
+    /* ── FUEL CARDS ── */
+    .fuel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+    .fuel-card {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 10px; padding: 16px;
+    }
+    .fuel-card-title {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--gold, #f0a500); margin-bottom: 8px;
+    }
+    .fuel-card p { font-size: 0.82rem; color: var(--text-secondary, #8fa3c0); line-height: 1.5; }
+
+    /* ── GLP1 ALERT ── */
+    .glp1-alert {
+      background: rgba(244,162,97,0.08);
+      border: 1px solid rgba(244,162,97,0.2);
+      border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;
+      display: none;
+    }
+    .glp1-alert.show { display: block; }
+    .glp1-alert-title {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem;
+      font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--amber, #f4a261); margin-bottom: 8px;
+    }
+    .glp1-alert p { font-size: 0.82rem; color: var(--text-secondary, #8fa3c0); line-height: 1.5; }
+
+    /* ── MICRO TRACKER ── */
+    .micro-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px; margin-bottom: 28px;
+    }
+    .micro-item {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 8px; padding: 12px;
+    }
+    .micro-name {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-secondary, #8fa3c0); margin-bottom: 4px;
+    }
+    .micro-bar {
+      height: 4px; background: var(--bg-secondary, #0e1e36);
+      border-radius: 2px; margin-bottom: 4px; overflow: hidden;
+    }
+    .micro-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+    .micro-values {
+      font-size: 0.68rem; color: var(--text-muted, #4a6080);
+      display: flex; justify-content: space-between;
+    }
+    .micro-desc {
+      font-size: 0.62rem; color: var(--text-muted, #4a6080);
+      margin-top: 4px; line-height: 1.4;
+    }
+
+    /* ── WEEKLY REPORT ── */
+    .weekly-report {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      border-radius: 10px; padding: 24px; margin-bottom: 28px;
+      text-align: center;
+    }
+    .weekly-report p { font-size: 0.85rem; color: var(--text-secondary, #8fa3c0); margin-bottom: 16px; }
+
+    /* ── SUPPLEMENT SECTION ── */
+    .supp-tier {
+      margin-bottom: 24px;
+    }
+    .supp-tier-header {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem;
+      letter-spacing: 1px; color: #e8edf5; margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+    }
+    .supp-tier-header span { color: var(--gold, #f0a500); }
+    .supp-list { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .supp-item {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 8px; padding: 14px 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .supp-item.highlight { border-color: var(--border-gold, rgba(240,165,0,0.18)); }
+    .supp-icon {
+      width: 32px; height: 32px; border-radius: 6px;
+      background: var(--gold-dim, rgba(240,165,0,0.12));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .supp-info { flex: 1; }
+    .supp-name {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 0.88rem; color: #e8edf5; margin-bottom: 2px;
+    }
+    .supp-dose {
+      font-size: 0.75rem; color: var(--gold, #f0a500);
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+    .supp-note {
+      font-size: 0.72rem; color: var(--text-muted, #4a6080);
+      margin-top: 4px; line-height: 1.4;
+    }
+    .supp-edu-note {
+      font-size: 0.75rem; color: var(--text-muted, #4a6080);
+      font-style: italic; margin-top: 8px;
+    }
+
+    /* ── POPULATION STACKS ── */
+    .pop-stack {
+      display: none;
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      border-radius: 10px; padding: 20px; margin-bottom: 20px;
+    }
+    .pop-stack.show { display: block; }
+    .pop-stack-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+      letter-spacing: 1px; color: var(--gold, #f0a500); margin-bottom: 10px;
+    }
+    .pop-stack ul {
+      list-style: none; padding: 0;
+    }
+    .pop-stack li {
+      font-size: 0.82rem; color: var(--text-secondary, #8fa3c0);
+      padding: 4px 0; padding-left: 16px; position: relative;
+    }
+    .pop-stack li::before {
+      content: ""; position: absolute; left: 0; top: 11px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold, #f0a500);
+    }
+
+    /* ── SUPPLEMENT DAILY TRACKER ── */
+    .supp-tracker-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 12px; margin-bottom: 20px;
+    }
+    .supp-tracker-col {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      border-radius: 10px; padding: 14px;
+    }
+    .supp-tracker-time {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--gold, #f0a500); margin-bottom: 10px; text-align: center;
+    }
+    .supp-check-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 0; font-size: 0.78rem; color: var(--text-secondary, #8fa3c0);
+    }
+    .supp-checkbox {
+      width: 18px; height: 18px; border-radius: 4px;
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      background: var(--bg-secondary, #0e1e36);
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; transition: all 0.15s;
+      font-size: 0.7rem; color: transparent;
+    }
+    .supp-checkbox.checked {
+      background: rgba(45,198,83,0.15);
+      border-color: var(--green, #2dc653);
+      color: var(--green, #2dc653);
+    }
+
+    /* ── DISCLAIMERS ── */
+    .disclaimer {
+      background: rgba(230,57,70,0.06);
+      border: 1px solid rgba(230,57,70,0.15);
+      border-radius: 8px; padding: 14px 18px;
+      font-size: 0.72rem; color: var(--text-muted, #4a6080);
+      line-height: 1.6; margin-bottom: 12px;
+    }
+
+    /* ── COACH TAB ── */
+    .chat-container {
+      display: flex; flex-direction: column;
+      height: calc(100vh - 180px);
+      max-width: 800px; margin: 0 auto;
+    }
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 20px 0;
+    }
+    .chat-msg {
+      display: flex; gap: 12px; margin-bottom: 16px;
+      align-items: flex-start;
+    }
+    .chat-msg.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .chat-avatar.ai {
+      background: var(--gold-dim, rgba(240,165,0,0.12));
+      color: var(--gold, #f0a500);
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+    }
+    .chat-avatar.human {
+      background: rgba(45,212,191,0.12);
+      color: var(--teal, #2dd4bf);
+      border: 1px solid rgba(45,212,191,0.18);
+    }
+    .chat-bubble {
+      max-width: 75%; padding: 14px 18px;
+      border-radius: 12px; font-size: 0.88rem;
+      line-height: 1.6;
+    }
+    .chat-msg.assistant .chat-bubble {
+      background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      color: var(--text-primary, #e8edf5);
+    }
+    .chat-msg.user .chat-bubble {
+      background: var(--gold-dim, rgba(240,165,0,0.12));
+      border: 1px solid var(--border-gold, rgba(240,165,0,0.18));
+      color: var(--text-primary, #e8edf5);
+    }
+    .chat-input-bar {
+      display: flex; gap: 10px; padding: 16px 0;
+      border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+    }
+    .chat-input {
+      flex: 1; background: var(--bg-card, #142444);
+      border: 1px solid var(--border-subtle, rgba(255,255,255,0.07));
+      color: var(--text-primary, #e8edf5);
+      font-family: 'Barlow', sans-serif; font-size: 0.88rem;
+      padding: 12px 16px; border-radius: 10px; outline: none;
+    }
+    .chat-input:focus { border-color: var(--gold, #f0a500); }
+    .chat-send {
+      background: var(--gold, #f0a500); border: none; color: #0a1628;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 0.82rem; letter-spacing: 1px; text-transform: uppercase;
+      padding: 12px 24px; border-radius: 10px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .chat-send:hover { background: var(--gold-hover, #ffb820); }
+    .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .top-nav { padding: 0 16px; }
+      .nav-center { display: none; }
+      .page { padding: 20px 16px; }
+      .form-row { grid-template-columns: 1fr; }
+      .wc-stats { grid-template-columns: 1fr; }
+      .fuel-grid { grid-template-columns: 1fr; }
+      .supp-tracker-grid { grid-template-columns: 1fr 1fr; }
+      .macro-rings { gap: 16px; }
+      .coach-mini { width: calc(100% - 32px); right: 16px; bottom: 16px; }
+      .workout-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .supp-tracker-grid { grid-template-columns: 1fr; }
+      .nav-right .lang-toggle { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════ NAVIGATION ════════════════════ -->
+<nav class="top-nav">
+  <div class="nav-left">
+    <button class="back-btn" onclick="history.back()" title="Go back">&larr;</button>
+    <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
+  </div>
+  <div class="nav-center">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/train.html" class="nav-link active">Train</a>
+    <a href="/progress.html" class="nav-link">Progress</a>
+    <a href="/debora.html" class="nav-link">Debora</a>
+    <a href="/resources.html" class="nav-link">Resources</a>
+    <a href="/book.html" class="nav-link">Book</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="pt">PT</button>
+    </div>
+    <a href="/login.html" class="btn-login">Log In</a>
+    <a href="/signup.html" class="btn-start">Get Started</a>
+  </div>
+</nav>
+
+<!-- ════════════════════ SUB TABS ════════════════════ -->
+<div class="sub-tabs">
+  <button class="sub-tab active" data-tab="workout">Workout</button>
+  <button class="sub-tab" data-tab="nutrition">Nutrition</button>
+  <button class="sub-tab" data-tab="coach">Coach</button>
+</div>
+
+<!-- ════════════════════ PAGE CONTENT ════════════════════ -->
+<div class="page">
+
+<!-- ──────────── WORKOUT TAB ──────────── -->
+<div id="tab-workout" class="tab-panel active">
+
+  <!-- Today's Workout -->
+  <div class="card card-gold">
+    <div class="card-header" id="today-workout-name">Push Day — Chest and Triceps</div>
+    <div class="card-sub">
+      <span id="today-muscles">Chest, Shoulders, Triceps</span> &middot;
+      <span id="today-duration">~45 min</span>
+    </div>
+    <button class="btn-gold" id="btn-start-workout">START WORKOUT</button>
+  </div>
+
+  <!-- Workout Library -->
+  <div class="section-title">Workout <em>Library</em></div>
+  <div class="filter-bar" id="category-filters">
+    <button class="filter-btn active" data-cat="all">All</button>
+    <button class="filter-btn" data-cat="push">Push</button>
+    <button class="filter-btn" data-cat="pull">Pull</button>
+    <button class="filter-btn" data-cat="legs">Legs</button>
+    <button class="filter-btn" data-cat="full">Full Body</button>
+    <button class="filter-btn" data-cat="cardio">Cardio</button>
+    <button class="filter-btn" data-cat="mobility">Mobility</button>
+    <button class="filter-btn" data-cat="custom">Custom</button>
+  </div>
+  <div class="workout-grid" id="workout-library"></div>
+
+  <!-- AI Workout Builder -->
+  <div style="margin-top: 32px;">
+    <div class="section-title">AI Workout <em>Builder</em></div>
+    <div class="card">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Goal</label>
+          <select class="form-select" id="ai-goal">
+            <option value="muscle">Build Muscle</option>
+            <option value="strength">Build Strength</option>
+            <option value="fat-loss">Fat Loss</option>
+            <option value="endurance">Endurance</option>
+            <option value="mobility">Mobility and Recovery</option>
+            <option value="athletic">Athletic Performance</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration</label>
+          <select class="form-select" id="ai-duration">
+            <option value="20">20 Minutes</option>
+            <option value="30">30 Minutes</option>
+            <option value="45" selected>45 Minutes</option>
+            <option value="60">60 Minutes</option>
+            <option value="90">90 Minutes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Equipment</label>
+          <select class="form-select" id="ai-equipment">
+            <option value="full-gym">Full Gym</option>
+            <option value="dumbbells">Dumbbells Only</option>
+            <option value="bodyweight">Bodyweight Only</option>
+            <option value="bands">Resistance Bands</option>
+            <option value="home">Home Gym</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top: 14px;">
+        <button class="btn-gold" id="btn-build-workout">Build My Workout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────── NUTRITION TAB ──────────── -->
+<div id="tab-nutrition" class="tab-panel">
+
+  <!-- Phase Banner -->
+  <div class="phase-banner amber" id="phase-banner">
+    <div class="icon">&#9888;</div>
+    <div class="text" id="phase-text">BASELINE WEEK — Track everything. No targets. No judgment. Your coach is watching patterns.</div>
+  </div>
+
+  <!-- GLP-1 Alert -->
+  <div class="glp1-alert" id="glp1-alert">
+    <div class="glp1-alert-title">GLP-1 Nutrition Alert</div>
+    <p>Prioritize protein. Monitor electrolytes. Track energy levels. Your body is adapting — consistency matters more than perfection right now.</p>
+  </div>
+
+  <!-- Calorie Display -->
+  <div class="calorie-display">
+    <div class="calorie-number" id="calorie-count">0</div>
+    <div class="calorie-label">Calories Logged</div>
+    <div class="calorie-target" id="calorie-target-display"></div>
+  </div>
+
+  <!-- Macro Rings -->
+  <div class="macro-rings" id="macro-rings">
+    <div class="macro-ring">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
+        <circle id="ring-protein" cx="50" cy="50" r="42" fill="none" stroke="#2dd4bf" stroke-width="8"
+          stroke-dasharray="0 264" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        <text x="50" y="46" text-anchor="middle" fill="#e8edf5" font-family="Bebas Neue" font-size="18" id="ring-protein-val">0g</text>
+        <text x="50" y="60" text-anchor="middle" fill="#8fa3c0" font-family="Barlow Condensed" font-size="9" letter-spacing="1">PROTEIN</text>
+      </svg>
+      <div class="macro-ring-value" id="protein-target-label"></div>
+    </div>
+    <div class="macro-ring">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
+        <circle id="ring-carbs" cx="50" cy="50" r="42" fill="none" stroke="#f0a500" stroke-width="8"
+          stroke-dasharray="0 264" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        <text x="50" y="46" text-anchor="middle" fill="#e8edf5" font-family="Bebas Neue" font-size="18" id="ring-carbs-val">0g</text>
+        <text x="50" y="60" text-anchor="middle" fill="#8fa3c0" font-family="Barlow Condensed" font-size="9" letter-spacing="1">CARBS</text>
+      </svg>
+      <div class="macro-ring-value" id="carbs-target-label"></div>
+    </div>
+    <div class="macro-ring">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
+        <circle id="ring-fat" cx="50" cy="50" r="42" fill="none" stroke="#f4a261" stroke-width="8"
+          stroke-dasharray="0 264" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        <text x="50" y="46" text-anchor="middle" fill="#e8edf5" font-family="Bebas Neue" font-size="18" id="ring-fat-val">0g</text>
+        <text x="50" y="60" text-anchor="middle" fill="#8fa3c0" font-family="Barlow Condensed" font-size="9" letter-spacing="1">FAT</text>
+      </svg>
+      <div class="macro-ring-value" id="fat-target-label"></div>
+    </div>
+  </div>
+
+  <!-- Water Tracker -->
+  <div class="card-header" style="text-align:center; font-size:1rem; margin-bottom:10px;">Water Intake</div>
+  <div class="water-tracker" id="water-tracker">
+    <div class="water-glass" data-glass="1"><div class="water-fill"></div></div>
+    <div class="water-glass" data-glass="2"><div class="water-fill"></div></div>
+    <div class="water-glass" data-glass="3"><div class="water-fill"></div></div>
+    <div class="water-glass" data-glass="4"><div class="water-fill"></div></div>
+    <div class="water-glass" data-glass="5"><div class="water-fill"></div></div>
+    <div class="water-glass" data-glass="6"><div class="water-fill"></div></div>
+    <div class="water-glass" data-glass="7"><div class="water-fill"></div></div>
+    <div class="water-glass" data-glass="8"><div class="water-fill"></div></div>
+  </div>
+  <div style="text-align:center; font-size:0.75rem; color:#4a6080; margin-bottom:20px;">
+    <span id="water-count">0</span> / 8 cups
+  </div>
+
+  <!-- Nutrition Actions -->
+  <div class="nutrition-actions">
+    <button class="btn-gold" id="btn-log-meal">Log Meal</button>
+    <button class="btn-outline" id="btn-log-water">Log Water (+1 Cup)</button>
+  </div>
+
+  <!-- Pre/Post Workout Fuel -->
+  <div class="section-title" style="font-size:1.3rem;">Workout <em>Fuel</em></div>
+  <div class="fuel-grid">
+    <div class="fuel-card">
+      <div class="fuel-card-title">Pre-Workout (60-90 min before)</div>
+      <p>Moderate carbs + lean protein. Examples: oatmeal with protein powder, banana with peanut butter, rice cakes with turkey.</p>
+    </div>
+    <div class="fuel-card">
+      <div class="fuel-card-title">Post-Workout (within 45 min)</div>
+      <p>Fast-digesting protein + carbs. Examples: whey protein shake with fruit, chicken with rice, Greek yogurt with berries.</p>
+    </div>
+  </div>
+
+  <!-- Micro Tracker -->
+  <div id="micro-section" style="display:none;">
+    <div class="section-title" style="font-size:1.3rem;">Micro <em>Tracker</em></div>
+    <div class="micro-grid" id="micro-grid"></div>
+  </div>
+
+  <!-- Weekly Nutrition Report -->
+  <div class="weekly-report">
+    <div class="card-header" style="font-size:1.1rem;">Weekly Nutrition Report</div>
+    <p>Your weekly report generates every Sunday. It highlights your biggest win, identifies one gap, and gives you one focus for next week.</p>
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button class="btn-outline btn-sm" id="btn-download-nutrition-pdf">Download PDF</button>
+      <button class="btn-outline btn-sm" id="btn-save-drive">Save to Drive</button>
+    </div>
+  </div>
+
+  <!-- ── SUPPLEMENT RECOMMENDATION ENGINE ── -->
+  <div class="section-title">Your Supplement <em>Stack</em></div>
+
+  <!-- Tier 1 -->
+  <div class="supp-tier">
+    <div class="supp-tier-header"><span>Tier 1</span> — Always Recommended</div>
+    <div class="supp-list">
+      <div class="supp-item highlight">
+        <div class="supp-icon">&#9883;</div>
+        <div class="supp-info">
+          <div class="supp-name">Protein Powder</div>
+          <div class="supp-dose">20-40g post-workout within 45 min</div>
+          <div class="supp-note">Whey, casein, or plant-based. Foundation of muscle recovery and satiety.</div>
+        </div>
+      </div>
+      <div class="supp-item highlight">
+        <div class="supp-icon">&#9883;</div>
+        <div class="supp-info">
+          <div class="supp-name">Creatine Monohydrate</div>
+          <div class="supp-dose">3-5g daily</div>
+          <div class="supp-note">Most researched supplement in sports nutrition. Supports strength, power, and cognitive function.</div>
+        </div>
+      </div>
+      <div class="supp-item highlight">
+        <div class="supp-icon">&#9883;</div>
+        <div class="supp-info">
+          <div class="supp-name">Vitamin D3 + K2</div>
+          <div class="supp-dose">1000-2000 IU D3 + 100-200mcg K2</div>
+          <div class="supp-note">Bone health, immune function, mood. K2 directs calcium to bones, not arteries.</div>
+        </div>
+      </div>
+      <div class="supp-item highlight">
+        <div class="supp-icon">&#9883;</div>
+        <div class="supp-info">
+          <div class="supp-name">Magnesium Glycinate</div>
+          <div class="supp-dose">310-420mg before bed</div>
+          <div class="supp-note">Muscle recovery, sleep quality, stress management. Most people are deficient.</div>
+        </div>
+      </div>
+      <div class="supp-item highlight">
+        <div class="supp-icon">&#9883;</div>
+        <div class="supp-info">
+          <div class="supp-name">Omega-3 Fish Oil</div>
+          <div class="supp-dose">2-3g EPA+DHA daily</div>
+          <div class="supp-note">Anti-inflammatory, heart health, brain function, joint support.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tier 2 -->
+  <div class="supp-tier">
+    <div class="supp-tier-header"><span>Tier 2</span> — Population-Specific</div>
+    <div class="supp-list" id="tier2-supps">
+      <div class="supp-item" data-flags="post-weight-loss,joint,50+,post-surgical">
+        <div class="supp-icon">&#9670;</div>
+        <div class="supp-info">
+          <div class="supp-name">Collagen Peptides + Vitamin C</div>
+          <div class="supp-dose">10-15g collagen + 500mg Vitamin C</div>
+          <div class="supp-note">Skin elasticity, joint repair, connective tissue. Essential for post-weight-loss and 50+ athletes.</div>
+        </div>
+      </div>
+      <div class="supp-item" data-flags="new-lifter,glp1,50+,returning-from-injury">
+        <div class="supp-icon">&#9670;</div>
+        <div class="supp-info">
+          <div class="supp-name">HMB (Beta-Hydroxy Beta-Methylbutyrate)</div>
+          <div class="supp-dose">3g daily in divided doses</div>
+          <div class="supp-note">Reduces muscle breakdown during caloric deficit. Critical for GLP-1 users and new lifters.</div>
+        </div>
+      </div>
+      <div class="supp-item" data-flags="glp1">
+        <div class="supp-icon">&#9670;</div>
+        <div class="supp-info">
+          <div class="supp-name">Fiber / Psyllium Husk</div>
+          <div class="supp-dose">5-10g daily, gradually increase</div>
+          <div class="supp-note">GLP-1 mandatory. Supports digestion and gut health during appetite suppression.</div>
+        </div>
+      </div>
+      <div class="supp-item" data-flags="training,glp1">
+        <div class="supp-icon">&#9670;</div>
+        <div class="supp-info">
+          <div class="supp-name">Electrolytes</div>
+          <div class="supp-dose">Training days minimum; GLP-1: daily mandatory</div>
+          <div class="supp-note">Sodium, potassium, magnesium. Prevents cramping, fatigue, brain fog.</div>
+        </div>
+      </div>
+      <div class="supp-item" data-flags="stress,ptsd,anxiety,poor-sleep">
+        <div class="supp-icon">&#9670;</div>
+        <div class="supp-info">
+          <div class="supp-name">Ashwagandha KSM-66</div>
+          <div class="supp-dose">300-600mg daily</div>
+          <div class="supp-note">Cortisol reduction, stress resilience, sleep quality. Studied extensively for anxiety and PTSD.</div>
+        </div>
+      </div>
+      <div class="supp-item" data-flags="all">
+        <div class="supp-icon">&#9670;</div>
+        <div class="supp-info">
+          <div class="supp-name">Zinc + Copper</div>
+          <div class="supp-dose">15-30mg Zinc + 1-2mg Copper (always paired)</div>
+          <div class="supp-note">Immune function, testosterone support, wound healing. Always take copper with zinc to prevent depletion.</div>
+        </div>
+      </div>
+      <div class="supp-item" data-flags="glp1">
+        <div class="supp-icon">&#9670;</div>
+        <div class="supp-info">
+          <div class="supp-name">B-Complex with B12</div>
+          <div class="supp-dose">1 daily with food</div>
+          <div class="supp-note">GLP-1 high priority. Energy metabolism, nervous system support. Reduced absorption common with GLP-1.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tier 3 -->
+  <div class="supp-tier">
+    <div class="supp-tier-header"><span>Tier 3</span> — Educational Only</div>
+    <div class="supp-list">
+      <div class="supp-item">
+        <div class="supp-icon" style="background:rgba(143,163,192,0.12);">&#9679;</div>
+        <div class="supp-info">
+          <div class="supp-name">Beta-Alanine</div>
+          <div class="supp-note">May improve endurance in 1-4 minute high-intensity efforts. Tingling side effect common.</div>
+        </div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-icon" style="background:rgba(143,163,192,0.12);">&#9679;</div>
+        <div class="supp-info">
+          <div class="supp-name">BCAAs</div>
+          <div class="supp-note">Branched-chain amino acids. Largely unnecessary if protein intake is adequate.</div>
+        </div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-icon" style="background:rgba(143,163,192,0.12);">&#9679;</div>
+        <div class="supp-info">
+          <div class="supp-name">Glutamine</div>
+          <div class="supp-note">Gut health support. Minimal evidence for muscle building in well-nourished individuals.</div>
+        </div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-icon" style="background:rgba(143,163,192,0.12);">&#9679;</div>
+        <div class="supp-info">
+          <div class="supp-name">CLA (Conjugated Linoleic Acid)</div>
+          <div class="supp-note">Modest fat loss effects in some studies. Results are small and inconsistent.</div>
+        </div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-icon" style="background:rgba(143,163,192,0.12);">&#9679;</div>
+        <div class="supp-info">
+          <div class="supp-name">Fat Burners</div>
+          <div class="supp-note">Thermogenics with caffeine and stimulants. Risk often outweighs minimal benefit.</div>
+        </div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-icon" style="background:rgba(143,163,192,0.12);">&#9679;</div>
+        <div class="supp-info">
+          <div class="supp-name">Testosterone Boosters</div>
+          <div class="supp-note">Most OTC products have no significant effect. Consult endocrinologist for actual concerns.</div>
+        </div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-icon" style="background:rgba(143,163,192,0.12);">&#9679;</div>
+        <div class="supp-info">
+          <div class="supp-name">Peptides</div>
+          <div class="supp-note">BPC-157, TB-500, etc. Research is emerging. Regulatory gray area. Medical supervision required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="supp-edu-note">Educational only — not recommended. Included for awareness so you can make informed decisions with your physician.</div>
+  </div>
+
+  <!-- Population Stacks -->
+  <div class="section-title" style="font-size:1.3rem; margin-top:28px;">Your Recommended <em>Stack</em></div>
+  <div class="pop-stack" id="stack-glp1">
+    <div class="pop-stack-title">GLP-1 Stack</div>
+    <ul>
+      <li>Protein Powder — 30-40g per serving, prioritize</li>
+      <li>Creatine Monohydrate — 5g daily (muscle preservation)</li>
+      <li>HMB — 3g daily (anti-catabolic)</li>
+      <li>Fiber / Psyllium Husk — 5-10g daily (mandatory)</li>
+      <li>Electrolytes — daily mandatory</li>
+      <li>B-Complex with B12 — high priority</li>
+      <li>Collagen Peptides + Vitamin C</li>
+      <li>Vitamin D3 + K2</li>
+      <li>Magnesium Glycinate</li>
+      <li>Omega-3 Fish Oil</li>
+    </ul>
+  </div>
+  <div class="pop-stack" id="stack-veteran">
+    <div class="pop-stack-title">Veteran Stack</div>
+    <ul>
+      <li>Ashwagandha KSM-66 — cortisol and stress management</li>
+      <li>Magnesium Glycinate — sleep and recovery</li>
+      <li>Omega-3 Fish Oil — inflammation and brain health</li>
+      <li>Vitamin D3 + K2 — mood and bone health</li>
+      <li>Creatine Monohydrate — cognitive and strength</li>
+      <li>Protein Powder — recovery foundation</li>
+      <li>Zinc + Copper — immune and hormonal support</li>
+    </ul>
+  </div>
+  <div class="pop-stack" id="stack-50plus">
+    <div class="pop-stack-title">50+ Stack</div>
+    <ul>
+      <li>Collagen Peptides + Vitamin C — joints and connective tissue</li>
+      <li>HMB — muscle preservation</li>
+      <li>Vitamin D3 + K2 — bone density critical</li>
+      <li>Magnesium Glycinate — recovery and sleep</li>
+      <li>Creatine Monohydrate — strength and cognition</li>
+      <li>Omega-3 Fish Oil — inflammation management</li>
+      <li>Protein Powder — higher needs after 50</li>
+      <li>Zinc + Copper — immune function</li>
+    </ul>
+  </div>
+  <div class="pop-stack" id="stack-muscle">
+    <div class="pop-stack-title">Muscle Building Stack</div>
+    <ul>
+      <li>Protein Powder — 30-40g post-workout</li>
+      <li>Creatine Monohydrate — 5g daily</li>
+      <li>Electrolytes — training days</li>
+      <li>Omega-3 Fish Oil — recovery</li>
+      <li>Magnesium Glycinate — sleep and recovery</li>
+      <li>Vitamin D3 + K2</li>
+    </ul>
+  </div>
+  <div class="pop-stack" id="stack-weightloss">
+    <div class="pop-stack-title">Weight Loss Stack</div>
+    <ul>
+      <li>Protein Powder — satiety and muscle preservation</li>
+      <li>Creatine Monohydrate — strength during deficit</li>
+      <li>Fiber / Psyllium Husk — fullness and digestion</li>
+      <li>Electrolytes — training days</li>
+      <li>Magnesium Glycinate — stress and sleep</li>
+      <li>Vitamin D3 + K2</li>
+      <li>Omega-3 Fish Oil</li>
+    </ul>
+  </div>
+  <div class="pop-stack" id="stack-posttransformation">
+    <div class="pop-stack-title">Post-Transformation Stack</div>
+    <ul>
+      <li>Collagen Peptides + Vitamin C — skin elasticity</li>
+      <li>Protein Powder — maintain muscle mass</li>
+      <li>Creatine Monohydrate — strength maintenance</li>
+      <li>Omega-3 Fish Oil — systemic recovery</li>
+      <li>Magnesium Glycinate</li>
+      <li>Vitamin D3 + K2</li>
+      <li>Zinc + Copper</li>
+    </ul>
+  </div>
+
+  <!-- Supplement Daily Tracker -->
+  <div class="section-title" style="font-size:1.3rem; margin-top:28px;">Daily Supplement <em>Tracker</em></div>
+  <div class="supp-tracker-grid" id="supp-tracker">
+    <div class="supp-tracker-col">
+      <div class="supp-tracker-time">Morning</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="morning-vitd">&#10003;</div> Vitamin D3 + K2</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="morning-omega3">&#10003;</div> Omega-3 Fish Oil</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="morning-bcomplex">&#10003;</div> B-Complex</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="morning-zinc">&#10003;</div> Zinc + Copper</div>
+    </div>
+    <div class="supp-tracker-col">
+      <div class="supp-tracker-time">Pre-Workout</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="pre-creatine">&#10003;</div> Creatine</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="pre-electrolytes">&#10003;</div> Electrolytes</div>
+    </div>
+    <div class="supp-tracker-col">
+      <div class="supp-tracker-time">Post-Workout</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="post-protein">&#10003;</div> Protein Powder</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="post-collagen">&#10003;</div> Collagen + Vit C</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="post-hmb">&#10003;</div> HMB</div>
+    </div>
+    <div class="supp-tracker-col">
+      <div class="supp-tracker-time">Evening</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="eve-magnesium">&#10003;</div> Magnesium</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="eve-ashwagandha">&#10003;</div> Ashwagandha</div>
+      <div class="supp-check-item"><div class="supp-checkbox" data-supp="eve-fiber">&#10003;</div> Fiber</div>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
+    <button class="btn-outline" id="btn-download-supp-pdf">Download Supplement Stack PDF</button>
+    <button class="btn-teal" id="btn-ask-coach-supps">Ask Coach About Supplements</button>
+  </div>
+
+  <!-- Disclaimers -->
+  <div class="disclaimer">
+    FORGEIQ supplement recommendations are educational and evidence-based. They are not medical advice and do not replace consultation with your physician — especially if you are on prescription medications.
+  </div>
+  <div class="disclaimer">
+    If you are on GLP-1, blood thinners, blood pressure medications, or immunosuppressants — discuss all supplements with your prescribing physician first.
+  </div>
+
+</div>
+
+<!-- ──────────── COACH TAB ──────────── -->
+<div id="tab-coach" class="tab-panel">
+  <div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-msg assistant">
+        <div class="chat-avatar ai">FIQ</div>
+        <div class="chat-bubble">Welcome to FORGEIQ Coach. I have context on your recent workouts and nutrition. Ask me anything about training, nutrition, supplements, or recovery. I am here for you.</div>
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Ask your coach anything..." />
+      <button class="chat-send" id="chat-send">Send</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.page -->
+
+<!-- ════════════════════ ACTIVE WORKOUT OVERLAY ════════════════════ -->
+<div class="workout-overlay" id="workout-overlay">
+  <div class="wo-header">
+    <button class="wo-exit" id="wo-exit-btn" title="Exit workout">&#10005;</button>
+    <div class="wo-title" id="wo-title">Push Day</div>
+    <div class="wo-timer" id="wo-timer">00:00</div>
+  </div>
+  <div class="wo-progress-bar"><div class="wo-progress-fill" id="wo-progress-fill" style="width:0%"></div></div>
+  <div class="wo-progress-labels" id="wo-progress-labels">
+    <span>Warm-Up</span><span>Main</span><span>Cool-Down</span>
+  </div>
+  <div class="wo-body" id="wo-body"></div>
+  <div class="wo-nav">
+    <button class="btn-outline" id="wo-prev">&#8592; Previous</button>
+    <button class="btn-gold" id="wo-next">Next &#8594;</button>
+  </div>
+</div>
+
+<!-- ════════════════════ REST TIMER OVERLAY ════════════════════ -->
+<div class="rest-overlay" id="rest-overlay">
+  <div class="rest-label">Rest</div>
+  <div class="rest-time" id="rest-time">60</div>
+  <button class="rest-skip" id="rest-skip">Skip Rest</button>
+</div>
+
+<!-- ════════════════════ ASK COACH MINI ════════════════════ -->
+<div class="coach-mini" id="coach-mini">
+  <div class="coach-mini-header">
+    <span>Ask Coach</span>
+    <button class="coach-mini-close" id="coach-mini-close">&#10005;</button>
+  </div>
+  <div class="coach-mini-body" id="coach-mini-body">
+    <p style="color:#4a6080;">Ask about form, alternatives, or modifications for this exercise.</p>
+  </div>
+  <div class="coach-mini-input">
+    <input type="text" id="coach-mini-input" placeholder="Type your question..." />
+    <button id="coach-mini-send">Send</button>
+  </div>
+</div>
+
+<!-- ════════════════════ EXIT CONFIRM MODAL ════════════════════ -->
+<div class="exit-modal" id="exit-modal">
+  <div class="exit-modal-box">
+    <h3>Exit This Workout?</h3>
+    <p>Your progress will be saved.</p>
+    <div class="exit-modal-btns">
+      <button class="btn-gold" id="exit-keep">Keep Going</button>
+      <button class="btn-outline btn-red" id="exit-save">Save and Exit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ WORKOUT COMPLETE SCREEN ════════════════════ -->
+<div class="workout-complete" id="workout-complete">
+  <div class="wc-inner">
+    <div class="wc-badge">&#9889;</div>
+    <div class="wc-title" id="wc-title">Workout Complete</div>
+    <div class="wc-subtitle" id="wc-subtitle"></div>
+    <div class="wc-stats">
+      <div class="wc-stat">
+        <div class="wc-stat-val" id="wc-duration">00:00</div>
+        <div class="wc-stat-label">Duration</div>
+      </div>
+      <div class="wc-stat">
+        <div class="wc-stat-val" id="wc-volume">0 lbs</div>
+        <div class="wc-stat-label">Total Volume</div>
+      </div>
+      <div class="wc-stat">
+        <div class="wc-stat-val" id="wc-prs">0</div>
+        <div class="wc-stat-label">PRs</div>
+      </div>
+    </div>
+    <div class="wc-quote">
+      <p>"I am not the exception. I am what happens when you decide to never quit."</p>
+      <cite>— Dr. Michael P. Lovato, EdD</cite>
+    </div>
+    <div class="wc-actions">
+      <button class="btn-gold" id="wc-log">Log Session</button>
+      <button class="btn-outline" id="wc-pdf">Download PDF</button>
+      <button class="btn-outline" id="wc-stats-btn">View Stats</button>
+      <button class="btn-outline" id="wc-back">Back to Train</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ LOG MEAL MODAL ════════════════════ -->
+<div class="meal-modal" id="meal-modal">
+  <div class="meal-modal-box">
+    <div class="meal-modal-header">
+      <h3>Log Meal</h3>
+      <button class="meal-modal-close" id="meal-modal-close">&#10005;</button>
+    </div>
+    <div class="meal-tabs">
+      <button class="meal-tab active" data-mtab="search">Search</button>
+      <button class="meal-tab" data-mtab="ai">AI Natural Language</button>
+      <button class="meal-tab" data-mtab="barcode">Barcode</button>
+    </div>
+    <div class="meal-panel active" id="mpanel-search">
+      <div class="form-group">
+        <label class="form-label">Search Food</label>
+        <input type="text" class="form-input" id="food-search-input" placeholder="e.g. chicken breast, brown rice..." />
+      </div>
+      <div class="search-results" id="food-search-results"></div>
+      <div id="food-serving-area" style="display:none; margin-top:14px;">
+        <div class="form-group">
+          <label class="form-label">Servings</label>
+          <input type="number" class="form-input" id="food-servings" value="1" min="0.25" step="0.25" style="width:100px;" />
+        </div>
+        <div id="food-selected-info" style="font-size:0.82rem; color:#8fa3c0; margin-bottom:12px;"></div>
+        <button class="btn-gold btn-sm" id="food-add-btn">Add to Log</button>
+      </div>
+    </div>
+    <div class="meal-panel" id="mpanel-ai">
+      <div class="form-group">
+        <label class="form-label">Describe What You Ate</label>
+        <textarea class="form-textarea" id="ai-meal-input" placeholder="e.g. I had a chicken breast with a cup of brown rice and steamed broccoli"></textarea>
+      </div>
+      <button class="btn-gold btn-sm" id="ai-meal-submit" style="margin-top:8px;">Analyze and Log</button>
+      <div id="ai-meal-result" style="margin-top:14px; font-size:0.82rem; color:#8fa3c0; line-height:1.6;"></div>
+    </div>
+    <div class="meal-panel" id="mpanel-barcode">
+      <div class="barcode-placeholder">
+        <div style="font-size:2rem; margin-bottom:12px;">&#128247;</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:1px; color:#e8edf5; margin-bottom:8px;">Coming Soon</div>
+        <div>Barcode scanning will be available in a future update. Use Search or AI Natural Language to log your meals.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ JAVASCRIPT ════════════════════ -->
+<script>
+(function(){
+  "use strict";
+
+  /* ── UTILITY ── */
+  function $(sel, ctx){ return (ctx||document).querySelector(sel); }
+  function $$(sel, ctx){ return Array.from((ctx||document).querySelectorAll(sel)); }
+  function ls(k, v){
+    if(v === undefined) { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } }
+    localStorage.setItem(k, JSON.stringify(v));
+  }
+  function todayKey(){ return new Date().toISOString().slice(0,10); }
+
+  /* ── PROFILE DATA ── */
+  var profile = ls("forgeiq_profile") || {};
+  var todayData = ls("forgeiq_day_" + todayKey()) || { meals: [], water: 0, supps: {}, workout: null };
+
+  function saveToday(){ ls("forgeiq_day_" + todayKey(), todayData); }
+
+  /* ── LANGUAGE TOGGLE ── */
+  $$(".lang-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      $$(".lang-btn").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+    });
+  });
+
+  /* ── SUB TAB SWITCHING ── */
+  $$(".sub-tab").forEach(function(tab){
+    tab.addEventListener("click", function(){
+      $$(".sub-tab").forEach(function(t){ t.classList.remove("active"); });
+      $$(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
+      tab.classList.add("active");
+      var panel = $("#tab-" + tab.dataset.tab);
+      if(panel) panel.classList.add("active");
+    });
+  });
+
+  /* ── TODAY WORKOUT FROM PROFILE ── */
+  if(profile.currentWorkout){
+    $("#today-workout-name").textContent = profile.currentWorkout.name || "Push Day — Chest and Triceps";
+    $("#today-muscles").textContent = profile.currentWorkout.muscles || "Chest, Shoulders, Triceps";
+    $("#today-duration").textContent = profile.currentWorkout.duration || "~45 min";
+  }
+
+  /* ═══════════════════════════════════════════════════
+     WORKOUT LIBRARY
+     ═══════════════════════════════════════════════════ */
+  var workoutLibrary = [
+    { name: "Push Day — Chest and Triceps", cat: "push", muscles: "Chest, Shoulders, Triceps", time: "45 min", exercises: 6 },
+    { name: "Pull Day — Back and Biceps", cat: "pull", muscles: "Back, Biceps, Rear Delts", time: "45 min", exercises: 6 },
+    { name: "Leg Day — Quads and Glutes", cat: "legs", muscles: "Quads, Glutes, Hamstrings", time: "50 min", exercises: 7 },
+    { name: "Full Body Strength", cat: "full", muscles: "All Major Groups", time: "60 min", exercises: 8 },
+    { name: "Upper Body Push Focus", cat: "push", muscles: "Chest, Shoulders, Triceps", time: "40 min", exercises: 5 },
+    { name: "Upper Body Pull Focus", cat: "pull", muscles: "Back, Biceps, Forearms", time: "40 min", exercises: 5 },
+    { name: "Posterior Chain", cat: "legs", muscles: "Hamstrings, Glutes, Lower Back", time: "45 min", exercises: 6 },
+    { name: "HIIT Cardio Blast", cat: "cardio", muscles: "Full Body, Cardiovascular", time: "25 min", exercises: 8 },
+    { name: "Steady State Cardio", cat: "cardio", muscles: "Cardiovascular", time: "30 min", exercises: 3 },
+    { name: "Mobility and Recovery", cat: "mobility", muscles: "Full Body Flexibility", time: "30 min", exercises: 10 },
+    { name: "Joint Prep and Foam Roll", cat: "mobility", muscles: "Joints, Fascia", time: "20 min", exercises: 8 },
+    { name: "Full Body Functional", cat: "full", muscles: "All Major Groups", time: "50 min", exercises: 7 }
+  ];
+
+  function renderLibrary(filter){
+    var grid = $("#workout-library");
+    grid.innerHTML = "";
+    workoutLibrary.forEach(function(w){
+      if(filter !== "all" && w.cat !== filter) return;
+      var card = document.createElement("div");
+      card.className = "workout-card";
+      card.innerHTML =
+        '<div class="workout-card-title">' + w.name + '</div>' +
+        '<div class="workout-card-meta"><span>' + w.muscles + '</span><span>' + w.time + '</span><span>' + w.exercises + ' exercises</span></div>' +
+        '<div class="workout-card-tags"><span class="tag tag-' + w.cat + '">' + w.cat + '</span></div>';
+      card.addEventListener("click", function(){
+        $("#today-workout-name").textContent = w.name;
+        $("#today-muscles").textContent = w.muscles;
+        $("#today-duration").textContent = "~" + w.time;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      grid.appendChild(card);
+    });
+  }
+  renderLibrary("all");
+
+  $$(".filter-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      $$(".filter-btn").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      renderLibrary(btn.dataset.cat);
+    });
+  });
+
+  /* ═══════════════════════════════════════════════════
+     ACTIVE WORKOUT
+     ═══════════════════════════════════════════════════ */
+  var sampleWorkout = {
+    name: "Push Day — Chest and Triceps",
+    exercises: [
+      { name: "Arm Circles and Band Pull-Aparts", phase: "warm-up", cue: "Activate the shoulders. Light resistance, full range of motion.", sets: 2, defaultReps: 15, defaultWeight: 0 },
+      { name: "Barbell Bench Press", phase: "main", cue: "Drive feet into the floor. Retract scapulae. Control the descent.", sets: 4, defaultReps: 8, defaultWeight: 135 },
+      { name: "Incline Dumbbell Press", phase: "main", cue: "45-degree angle. Squeeze at the top. Slow eccentric.", sets: 3, defaultReps: 10, defaultWeight: 50 },
+      { name: "Cable Flyes", phase: "main", cue: "Slight bend in elbows. Think hugging a tree. Peak contraction.", sets: 3, defaultReps: 12, defaultWeight: 30 },
+      { name: "Overhead Tricep Extension", phase: "main", cue: "Elbows tight. Full stretch at bottom. Lock out at top.", sets: 3, defaultReps: 12, defaultWeight: 40 },
+      { name: "Tricep Pushdowns", phase: "main", cue: "Pin elbows to your sides. Squeeze at full extension.", sets: 3, defaultReps: 15, defaultWeight: 50 },
+      { name: "Chest Stretch and Foam Roll", phase: "cool-down", cue: "Hold each stretch 30 seconds. Breathe deeply. Let the tension go.", sets: 1, defaultReps: 1, defaultWeight: 0 }
+    ]
+  };
+
+  var currentExIdx = 0;
+  var workoutTimer = null;
+  var workoutSeconds = 0;
+  var workoutLog = [];
+  var restTimerInterval = null;
+
+  function getExerciseHistory(name){
+    var hist = ls("forgeiq_exercise_history") || {};
+    return hist[name] || null;
+  }
+
+  function saveExerciseHistory(name, bestVol){
+    var hist = ls("forgeiq_exercise_history") || {};
+    hist[name] = { bestVolume: bestVol, date: todayKey() };
+    ls("forgeiq_exercise_history", hist);
+  }
+
+  function renderExercise(idx){
+    var ex = sampleWorkout.exercises[idx];
+    if(!ex) return;
+    currentExIdx = idx;
+
+    // Progress
+    var total = sampleWorkout.exercises.length;
+    var pct = ((idx + 1) / total) * 100;
+    $("#wo-progress-fill").style.width = pct + "%";
+
+    // Phase labels
+    var labels = $("#wo-progress-labels");
+    labels.innerHTML = "";
+    var phases = ["warm-up", "main", "cool-down"];
+    phases.forEach(function(p){
+      var sp = document.createElement("span");
+      sp.textContent = p === "warm-up" ? "Warm-Up" : p === "cool-down" ? "Cool-Down" : "Main";
+      if(ex.phase === p) sp.className = "current";
+      labels.appendChild(sp);
+    });
+
+    var prev = getExerciseHistory(ex.name);
+    var prevText = prev ? "Previous best: " + prev.bestVolume + " lbs total volume" : "No previous data";
+
+    var setsHtml = '<table class="set-table"><thead><tr><th>Set</th><th>Weight (lbs)</th><th>Reps</th><th></th></tr></thead><tbody>';
+    for(var s = 0; s < ex.sets; s++){
+      var savedSet = (workoutLog[idx] && workoutLog[idx][s]) || {};
+      var w = savedSet.weight !== undefined ? savedSet.weight : (ex.defaultWeight || "");
+      var r = savedSet.reps !== undefined ? savedSet.reps : (ex.defaultReps || "");
+      var done = savedSet.done ? " done" : "";
+      setsHtml += '<tr>' +
+        '<td><span class="set-label">' + (s+1) + '</span></td>' +
+        '<td><input type="number" class="set-input" data-set="' + s + '" data-field="weight" value="' + w + '" placeholder="0" /></td>' +
+        '<td><input type="number" class="set-input" data-set="' + s + '" data-field="reps" value="' + r + '" placeholder="0" /></td>' +
+        '<td><button class="set-check' + done + '" data-set="' + s + '">&#10003;</button></td>' +
+        '</tr>';
+    }
+    setsHtml += '</tbody></table>';
+
+    var body = $("#wo-body");
+    body.innerHTML =
+      '<div class="exercise-card">' +
+        '<div class="exercise-name">' + ex.name + '</div>' +
+        '<div class="exercise-cue">' + ex.cue + '</div>' +
+        '<div class="exercise-prev">' + prevText + '</div>' +
+        setsHtml +
+        '<div class="exercise-actions">' +
+          '<button class="btn-outline btn-sm" id="btn-swap-exercise">Swap Exercise</button>' +
+          '<button class="btn-teal btn-sm" id="btn-ask-coach-ex">Ask Coach</button>' +
+        '</div>' +
+      '</div>';
+
+    // Set input handlers
+    $$(".set-input", body).forEach(function(inp){
+      inp.addEventListener("change", function(){
+        var si = parseInt(inp.dataset.set);
+        if(!workoutLog[idx]) workoutLog[idx] = [];
+        if(!workoutLog[idx][si]) workoutLog[idx][si] = {};
+        workoutLog[idx][si][inp.dataset.field] = parseFloat(inp.value) || 0;
+      });
+    });
+
+    // Check handlers
+    $$(".set-check", body).forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var si = parseInt(btn.dataset.set);
+        if(!workoutLog[idx]) workoutLog[idx] = [];
+        if(!workoutLog[idx][si]) workoutLog[idx][si] = {};
+
+        // Save input values
+        var row = btn.closest("tr");
+        var wInput = $('input[data-field="weight"]', row);
+        var rInput = $('input[data-field="reps"]', row);
+        workoutLog[idx][si].weight = parseFloat(wInput.value) || 0;
+        workoutLog[idx][si].reps = parseFloat(rInput.value) || 0;
+        workoutLog[idx][si].done = true;
+        btn.classList.add("done");
+
+        // Start rest timer
+        startRestTimer(60);
+      });
+    });
+
+    // Swap exercise
+    body.addEventListener("click", function(e){
+      if(e.target.id === "btn-swap-exercise"){
+        var alts = ["Dumbbell Press", "Machine Press", "Push-Ups", "Landmine Press", "Smith Machine Press"];
+        var alt = alts[Math.floor(Math.random() * alts.length)];
+        sampleWorkout.exercises[idx].name = alt;
+        sampleWorkout.exercises[idx].cue = "Swapped. Focus on form and controlled movement.";
+        renderExercise(idx);
+      }
+      if(e.target.id === "btn-ask-coach-ex"){
+        $("#coach-mini").classList.add("active");
+        $("#coach-mini-body").innerHTML = '<p style="color:#4a6080;">Ask about form, alternatives, or modifications for ' + ex.name + '.</p>';
+      }
+    });
+
+    // Nav button labels
+    $("#wo-prev").style.visibility = idx === 0 ? "hidden" : "visible";
+    if(idx === total - 1){
+      $("#wo-next").textContent = "Finish Workout";
+    } else {
+      $("#wo-next").innerHTML = "Next &#8594;";
+    }
+  }
+
+  function startWorkout(){
+    currentExIdx = 0;
+    workoutLog = [];
+    workoutSeconds = 0;
+    $("#workout-overlay").classList.add("active");
+    $("#wo-title").textContent = $("#today-workout-name").textContent;
+    renderExercise(0);
+    workoutTimer = setInterval(function(){
+      workoutSeconds++;
+      var m = Math.floor(workoutSeconds / 60);
+      var s = workoutSeconds % 60;
+      $("#wo-timer").textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+    }, 1000);
+    document.body.style.overflow = "hidden";
+  }
+
+  function endWorkout(save){
+    clearInterval(workoutTimer);
+    $("#workout-overlay").classList.remove("active");
+    document.body.style.overflow = "";
+    if(save) showWorkoutComplete();
+  }
+
+  // Start Workout button
+  $("#btn-start-workout").addEventListener("click", startWorkout);
+
+  // Nav
+  $("#wo-prev").addEventListener("click", function(){
+    if(currentExIdx > 0) renderExercise(currentExIdx - 1);
+  });
+  $("#wo-next").addEventListener("click", function(){
+    if(currentExIdx < sampleWorkout.exercises.length - 1){
+      renderExercise(currentExIdx + 1);
+    } else {
+      endWorkout(true);
+    }
+  });
+
+  // Exit
+  $("#wo-exit-btn").addEventListener("click", function(){
+    $("#exit-modal").classList.add("active");
+  });
+  $("#exit-keep").addEventListener("click", function(){
+    $("#exit-modal").classList.remove("active");
+  });
+  $("#exit-save").addEventListener("click", function(){
+    $("#exit-modal").classList.remove("active");
+    endWorkout(true);
+  });
+
+  /* ── REST TIMER ── */
+  function startRestTimer(secs){
+    var remaining = secs;
+    $("#rest-overlay").classList.add("active");
+    $("#rest-time").textContent = remaining;
+    clearInterval(restTimerInterval);
+    restTimerInterval = setInterval(function(){
+      remaining--;
+      $("#rest-time").textContent = remaining;
+      if(remaining <= 0){
+        clearInterval(restTimerInterval);
+        $("#rest-overlay").classList.remove("active");
+      }
+    }, 1000);
+  }
+  $("#rest-skip").addEventListener("click", function(){
+    clearInterval(restTimerInterval);
+    $("#rest-overlay").classList.remove("active");
+  });
+
+  /* ── COACH MINI ── */
+  $("#coach-mini-close").addEventListener("click", function(){
+    $("#coach-mini").classList.remove("active");
+  });
+  $("#coach-mini-send").addEventListener("click", function(){
+    var inp = $("#coach-mini-input");
+    var q = inp.value.trim();
+    if(!q) return;
+    var body = $("#coach-mini-body");
+    body.innerHTML += '<div style="margin-top:8px;padding:8px 10px;background:rgba(240,165,0,0.08);border-radius:6px;color:#e8edf5;font-size:0.82rem;">' + q + '</div>';
+    body.innerHTML += '<div style="margin-top:6px;color:#8fa3c0;font-size:0.82rem;">Thinking...</div>';
+    inp.value = "";
+    var ex = sampleWorkout.exercises[currentExIdx];
+    fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: [
+          { role: "system", content: "You are FORGEIQ Coach. The user is currently doing: " + (ex ? ex.name : "a workout") + ". Give brief, actionable coaching advice. Keep it under 3 sentences." },
+          { role: "user", content: q }
+        ]
+      })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var last = body.lastElementChild;
+      if(last) last.textContent = data.reply || data.content || "Focus on controlled movement and proper breathing.";
+    })
+    .catch(function(){
+      var last = body.lastElementChild;
+      if(last) last.textContent = "Keep your form tight and breathe through the movement. You have got this.";
+    });
+  });
+
+  /* ── WORKOUT COMPLETE ── */
+  function showWorkoutComplete(){
+    var totalVol = 0;
+    var prs = 0;
+    workoutLog.forEach(function(sets, exIdx){
+      if(!sets) return;
+      var exVol = 0;
+      sets.forEach(function(s){
+        if(s && s.done) exVol += (s.weight || 0) * (s.reps || 0);
+      });
+      totalVol += exVol;
+      var ex = sampleWorkout.exercises[exIdx];
+      if(ex && exVol > 0){
+        var prev = getExerciseHistory(ex.name);
+        if(!prev || exVol > prev.bestVolume){
+          prs++;
+          saveExerciseHistory(ex.name, exVol);
+        }
+      }
+    });
+
+    var m = Math.floor(workoutSeconds / 60);
+    var s = workoutSeconds % 60;
+    var durStr = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+
+    $("#wc-title").textContent = "Workout Complete";
+    $("#wc-subtitle").textContent = $("#today-workout-name").textContent;
+    $("#wc-duration").textContent = durStr;
+    $("#wc-volume").textContent = totalVol.toLocaleString() + " lbs";
+    $("#wc-prs").textContent = prs;
+    $("#workout-complete").classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    // Save to today data
+    todayData.workout = {
+      name: $("#today-workout-name").textContent,
+      duration: workoutSeconds,
+      volume: totalVol,
+      prs: prs,
+      log: workoutLog,
+      date: todayKey()
+    };
+    saveToday();
+
+    // Save to history
+    var hist = ls("forgeiq_workout_history") || [];
+    hist.push(todayData.workout);
+    ls("forgeiq_workout_history", hist);
+  }
+
+  // WC buttons
+  $("#wc-log").addEventListener("click", function(){
+    alert("Session logged successfully.");
+  });
+
+  $("#wc-pdf").addEventListener("click", function(){
+    var win = window.open("", "_blank");
+    var m = Math.floor(workoutSeconds / 60);
+    var s = workoutSeconds % 60;
+    var dur = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+    var html = '<!DOCTYPE html><html><head><title>FORGEIQ Workout Report</title>' +
+      '<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">' +
+      '<style>body{font-family:Barlow,sans-serif;max-width:700px;margin:0 auto;padding:40px;color:#222;}' +
+      'h1{font-family:"Bebas Neue",sans-serif;font-size:2.5rem;margin:0;letter-spacing:2px;}' +
+      'h1 span{color:#f0a500;}' +
+      '.meta{color:#666;margin-bottom:24px;font-size:0.9rem;}' +
+      '.stat-row{display:flex;gap:24px;margin-bottom:24px;}' +
+      '.stat{background:#f5f5f5;border-radius:8px;padding:16px 24px;text-align:center;flex:1;}' +
+      '.stat-val{font-family:"Bebas Neue",sans-serif;font-size:2rem;color:#f0a500;}' +
+      '.stat-label{font-size:0.75rem;color:#888;text-transform:uppercase;letter-spacing:1px;}' +
+      'table{width:100%;border-collapse:collapse;margin-bottom:24px;}' +
+      'th{text-align:left;padding:8px;border-bottom:2px solid #ddd;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;color:#888;}' +
+      'td{padding:8px;border-bottom:1px solid #eee;font-size:0.88rem;}' +
+      '.quote{border-left:3px solid #f0a500;padding:16px 20px;background:#faf6ee;margin:24px 0;font-style:italic;}' +
+      '.quote cite{display:block;margin-top:8px;font-style:normal;color:#f0a500;font-size:0.85rem;}' +
+      '</style></head><body>' +
+      '<h1>FORGE<span>IQ</span></h1>' +
+      '<div class="meta">Workout Report — ' + todayKey() + '</div>' +
+      '<h2 style="font-family:Bebas Neue,sans-serif;letter-spacing:1px;">' + ($("#today-workout-name").textContent) + '</h2>' +
+      '<div class="stat-row">' +
+        '<div class="stat"><div class="stat-val">' + dur + '</div><div class="stat-label">Duration</div></div>' +
+        '<div class="stat"><div class="stat-val">' + ($("#wc-volume").textContent) + '</div><div class="stat-label">Volume</div></div>' +
+        '<div class="stat"><div class="stat-val">' + ($("#wc-prs").textContent) + '</div><div class="stat-label">PRs</div></div>' +
+      '</div>' +
+      '<table><thead><tr><th>Exercise</th><th>Sets</th><th>Best Set</th></tr></thead><tbody>';
+    sampleWorkout.exercises.forEach(function(ex, i){
+      var sets = workoutLog[i] || [];
+      var completed = sets.filter(function(s){ return s && s.done; }).length;
+      var best = "";
+      sets.forEach(function(s){
+        if(s && s.done && s.weight && s.reps) best = s.weight + " x " + s.reps;
+      });
+      html += '<tr><td>' + ex.name + '</td><td>' + completed + '/' + ex.sets + '</td><td>' + (best || "—") + '</td></tr>';
+    });
+    html += '</tbody></table>' +
+      '<div class="quote"><p>"I am not the exception. I am what happens when you decide to never quit."</p><cite>— Dr. Michael P. Lovato, EdD</cite></div>' +
+      '</body></html>';
+    win.document.write(html);
+    win.document.close();
+    setTimeout(function(){ win.print(); }, 500);
+  });
+
+  $("#wc-stats-btn").addEventListener("click", function(){
+    window.location.href = "/progress.html";
+  });
+
+  $("#wc-back").addEventListener("click", function(){
+    $("#workout-complete").classList.remove("active");
+    document.body.style.overflow = "";
+  });
+
+  /* ── AI WORKOUT BUILDER ── */
+  $("#btn-build-workout").addEventListener("click", function(){
+    var goal = $("#ai-goal").value;
+    var dur = $("#ai-duration").value;
+    var equip = $("#ai-equipment").value;
+    var btn = $("#btn-build-workout");
+    btn.textContent = "BUILDING...";
+    btn.disabled = true;
+
+    fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: [
+          { role: "system", content: "You are FORGEIQ workout builder. Create a structured workout with warm-up, main exercises, and cool-down. Goal: " + goal + ". Duration: " + dur + " minutes. Equipment: " + equip + ". Format: numbered list with sets x reps and coaching cues. Be specific." },
+          { role: "user", content: "Build me a " + dur + "-minute " + goal + " workout using " + equip + " equipment." }
+        ]
+      })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      btn.textContent = "BUILD MY WORKOUT";
+      btn.disabled = false;
+      // Switch to coach tab and display
+      $$(".sub-tab").forEach(function(t){ t.classList.remove("active"); });
+      $$(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
+      $$(".sub-tab").forEach(function(t){ if(t.dataset.tab === "coach") t.classList.add("active"); });
+      $("#tab-coach").classList.add("active");
+      addChatMsg("assistant", data.reply || data.content || "Here is your custom workout. Try adjusting your parameters and ask again.");
+    })
+    .catch(function(){
+      btn.textContent = "BUILD MY WORKOUT";
+      btn.disabled = false;
+      alert("Could not reach the AI. Please try again.");
+    });
+  });
+
+  /* ═══════════════════════════════════════════════════
+     NUTRITION TAB
+     ═══════════════════════════════════════════════════ */
+
+  /* ── PHASE DETECTION ── */
+  var onboardDate = profile.onboardDate || ls("forgeiq_onboard_date");
+  var daysSinceOnboard = 0;
+  if(onboardDate){
+    daysSinceOnboard = Math.floor((Date.now() - new Date(onboardDate).getTime()) / 86400000);
+  }
+  var phase = daysSinceOnboard <= 7 ? 1 : daysSinceOnboard <= 56 ? 2 : 3;
+
+  var phaseBanner = $("#phase-banner");
+  var phaseText = $("#phase-text");
+  if(phase === 1){
+    phaseBanner.className = "phase-banner amber";
+    phaseText.textContent = "BASELINE WEEK \u2014 Track everything. No targets. No judgment. Your coach is watching patterns.";
+  } else if(phase === 2){
+    phaseBanner.className = "phase-banner green";
+    phaseText.textContent = "PHASE 2 (Weeks 2-8) \u2014 Targets are gradually activating. Stay consistent with logging.";
+  } else {
+    phaseBanner.className = "phase-banner green";
+    phaseText.textContent = "FULL TARGETS ACTIVE \u2014 All macro and micro targets are live. You are in control.";
+  }
+
+  /* ── GLP1 CHECK ── */
+  if(profile.glp1 || profile.flags && profile.flags.indexOf("glp1") > -1){
+    $("#glp1-alert").classList.add("show");
+  }
+
+  /* ── MACRO TARGETS ── */
+  var targets = profile.macroTargets || { calories: 2200, protein: 180, carbs: 250, fat: 70 };
+
+  function updateMacros(){
+    var totals = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+    (todayData.meals || []).forEach(function(m){
+      totals.calories += (m.calories || 0);
+      totals.protein += (m.protein || 0);
+      totals.carbs += (m.carbs || 0);
+      totals.fat += (m.fat || 0);
+    });
+
+    $("#calorie-count").textContent = Math.round(totals.calories);
+    if(phase > 1){
+      $("#calorie-target-display").textContent = "Target: " + targets.calories + " cal";
+      $("#protein-target-label").textContent = "/ " + targets.protein + "g";
+      $("#carbs-target-label").textContent = "/ " + targets.carbs + "g";
+      $("#fat-target-label").textContent = "/ " + targets.fat + "g";
+    }
+
+    // Rings
+    var circ = 2 * Math.PI * 42;
+    var pPct = phase > 1 ? Math.min(totals.protein / targets.protein, 1) : (totals.protein > 0 ? 0.5 : 0);
+    var cPct = phase > 1 ? Math.min(totals.carbs / targets.carbs, 1) : (totals.carbs > 0 ? 0.5 : 0);
+    var fPct = phase > 1 ? Math.min(totals.fat / targets.fat, 1) : (totals.fat > 0 ? 0.5 : 0);
+
+    $("#ring-protein").setAttribute("stroke-dasharray", (pPct * circ) + " " + circ);
+    $("#ring-carbs").setAttribute("stroke-dasharray", (cPct * circ) + " " + circ);
+    $("#ring-fat").setAttribute("stroke-dasharray", (fPct * circ) + " " + circ);
+
+    $("#ring-protein-val").textContent = Math.round(totals.protein) + "g";
+    $("#ring-carbs-val").textContent = Math.round(totals.carbs) + "g";
+    $("#ring-fat-val").textContent = Math.round(totals.fat) + "g";
+  }
+  updateMacros();
+
+  /* ── WATER TRACKER ── */
+  function updateWater(){
+    var count = todayData.water || 0;
+    $$(".water-glass").forEach(function(g, i){
+      if(i < count) g.classList.add("filled");
+      else g.classList.remove("filled");
+    });
+    $("#water-count").textContent = count;
+  }
+  updateWater();
+
+  $$(".water-glass").forEach(function(g){
+    g.addEventListener("click", function(){
+      var idx = parseInt(g.dataset.glass);
+      todayData.water = idx;
+      saveToday();
+      updateWater();
+    });
+  });
+
+  $("#btn-log-water").addEventListener("click", function(){
+    todayData.water = Math.min((todayData.water || 0) + 1, 8);
+    saveToday();
+    updateWater();
+  });
+
+  /* ── LOG MEAL MODAL ── */
+  $("#btn-log-meal").addEventListener("click", function(){
+    $("#meal-modal").classList.add("active");
+  });
+  $("#meal-modal-close").addEventListener("click", function(){
+    $("#meal-modal").classList.remove("active");
+  });
+  $("#meal-modal").addEventListener("click", function(e){
+    if(e.target === $("#meal-modal")) $("#meal-modal").classList.remove("active");
+  });
+
+  $$(".meal-tab").forEach(function(tab){
+    tab.addEventListener("click", function(){
+      $$(".meal-tab").forEach(function(t){ t.classList.remove("active"); });
+      $$(".meal-panel").forEach(function(p){ p.classList.remove("active"); });
+      tab.classList.add("active");
+      $("#mpanel-" + tab.dataset.mtab).classList.add("active");
+    });
+  });
+
+  /* Food search */
+  var searchTimeout = null;
+  var selectedFood = null;
+  $("#food-search-input").addEventListener("input", function(){
+    clearTimeout(searchTimeout);
+    var q = this.value.trim();
+    if(q.length < 2){ $("#food-search-results").innerHTML = ""; return; }
+    searchTimeout = setTimeout(function(){
+      fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            { role: "system", content: "You are a nutrition database. Return a JSON array of 5 food items matching the query. Each item: {name, calories, protein, carbs, fat} per 100g serving. Return ONLY the JSON array, no other text." },
+            { role: "user", content: "Search: " + q }
+          ]
+        })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var text = data.reply || data.content || "[]";
+        var match = text.match(/\[[\s\S]*\]/);
+        if(!match) return;
+        try {
+          var items = JSON.parse(match[0]);
+          var results = $("#food-search-results");
+          results.innerHTML = "";
+          items.forEach(function(item){
+            var div = document.createElement("div");
+            div.className = "search-result-item";
+            div.innerHTML = '<div>' + item.name + '</div><div class="search-result-macros">' +
+              (item.calories || 0) + ' cal | P: ' + (item.protein || 0) + 'g | C: ' + (item.carbs || 0) + 'g | F: ' + (item.fat || 0) + 'g (per 100g)</div>';
+            div.addEventListener("click", function(){
+              selectedFood = item;
+              $("#food-serving-area").style.display = "block";
+              $("#food-selected-info").textContent = item.name + " — " + item.calories + " cal per 100g";
+              $$(".search-result-item").forEach(function(r){ r.style.background = ""; });
+              div.style.background = "rgba(240,165,0,0.08)";
+            });
+            results.appendChild(div);
+          });
+        } catch(e){}
+      })
+      .catch(function(){});
+    }, 500);
+  });
+
+  $("#food-add-btn").addEventListener("click", function(){
+    if(!selectedFood) return;
+    var servings = parseFloat($("#food-servings").value) || 1;
+    var meal = {
+      name: selectedFood.name,
+      calories: Math.round((selectedFood.calories || 0) * servings),
+      protein: Math.round((selectedFood.protein || 0) * servings),
+      carbs: Math.round((selectedFood.carbs || 0) * servings),
+      fat: Math.round((selectedFood.fat || 0) * servings),
+      time: new Date().toLocaleTimeString()
+    };
+    todayData.meals.push(meal);
+    saveToday();
+    updateMacros();
+    selectedFood = null;
+    $("#food-serving-area").style.display = "none";
+    $("#food-search-input").value = "";
+    $("#food-search-results").innerHTML = "";
+    $("#meal-modal").classList.remove("active");
+  });
+
+  /* AI Natural Language */
+  $("#ai-meal-submit").addEventListener("click", function(){
+    var text = $("#ai-meal-input").value.trim();
+    if(!text) return;
+    var btn = $("#ai-meal-submit");
+    btn.textContent = "ANALYZING...";
+    btn.disabled = true;
+    fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: [
+          { role: "system", content: "You are a nutrition analyzer. The user describes a meal. Estimate total macros. Return ONLY a JSON object: {name, calories, protein, carbs, fat}. No other text." },
+          { role: "user", content: text }
+        ]
+      })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      btn.textContent = "ANALYZE AND LOG";
+      btn.disabled = false;
+      var resp = data.reply || data.content || "{}";
+      var match = resp.match(/\{[\s\S]*\}/);
+      if(match){
+        try {
+          var meal = JSON.parse(match[0]);
+          meal.time = new Date().toLocaleTimeString();
+          todayData.meals.push(meal);
+          saveToday();
+          updateMacros();
+          $("#ai-meal-result").textContent = "Logged: " + (meal.name || text) + " — " + meal.calories + " cal, P:" + meal.protein + "g, C:" + meal.carbs + "g, F:" + meal.fat + "g";
+          $("#ai-meal-input").value = "";
+        } catch(e){
+          $("#ai-meal-result").textContent = "Could not parse the response. Try again.";
+        }
+      }
+    })
+    .catch(function(){
+      btn.textContent = "ANALYZE AND LOG";
+      btn.disabled = false;
+      $("#ai-meal-result").textContent = "Could not reach the AI. Please try again.";
+    });
+  });
+
+  /* ── MICRO TRACKER ── */
+  var micros = [
+    { name: "Vitamin D", target: "2000 IU", logged: 0, color: "#f0a500", desc: "Bone health, immune function, mood regulation" },
+    { name: "B12", target: "2.4 mcg", logged: 0, color: "#2dd4bf", desc: "Energy, nerve function, red blood cell production" },
+    { name: "Vitamin C", target: "90 mg", logged: 0, color: "#f4a261", desc: "Collagen synthesis, immune support, antioxidant" },
+    { name: "Vitamin A", target: "900 mcg", logged: 0, color: "#e63946", desc: "Vision, immune function, skin health" },
+    { name: "Vitamin E", target: "15 mg", logged: 0, color: "#2dc653", desc: "Antioxidant, skin health, immune support" },
+    { name: "Folate", target: "400 mcg", logged: 0, color: "#8b5cf6", desc: "Cell division, DNA synthesis, heart health" },
+    { name: "Iron", target: "18 mg", logged: 0, color: "#e63946", desc: "Oxygen transport, energy, cognitive function" },
+    { name: "Calcium", target: "1000 mg", logged: 0, color: "#e8edf5", desc: "Bone density, muscle contraction, nerve signaling" },
+    { name: "Magnesium", target: "420 mg", logged: 0, color: "#2dd4bf", desc: "Muscle recovery, sleep, 300+ enzyme reactions" },
+    { name: "Potassium", target: "2600 mg", logged: 0, color: "#f0a500", desc: "Blood pressure, fluid balance, muscle contractions" },
+    { name: "Zinc", target: "11 mg", logged: 0, color: "#f4a261", desc: "Immune defense, testosterone, wound healing" },
+    { name: "Sodium", target: "2300 mg", logged: 0, color: "#8fa3c0", desc: "Fluid balance, nerve function. Monitor if hypertensive" },
+    { name: "Omega-3", target: "2 g", logged: 0, color: "#2dd4bf", desc: "Anti-inflammatory, brain health, heart health" },
+    { name: "Fiber", target: "30 g", logged: 0, color: "#2dc653", desc: "Gut health, satiety, blood sugar regulation" },
+    { name: "Collagen", target: "10 g", logged: 0, color: "#f4a261", desc: "Skin elasticity, joint health, connective tissue" },
+    { name: "Water", target: "8 cups", logged: 0, color: "#2dd4bf", desc: "Hydration, metabolism, cognitive performance" },
+    { name: "Electrolytes", target: "daily", logged: 0, color: "#f0a500", desc: "Prevent cramping, maintain energy and focus" }
+  ];
+
+  if(phase > 1){
+    $("#micro-section").style.display = "block";
+    var grid = $("#micro-grid");
+    micros.forEach(function(mic){
+      var pct = Math.random() * 0.6;
+      var item = document.createElement("div");
+      item.className = "micro-item";
+      item.innerHTML =
+        '<div class="micro-name">' + mic.name + '</div>' +
+        '<div class="micro-bar"><div class="micro-bar-fill" style="width:' + (pct * 100) + '%;background:' + mic.color + ';"></div></div>' +
+        '<div class="micro-values"><span>' + Math.round(pct * parseFloat(mic.target)) + '</span><span>' + mic.target + '</span></div>' +
+        '<div class="micro-desc">' + mic.desc + '</div>';
+      grid.appendChild(item);
+    });
+  }
+
+  /* ── WEEKLY REPORT PDF ── */
+  $("#btn-download-nutrition-pdf").addEventListener("click", function(){
+    var win = window.open("", "_blank");
+    var html = '<!DOCTYPE html><html><head><title>FORGEIQ Weekly Nutrition Report</title>' +
+      '<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">' +
+      '<style>body{font-family:Barlow,sans-serif;max-width:700px;margin:0 auto;padding:40px;color:#222;}' +
+      'h1{font-family:"Bebas Neue",sans-serif;font-size:2.5rem;margin:0;letter-spacing:2px;}h1 span{color:#f0a500;}' +
+      '.section{margin:24px 0;padding:16px;background:#f9f9f9;border-radius:8px;}' +
+      'h3{font-family:"Bebas Neue",sans-serif;color:#f0a500;letter-spacing:1px;}</style></head><body>' +
+      '<h1>FORGE<span>IQ</span></h1><p style="color:#888;">Weekly Nutrition Report — Week of ' + todayKey() + '</p>' +
+      '<div class="section"><h3>Win</h3><p>You logged meals consistently this week. Protein intake improved.</p></div>' +
+      '<div class="section"><h3>Gap</h3><p>Fiber and water intake were below target on 3 days. Focus on whole grains and hydration.</p></div>' +
+      '<div class="section"><h3>Focus for Next Week</h3><p>Add one extra serving of vegetables to lunch and dinner.</p></div>' +
+      '</body></html>';
+    win.document.write(html);
+    win.document.close();
+    setTimeout(function(){ win.print(); }, 500);
+  });
+
+  $("#btn-save-drive").addEventListener("click", function(){
+    alert("Google Drive integration coming soon.");
+  });
+
+  /* ── SUPPLEMENT TRACKER CHECKBOXES ── */
+  var suppState = todayData.supps || {};
+  $$(".supp-checkbox").forEach(function(cb){
+    var key = cb.dataset.supp;
+    if(suppState[key]) cb.classList.add("checked");
+    cb.addEventListener("click", function(){
+      cb.classList.toggle("checked");
+      suppState[key] = cb.classList.contains("checked");
+      todayData.supps = suppState;
+      saveToday();
+    });
+  });
+
+  /* ── SUPPLEMENT PDF ── */
+  $("#btn-download-supp-pdf").addEventListener("click", function(){
+    var win = window.open("", "_blank");
+    var html = '<!DOCTYPE html><html><head><title>FORGEIQ Supplement Stack</title>' +
+      '<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">' +
+      '<style>body{font-family:Barlow,sans-serif;max-width:700px;margin:0 auto;padding:40px;color:#222;}' +
+      'h1{font-family:"Bebas Neue",sans-serif;font-size:2.5rem;margin:0;letter-spacing:2px;}h1 span{color:#f0a500;}' +
+      'h2{font-family:"Bebas Neue",sans-serif;color:#f0a500;letter-spacing:1px;margin-top:24px;}' +
+      '.supp{padding:10px 0;border-bottom:1px solid #eee;}' +
+      '.supp-n{font-weight:700;}.supp-d{color:#f0a500;font-size:0.88rem;}.supp-nt{color:#888;font-size:0.82rem;}' +
+      '.disc{margin-top:24px;padding:12px;background:#fef3f3;border-radius:6px;font-size:0.78rem;color:#888;line-height:1.6;}</style></head><body>' +
+      '<h1>FORGE<span>IQ</span></h1><p style="color:#888;">Your Supplement Stack — ' + todayKey() + '</p>' +
+      '<h2>Tier 1 — Always Recommended</h2>' +
+      '<div class="supp"><div class="supp-n">Protein Powder</div><div class="supp-d">20-40g post-workout within 45 min</div></div>' +
+      '<div class="supp"><div class="supp-n">Creatine Monohydrate</div><div class="supp-d">3-5g daily</div></div>' +
+      '<div class="supp"><div class="supp-n">Vitamin D3 + K2</div><div class="supp-d">1000-2000 IU D3 + 100-200mcg K2</div></div>' +
+      '<div class="supp"><div class="supp-n">Magnesium Glycinate</div><div class="supp-d">310-420mg before bed</div></div>' +
+      '<div class="supp"><div class="supp-n">Omega-3 Fish Oil</div><div class="supp-d">2-3g EPA+DHA daily</div></div>' +
+      '<div class="disc">FORGEIQ supplement recommendations are educational and evidence-based. They are not medical advice and do not replace consultation with your physician.</div>' +
+      '<div class="disc">If you are on GLP-1, blood thinners, blood pressure medications, or immunosuppressants \u2014 discuss all supplements with your prescribing physician first.</div>' +
+      '</body></html>';
+    win.document.write(html);
+    win.document.close();
+    setTimeout(function(){ win.print(); }, 500);
+  });
+
+  /* ── ASK COACH ABOUT SUPPLEMENTS ── */
+  $("#btn-ask-coach-supps").addEventListener("click", function(){
+    $$(".sub-tab").forEach(function(t){ t.classList.remove("active"); });
+    $$(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
+    $$(".sub-tab").forEach(function(t){ if(t.dataset.tab === "coach") t.classList.add("active"); });
+    $("#tab-coach").classList.add("active");
+    addChatMsg("user", "I have questions about my supplement stack.");
+    sendChatMessage("I have questions about my supplement stack. What should I know about my current recommended supplements based on my profile?");
+  });
+
+  /* ── POPULATION STACKS VISIBILITY ── */
+  var flags = (profile.flags || []);
+  if(typeof flags === "string") flags = flags.split(",");
+  if(profile.glp1) flags.push("glp1");
+  if(profile.veteran) flags.push("veteran");
+  if(profile.age && profile.age >= 50) flags.push("50+");
+
+  if(flags.indexOf("glp1") > -1) $("#stack-glp1").classList.add("show");
+  if(flags.indexOf("veteran") > -1) $("#stack-veteran").classList.add("show");
+  if(flags.indexOf("50+") > -1) $("#stack-50plus").classList.add("show");
+  if(flags.indexOf("muscle") > -1 || flags.indexOf("muscle-building") > -1) $("#stack-muscle").classList.add("show");
+  if(flags.indexOf("weight-loss") > -1) $("#stack-weightloss").classList.add("show");
+  if(flags.indexOf("post-transformation") > -1) $("#stack-posttransformation").classList.add("show");
+
+  // If no flags, show muscle building as default
+  var anyStackShown = $$(".pop-stack.show").length > 0;
+  if(!anyStackShown) $("#stack-muscle").classList.add("show");
+
+  /* ═══════════════════════════════════════════════════
+     COACH TAB — CHAT
+     ═══════════════════════════════════════════════════ */
+  var chatHistory = [];
+
+  function addChatMsg(role, text){
+    var container = $("#chat-messages");
+    var div = document.createElement("div");
+    div.className = "chat-msg " + role;
+    var avatarClass = role === "user" ? "human" : "ai";
+    var avatarText = role === "user" ? "YOU" : "FIQ";
+    div.innerHTML =
+      '<div class="chat-avatar ' + avatarClass + '">' + avatarText + '</div>' +
+      '<div class="chat-bubble">' + text.replace(/\n/g, "<br>") + '</div>';
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function buildContext(){
+    var ctx = "FORGEIQ Coach context:\n";
+    if(todayData.workout){
+      ctx += "Recent workout: " + todayData.workout.name + " (" + Math.round(todayData.workout.duration/60) + " min, " + todayData.workout.volume + " lbs volume)\n";
+    }
+    var totals = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+    (todayData.meals || []).forEach(function(m){
+      totals.calories += (m.calories || 0);
+      totals.protein += (m.protein || 0);
+      totals.carbs += (m.carbs || 0);
+      totals.fat += (m.fat || 0);
+    });
+    ctx += "Nutrition today: " + Math.round(totals.calories) + " cal, P:" + Math.round(totals.protein) + "g, C:" + Math.round(totals.carbs) + "g, F:" + Math.round(totals.fat) + "g\n";
+    ctx += "Water: " + (todayData.water || 0) + "/8 cups\n";
+    if(profile.glp1) ctx += "User is on GLP-1 medication.\n";
+    if(profile.veteran) ctx += "User is a veteran.\n";
+    return ctx;
+  }
+
+  function sendChatMessage(text){
+    var systemMsg = {
+      role: "system",
+      content: "You are FORGEIQ Coach, an AI fitness and nutrition coach built by Dr. Michael P. Lovato, EdD (NASM CNC/CES/PES) and Debora Lovato (NASM CNC/CES/PES, Licensed Esthetician). Be motivational, evidence-based, and concise. Always recommend consulting a physician for medical decisions. " + buildContext()
+    };
+    chatHistory.push({ role: "user", content: text });
+    var msgs = [systemMsg].concat(chatHistory.slice(-10));
+
+    fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: msgs })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var reply = data.reply || data.content || "I am here for you. Could you rephrase that?";
+      chatHistory.push({ role: "assistant", content: reply });
+      addChatMsg("assistant", reply);
+    })
+    .catch(function(){
+      addChatMsg("assistant", "Connection issue. Please try again in a moment.");
+    });
+  }
+
+  $("#chat-send").addEventListener("click", function(){
+    var input = $("#chat-input");
+    var text = input.value.trim();
+    if(!text) return;
+    addChatMsg("user", text);
+    input.value = "";
+    sendChatMessage(text);
+  });
+
+  $("#chat-input").addEventListener("keydown", function(e){
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      $("#chat-send").click();
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
