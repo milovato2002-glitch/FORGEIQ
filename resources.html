@@ -621,7 +621,7 @@
     <div class="tile-title">GLP-1 EDUCATION HUB</div>
     <div class="tile-author">Dr. Lovato + Debora</div>
     <p class="tile-desc">How GLP-1 medications work, muscle preservation, nutrition adjustments, skin changes, long-term management.</p>
-    <button class="btn-read-more" onclick="openResource('glp1')">Read More &#8594;</button>
+    <a href="/glp-hub.html" class="btn-read-more" style="display:inline-block;text-align:center;">View Full GLP Hub &#8594;</a>
   </div>
 
   <!-- TILE 2: Peptide Education Hub -->
@@ -630,7 +630,7 @@
     <div class="tile-title">PEPTIDE EDUCATION HUB</div>
     <div class="tile-author">Dr. Lovato</div>
     <p class="tile-desc">BPC-157, TB-500, GH secretagogues -- mechanism, research, scope-of-practice limits.</p>
-    <button class="btn-read-more" onclick="openResource('peptides')">Read More &#8594;</button>
+    <a href="/peptide-library.html" class="btn-read-more" style="display:inline-block;text-align:center;">View 100 Peptide Library &#8594;</a>
   </div>
 
   <!-- TILE 3: Supplement Reference Library -->
@@ -1499,7 +1499,10 @@
     printWindow.document.write('.print-footer { text-align: center; margin-top: 30px; padding-top: 16px; border-top: 1px solid #999; font-size: 0.75rem; color: #888; }');
     printWindow.document.write('</style></head><body>');
     printWindow.document.write(printContent);
-    printWindow.document.write('</body></html>');
+    printWindow.document.write('
+
+
+</body></html>');
     printWindow.document.close();
 
     // Wait for fonts to load, then print
@@ -1513,5 +1516,8 @@
   }
 </script>
 
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/forge-ai-button.js"></script>
 </body>
 </html>

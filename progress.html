@@ -514,7 +514,7 @@
   </div>
   <nav class="nav-items">
     <a href="dashboard.html" class="nav-item">Dashboard</a>
-    <a href="workout-log.html" class="nav-item">Train</a>
+    <a href="/train.html" class="nav-item">Train</a>
     <a href="progress.html" class="nav-item active">Progress</a>
     <a href="debora.html" class="nav-item">Debora</a>
     <a href="resources.html" class="nav-item">Resources</a>
@@ -1292,7 +1292,10 @@
       "</tbody></table>" +
       "<h2>Earned Milestones</h2><ul>" + earnedList + "</ul>" +
       "<div class=\"footer\">FORGEIQ &mdash; Dr. Michael P. Lovato, EdD &middot; Debora Lovato &mdash; forgeiq.netlify.app</div>" +
-      "</body></html>"
+      "
+
+
+</body></html>"
     );
     win.document.close();
     setTimeout(function() { win.print(); }, 500);
@@ -1412,5 +1415,8 @@
 })();
 </script>
 
+<script src="/js/supabase-config.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/forge-ai-button.js"></script>
 </body>
 </html>

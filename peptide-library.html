@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Peptide Education Library</title>
+  <meta name="description" content="Comprehensive peptide education library with 100 research-based peptide entries. Educational purposes only. FORGEIQ does not recommend, prescribe, or sell peptides." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
+  <style>
+    /* ── RESET & VARIABLES ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #0a1628;
+      --bg-secondary: #0e1e36;
+      --card-bg: #142444;
+      --gold: #f0a500;
+      --gold-hover: #ffb820;
+      --gold-dim: rgba(240,165,0,0.12);
+      --teal: #2dd4bf;
+      --amber: #f4a261;
+      --red: #e63946;
+      --green: #2dc653;
+      --text-primary: #e8edf5;
+      --text-secondary: #8fa3c0;
+      --text-muted: #4a6080;
+      --border-gold: rgba(240,165,0,0.18);
+      --border-subtle: rgba(255,255,255,0.07);
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-condensed: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,22,40,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-back {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a.active { color: var(--gold); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-family: var(--font-condensed);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .nav-login {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-login:hover { color: var(--text-primary); }
+    .nav-cta {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--gold-hover);
+      transform: translateY(-1px);
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 60px 24px 20px;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      letter-spacing: 6px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer {
+      max-width: 1000px;
+      margin: 20px auto 30px;
+      padding: 18px 24px;
+      background: rgba(230,57,70,0.08);
+      border: 1px solid rgba(230,57,70,0.3);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .disclaimer strong {
+      color: var(--red);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .disclaimer p {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ── SEARCH & FILTERS ── */
+    .filter-section {
+      max-width: 1200px;
+      margin: 0 auto 30px;
+      padding: 0 24px;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 0 16px;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+    }
+    .search-bar:focus-within {
+      border-color: var(--gold);
+    }
+    .search-icon {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-right: 10px;
+    }
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 14px 0;
+      outline: none;
+    }
+    .search-bar input::placeholder {
+      color: var(--text-muted);
+    }
+    .search-clear {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      display: none;
+      transition: color 0.2s;
+    }
+    .search-clear:hover { color: var(--text-primary); }
+    .search-clear.visible { display: block; }
+    .category-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .cat-tab {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.78rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cat-tab:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .cat-tab.active {
+      background: var(--gold);
+      color: var(--bg-primary);
+      border-color: var(--gold);
+      font-weight: 700;
+    }
+    .count-display {
+      color: var(--text-muted);
+      font-family: var(--font-condensed);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+    .count-display span {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ── PEPTIDE CARDS ── */
+    .peptide-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .peptide-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .peptide-card:hover {
+      border-color: rgba(240,165,0,0.25);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    }
+    .peptide-card.cross-ref {
+      opacity: 0.7;
+      border-left: 3px solid var(--text-muted);
+    }
+    .peptide-card.cross-ref:hover { opacity: 1; }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 0;
+    }
+    .card-name {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-badges {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .badge {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+    .badge-cat {
+      background: var(--gold-dim);
+      color: var(--gold);
+      border: 1px solid var(--border-gold);
+    }
+    .badge-approved {
+      background: rgba(45,198,83,0.12);
+      color: var(--green);
+      border: 1px solid rgba(45,198,83,0.3);
+    }
+    .badge-trials {
+      background: rgba(45,212,191,0.1);
+      color: var(--teal);
+      border: 1px solid rgba(45,212,191,0.25);
+    }
+    .badge-not-approved {
+      background: rgba(230,57,70,0.08);
+      color: var(--red);
+      border: 1px solid rgba(230,57,70,0.2);
+      font-size: 0.6rem;
+    }
+    .badge-cross {
+      background: rgba(79,117,163,0.1);
+      color: var(--text-muted);
+      border: 1px solid rgba(79,117,163,0.2);
+      font-size: 0.6rem;
+    }
+    .expand-icon {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+    .peptide-card.expanded .expand-icon {
+      transform: rotate(180deg);
+    }
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .peptide-card.expanded .card-body {
+      max-height: 600px;
+    }
+    .card-content {
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .card-alt-names {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      margin-top: 14px;
+      font-style: italic;
+    }
+    .card-mechanism {
+      margin-top: 12px;
+    }
+    .card-mechanism h4 {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .card-mechanism p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .card-research {
+      margin-top: 12px;
+    }
+    .card-research h4 {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 6px;
+    }
+    .card-research p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .card-links {
+      margin-top: 14px;
+      display: flex;
+      gap: 12px;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    .card-link.pubmed {
+      background: rgba(45,212,191,0.1);
+      color: var(--teal);
+      border: 1px solid rgba(45,212,191,0.2);
+    }
+    .card-link.pubmed:hover {
+      background: rgba(45,212,191,0.2);
+    }
+    .card-link.youtube {
+      background: rgba(230,57,70,0.08);
+      color: var(--red);
+      border: 1px solid rgba(230,57,70,0.2);
+    }
+    .card-link.youtube:hover {
+      background: rgba(230,57,70,0.15);
+    }
+    .cross-ref-note {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    /* ── EDUCATORS & RESOURCES ── */
+    .bottom-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .bottom-section h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .educator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 60px;
+    }
+    .educator-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .educator-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-2px);
+    }
+    .educator-card .icon {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+    .educator-card .name {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      color: var(--text-primary);
+    }
+    .educator-card .role {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 2px;
+    }
+    .db-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .db-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.2s;
+    }
+    .db-card:hover {
+      border-color: var(--teal);
+    }
+    .db-card .db-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .db-card .db-name {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+      color: var(--text-primary);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 30px 24px;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links, .lang-toggle { display: none; }
+      .mobile-menu-btn { display: block; }
+      nav { padding: 12px 18px; }
+      .page-header h1 { font-size: 2.4rem; letter-spacing: 4px; }
+      .card-header { padding: 14px 16px; }
+      .card-content { padding: 0 16px 16px; }
+      .card-badges { flex-wrap: wrap; }
+      .card-name { font-size: 0.95rem; }
+      .educator-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .db-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .card-links { flex-wrap: wrap; }
+    }
+    @media (max-width: 480px) {
+      .page-header h1 { font-size: 1.8rem; }
+      .category-tabs { gap: 6px; }
+      .cat-tab { font-size: 0.7rem; padding: 5px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
+<nav>
+  <div class="nav-left">
+    <button class="nav-back" onclick="if(window.history.length>1)history.back();else window.location.href='/resources.html';" aria-label="Go back">&#8592;</button>
+    <a href="index.html" class="logo">FORGEIQ</a>
+  </div>
+  <div class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="train.html">Train</a>
+    <a href="progress.html">Progress</a>
+    <a href="debora.html">Debora</a>
+    <a href="resources.html" class="active">Resources</a>
+    <a href="book.html">Book</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active">EN</button>
+      <button class="lang-btn">ES</button>
+      <button class="lang-btn">PT</button>
+    </div>
+    <a href="login.html" class="nav-login">Log In</a>
+    <a href="signup.html" class="nav-cta">Get Started</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex';" aria-label="Toggle menu">&#9776;</button>
+</nav>
+
+<!-- ═══════════════════════ PAGE HEADER ═══════════════════════ -->
+<div class="page-header">
+  <h1>PEPTIDE EDUCATION LIBRARY</h1>
+  <p>Research-based education. FORGEIQ does not recommend, prescribe, or sell peptides.</p>
+</div>
+
+<!-- ═══════════════════════ DISCLAIMER ═══════════════════════ -->
+<div class="disclaimer">
+  <strong>CRITICAL</strong>
+  <p>Peptides listed here are NOT FDA-approved for human use unless explicitly marked. Educational purposes only. Consult a licensed physician.</p>
+</div>
+
+<!-- ═══════════════════════ SEARCH & FILTERS ═══════════════════════ -->
+<div class="filter-section">
+  <div class="search-bar">
+    <span class="search-icon">&#128269;</span>
+    <input type="text" id="searchInput" placeholder="Search peptides by name, mechanism, or category..." />
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">&#10005;</button>
+  </div>
+  <div class="category-tabs" id="categoryTabs">
+    <button class="cat-tab active" data-cat="all">All</button>
+    <button class="cat-tab" data-cat="skin">Skin</button>
+    <button class="cat-tab" data-cat="weight_loss">Weight Loss</button>
+    <button class="cat-tab" data-cat="muscle">Muscle</button>
+    <button class="cat-tab" data-cat="joints">Joints</button>
+    <button class="cat-tab" data-cat="cognitive">Cognitive</button>
+    <button class="cat-tab" data-cat="cardiovascular">Cardiovascular</button>
+    <button class="cat-tab" data-cat="immune">Immune</button>
+    <button class="cat-tab" data-cat="hormonal">Hormonal</button>
+    <button class="cat-tab" data-cat="longevity">Longevity</button>
+  </div>
+  <div class="count-display">Showing <span id="countDisplay">100</span> of 100 peptides</div>
+</div>
+
+<!-- ═══════════════════════ PEPTIDE CARDS ═══════════════════════ -->
+<div class="peptide-grid" id="peptideGrid"></div>
+
+<!-- ═══════════════════════ YOUTUBE EDUCATORS ═══════════════════════ -->
+<div class="bottom-section">
+  <h2>YOUTUBE EDUCATORS</h2>
+  <div class="educator-grid">
+    <a href="https://www.youtube.com/results?search_query=Andrew+Huberman+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#127891;</div>
+      <div class="name">Andrew Huberman</div>
+      <div class="role">Huberman Lab</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=More+Plates+More+Dates+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#128170;</div>
+      <div class="name">MPMD</div>
+      <div class="role">More Plates More Dates</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=Dr+Seeds+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#129514;</div>
+      <div class="name">Dr. Seeds</div>
+      <div class="role">Peptide Specialist</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=Ben+Greenfield+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#127939;</div>
+      <div class="name">Ben Greenfield</div>
+      <div class="role">Biohacker &amp; Author</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=Dr+Kyle+Gillett+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#9877;</div>
+      <div class="name">Dr. Kyle Gillett</div>
+      <div class="role">Hormone Physician</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=Thomas+DeLauer+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#127947;</div>
+      <div class="name">Thomas DeLauer</div>
+      <div class="role">Health Educator</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=Dr+Rand+McClain+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#128300;</div>
+      <div class="name">Dr. Rand McClain</div>
+      <div class="role">Regenerative Medicine</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=Dr+Keith+Nichols+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#128218;</div>
+      <div class="name">Dr. Keith Nichols</div>
+      <div class="role">Peptide Researcher</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=Jay+Campbell+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#128214;</div>
+      <div class="name">Jay Campbell</div>
+      <div class="role">Author &amp; Advocate</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=William+Seeds+MD+peptides" target="_blank" class="educator-card">
+      <div class="icon">&#129656;</div>
+      <div class="name">William Seeds MD</div>
+      <div class="role">ISSPP Founder</div>
+    </a>
+  </div>
+
+  <h2>RESEARCH DATABASES</h2>
+  <div class="db-grid">
+    <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" class="db-card">
+      <span class="db-icon">&#128202;</span>
+      <span class="db-name">PubMed</span>
+    </a>
+    <a href="https://www.nih.gov/" target="_blank" class="db-card">
+      <span class="db-icon">&#127963;</span>
+      <span class="db-name">NIH</span>
+    </a>
+    <a href="https://clinicaltrials.gov/" target="_blank" class="db-card">
+      <span class="db-icon">&#128203;</span>
+      <span class="db-name">ClinicalTrials.gov</span>
+    </a>
+    <a href="https://www.sciencedirect.com/" target="_blank" class="db-card">
+      <span class="db-icon">&#128196;</span>
+      <span class="db-name">ScienceDirect</span>
+    </a>
+    <a href="https://www.researchgate.net/" target="_blank" class="db-card">
+      <span class="db-icon">&#128300;</span>
+      <span class="db-name">ResearchGate</span>
+    </a>
+    <a href="https://www.biorxiv.org/" target="_blank" class="db-card">
+      <span class="db-icon">&#129516;</span>
+      <span class="db-name">BioRxiv</span>
+    </a>
+    <a href="https://scholar.google.com/" target="_blank" class="db-card">
+      <span class="db-icon">&#127891;</span>
+      <span class="db-name">Google Scholar</span>
+    </a>
+    <a href="https://www.peptides.org/" target="_blank" class="db-card">
+      <span class="db-icon">&#129516;</span>
+      <span class="db-name">Peptide Society</span>
+    </a>
+    <a href="https://www.eurpepsoc.com/" target="_blank" class="db-card">
+      <span class="db-icon">&#127758;</span>
+      <span class="db-name">European Peptide Society</span>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<div class="footer">
+  &copy; 2026 FORGEIQ. Educational purposes only. Not medical advice. Consult a licensed physician.
+</div>
+
+<!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
+<script src="js/supabase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/forge-ai-button.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   PEPTIDE DATA — 100 ENTRIES
+   ═══════════════════════════════════════════════════════════ */
+const PEPTIDES = [
+
+  /* ─── SKIN (15) ─── */
+  {
+    id: 1, name: "GHK-Cu", altNames: "Copper Peptide, GHK-Copper",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "GHK-Cu is a naturally occurring tripeptide that binds copper ions and stimulates collagen synthesis, glycosaminoglycan production, and fibroblast activity. It activates tissue remodeling genes and promotes wound healing by increasing decorin, angiogenesis, and nerve growth factor expression. It also acts as a potent antioxidant and anti-inflammatory agent.",
+    research: "Studies show GHK-Cu accelerates wound closure, improves skin elasticity, and reduces fine lines. Gene expression research indicates it resets over 4,000 genes toward a healthier state.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=GHK-Cu+peptide+skin", youtube: "https://www.youtube.com/results?search_query=GHK-Cu+peptide+benefits" }
+  },
+  {
+    id: 2, name: "Matrixyl 3000", altNames: "Palmitoyl Tripeptide-1 / Palmitoyl Tetrapeptide-7 blend",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Matrixyl 3000 combines two peptides that stimulate collagen I, III, and IV synthesis in the dermal extracellular matrix. These matrikines signal fibroblasts to produce structural proteins by mimicking collagen fragment activity. The synergistic blend also reduces the appearance of wrinkles through matrix metalloproteinase regulation.",
+    research: "Clinical trials demonstrate visible wrinkle depth reduction of up to 45% over 2 months. It is one of the most studied cosmetic peptide blends for anti-aging.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Matrixyl+3000+collagen+peptide", youtube: "https://www.youtube.com/results?search_query=Matrixyl+3000+anti-aging" }
+  },
+  {
+    id: 3, name: "Argireline", altNames: "Acetyl Hexapeptide-3, Acetyl Hexapeptide-8",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Argireline inhibits SNARE complex formation at the neuromuscular junction, reducing the exocytosis of neurotransmitters required for muscle contraction. By partially blocking catecholamine release at facial muscles, it softens expression lines without paralysis. It is often called a topical alternative to botulinum toxin.",
+    research: "In vitro and clinical studies report up to 30% wrinkle reduction after 30 days of topical application. It shows the strongest effects on periorbital and forehead expression lines.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Argireline+acetyl+hexapeptide+wrinkle", youtube: "https://www.youtube.com/results?search_query=Argireline+peptide+skin" }
+  },
+  {
+    id: 4, name: "Epithalon", altNames: "Epitalon, Epithalone, AEDG peptide",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Epithalon is a synthetic tetrapeptide based on the pineal gland's epithalamin. It activates telomerase, the enzyme responsible for adding protective telomere repeats to chromosome ends. By elongating telomeres, it may slow cellular senescence and extend cellular replicative capacity.",
+    research: "Animal studies by Khavinson et al. showed lifespan extension of up to 25% in rodent models. Human cell culture studies confirmed telomerase activation and telomere elongation.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Epithalon+telomerase+aging", youtube: "https://www.youtube.com/results?search_query=Epithalon+peptide+longevity" }
+  },
+  {
+    id: 5, name: "Melanotan II", altNames: "MT-2, Melanotan 2",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Melanotan II is a synthetic analog of alpha-melanocyte-stimulating hormone (alpha-MSH) that activates melanocortin receptors MC1R through MC5R. MC1R activation stimulates melanogenesis, increasing eumelanin production in melanocytes. It also acts on MC4R, which is involved in appetite regulation and sexual arousal.",
+    research: "Clinical studies demonstrate significant increases in skin pigmentation independent of UV exposure. Research also documents effects on libido through central MC4R activation, though side effects include nausea and cardiovascular concerns.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Melanotan+II+melanocortin+receptor", youtube: "https://www.youtube.com/results?search_query=Melanotan+2+peptide" }
+  },
+  {
+    id: 6, name: "Thymosin Alpha-1", altNames: "Ta1, Thymalfasin, Zadaxin",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Thymosin Alpha-1 is a 28-amino-acid peptide derived from prothymosin alpha that modulates dendritic cell maturation, T-cell differentiation, and NK cell cytotoxicity. It enhances TLR signaling and promotes Th1 immune responses while balancing excessive inflammation. In skin applications, it supports wound healing through immune optimization.",
+    research: "Approved in over 35 countries for hepatitis B and C, it has extensive safety data. Dermatological research shows enhanced wound resolution and reduced infection rates when immunity is optimized.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Thymosin+alpha+1+immune+modulation", youtube: "https://www.youtube.com/results?search_query=Thymosin+Alpha+1+peptide" }
+  },
+  {
+    id: 7, name: "LL-37", altNames: "Cathelicidin, hCAP-18",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "LL-37 is the only human cathelicidin antimicrobial peptide, produced by epithelial cells and neutrophils. It disrupts bacterial membranes through electrostatic interactions while also modulating inflammation via NF-kB pathway regulation. It promotes angiogenesis, wound closure, and epithelial cell migration.",
+    research: "Research demonstrates broad-spectrum antimicrobial activity against bacteria, fungi, and enveloped viruses. Wound healing studies show accelerated re-epithelialization and reduced scar formation.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=LL-37+cathelicidin+wound+healing", youtube: "https://www.youtube.com/results?search_query=LL-37+antimicrobial+peptide" }
+  },
+  {
+    id: 8, name: "Palmitoyl Tetrapeptide-7", altNames: "Rigin, Pal-GQPR",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Palmitoyl Tetrapeptide-7 suppresses interleukin-6 (IL-6) secretion from keratinocytes, reducing chronic low-grade skin inflammation associated with aging (inflammaging). By modulating inflammatory cytokine release, it protects the extracellular matrix from enzymatic degradation. The palmitoyl group enhances skin penetration and bioavailability.",
+    research: "Studies show significant reduction in skin inflammation markers and improved skin firmness when used in combination formulations. It is a key component of Matrixyl 3000 blends.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Palmitoyl+tetrapeptide-7+inflammaging+skin", youtube: "https://www.youtube.com/results?search_query=Palmitoyl+Tetrapeptide-7+anti-aging" }
+  },
+  {
+    id: 9, name: "SNAP-8", altNames: "Acetyl Octapeptide-3",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "SNAP-8 is an elongated version of Argireline that more effectively competes for positions in the SNARE complex, inhibiting vesicle docking and neurotransmitter release at the neuromuscular junction. It provides a more potent muscle-relaxing effect on facial expression muscles. The mechanism mimics botulinum toxin type A but through competitive binding rather than enzymatic cleavage.",
+    research: "Comparative studies show SNAP-8 outperforms Argireline in wrinkle depth reduction at equivalent concentrations. Clinical data reports up to 63% improvement in periorbital wrinkle depth.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=SNAP-8+acetyl+octapeptide+wrinkle", youtube: "https://www.youtube.com/results?search_query=SNAP-8+peptide+wrinkle" }
+  },
+  {
+    id: 10, name: "Leuphasyl", altNames: "Pentapeptide-18",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Leuphasyl mimics the activity of enkephalins, binding to the enkephalin receptor on the outside of nerve cells to inhibit neuronal activity and reduce acetylcholine release. This mechanism complements SNARE-complex inhibitors by acting upstream at the receptor level. The combined approach addresses expression wrinkles through dual neuromuscular modulation.",
+    research: "In vitro studies demonstrate synergistic wrinkle reduction when combined with Argireline or SNAP-8. Clinical evaluations show enhanced anti-wrinkle efficacy in multi-peptide formulations.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Leuphasyl+pentapeptide-18+wrinkle", youtube: "https://www.youtube.com/results?search_query=Leuphasyl+peptide+anti-wrinkle" }
+  },
+  {
+    id: 11, name: "Kinetin", altNames: "N6-furfuryladenine, Furfurylaminopurine",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Kinetin is a naturally occurring cytokinin plant growth factor that delays cellular senescence in human fibroblasts without promoting abnormal growth. It inhibits oxidative damage and advanced glycation end-product (AGE) formation in skin proteins. It helps maintain healthy cell morphology by protecting against environmentally induced aging.",
+    research: "Clinical trials demonstrate significant improvement in skin texture, hyperpigmentation, and fine lines with minimal irritation. It is one of the few anti-aging agents that works without increasing sun sensitivity.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=kinetin+skin+aging+senescence", youtube: "https://www.youtube.com/results?search_query=Kinetin+anti-aging+skin" }
+  },
+  {
+    id: 12, name: "Thymulin", altNames: "Facteur Thymique Serique, FTS-Zinc",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Thymulin is a zinc-dependent nonapeptide secreted by thymic epithelial cells that modulates T-cell maturation and differentiation. In skin biology, it promotes keratinocyte differentiation, regulates hair follicle cycling, and reduces inflammatory cytokine production. Its zinc-binding activity also contributes to antioxidant defense in skin tissue.",
+    research: "Studies show thymulin analogs promote hair growth and improve skin barrier function. Research indicates declining thymulin levels correlate with immune aging and skin deterioration.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=thymulin+peptide+skin+hair", youtube: "https://www.youtube.com/results?search_query=Thymulin+peptide+skin" }
+  },
+  {
+    id: 13, name: "Palmitoyl Tripeptide-5", altNames: "Syn-Coll, Pal-KVK",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Palmitoyl Tripeptide-5 mimics the thrombospondin-1 signaling that activates TGF-beta, a key growth factor in collagen production. By stimulating TGF-beta without the full protein, it triggers robust type I collagen synthesis in dermal fibroblasts. The palmitoyl chain ensures efficient transdermal delivery.",
+    research: "Clinical studies show collagen production increases comparable to retinol without associated irritation. Wrinkle depth measurements show visible improvement within 4-8 weeks of topical application.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Palmitoyl+Tripeptide-5+TGF-beta+collagen", youtube: "https://www.youtube.com/results?search_query=Palmitoyl+Tripeptide-5+collagen" }
+  },
+  {
+    id: 14, name: "Carnosine", altNames: "L-Carnosine, Beta-alanyl-L-histidine",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "Carnosine is a naturally occurring dipeptide with potent anti-glycation, antioxidant, and metal-chelating properties. It prevents advanced glycation end-products (AGEs) from cross-linking collagen and elastin fibers, preserving skin elasticity. It also scavenges reactive oxygen species and reactive carbonyl species that accelerate skin aging.",
+    research: "Research demonstrates carnosine extends fibroblast lifespan in culture and maintains youthful cell morphology. Studies show it reduces lipid peroxidation and protein carbonyl formation in skin tissue.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=carnosine+anti-glycation+skin+aging", youtube: "https://www.youtube.com/results?search_query=L-Carnosine+anti-aging+benefits" }
+  },
+  {
+    id: 15, name: "Biomimetic Hexapeptide", altNames: "Hexapeptide-11, bFGF Mimetic",
+    category: "skin", fdaStatus: "not_approved",
+    mechanism: "This synthetic hexapeptide mimics the activity of basic fibroblast growth factor (bFGF) to stimulate keratinocyte and fibroblast proliferation. It enhances extracellular matrix protein production including collagen, fibronectin, and elastin without the instability issues of full-length growth factors. The small peptide format provides improved stability and penetration.",
+    research: "In vitro studies show significant increases in collagen and elastin synthesis. Clinical evaluations demonstrate improvement in skin density, hydration, and overall radiance.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=biomimetic+hexapeptide+fibroblast+growth+factor+skin", youtube: "https://www.youtube.com/results?search_query=Biomimetic+Hexapeptide+skin+peptide" }
+  },
+
+  /* ─── WEIGHT LOSS (12) ─── */
+  {
+    id: 16, name: "AOD-9604", altNames: "Anti-Obesity Drug 9604, Tyr-hGH Fragment 177-191",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "AOD-9604 is a modified fragment of human growth hormone (amino acids 177-191) with a tyrosine addition. It stimulates lipolysis and inhibits lipogenesis by mimicking the fat-metabolizing action of GH without affecting IGF-1 levels or insulin resistance. It acts on beta-3 adrenergic receptors in adipose tissue to enhance fat breakdown.",
+    research: "Phase II clinical trials showed significant fat reduction without the adverse effects of full HGH. Studies confirm it does not affect blood sugar, cortisol, or produce antibody formation.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=AOD-9604+anti-obesity+fat+loss", youtube: "https://www.youtube.com/results?search_query=AOD-9604+peptide+fat+loss" }
+  },
+  {
+    id: 17, name: "Fragment 176-191", altNames: "HGH Frag 176-191, GH Fragment",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "Fragment 176-191 is the unmodified C-terminal portion of human growth hormone responsible for its lipolytic activity. It directly activates hormone-sensitive lipase in adipocytes, stimulating the release of stored triglycerides as free fatty acids. Unlike full GH, it has no effect on growth, IGF-1 production, or glucose metabolism.",
+    research: "Studies demonstrate selective fat-burning effects comparable to GH without growth-promoting or diabetogenic effects. Research in obese mouse models shows significant reduction in body fat.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=HGH+fragment+176-191+lipolysis", youtube: "https://www.youtube.com/results?search_query=HGH+Fragment+176-191+fat+loss" }
+  },
+  {
+    id: 18, name: "CJC-1295", altNames: "CJC-1295 DAC, Modified GRF 1-29",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "CJC-1295 is a synthetic analog of growth hormone-releasing hormone (GHRH) with a Drug Affinity Complex (DAC) that extends its half-life by binding to serum albumin. It stimulates the anterior pituitary to release growth hormone in a pulsatile, physiological manner. The sustained GH elevation promotes lipolysis, lean mass maintenance, and improved body composition.",
+    research: "Clinical studies show 2-10 fold increases in GH levels lasting up to 6 days after a single injection. Research demonstrates improved body composition metrics with favorable safety profiles.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=CJC-1295+growth+hormone+releasing", youtube: "https://www.youtube.com/results?search_query=CJC-1295+peptide+fat+loss" }
+  },
+  {
+    id: 19, name: "Ipamorelin", altNames: "IPA, NNC 26-0161",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "Ipamorelin is a selective growth hormone secretagogue that activates the ghrelin/GHS-R1a receptor in the pituitary gland to stimulate GH release. Unlike other GHSs, it does not significantly affect ACTH, cortisol, prolactin, or aldosterone levels. This selectivity provides clean GH pulses that support fat metabolism and lean mass without hormonal side effects.",
+    research: "Studies confirm dose-dependent GH release with minimal effects on other pituitary hormones. Clinical data shows improved body composition and recovery metrics with excellent tolerability.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Ipamorelin+growth+hormone+secretagogue", youtube: "https://www.youtube.com/results?search_query=Ipamorelin+peptide+benefits" }
+  },
+  {
+    id: 20, name: "Tesamorelin", altNames: "Egrifta, TH9507",
+    category: "weight_loss", fdaStatus: "approved",
+    mechanism: "Tesamorelin is a stabilized GHRH analog that stimulates the synthesis and pulsatile release of endogenous growth hormone from the pituitary. It specifically targets visceral adipose tissue reduction by promoting lipolysis in abdominal fat depots. Its mechanism preserves the natural GH negative feedback axis, preventing supraphysiological GH levels.",
+    research: "FDA-approved for HIV-associated lipodystrophy, clinical trials demonstrated significant reduction in trunk fat and visceral adipose tissue. Studies also show improvements in lipid profiles and liver fat content.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Tesamorelin+visceral+fat+GHRH", youtube: "https://www.youtube.com/results?search_query=Tesamorelin+FDA+approved+fat+loss" }
+  },
+  {
+    id: 21, name: "MK-677", altNames: "Ibutamoren, Oratrope, L-163,191",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "MK-677 is an orally active, non-peptide growth hormone secretagogue that mimics ghrelin's action at the GHS-R1a receptor. It elevates GH and IGF-1 levels for up to 24 hours from a single oral dose without significantly affecting cortisol. Sustained IGF-1 elevation promotes fat oxidation, lean mass preservation, and improved sleep quality.",
+    research: "Clinical trials in elderly subjects show increased GH secretion, improved body composition, and enhanced sleep architecture. Two-year studies demonstrate sustained efficacy without tachyphylaxis.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=MK-677+ibutamoren+growth+hormone", youtube: "https://www.youtube.com/results?search_query=MK-677+Ibutamoren+benefits" }
+  },
+  {
+    id: 22, name: "5-Amino-1MQ", altNames: "5-amino-1-methylquinolinium",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "5-Amino-1MQ is a small molecule that selectively inhibits nicotinamide N-methyltransferase (NNMT), an enzyme overexpressed in adipose tissue of obese individuals. NNMT inhibition increases intracellular NAD+ levels, activates the SIRT1 energy-sensing pathway, and shifts metabolism toward fat oxidation. It effectively shrinks fat cells while preventing new fat cell formation.",
+    research: "Preclinical studies show significant reductions in body weight and white adipose tissue without changes in food intake. Research indicates reversal of diet-induced obesity in murine models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=5-amino-1MQ+NNMT+obesity+fat", youtube: "https://www.youtube.com/results?search_query=5-Amino-1MQ+fat+loss+peptide" }
+  },
+  {
+    id: 23, name: "MOTS-c", altNames: "Mitochondrial ORF of the Twelve S rRNA type-c",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "MOTS-c is a mitochondria-derived peptide encoded within the 12S rRNA gene. It activates AMPK signaling, enhancing glucose uptake, fatty acid oxidation, and metabolic flexibility. During metabolic stress, MOTS-c translocates to the nucleus where it regulates adaptive gene expression for stress resistance and energy homeostasis.",
+    research: "Studies show MOTS-c prevents diet-induced obesity and insulin resistance in mice. Research demonstrates it improves exercise capacity and metabolic markers, declining with age in humans.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=MOTS-c+mitochondrial+peptide+metabolism", youtube: "https://www.youtube.com/results?search_query=MOTS-c+peptide+metabolism" }
+  },
+  {
+    id: 24, name: "GHRP-2", altNames: "Growth Hormone Releasing Peptide-2, Pralmorelin",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "GHRP-2 is a synthetic hexapeptide that stimulates growth hormone release by activating the ghrelin receptor and synergizing with endogenous GHRH. It produces strong, dose-dependent GH pulses that enhance lipolysis and lean mass accretion. GHRP-2 also has mild cortisol and prolactin elevating effects at higher doses.",
+    research: "Clinical studies show robust GH release comparable to GHRH stimulation tests. Research demonstrates improved body composition with short-term and sustained administration protocols.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=GHRP-2+growth+hormone+releasing+peptide", youtube: "https://www.youtube.com/results?search_query=GHRP-2+peptide+growth+hormone" }
+  },
+  {
+    id: 25, name: "GHRP-6", altNames: "Growth Hormone Releasing Peptide-6, SKF-110679",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "GHRP-6 activates the ghrelin receptor to stimulate GH release from the anterior pituitary in a dose-dependent manner. It also significantly increases appetite through its ghrelin-mimetic effects on the hypothalamus. GHRP-6 promotes gastric motility and cytoprotective mechanisms in the GI tract while elevating IGF-1 levels.",
+    research: "Studies confirm strong GH secretion with notable hunger stimulation. Research shows it enhances recovery, improves cardiac function post-ischemia, and has gastric protective effects.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=GHRP-6+growth+hormone+ghrelin", youtube: "https://www.youtube.com/results?search_query=GHRP-6+peptide+benefits" }
+  },
+  {
+    id: 26, name: "Sermorelin", altNames: "GRF 1-29, Geref",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "Sermorelin is the bioactive fragment (amino acids 1-29) of growth hormone-releasing hormone that retains full receptor binding activity. It stimulates physiological, pulsatile GH release from the pituitary while maintaining intact feedback mechanisms. This results in normalized GH levels that support fat metabolism, sleep quality, and body composition optimization.",
+    research: "Previously FDA-approved for GH deficiency testing, extensive clinical data supports its safety profile. Studies show improved body composition, sleep architecture, and recovery markers in adults with declining GH.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Sermorelin+GHRH+growth+hormone+body+composition", youtube: "https://www.youtube.com/results?search_query=Sermorelin+peptide+anti-aging" }
+  },
+  {
+    id: 27, name: "Hexarelin", altNames: "Examorelin, HEX",
+    category: "weight_loss", fdaStatus: "not_approved",
+    mechanism: "Hexarelin is one of the most potent synthetic growth hormone secretagogues, activating both the ghrelin receptor and CD36 scavenger receptor. Its CD36 activity provides unique cardiovascular benefits including cardioprotection and anti-atherosclerotic effects. GH release is robust but subject to desensitization with chronic high-dose use.",
+    research: "Studies demonstrate the strongest acute GH release among GHRPs. Cardiac research shows improved ventricular function and protection against ischemia-reperfusion injury.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Hexarelin+growth+hormone+cardioprotection", youtube: "https://www.youtube.com/results?search_query=Hexarelin+peptide+GH+release" }
+  },
+
+  /* ─── MUSCLE (18) ─── */
+  {
+    id: 28, name: "BPC-157", altNames: "Body Protection Compound-157, Bepecin, PL 14736",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "BPC-157 is a pentadecapeptide derived from human gastric juice that promotes angiogenesis through VEGF upregulation, activates the FAK-paxillin pathway for cell migration, and modulates nitric oxide synthesis. It accelerates tendon, muscle, ligament, and bone healing by stimulating growth hormone receptor expression and collagen deposition. BPC-157 also exerts systemic cytoprotective effects on the GI tract, liver, and brain.",
+    research: "Extensive animal studies show accelerated healing across multiple tissue types. Research demonstrates tendon-to-bone healing, muscle tear recovery, and protection against NSAID-induced GI damage.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=BPC-157+body+protection+compound+healing", youtube: "https://www.youtube.com/results?search_query=BPC-157+peptide+healing" }
+  },
+  {
+    id: 29, name: "TB-500", altNames: "Thymosin Beta-4, TB4",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "TB-500 is a synthetic version of the naturally occurring 43-amino-acid peptide thymosin beta-4. It sequesters G-actin monomers to regulate actin polymerization, which is essential for cell migration, wound healing, and tissue repair. TB-500 promotes angiogenesis, reduces inflammation via NF-kB downregulation, and decreases fibrosis at injury sites.",
+    research: "Animal studies demonstrate remarkable healing of muscle, tendon, and cardiac tissue after injury. Research shows reduced scar tissue formation and accelerated return to function in equine and rodent models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Thymosin+beta+4+TB-500+tissue+repair", youtube: "https://www.youtube.com/results?search_query=TB-500+peptide+muscle+healing" }
+  },
+  {
+    id: 30, name: "Pentadeca Arginate", altNames: "PDA, BPC-157 Arginine Salt",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "Pentadeca Arginate is the arginine salt form of BPC-157, designed for improved stability and oral bioavailability. The arginine counterion enhances nitric oxide production, amplifying the vasodilatory and angiogenic effects of BPC-157. This formulation preserves the parent peptide's tissue-healing properties while allowing for oral and sublingual administration routes.",
+    research: "Emerging research suggests comparable tissue repair benefits to injectable BPC-157 with improved oral absorption. The arginine salt form shows enhanced stability in acidic conditions.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Pentadeca+Arginate+BPC-157+oral", youtube: "https://www.youtube.com/results?search_query=Pentadeca+Arginate+BPC-157+oral" }
+  },
+  {
+    id: 31, name: "IGF-1 LR3", altNames: "Long R3 IGF-1, Insulin-like Growth Factor-1 Long R3",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "IGF-1 LR3 is an 83-amino-acid analog of IGF-1 with an arginine substitution at position 3 and a 13-amino-acid extension. These modifications reduce binding to IGF-binding proteins, resulting in a significantly longer half-life and greater bioavailability. It activates the IGF-1 receptor to promote muscle hyperplasia (new cell formation), protein synthesis, and glucose uptake.",
+    research: "Studies show potent anabolic effects including increased muscle mass and decreased body fat. Research demonstrates both hypertrophic and hyperplastic muscle growth through satellite cell activation.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=IGF-1+LR3+muscle+growth+anabolic", youtube: "https://www.youtube.com/results?search_query=IGF-1+LR3+peptide+muscle" }
+  },
+  {
+    id: 32, name: "MGF", altNames: "Mechano Growth Factor, IGF-1Ec splice variant",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "MGF is a splice variant of the IGF-1 gene expressed in response to mechanical overload and tissue damage. It activates satellite cells (muscle stem cells) to proliferate and fuse with existing myofibers, driving muscle repair and adaptation. MGF acts locally at the site of muscle damage before being cleaved into systemic IGF-1.",
+    research: "Research shows MGF is essential for the initial muscle repair response to exercise. Studies demonstrate enhanced satellite cell activation and accelerated muscle regeneration in damaged tissue.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Mechano+Growth+Factor+MGF+satellite+cell+muscle", youtube: "https://www.youtube.com/results?search_query=MGF+Mechano+Growth+Factor+peptide" }
+  },
+  {
+    id: 33, name: "PEG-MGF", altNames: "PEGylated Mechano Growth Factor",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "PEG-MGF is Mechano Growth Factor conjugated with polyethylene glycol to extend its biological half-life from minutes to hours. The PEGylation protects the peptide from enzymatic degradation while maintaining its ability to activate muscle satellite cells. This allows for systemic distribution and prolonged anabolic signaling compared to unmodified MGF.",
+    research: "Studies show PEG-MGF provides sustained satellite cell activation and enhanced muscle repair. Research indicates systemic administration can target distal muscle groups more effectively than native MGF.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=PEG-MGF+PEGylated+mechano+growth+factor", youtube: "https://www.youtube.com/results?search_query=PEG-MGF+peptide+muscle+growth" }
+  },
+  {
+    id: 34, name: "Follistatin 344", altNames: "FS-344, Follistatin",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "Follistatin 344 is a single-chain glycoprotein that binds and neutralizes myostatin, activin, and other TGF-beta superfamily members that inhibit muscle growth. By blocking myostatin signaling, it removes the natural brake on skeletal muscle hypertrophy. Follistatin also promotes follicular development and has roles in liver, reproductive, and immune function.",
+    research: "Gene therapy studies demonstrate dramatic muscle mass increases in primates and other models. Research shows myostatin inhibition via follistatin produces muscle growth beyond normal genetic limits.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Follistatin+344+myostatin+inhibitor+muscle", youtube: "https://www.youtube.com/results?search_query=Follistatin+344+myostatin+blocker" }
+  },
+  {
+    id: 35, name: "ACE-031", altNames: "ACVR2B-Fc, Activin Receptor Type IIB-Fc",
+    category: "muscle", fdaStatus: "trials",
+    mechanism: "ACE-031 is a soluble form of the activin type IIB receptor fused to an Fc antibody fragment. It acts as a decoy receptor, binding and sequestering myostatin, activin, GDF-11, and other TGF-beta ligands before they reach cell-surface receptors. This broad ligand trap approach produces potent increases in muscle mass and strength while reducing adiposity.",
+    research: "Phase I/II trials for Duchenne muscular dystrophy showed significant muscle mass increases. Trials were paused due to minor nosebleeds and gum bleeding related to effects on blood vessel biology.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=ACE-031+activin+receptor+muscle+growth", youtube: "https://www.youtube.com/results?search_query=ACE-031+myostatin+inhibitor+muscle" }
+  },
+  {
+    id: 36, name: "CJC-1295 + Ipamorelin Stack", altNames: "CJC/IPA, GH Peptide Stack",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "The CJC-1295 and Ipamorelin combination leverages synergistic GH-releasing mechanisms: CJC-1295 stimulates via the GHRH receptor while Ipamorelin activates the ghrelin receptor. This dual-pathway activation produces amplified, pulsatile GH release exceeding either peptide alone. The stack promotes lean mass gain, fat loss, improved recovery, and enhanced sleep quality.",
+    research: "Clinical observations show the combination produces GH release 3-5x greater than either peptide individually. Practitioner reports indicate improved body composition and recovery metrics.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=CJC-1295+Ipamorelin+growth+hormone", youtube: "https://www.youtube.com/results?search_query=CJC-1295+Ipamorelin+stack+peptide" }
+  },
+  {
+    id: 37, name: "Selank", altNames: "Selanc, TP-7",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "Selank is a synthetic analog of the immunomodulatory peptide tuftsin, fused with a stabilizing Pro-Gly-Pro sequence. It modulates GABA, serotonin, dopamine, and norepinephrine neurotransmitter systems while enhancing BDNF expression. Selank reduces anxiety without sedation, improves cognitive function, and has immunostimulatory properties that support recovery.",
+    research: "Approved in Russia as an anxiolytic, studies show significant anxiety reduction comparable to benzodiazepines without addiction or cognitive impairment. Research demonstrates enhanced memory and learning.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Selank+peptide+anxiolytic+cognitive", youtube: "https://www.youtube.com/results?search_query=Selank+peptide+anxiety+nootropic" }
+  },
+  {
+    id: 38, name: "Semax", altNames: "ACTH 4-10 Pro-Gly-Pro",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "Semax is a synthetic heptapeptide analog of ACTH(4-10) with a C-terminal Pro-Gly-Pro modification for metabolic stability. It increases BDNF, NGF, and GDNF neurotrophic factors while modulating dopaminergic and serotonergic neurotransmission. Semax enhances cognitive performance, focus, and neuroprotection without adrenal stimulation or cortisol elevation.",
+    research: "Approved in Russia and Ukraine for stroke recovery and cognitive enhancement. Studies show improved memory consolidation, attention span, and neuroprotection against ischemic damage.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Semax+ACTH+analog+nootropic+BDNF", youtube: "https://www.youtube.com/results?search_query=Semax+peptide+nootropic+focus" }
+  },
+  {
+    id: 39, name: "Humanin", altNames: "HN, Mitochondrial Peptide Humanin",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "Humanin is a 24-amino-acid mitochondria-derived peptide that acts as a cytoprotective factor against cellular stress and apoptosis. It binds to BAX to prevent mitochondrial membrane permeabilization and activates the STAT3 and ERK1/2 survival pathways. Humanin protects muscle cells from oxidative stress while promoting insulin sensitivity and metabolic health.",
+    research: "Research shows humanin levels decline with age and correlate with disease risk. Studies demonstrate protection against Alzheimer's, type 2 diabetes, and cardiovascular pathology in animal models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Humanin+mitochondrial+peptide+cytoprotection", youtube: "https://www.youtube.com/results?search_query=Humanin+peptide+longevity" }
+  },
+  {
+    id: 40, name: "FOXO4-DRI", altNames: "FOXO4-D-Retro-Inverso, Proxofim",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "FOXO4-DRI is a D-retro-inverso peptide that disrupts the interaction between FOXO4 and p53 in senescent cells. By blocking this interaction, p53 is released to the mitochondria where it triggers apoptosis specifically in senescent (zombie) cells. This targeted senolytic action removes aged, dysfunctional cells while sparing healthy tissue, promoting tissue rejuvenation.",
+    research: "Landmark studies by de Keizer showed reversal of age-related phenotypes in naturally aged mice including restoration of fur density and renal function. Research demonstrates selective senescent cell clearance.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=FOXO4-DRI+senolytic+senescent+cells", youtube: "https://www.youtube.com/results?search_query=FOXO4-DRI+senolytic+peptide+aging" }
+  },
+  {
+    id: 41, name: "SS-31 / Elamipretide", altNames: "Bendavia, MTP-131",
+    category: "muscle", fdaStatus: "trials",
+    mechanism: "SS-31 is a mitochondria-targeted tetrapeptide that concentrates 5000-fold in the inner mitochondrial membrane by binding to cardiolipin. It optimizes electron transport chain efficiency, reduces reactive oxygen species generation at the source, and prevents cytochrome c peroxidase activity. This preserves mitochondrial bioenergetics and prevents apoptotic signaling under stress.",
+    research: "Phase II/III trials for Barth syndrome, heart failure, and mitochondrial myopathy show functional improvements. Studies demonstrate enhanced exercise tolerance and reduced biomarkers of mitochondrial dysfunction.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=SS-31+Elamipretide+mitochondria+cardiolipin", youtube: "https://www.youtube.com/results?search_query=SS-31+Elamipretide+mitochondria+peptide" }
+  },
+  {
+    id: 42, name: "ARA-290", altNames: "Cibinetide, Innate Repair Receptor Agonist",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "ARA-290 is an 11-amino-acid peptide that selectively activates the innate repair receptor (IRR), a heterodimer of the erythropoietin receptor and beta common receptor. Unlike EPO, it has no erythropoietic or thrombotic effects. It promotes tissue repair, reduces inflammation, and protects against neuropathy by activating anti-inflammatory and regenerative gene programs.",
+    research: "Phase II trials show efficacy in sarcoidosis-related neuropathy and diabetic neuropathic pain. Studies demonstrate nerve fiber regeneration and reduced inflammatory markers without EPO-related risks.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=ARA-290+cibinetide+innate+repair+receptor", youtube: "https://www.youtube.com/results?search_query=ARA-290+cibinetide+peptide+repair" }
+  },
+  {
+    id: 43, name: "Dihexa", altNames: "N-hexanoic-Tyr-Ile-(6)-aminohexanoic amide",
+    category: "muscle", fdaStatus: "not_approved",
+    mechanism: "Dihexa is a small peptide derived from angiotensin IV that is 7 orders of magnitude more potent than BDNF at promoting hepatocyte growth factor (HGF) / c-Met receptor signaling. It drives synaptogenesis, neuronal connectivity, and cognitive enhancement by facilitating HGF dimerization and receptor activation. Its effects span cognitive recovery, neural repair, and potentially muscle regeneration via HGF pathways.",
+    research: "Research shows profound cognitive enhancement in animal models of dementia and cognitive impairment. Studies demonstrate new synapse formation and reversal of cognitive deficits at picomolar concentrations.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Dihexa+HGF+c-Met+cognitive+enhancement", youtube: "https://www.youtube.com/results?search_query=Dihexa+peptide+nootropic+cognitive" }
+  },
+  {
+    id: 44, name: "Epithalon", altNames: "Epitalon (cross-ref from Skin)",
+    category: "muscle", fdaStatus: "not_approved", crossRef: 4,
+    mechanism: "Cross-reference: See primary entry under Skin. Epithalon's telomerase activation may support muscle cell replicative capacity and recovery from training stress by preserving telomere length in satellite cells.",
+    research: "See primary entry. Additional muscle-relevant research suggests telomere maintenance in stem cell populations supports regenerative capacity.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Epithalon+telomerase+aging", youtube: "https://www.youtube.com/results?search_query=Epithalon+peptide+longevity" }
+  },
+  {
+    id: 45, name: "GHK-Cu", altNames: "Copper Peptide (cross-ref from Skin)",
+    category: "muscle", fdaStatus: "not_approved", crossRef: 1,
+    mechanism: "Cross-reference: See primary entry under Skin. GHK-Cu's collagen synthesis and tissue remodeling properties support connective tissue repair in muscle injuries, tendon insertions, and fascial recovery.",
+    research: "See primary entry. Musculoskeletal applications leverage its broad tissue-remodeling gene activation profile.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=GHK-Cu+peptide+tissue+repair", youtube: "https://www.youtube.com/results?search_query=GHK-Cu+peptide+benefits" }
+  },
+
+  /* ─── JOINTS (10) ─── */
+  {
+    id: 46, name: "BPC-157", altNames: "Body Protection Compound (cross-ref from Muscle)",
+    category: "joints", fdaStatus: "not_approved", crossRef: 28,
+    mechanism: "Cross-reference: See primary entry under Muscle. BPC-157 is extensively studied for joint healing, promoting tendon-to-bone reattachment, cartilage repair, and reduction of joint inflammation through VEGF and growth factor modulation.",
+    research: "See primary entry. Joint-specific studies show accelerated recovery from ACL, rotator cuff, and Achilles tendon injuries in animal models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=BPC-157+tendon+joint+healing", youtube: "https://www.youtube.com/results?search_query=BPC-157+joint+healing+peptide" }
+  },
+  {
+    id: 47, name: "TB-500", altNames: "Thymosin Beta-4 (cross-ref from Muscle)",
+    category: "joints", fdaStatus: "not_approved", crossRef: 29,
+    mechanism: "Cross-reference: See primary entry under Muscle. TB-500's actin-regulation and anti-inflammatory properties make it particularly effective for joint tissue repair, reducing fibrosis and promoting functional recovery of damaged connective tissue.",
+    research: "See primary entry. Joint-relevant research shows reduced adhesion formation and improved range of motion after connective tissue injuries.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Thymosin+beta+4+joint+connective+tissue", youtube: "https://www.youtube.com/results?search_query=TB-500+joint+healing+peptide" }
+  },
+  {
+    id: 48, name: "Pentadeca Arginate", altNames: "PDA (cross-ref from Muscle)",
+    category: "joints", fdaStatus: "not_approved", crossRef: 30,
+    mechanism: "Cross-reference: See primary entry under Muscle. The oral bioavailability of PDA makes it a practical option for chronic joint support, providing systemic BPC-157 activity for ongoing connective tissue maintenance.",
+    research: "See primary entry. Oral administration may provide sustained support for joint health and recovery from repetitive strain injuries.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Pentadeca+Arginate+BPC-157+oral+joint", youtube: "https://www.youtube.com/results?search_query=Pentadeca+Arginate+oral+BPC-157" }
+  },
+  {
+    id: 49, name: "KPV", altNames: "Alpha-MSH C-terminal tripeptide, Lys-Pro-Val",
+    category: "joints", fdaStatus: "not_approved",
+    mechanism: "KPV is the C-terminal tripeptide of alpha-melanocyte-stimulating hormone with potent anti-inflammatory properties independent of melanocortin receptor activation. It enters cells and directly inhibits NF-kB nuclear translocation, reducing inflammatory cytokine production (TNF-alpha, IL-6, IL-1beta). KPV also modulates inflammasome activation and reduces oxidative stress in joint tissue.",
+    research: "Studies show significant anti-inflammatory efficacy in colitis and inflammatory joint disease models. Research demonstrates NF-kB inhibition comparable to pharmacological inhibitors without immunosuppression.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=KPV+alpha-MSH+anti-inflammatory+NF-kB", youtube: "https://www.youtube.com/results?search_query=KPV+peptide+anti-inflammatory" }
+  },
+  {
+    id: 50, name: "VIP", altNames: "Vasoactive Intestinal Peptide",
+    category: "joints", fdaStatus: "not_approved",
+    mechanism: "VIP is a 28-amino-acid neuropeptide that activates VPAC1 and VPAC2 receptors to produce broad anti-inflammatory, immunomodulatory, and vasodilatory effects. In joints, it inhibits macrophage and Th1-mediated inflammatory cascades while promoting Treg differentiation. VIP also has chondroprotective effects, reducing cartilage degradation enzyme expression.",
+    research: "Studies in rheumatoid arthritis models show reduced joint inflammation and cartilage destruction. Clinical research explores intranasal and injectable VIP for autoimmune joint conditions.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=VIP+vasoactive+intestinal+peptide+joint+inflammation", youtube: "https://www.youtube.com/results?search_query=VIP+Vasoactive+Intestinal+Peptide+benefits" }
+  },
+  {
+    id: 51, name: "LL-37", altNames: "Cathelicidin (cross-ref from Skin)",
+    category: "joints", fdaStatus: "not_approved", crossRef: 7,
+    mechanism: "Cross-reference: See primary entry under Skin. LL-37's antimicrobial and wound healing properties extend to joint health by preventing infection in compromised joint tissue and modulating inflammatory responses in synovial membranes.",
+    research: "See primary entry. Joint-relevant research shows LL-37 modulates synovial inflammation and supports innate defense in articular tissue.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=LL-37+cathelicidin+joint+inflammation", youtube: "https://www.youtube.com/results?search_query=LL-37+peptide+healing" }
+  },
+  {
+    id: 52, name: "Thymosin Beta-10", altNames: "TB-10, TMSB10",
+    category: "joints", fdaStatus: "not_approved",
+    mechanism: "Thymosin Beta-10 is a small actin-sequestering peptide related to thymosin beta-4 but with distinct regulatory properties. It modulates cell motility, adhesion, and cytoskeletal dynamics in chondrocytes and synovial cells. TB-10 influences wound healing and tissue remodeling through regulation of actin dynamics and cell migration pathways.",
+    research: "Research shows TB-10 expression correlates with tissue repair processes and is upregulated during wound healing. Studies suggest roles in cartilage homeostasis and joint tissue maintenance.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Thymosin+beta+10+actin+tissue+repair", youtube: "https://www.youtube.com/results?search_query=Thymosin+Beta+10+peptide" }
+  },
+  {
+    id: 53, name: "Larazotide", altNames: "AT-1001, Larazotide Acetate",
+    category: "joints", fdaStatus: "trials",
+    mechanism: "Larazotide is a synthetic octapeptide that regulates tight junction permeability by modulating zonulin-mediated intestinal paracellular transport. By restoring gut barrier integrity, it reduces systemic inflammation from microbial translocation that contributes to joint inflammatory conditions. It acts locally in the GI tract without significant systemic absorption.",
+    research: "Phase III trials for celiac disease show reduced intestinal permeability and symptoms. Research connects gut barrier dysfunction to joint inflammation, suggesting indirect joint benefits.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Larazotide+tight+junction+gut+permeability", youtube: "https://www.youtube.com/results?search_query=Larazotide+leaky+gut+peptide" }
+  },
+  {
+    id: 54, name: "Collagen Peptides", altNames: "Hydrolyzed Collagen, Collagen Hydrolysate",
+    category: "joints", fdaStatus: "not_approved",
+    mechanism: "Collagen peptides are bioactive fragments produced by enzymatic hydrolysis of collagen proteins. These di- and tripeptides (especially Pro-Hyp and Hyp-Gly) survive digestion and accumulate in cartilage, where they stimulate chondrocyte metabolism and type II collagen synthesis. They also activate osteoblasts for bone formation and fibroblasts for tendon and ligament repair.",
+    research: "Multiple randomized controlled trials show reduced joint pain, improved cartilage density, and enhanced mobility in osteoarthritis patients. Studies demonstrate dose-dependent benefits at 10-15g daily for 3-6 months.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=collagen+peptides+joint+cartilage+osteoarthritis", youtube: "https://www.youtube.com/results?search_query=Collagen+Peptides+joint+health" }
+  },
+  {
+    id: 55, name: "COMP Peptides", altNames: "Cartilage Oligomeric Matrix Protein Peptides",
+    category: "joints", fdaStatus: "not_approved",
+    mechanism: "COMP-derived peptides are fragments of the cartilage oligomeric matrix protein, a key structural glycoprotein in cartilage extracellular matrix. These peptides influence chondrocyte behavior, modulating collagen fibril assembly and cartilage matrix organization. COMP fragments may serve as both biomarkers of cartilage turnover and bioactive signals for tissue repair.",
+    research: "Research identifies COMP as both a diagnostic biomarker for joint degeneration and a potential therapeutic target. Studies show COMP peptide levels correlate with cartilage health and response to treatment.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=COMP+cartilage+oligomeric+matrix+protein+peptide", youtube: "https://www.youtube.com/results?search_query=COMP+cartilage+joint+peptide" }
+  },
+
+  /* ─── COGNITIVE (10) ─── */
+  {
+    id: 56, name: "Semax", altNames: "ACTH 4-10 analog (cross-ref from Muscle)",
+    category: "cognitive", fdaStatus: "not_approved", crossRef: 38,
+    mechanism: "Cross-reference: See primary entry under Muscle. Semax is primarily valued for cognitive enhancement through BDNF upregulation, neurotrophic support, and modulation of dopaminergic and serotonergic systems in the prefrontal cortex and hippocampus.",
+    research: "See primary entry. Cognitive-specific research shows improved working memory, attention, and neuroprotection against ischemic brain injury.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Semax+nootropic+BDNF+cognitive", youtube: "https://www.youtube.com/results?search_query=Semax+nootropic+cognitive+enhancement" }
+  },
+  {
+    id: 57, name: "Selank", altNames: "Tuftsin analog (cross-ref from Muscle)",
+    category: "cognitive", fdaStatus: "not_approved", crossRef: 37,
+    mechanism: "Cross-reference: See primary entry under Muscle. Selank's anxiolytic and nootropic properties arise from GABA system modulation, serotonin metabolism enhancement, and BDNF expression increases in the hippocampus.",
+    research: "See primary entry. Cognitive research shows enhanced learning, memory consolidation, and stress resilience without sedation or cognitive impairment.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Selank+anxiolytic+cognitive+GABA", youtube: "https://www.youtube.com/results?search_query=Selank+peptide+anxiety+nootropic" }
+  },
+  {
+    id: 58, name: "Dihexa", altNames: "HGF activator (cross-ref from Muscle)",
+    category: "cognitive", fdaStatus: "not_approved", crossRef: 43,
+    mechanism: "Cross-reference: See primary entry under Muscle. Dihexa's extraordinary potency in promoting HGF/c-Met-driven synaptogenesis makes it one of the most studied peptides for cognitive restoration and memory enhancement.",
+    research: "See primary entry. Cognitive-specific data shows reversal of scopolamine-induced memory deficits and enhanced spatial learning in aged animal models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Dihexa+cognitive+synaptogenesis+HGF", youtube: "https://www.youtube.com/results?search_query=Dihexa+peptide+cognitive+memory" }
+  },
+  {
+    id: 59, name: "NSI-189", altNames: "Neuralstem compound 189",
+    category: "cognitive", fdaStatus: "trials",
+    mechanism: "NSI-189 is a small molecule that stimulates neurogenesis in the hippocampal dentate gyrus, increasing hippocampal volume by promoting neural progenitor cell proliferation and differentiation. It enhances synaptic plasticity and long-term potentiation while increasing BDNF levels in hippocampal neurons. The mechanism involves modulation of the Akt/CREB signaling pathway.",
+    research: "Phase II trials for major depressive disorder showed improvements in cognition and depressive symptoms. MRI studies confirm measurable increases in hippocampal volume in treated subjects.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=NSI-189+neurogenesis+hippocampus+depression", youtube: "https://www.youtube.com/results?search_query=NSI-189+neurogenesis+cognitive+peptide" }
+  },
+  {
+    id: 60, name: "Cerebrolysin", altNames: "FPF-1070, Brain-derived Peptide Preparation",
+    category: "cognitive", fdaStatus: "approved",
+    mechanism: "Cerebrolysin is a porcine brain-derived peptide preparation containing neurotrophic factors that mimic the activity of BDNF, GDNF, NGF, and CNTF. It crosses the blood-brain barrier to promote neuronal survival, synaptic plasticity, and neurogenesis. The preparation inhibits calpain-mediated neurodegeneration and reduces amyloid-beta aggregation.",
+    research: "Approved in multiple countries for stroke, traumatic brain injury, and dementia. Large clinical trials show improved cognitive outcomes in Alzheimer's patients and enhanced recovery after acute ischemic stroke.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Cerebrolysin+neuroprotection+stroke+dementia", youtube: "https://www.youtube.com/results?search_query=Cerebrolysin+brain+peptide+cognitive" }
+  },
+  {
+    id: 61, name: "Cortexin", altNames: "Brain Cortex Polypeptide",
+    category: "cognitive", fdaStatus: "approved",
+    mechanism: "Cortexin is a complex of neuropeptides, amino acids, and microelements derived from porcine cerebral cortex. It provides neurotrophic support, enhances GABAergic and glutamatergic neurotransmission balance, and protects neurons from oxidative damage. It promotes neuroplasticity by modulating gene expression related to synaptic function and neuronal survival.",
+    research: "Approved in Russia for cognitive disorders, epilepsy, and neurodevelopmental conditions. Clinical studies show improved cognitive function, reduced seizure frequency, and enhanced cerebral blood flow.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Cortexin+neuropeptide+cognitive+neuroprotection", youtube: "https://www.youtube.com/results?search_query=Cortexin+brain+peptide+nootropic" }
+  },
+  {
+    id: 62, name: "DSIP", altNames: "Delta Sleep-Inducing Peptide",
+    category: "cognitive", fdaStatus: "not_approved",
+    mechanism: "DSIP is a nonapeptide that modulates sleep architecture by promoting delta-wave (slow-wave) sleep through GABA receptor modulation and serotonin/melatonin pathway regulation. It normalizes disrupted sleep patterns without the sedation hangover of pharmacological sleep aids. DSIP also influences stress hormone regulation, reducing cortisol and ACTH levels.",
+    research: "Studies show improved sleep efficiency and increased slow-wave sleep duration. Research demonstrates normalization of circadian rhythm disruptions and reduced insomnia symptoms in clinical populations.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=DSIP+delta+sleep+inducing+peptide", youtube: "https://www.youtube.com/results?search_query=DSIP+Delta+Sleep+Inducing+Peptide" }
+  },
+  {
+    id: 63, name: "Orexin A", altNames: "Hypocretin-1, OX-A",
+    category: "cognitive", fdaStatus: "not_approved",
+    mechanism: "Orexin A is a 33-amino-acid neuropeptide produced by lateral hypothalamic neurons that plays a central role in wakefulness, arousal, and motivation. It activates orexin receptors OX1R and OX2R to stimulate wake-promoting brain regions, enhance attention, and drive reward-motivated behavior. Orexin A also regulates energy homeostasis and feeding behavior.",
+    research: "Orexin deficiency causes narcolepsy, establishing its critical role in wakefulness. Research explores orexin agonism for cognitive enhancement, alertness improvement, and treatment of excessive daytime sleepiness.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Orexin+A+hypocretin+wakefulness+cognition", youtube: "https://www.youtube.com/results?search_query=Orexin+A+wakefulness+peptide" }
+  },
+  {
+    id: 64, name: "Alarin", altNames: "Galanin-like Peptide, GALP variant",
+    category: "cognitive", fdaStatus: "not_approved",
+    mechanism: "Alarin is a 25-amino-acid neuropeptide from the galanin peptide family that modulates hypothalamic function, influencing feeding behavior, body temperature, and neuroendocrine signaling. It promotes vasodilation, enhances neural activity in cognitive circuits, and may modulate GnRH release. Unlike other galanin peptides, alarin does not bind classical galanin receptors.",
+    research: "Emerging research shows alarin expression in brain regions associated with cognition and metabolism. Studies suggest roles in neuroinflammation regulation and neuroprotective signaling pathways.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Alarin+galanin+neuropeptide+cognitive", youtube: "https://www.youtube.com/results?search_query=Alarin+peptide+neuropeptide" }
+  },
+  {
+    id: 65, name: "Humanin", altNames: "HN (cross-ref from Muscle)",
+    category: "cognitive", fdaStatus: "not_approved", crossRef: 39,
+    mechanism: "Cross-reference: See primary entry under Muscle. Humanin provides neuroprotective effects against amyloid-beta toxicity, oxidative neuronal damage, and excitotoxicity. It activates STAT3 survival signaling in neurons and reduces neuroinflammation.",
+    research: "See primary entry. Alzheimer's research shows humanin protects hippocampal neurons from amyloid-beta-induced apoptosis and improves spatial memory in transgenic mouse models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Humanin+neuroprotection+Alzheimer+amyloid", youtube: "https://www.youtube.com/results?search_query=Humanin+peptide+brain+neuroprotection" }
+  },
+
+  /* ─── CARDIOVASCULAR (8) ─── */
+  {
+    id: 66, name: "BPC-157", altNames: "Body Protection Compound (cross-ref from Muscle)",
+    category: "cardiovascular", fdaStatus: "not_approved", crossRef: 28,
+    mechanism: "Cross-reference: See primary entry under Muscle. BPC-157 demonstrates cardiovascular benefits through angiogenesis promotion, blood pressure normalization via nitric oxide modulation, and protection of endothelial cells from oxidative damage.",
+    research: "See primary entry. Cardiovascular research shows protection against arrhythmias, accelerated collateral vessel formation, and reduced damage from thrombosis in animal models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=BPC-157+cardiovascular+endothelial+angiogenesis", youtube: "https://www.youtube.com/results?search_query=BPC-157+heart+cardiovascular" }
+  },
+  {
+    id: 67, name: "TB-4", altNames: "Thymosin Beta-4 (cross-ref from Muscle)",
+    category: "cardiovascular", fdaStatus: "not_approved", crossRef: 29,
+    mechanism: "Cross-reference: See primary entry under Muscle. TB-4 shows remarkable cardioprotective properties, promoting cardiac progenitor cell migration, reducing infarct size, and inhibiting fibrosis after myocardial injury through actin regulation and anti-inflammatory pathways.",
+    research: "See primary entry. Cardiac studies demonstrate reduced infarct size, improved ejection fraction, and enhanced survival of cardiomyocytes after ischemic events.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Thymosin+beta+4+cardiac+repair+cardioprotection", youtube: "https://www.youtube.com/results?search_query=Thymosin+Beta+4+heart+repair" }
+  },
+  {
+    id: 68, name: "MOTS-c", altNames: "Mitochondrial peptide (cross-ref from Weight Loss)",
+    category: "cardiovascular", fdaStatus: "not_approved", crossRef: 23,
+    mechanism: "Cross-reference: See primary entry under Weight Loss. MOTS-c's AMPK activation improves cardiovascular health through enhanced endothelial function, reduced vascular inflammation, and improved metabolic flexibility in cardiac tissue.",
+    research: "See primary entry. Cardiovascular research shows MOTS-c reduces atherosclerosis progression and improves cardiac metabolic efficiency in aging models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=MOTS-c+cardiovascular+AMPK+endothelial", youtube: "https://www.youtube.com/results?search_query=MOTS-c+heart+health+peptide" }
+  },
+  {
+    id: 69, name: "Humanin", altNames: "HN (cross-ref from Muscle)",
+    category: "cardiovascular", fdaStatus: "not_approved", crossRef: 39,
+    mechanism: "Cross-reference: See primary entry under Muscle. Humanin protects cardiomyocytes from ischemia-reperfusion injury, reduces oxidative stress in vascular tissue, and improves endothelial function through STAT3 and PI3K/Akt signaling.",
+    research: "See primary entry. Cardiac studies show reduced myocardial infarct size and improved left ventricular function in post-ischemic models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Humanin+cardioprotection+ischemia+reperfusion", youtube: "https://www.youtube.com/results?search_query=Humanin+heart+protection+peptide" }
+  },
+  {
+    id: 70, name: "SS-31", altNames: "Elamipretide (cross-ref from Muscle)",
+    category: "cardiovascular", fdaStatus: "trials", crossRef: 41,
+    mechanism: "Cross-reference: See primary entry under Muscle. SS-31's cardiolipin stabilization in cardiac mitochondria directly improves myocardial bioenergetics, reduces ROS-mediated damage, and enhances cardiac contractile function.",
+    research: "See primary entry. Heart failure trials show improved left ventricular volumes and enhanced exercise capacity. Research demonstrates reduced mitochondrial dysfunction in failing hearts.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=SS-31+Elamipretide+heart+failure+mitochondria", youtube: "https://www.youtube.com/results?search_query=Elamipretide+heart+failure+peptide" }
+  },
+  {
+    id: 71, name: "ARA-290", altNames: "Cibinetide (cross-ref from Muscle)",
+    category: "cardiovascular", fdaStatus: "not_approved", crossRef: 42,
+    mechanism: "Cross-reference: See primary entry under Muscle. ARA-290's innate repair receptor activation provides cardiovascular benefits through endothelial protection, reduced vascular inflammation, and prevention of atherosclerotic plaque progression.",
+    research: "See primary entry. Cardiovascular research shows improved endothelial function and reduced inflammatory markers in patients with metabolic syndrome.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=ARA-290+cibinetide+cardiovascular+endothelial", youtube: "https://www.youtube.com/results?search_query=ARA-290+cibinetide+vascular" }
+  },
+  {
+    id: 72, name: "Apelin", altNames: "APLN, APJ receptor ligand",
+    category: "cardiovascular", fdaStatus: "not_approved",
+    mechanism: "Apelin is an endogenous peptide ligand for the APJ receptor (now called apelin receptor), expressed abundantly in the cardiovascular system. It is a potent positive inotrope that increases cardiac contractility while reducing cardiac loading through vasodilation. Apelin promotes angiogenesis, inhibits cardiac hypertrophy, and improves fluid homeostasis through aquaporin regulation.",
+    research: "Research shows apelin levels are depleted in heart failure and correlate with disease severity. Studies demonstrate apelin administration improves cardiac output and reduces pulmonary artery pressure in heart failure models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Apelin+APJ+receptor+cardiovascular+heart", youtube: "https://www.youtube.com/results?search_query=Apelin+peptide+cardiovascular+heart" }
+  },
+  {
+    id: 73, name: "Ghrelin", altNames: "Growth Hormone Releasing Peptide, Lenomorelin",
+    category: "cardiovascular", fdaStatus: "not_approved",
+    mechanism: "Ghrelin is the endogenous 28-amino-acid ligand for the GHS-R1a receptor, produced primarily by gastric endocrine cells. Beyond GH release and appetite stimulation, ghrelin has direct cardiovascular effects including positive inotropy, vasodilation, and cardioprotection. It reduces cardiac fibrosis, inhibits cardiomyocyte apoptosis, and improves endothelial function through eNOS activation.",
+    research: "Studies show ghrelin administration improves cardiac output in chronic heart failure patients. Research demonstrates reduced cardiac remodeling and improved survival in post-myocardial infarction models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Ghrelin+cardiovascular+cardioprotection+heart", youtube: "https://www.youtube.com/results?search_query=Ghrelin+peptide+cardiovascular+heart" }
+  },
+
+  /* ─── IMMUNE (8) ─── */
+  {
+    id: 74, name: "Thymosin Alpha-1", altNames: "Ta1, Zadaxin (cross-ref from Skin)",
+    category: "immune", fdaStatus: "not_approved", crossRef: 6,
+    mechanism: "Cross-reference: See primary entry under Skin. Thymosin Alpha-1 is primarily an immune peptide that enhances T-cell maturation, NK cell activity, and dendritic cell function. It is approved in 35+ countries for hepatitis and as an immune adjuvant.",
+    research: "See primary entry. Immune-specific research shows improved outcomes in hepatitis B/C, enhanced vaccine responses, and adjunctive benefit in cancer immunotherapy.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Thymosin+Alpha+1+immune+T-cell+hepatitis", youtube: "https://www.youtube.com/results?search_query=Thymosin+Alpha+1+immune+system" }
+  },
+  {
+    id: 75, name: "Thymulin", altNames: "FTS-Zinc (cross-ref from Skin)",
+    category: "immune", fdaStatus: "not_approved", crossRef: 12,
+    mechanism: "Cross-reference: See primary entry under Skin. Thymulin's primary role is immune regulation, promoting T-cell differentiation and function. Its zinc-dependent activity links mineral nutrition to immune competence.",
+    research: "See primary entry. Immune research shows thymulin restores T-cell function in aged subjects and enhances immune surveillance against infections.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Thymulin+immune+T-cell+zinc+thymus", youtube: "https://www.youtube.com/results?search_query=Thymulin+immune+system+peptide" }
+  },
+  {
+    id: 76, name: "LL-37", altNames: "Cathelicidin (cross-ref from Skin)",
+    category: "immune", fdaStatus: "not_approved", crossRef: 7,
+    mechanism: "Cross-reference: See primary entry under Skin. LL-37 is a frontline innate immune effector, providing broad-spectrum antimicrobial defense and bridging innate and adaptive immunity through dendritic cell modulation.",
+    research: "See primary entry. Immune research shows LL-37 kills drug-resistant bacteria, neutralizes viral particles, and enhances immune cell chemotaxis to infection sites.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=LL-37+cathelicidin+antimicrobial+innate+immunity", youtube: "https://www.youtube.com/results?search_query=LL-37+immune+antimicrobial+peptide" }
+  },
+  {
+    id: 77, name: "KPV", altNames: "Alpha-MSH tripeptide (cross-ref from Joints)",
+    category: "immune", fdaStatus: "not_approved", crossRef: 49,
+    mechanism: "Cross-reference: See primary entry under Joints. KPV modulates immune responses by inhibiting NF-kB and reducing pro-inflammatory cytokine production, making it valuable for autoimmune and chronic inflammatory conditions.",
+    research: "See primary entry. Immune-specific research demonstrates efficacy in inflammatory bowel disease models and reduction of systemic inflammatory markers.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=KPV+anti-inflammatory+immune+NF-kB", youtube: "https://www.youtube.com/results?search_query=KPV+peptide+immune+inflammation" }
+  },
+  {
+    id: 78, name: "VIP", altNames: "Vasoactive Intestinal Peptide (cross-ref from Joints)",
+    category: "immune", fdaStatus: "not_approved", crossRef: 50,
+    mechanism: "Cross-reference: See primary entry under Joints. VIP is a potent immunomodulator that shifts immune responses from Th1/Th17 toward Treg-mediated tolerance, reducing autoimmune pathology while maintaining infection defense.",
+    research: "See primary entry. Immune research shows VIP reduces severity of experimental autoimmune conditions including arthritis, encephalomyelitis, and colitis.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=VIP+immunomodulation+Treg+autoimmune", youtube: "https://www.youtube.com/results?search_query=VIP+immune+modulation+peptide" }
+  },
+  {
+    id: 79, name: "BPC-157", altNames: "Body Protection Compound (cross-ref from Muscle)",
+    category: "immune", fdaStatus: "not_approved", crossRef: 28,
+    mechanism: "Cross-reference: See primary entry under Muscle. BPC-157's cytoprotective and anti-inflammatory mechanisms support immune function by protecting mucosal barriers, reducing systemic inflammation, and promoting tissue integrity that prevents pathogen entry.",
+    research: "See primary entry. Immune-relevant research shows gut barrier protection, reduced inflammatory cytokine storms, and enhanced mucosal immune defense.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=BPC-157+cytoprotection+immune+gut+barrier", youtube: "https://www.youtube.com/results?search_query=BPC-157+immune+gut+healing" }
+  },
+  {
+    id: 80, name: "Selank", altNames: "Tuftsin analog (cross-ref from Muscle)",
+    category: "immune", fdaStatus: "not_approved", crossRef: 37,
+    mechanism: "Cross-reference: See primary entry under Muscle. Selank derives from the immunostimulatory peptide tuftsin and retains potent immunomodulatory activity, enhancing phagocytosis, NK cell activity, and IL-6 production while reducing anxiety-driven immunosuppression.",
+    research: "See primary entry. Immune research shows enhanced antiviral defense, improved vaccine responses, and restoration of immune function during chronic stress.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Selank+tuftsin+immune+modulation", youtube: "https://www.youtube.com/results?search_query=Selank+immune+system+peptide" }
+  },
+  {
+    id: 81, name: "Epithalon", altNames: "Epitalon (cross-ref from Skin)",
+    category: "immune", fdaStatus: "not_approved", crossRef: 4,
+    mechanism: "Cross-reference: See primary entry under Skin. Epithalon's telomerase activation extends the replicative lifespan of immune cells, particularly T-cells, potentially restoring immune function that declines with age-related telomere shortening.",
+    research: "See primary entry. Immune research shows improved T-cell proliferative capacity and enhanced immune surveillance in aged animal models.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Epithalon+telomerase+immune+aging+T-cell", youtube: "https://www.youtube.com/results?search_query=Epithalon+immune+longevity+peptide" }
+  },
+
+  /* ─── HORMONAL (10) ─── */
+  {
+    id: 82, name: "PT-141 / Bremelanotide", altNames: "Vyleesi",
+    category: "hormonal", fdaStatus: "approved",
+    mechanism: "PT-141 is a synthetic melanocortin peptide that activates MC3R and MC4R receptors in the central nervous system to enhance sexual desire and arousal. Unlike PDE5 inhibitors, it acts on brain pathways rather than peripheral vasculature, addressing the neurological component of sexual dysfunction. It increases dopaminergic activity in reward circuits associated with sexual motivation.",
+    research: "FDA-approved in 2019 as Vyleesi for hypoactive sexual desire disorder in premenopausal women. Clinical trials showed significant improvement in desire and reduction in distress related to low libido.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=PT-141+Bremelanotide+sexual+desire+melanocortin", youtube: "https://www.youtube.com/results?search_query=PT-141+Bremelanotide+Vyleesi" }
+  },
+  {
+    id: 83, name: "Melanotan II", altNames: "MT-2 (cross-ref from Skin)",
+    category: "hormonal", fdaStatus: "not_approved", crossRef: 5,
+    mechanism: "Cross-reference: See primary entry under Skin. Melanotan II's MC4R activation produces significant effects on sexual function and libido through central melanocortin pathways, in addition to its melanogenic effects.",
+    research: "See primary entry. Hormonal research documents increased spontaneous erections and sexual arousal in both males and females through MC4R-mediated mechanisms.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Melanotan+II+sexual+function+MC4R", youtube: "https://www.youtube.com/results?search_query=Melanotan+2+libido+hormonal" }
+  },
+  {
+    id: 84, name: "Kisspeptin-10", altNames: "KP-10, Metastin 45-54",
+    category: "hormonal", fdaStatus: "not_approved",
+    mechanism: "Kisspeptin-10 is the minimal active fragment of kisspeptin that activates the KISS1R (GPR54) receptor on GnRH neurons in the hypothalamus. It is the master upstream regulator of the reproductive hormone cascade, triggering GnRH release which stimulates LH and FSH secretion from the pituitary. This controls testosterone, estrogen, and progesterone production.",
+    research: "Research shows kisspeptin-10 potently stimulates LH secretion in healthy volunteers. Studies demonstrate its role as a diagnostic tool for reproductive endocrine disorders and potential therapeutic for hypogonadism.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Kisspeptin-10+GnRH+LH+reproductive+hormone", youtube: "https://www.youtube.com/results?search_query=Kisspeptin+10+testosterone+hormonal+peptide" }
+  },
+  {
+    id: 85, name: "GnRH / Gonadorelin", altNames: "LHRH, Gonadotropin Releasing Hormone, Factrel",
+    category: "hormonal", fdaStatus: "approved",
+    mechanism: "GnRH is the hypothalamic decapeptide that controls the entire reproductive hormone axis by stimulating pituitary gonadotropin release. Pulsatile administration mimics physiological secretion to stimulate both LH and FSH, promoting gonadal function. Continuous administration paradoxically downregulates the axis through receptor desensitization.",
+    research: "FDA-approved for diagnostic testing of pituitary gonadotroph function and therapeutic use in reproductive medicine. Studies document its essential role in puberty initiation, fertility treatment, and hormonal assessment.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=GnRH+Gonadorelin+gonadotropin+releasing+hormone", youtube: "https://www.youtube.com/results?search_query=Gonadorelin+GnRH+testosterone+peptide" }
+  },
+  {
+    id: 86, name: "Oxytocin", altNames: "OT, Pitocin, The Bonding Hormone",
+    category: "hormonal", fdaStatus: "approved",
+    mechanism: "Oxytocin is a nonapeptide neurohormone produced in the hypothalamus and released from the posterior pituitary. It activates oxytocin receptors in the brain and periphery to promote social bonding, trust, empathy, and pair bonding. Peripherally, it stimulates uterine contractions, milk letdown, and plays roles in wound healing and cardiac function.",
+    research: "FDA-approved for labor induction and postpartum hemorrhage prevention. Research explores intranasal oxytocin for autism spectrum disorder, social anxiety, PTSD, and relationship enhancement.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Oxytocin+social+bonding+neurohormone", youtube: "https://www.youtube.com/results?search_query=Oxytocin+bonding+hormone+peptide" }
+  },
+  {
+    id: 87, name: "Triptorelin", altNames: "Decapeptyl, Trelstar, GnRH agonist",
+    category: "hormonal", fdaStatus: "approved",
+    mechanism: "Triptorelin is a synthetic GnRH agonist decapeptide with enhanced potency and duration compared to native GnRH. Initial administration causes an LH/FSH surge (flare effect), but sustained use downregulates pituitary GnRH receptors, producing chemical castration-level suppression of sex hormones. It is used for conditions requiring complete gonadal axis suppression.",
+    research: "FDA-approved for advanced prostate cancer, endometriosis, uterine fibroids, and precocious puberty. Extensive clinical data supports long-term safety with reversible hormonal suppression.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Triptorelin+GnRH+agonist+prostate+cancer", youtube: "https://www.youtube.com/results?search_query=Triptorelin+GnRH+agonist+hormonal" }
+  },
+  {
+    id: 88, name: "GHRP-2", altNames: "Pralmorelin (cross-ref from Weight Loss)",
+    category: "hormonal", fdaStatus: "not_approved", crossRef: 24,
+    mechanism: "Cross-reference: See primary entry under Weight Loss. GHRP-2 influences the hormonal axis through potent GH stimulation, which secondarily affects IGF-1, cortisol, and prolactin levels depending on dosing.",
+    research: "See primary entry. Hormonal research documents GHRP-2's effects on the broader endocrine system including growth hormone-IGF-1 axis stimulation.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=GHRP-2+growth+hormone+endocrine", youtube: "https://www.youtube.com/results?search_query=GHRP-2+hormonal+growth+hormone" }
+  },
+  {
+    id: 89, name: "Sermorelin", altNames: "GRF 1-29 (cross-ref from Weight Loss)",
+    category: "hormonal", fdaStatus: "not_approved", crossRef: 26,
+    mechanism: "Cross-reference: See primary entry under Weight Loss. Sermorelin restores youthful GH pulsatility through GHRH receptor activation, supporting the broader hormonal milieu including IGF-1, insulin sensitivity, and downstream hormonal balance.",
+    research: "See primary entry. Hormonal research shows improved GH-IGF-1 axis function, enhanced sleep-related GH secretion, and normalized growth hormone profiles.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Sermorelin+GHRH+hormonal+GH+axis", youtube: "https://www.youtube.com/results?search_query=Sermorelin+hormonal+anti-aging+GH" }
+  },
+  {
+    id: 90, name: "Kisspeptin-54", altNames: "KP-54, Metastin, Full-length Kisspeptin",
+    category: "hormonal", fdaStatus: "not_approved",
+    mechanism: "Kisspeptin-54 is the full-length active form of the KISS1 gene product that acts as the most potent endogenous stimulator of the hypothalamic-pituitary-gonadal axis. It activates KISS1R on GnRH neurons with sustained signaling compared to kisspeptin-10, producing more prolonged gonadotropin release. It also has anti-metastatic properties as the original metastasis suppressor gene product.",
+    research: "Clinical studies show kisspeptin-54 robustly stimulates reproductive hormones in healthy volunteers and patients with reproductive disorders. Research explores its use in IVF protocols as a safer trigger than hCG.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Kisspeptin-54+metastin+GnRH+reproductive", youtube: "https://www.youtube.com/results?search_query=Kisspeptin-54+hormonal+fertility+peptide" }
+  },
+  {
+    id: 91, name: "Epitestosterone", altNames: "17alpha-Hydroxy-4-androsten-3-one",
+    category: "hormonal", fdaStatus: "not_approved",
+    mechanism: "Epitestosterone is the 17-alpha epimer of testosterone, naturally produced in the testes, ovaries, and adrenal glands. It acts as a competitive antagonist at the androgen receptor, modulating testosterone's androgenic effects. Epitestosterone also inhibits 5-alpha reductase activity and may have independent roles in neuroprotection and hormonal balance regulation.",
+    research: "Research shows epitestosterone maintains a natural ratio with testosterone (T/E ratio) used in anti-doping testing. Studies suggest it has anti-androgenic, anti-acne, and potentially neuroprotective properties.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Epitestosterone+androgen+receptor+antagonist", youtube: "https://www.youtube.com/results?search_query=Epitestosterone+hormonal+testosterone+ratio" }
+  },
+
+  /* ─── LONGEVITY (9) ─── */
+  {
+    id: 92, name: "Epithalon", altNames: "Epitalon (cross-ref from Skin)",
+    category: "longevity", fdaStatus: "not_approved", crossRef: 4,
+    mechanism: "Cross-reference: See primary entry under Skin. Epithalon is the most studied longevity peptide, with its telomerase activation directly addressing the telomere shortening theory of aging. It also normalizes melatonin production and circadian rhythms.",
+    research: "See primary entry. Longevity-specific studies show lifespan extension in multiple animal models and restoration of age-related telomere attrition in human cell cultures.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Epithalon+longevity+lifespan+telomerase", youtube: "https://www.youtube.com/results?search_query=Epithalon+longevity+anti-aging+peptide" }
+  },
+  {
+    id: 93, name: "Humanin", altNames: "HN (cross-ref from Muscle)",
+    category: "longevity", fdaStatus: "not_approved", crossRef: 39,
+    mechanism: "Cross-reference: See primary entry under Muscle. Humanin is a key longevity-associated mitochondrial peptide whose levels decline with age. Higher circulating humanin levels correlate with improved healthspan and reduced age-related disease risk.",
+    research: "See primary entry. Longevity research shows centenarians have higher humanin levels, and exogenous humanin extends healthspan in animal models by protecting against metabolic and neurodegenerative diseases.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Humanin+longevity+aging+centenarian", youtube: "https://www.youtube.com/results?search_query=Humanin+longevity+anti-aging" }
+  },
+  {
+    id: 94, name: "MOTS-c", altNames: "Mitochondrial peptide (cross-ref from Weight Loss)",
+    category: "longevity", fdaStatus: "not_approved", crossRef: 23,
+    mechanism: "Cross-reference: See primary entry under Weight Loss. MOTS-c promotes metabolic fitness through AMPK activation, and its levels decline with age. It acts as an exercise mimetic that improves cellular stress resistance and metabolic flexibility, key components of healthy aging.",
+    research: "See primary entry. Longevity studies show MOTS-c prevents age-related metabolic decline and improves physical performance in aged mice, functioning as a mitochondrial-encoded exercise factor.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=MOTS-c+aging+longevity+exercise+mimetic", youtube: "https://www.youtube.com/results?search_query=MOTS-c+longevity+anti-aging+peptide" }
+  },
+  {
+    id: 95, name: "SS-31", altNames: "Elamipretide (cross-ref from Muscle)",
+    category: "longevity", fdaStatus: "trials", crossRef: 41,
+    mechanism: "Cross-reference: See primary entry under Muscle. SS-31's mitochondrial rejuvenation effects directly address the mitochondrial theory of aging by restoring electron transport chain efficiency and reducing oxidative damage that accumulates with age.",
+    research: "See primary entry. Aging research shows SS-31 reverses age-related mitochondrial dysfunction, restores cardiac and skeletal muscle function, and improves exercise capacity in elderly subjects.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=SS-31+aging+mitochondria+rejuvenation", youtube: "https://www.youtube.com/results?search_query=SS-31+Elamipretide+longevity+aging" }
+  },
+  {
+    id: 96, name: "FOXO4-DRI", altNames: "Senolytic peptide (cross-ref from Muscle)",
+    category: "longevity", fdaStatus: "not_approved", crossRef: 40,
+    mechanism: "Cross-reference: See primary entry under Muscle. FOXO4-DRI is a leading senolytic peptide that selectively eliminates senescent cells, which accumulate with age and drive chronic inflammation, tissue dysfunction, and age-related disease through the senescence-associated secretory phenotype (SASP).",
+    research: "See primary entry. Longevity research demonstrates clearance of senescent cells reverses multiple age-related phenotypes and extends healthspan in naturally aged mice.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=FOXO4-DRI+senolytic+aging+longevity", youtube: "https://www.youtube.com/results?search_query=FOXO4-DRI+senolytic+longevity+aging" }
+  },
+  {
+    id: 97, name: "GHK-Cu", altNames: "Copper Peptide (cross-ref from Skin)",
+    category: "longevity", fdaStatus: "not_approved", crossRef: 1,
+    mechanism: "Cross-reference: See primary entry under Skin. GHK-Cu declines from 200ng/mL at age 20 to 80ng/mL by age 60. Its ability to reset gene expression patterns toward a healthier profile makes it a promising systems-level longevity intervention.",
+    research: "See primary entry. Gene expression studies show GHK-Cu modulates over 4,000 genes toward youthful expression patterns, suppressing inflammatory and cancer-related genes while activating repair programs.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=GHK-Cu+gene+expression+aging+longevity", youtube: "https://www.youtube.com/results?search_query=GHK-Cu+longevity+anti-aging+peptide" }
+  },
+  {
+    id: 98, name: "Klotho", altNames: "Alpha-Klotho, KL protein",
+    category: "longevity", fdaStatus: "not_approved",
+    mechanism: "Klotho is a transmembrane protein and circulating hormone that functions as an aging suppressor. It regulates FGF23/phosphate metabolism, inhibits insulin/IGF-1 signaling (promoting longevity pathways), enhances Nrf2-mediated antioxidant defense, and suppresses Wnt signaling to prevent stem cell exhaustion. Soluble klotho also protects against vascular calcification and renal fibrosis.",
+    research: "Klotho-deficient mice show accelerated aging and early death, while overexpression extends lifespan by 20-30%. Human studies show lower klotho levels correlate with cardiovascular disease, cognitive decline, and mortality risk.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Klotho+aging+longevity+anti-aging+protein", youtube: "https://www.youtube.com/results?search_query=Klotho+protein+longevity+aging" }
+  },
+  {
+    id: 99, name: "LL-37", altNames: "Cathelicidin (cross-ref from Skin)",
+    category: "longevity", fdaStatus: "not_approved", crossRef: 7,
+    mechanism: "Cross-reference: See primary entry under Skin. LL-37's role in longevity stems from its immune surveillance function, maintaining defense against infections that accelerate aging, and its ability to reduce chronic inflammation (inflammaging) that drives age-related tissue damage.",
+    research: "See primary entry. Longevity research shows antimicrobial peptide levels decline with age, and LL-37 supplementation may help restore innate immune competence in aging populations.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=LL-37+aging+immune+defense+longevity", youtube: "https://www.youtube.com/results?search_query=LL-37+longevity+immune+aging" }
+  },
+  {
+    id: 100, name: "Carnosine", altNames: "L-Carnosine (cross-ref from Skin)",
+    category: "longevity", fdaStatus: "not_approved", crossRef: 14,
+    mechanism: "Cross-reference: See primary entry under Skin. Carnosine is a longevity-relevant dipeptide due to its anti-glycation properties that protect long-lived proteins (collagen, crystallins, myelin) from AGE cross-linking that accumulates with age and drives tissue stiffening and dysfunction.",
+    research: "See primary entry. Longevity studies show carnosine extends cell culture lifespan, reduces AGE accumulation in aged tissues, and improves cognitive function in elderly subjects.",
+    links: { pubmed: "https://pubmed.ncbi.nlm.nih.gov/?term=Carnosine+longevity+anti-glycation+aging", youtube: "https://www.youtube.com/results?search_query=Carnosine+longevity+anti-aging+peptide" }
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════
+   RENDERING & INTERACTIVITY
+   ═══════════════════════════════════════════════════════════ */
+
+const grid = document.getElementById('peptideGrid');
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+const countDisplay = document.getElementById('countDisplay');
+const categoryTabs = document.querySelectorAll('.cat-tab');
+
+let activeCategory = 'all';
+
+const CATEGORY_LABELS = {
+  skin: 'Skin', weight_loss: 'Weight Loss', muscle: 'Muscle',
+  joints: 'Joints', cognitive: 'Cognitive', cardiovascular: 'Cardiovascular',
+  immune: 'Immune', hormonal: 'Hormonal', longevity: 'Longevity'
+};
+
+const FDA_LABELS = {
+  approved: 'FDA Approved',
+  trials: 'Clinical Trials',
+  not_approved: 'Not FDA Approved'
+};
+
+function renderPeptides() {
+  const query = searchInput.value.toLowerCase().trim();
+  const filtered = PEPTIDES.filter(p => {
+    const matchesCat = activeCategory === 'all' || p.category === activeCategory;
+    const matchesSearch = !query ||
+      p.name.toLowerCase().includes(query) ||
+      (p.altNames && p.altNames.toLowerCase().includes(query)) ||
+      p.mechanism.toLowerCase().includes(query) ||
+      p.category.toLowerCase().includes(query) ||
+      CATEGORY_LABELS[p.category].toLowerCase().includes(query);
+    return matchesCat && matchesSearch;
+  });
+
+  countDisplay.textContent = filtered.length;
+  searchClear.classList.toggle('visible', query.length > 0);
+
+  grid.innerHTML = filtered.map(p => {
+    const isCross = !!p.crossRef;
+    const fdaClass = 'badge-' + p.fdaStatus.replace('_', '-');
+    return `
+      <div class="peptide-card${isCross ? ' cross-ref' : ''}" data-id="${p.id}">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-header-left">
+            <span class="card-name">${p.name}</span>
+            <div class="card-badges">
+              <span class="badge badge-cat">${CATEGORY_LABELS[p.category]}</span>
+              <span class="badge ${fdaClass}">${FDA_LABELS[p.fdaStatus]}</span>
+              ${isCross ? '<span class="badge badge-cross">Cross-Ref</span>' : ''}
+            </div>
+          </div>
+          <span class="expand-icon">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <div class="card-content">
+            ${p.altNames ? `<div class="card-alt-names">Also known as: ${p.altNames}</div>` : ''}
+            <div class="card-mechanism">
+              <h4>Mechanism of Action</h4>
+              <p>${p.mechanism}</p>
+            </div>
+            <div class="card-research">
+              <h4>Research Summary</h4>
+              <p>${p.research}</p>
+            </div>
+            ${isCross ? `<div class="cross-ref-note">This is a cross-reference. See primary entry (ID #${p.crossRef}) for full details.</div>` : ''}
+            <div class="card-links">
+              <a href="${p.links.pubmed}" target="_blank" class="card-link pubmed">&#128218; PubMed</a>
+              <a href="${p.links.youtube}" target="_blank" class="card-link youtube">&#9654; YouTube</a>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleCard(header) {
+  const card = header.closest('.peptide-card');
+  card.classList.toggle('expanded');
+}
+
+function clearSearch() {
+  searchInput.value = '';
+  renderPeptides();
+  searchInput.focus();
+}
+
+/* Event Listeners */
+searchInput.addEventListener('input', renderPeptides);
+
+categoryTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    categoryTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeCategory = tab.dataset.cat;
+    renderPeptides();
+  });
+});
+
+/* Initial render */
+renderPeptides();
+</script>
+
+</body>
+</html>

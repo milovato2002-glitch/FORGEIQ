@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — GLP Medications Research Hub</title>
+  <meta name="description" content="Comprehensive GLP medication education hub. Every GLP-class medication explained with primary research citations. Peer-reviewed sources. FORGEIQ does not prescribe medications." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
+  <style>
+    /* ── RESET & VARIABLES ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #0a1628;
+      --bg-secondary: #0e1e36;
+      --card-bg: #142444;
+      --gold: #f0a500;
+      --gold-hover: #ffb820;
+      --gold-dim: rgba(240,165,0,0.12);
+      --teal: #2dd4bf;
+      --amber: #f4a261;
+      --red: #e63946;
+      --green: #2dc653;
+      --text-primary: #e8edf5;
+      --text-secondary: #8fa3c0;
+      --text-muted: #4a6080;
+      --border-gold: rgba(240,165,0,0.18);
+      --border-subtle: rgba(255,255,255,0.07);
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-condensed: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,22,40,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-back {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a.active { color: var(--gold); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-family: var(--font-condensed);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .nav-login {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-login:hover { color: var(--text-primary); }
+    .nav-cta {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--gold-hover);
+      transform: translateY(-1px);
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 80px 24px 40px;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      letter-spacing: 6px;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 780px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ── DISCLAIMER BANNER ── */
+    .disclaimer-banner {
+      background: rgba(244,162,97,0.15);
+      border: 1px solid var(--amber);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      text-align: center;
+      color: var(--amber);
+      font-size: 0.92rem;
+      font-weight: 400;
+      line-height: 1.7;
+    }
+    .disclaimer-banner strong {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── TAB NAVIGATION ── */
+    .tab-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      padding: 0 24px;
+      justify-content: center;
+    }
+    .tab-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 10px 22px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .tab-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .tab-btn.active {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* ── TAB CONTENT ── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── MEDICATION CARDS ── */
+    .med-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      margin-bottom: 32px;
+      transition: border-color 0.3s;
+    }
+    .med-card:hover {
+      border-color: var(--border-gold);
+    }
+    .med-card h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .med-card h3 {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-top: 28px;
+      margin-bottom: 8px;
+    }
+    .med-card p, .med-card li {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+    .med-card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .med-card ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 4px;
+    }
+    .med-card ul li::before {
+      content: "\25B8";
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+    }
+
+    /* ── BRAND BADGES ── */
+    .brand-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .brand-badge {
+      display: inline-block;
+      background: var(--gold-dim);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .status-badge {
+      display: inline-block;
+      background: rgba(244,162,97,0.15);
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── CITATION ── */
+    .citation {
+      background: var(--bg-secondary);
+      border-left: 3px solid var(--gold);
+      padding: 14px 20px;
+      margin-top: 24px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    /* ── RESEARCH LINKS ── */
+    .research-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .research-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--teal);
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .research-link:hover {
+      border-color: var(--teal);
+      background: rgba(45,212,191,0.08);
+    }
+
+    /* ── PROTOCOL CARDS ── */
+    .protocol-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 32px 30px;
+      margin-bottom: 24px;
+      transition: border-color 0.3s;
+    }
+    .protocol-card:hover {
+      border-color: var(--border-gold);
+    }
+    .protocol-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .protocol-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+    .protocol-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--gold-dim);
+      border: 1px solid var(--border-gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+
+    /* ── SKIN SECTION ── */
+    .skin-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      margin-bottom: 28px;
+    }
+    .skin-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .skin-section p, .skin-section li {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+    .skin-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .skin-section ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 6px;
+    }
+    .skin-section ul li::before {
+      content: "\25B8";
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+    }
+    .step-label {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 2px 12px;
+      border-radius: 3px;
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* ── RESEARCHER GRID ── */
+    .researcher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .researcher-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 24px 22px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .researcher-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-2px);
+    }
+    .researcher-card h4 {
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .researcher-card .institution {
+      color: var(--teal);
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .researcher-card .contribution {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .scholar-link {
+      color: var(--gold);
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .scholar-link:hover { color: var(--gold-hover); }
+
+    /* ── INSTITUTION BUTTONS ── */
+    .institution-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+      justify-content: center;
+    }
+    .institution-btn {
+      display: inline-block;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 10px 22px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.82rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      transition: all 0.25s;
+    }
+    .institution-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-dim);
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 700px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    /* ── GOLD BUTTON ── */
+    .btn-gold {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 14px 36px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-gold:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+
+    /* ── PDF BUTTON ── */
+    .pdf-section {
+      text-align: center;
+      padding: 60px 24px 80px;
+    }
+
+    /* ── TAB SECTION HEADER ── */
+    .tab-section-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .tab-section-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .tab-section-header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 12px 18px; }
+      .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; flex-direction: column; background: var(--bg-secondary); padding: 20px; gap: 16px; border-bottom: 1px solid var(--border-subtle); }
+      .nav-right .lang-toggle, .nav-login { display: none; }
+      .mobile-menu-btn { display: block; }
+      .tab-nav { gap: 6px; }
+      .tab-btn { padding: 8px 14px; font-size: 0.75rem; }
+      .med-card { padding: 28px 20px; }
+      .researcher-grid { grid-template-columns: 1fr; }
+      .institution-grid { gap: 8px; }
+    }
+
+    @media print {
+      nav, .tab-nav, .disclaimer-banner, .pdf-section, .mobile-menu-btn { display: none !important; }
+      .tab-content { display: block !important; }
+      .med-card, .protocol-card, .skin-section, .researcher-card { break-inside: avoid; border-color: #ccc; }
+      body { background: #fff; color: #111; }
+      .med-card h2, .section-title, .protocol-card h3, .skin-section h3 { color: #111; }
+      .med-card p, .med-card li, .protocol-card p, .skin-section p, .skin-section li { color: #333; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
+<nav>
+  <div class="nav-left">
+    <button class="nav-back" onclick="if(window.history.length>1)history.back();else window.location.href='/resources.html';" aria-label="Go back">&#8592;</button>
+    <a href="index.html" class="logo">FORGEIQ</a>
+  </div>
+  <div class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="train.html">Train</a>
+    <a href="progress.html">Progress</a>
+    <a href="debora.html">Debora</a>
+    <a href="resources.html" class="active">Resources</a>
+    <a href="book.html">Book</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active">EN</button>
+      <button class="lang-btn">ES</button>
+      <button class="lang-btn">PT</button>
+    </div>
+    <a href="login.html" class="nav-login">Log In</a>
+    <a href="signup.html" class="nav-cta">Get Started</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex';" aria-label="Toggle menu">&#9776;</button>
+</nav>
+
+<!-- ═══════════════════════ PAGE HEADER ═══════════════════════ -->
+<div class="page-header">
+  <h1>GLP MEDICATIONS &mdash; THE COMPLETE RESEARCH HUB</h1>
+  <p>Every GLP-class medication explained with primary research citations. Read the actual studies. Do your own research. FORGEIQ does not prescribe medications.</p>
+</div>
+
+<!-- ═══════════════════════ DISCLAIMER ═══════════════════════ -->
+<div class="container">
+  <div class="disclaimer-banner">
+    <strong>Educational content only. Not medical advice.</strong><br />
+    FORGEIQ does not prescribe medications. All sources linked are peer-reviewed research or official regulatory documents. Always consult your physician before starting, stopping, or changing any medication.
+  </div>
+</div>
+
+<!-- ═══════════════════════ TAB NAVIGATION ═══════════════════════ -->
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="glp1">GLP-1 Agonists</button>
+  <button class="tab-btn" data-tab="glp2">GLP-2 Agonists</button>
+  <button class="tab-btn" data-tab="dual">Dual/Triple Agonists</button>
+  <button class="tab-btn" data-tab="oral">Oral GLP</button>
+  <button class="tab-btn" data-tab="emerging">Emerging Research</button>
+  <button class="tab-btn" data-tab="fitness">Fitness Protocol</button>
+  <button class="tab-btn" data-tab="skin">Skin Changes</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ TAB: GLP-1 AGONISTS ════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="tab-content active" id="tab-glp1">
+  <div class="container">
+
+    <!-- ── SEMAGLUTIDE ── -->
+    <div class="med-card">
+      <h2>SEMAGLUTIDE</h2>
+      <div class="brand-badges">
+        <span class="brand-badge">Ozempic</span>
+        <span class="brand-badge">Wegovy</span>
+        <span class="brand-badge">Rybelsus</span>
+      </div>
+
+      <h3>Mechanism of Action</h3>
+      <p>GLP-1 receptor agonist with 94% structural similarity to human GLP-1. Binds to GLP-1 receptors in the pancreas, brain, and gut. Slows gastric emptying, reduces appetite, and improves insulin sensitivity.</p>
+
+      <h3>FDA Approval</h3>
+      <ul>
+        <li>Ozempic — 2017 (Type 2 Diabetes)</li>
+        <li>Wegovy — 2021 (Chronic weight management)</li>
+        <li>Rybelsus — 2019 (Oral formulation for Type 2 Diabetes)</li>
+      </ul>
+
+      <h3>Clinical Trial Results</h3>
+      <p>STEP trials — average 14.9% body weight reduction over 68 weeks (Wegovy). STEP 1: 86.4% of participants achieved at least 5% weight loss.</p>
+
+      <h3>Muscle Loss Risk</h3>
+      <p>25-39% of weight lost can be lean mass without resistance training (Frontiers in Endocrinology 2026). This is a critical consideration for anyone on semaglutide therapy.</p>
+
+      <h3>Side Effects</h3>
+      <ul>
+        <li>Nausea (44%)</li>
+        <li>Diarrhea (30%)</li>
+        <li>Vomiting (24%)</li>
+        <li>Constipation (24%)</li>
+        <li>Gastroparesis risk</li>
+        <li>Thyroid C-cell tumors (animal studies)</li>
+        <li>Pancreatitis (rare)</li>
+      </ul>
+
+      <h3>Fitness Protocol Notes</h3>
+      <p>Mandatory resistance training 3x/week minimum. Protein intake 1.2-1.6g/kg bodyweight. Creatine 3-5g daily. Electrolytes mandatory.</p>
+
+      <div class="citation">
+        Wilding JPH et al. "Once-Weekly Semaglutide in Adults with Overweight or Obesity." <em>New England Journal of Medicine</em>, 2021.
+      </div>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=semaglutide+weight+loss" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://www.fda.gov/drugs/drug-approvals-and-databases" target="_blank" rel="noopener" class="research-link">&#127963; FDA</a>
+        <a href="https://clinicaltrials.gov/search?term=semaglutide" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+        <a href="https://medlineplus.gov/druginfo/meds/a618008.html" target="_blank" rel="noopener" class="research-link">&#127973; NIH</a>
+      </div>
+    </div>
+
+    <!-- ── TIRZEPATIDE ── -->
+    <div class="med-card">
+      <h2>TIRZEPATIDE</h2>
+      <div class="brand-badges">
+        <span class="brand-badge">Mounjaro</span>
+        <span class="brand-badge">Zepbound</span>
+      </div>
+
+      <h3>Mechanism of Action</h3>
+      <p>Dual GIP + GLP-1 receptor agonist (first of its kind). Activates both glucose-dependent insulinotropic polypeptide and GLP-1 receptors simultaneously.</p>
+
+      <h3>FDA Approval</h3>
+      <ul>
+        <li>Mounjaro — 2022 (Type 2 Diabetes)</li>
+        <li>Zepbound — 2023 (Chronic weight management)</li>
+      </ul>
+
+      <h3>Clinical Trial Results</h3>
+      <p>SURMOUNT-1 — average 20.9% body weight reduction at 72 weeks (15mg dose). 36% achieved at least 25% weight loss. Superior to semaglutide in head-to-head comparisons.</p>
+
+      <h3>Muscle Loss Risk</h3>
+      <p>Same as semaglutide without resistance training. Lean mass preservation requires dedicated strength programming.</p>
+
+      <h3>Side Effects</h3>
+      <ul>
+        <li>Nausea (29%)</li>
+        <li>Diarrhea (23%)</li>
+        <li>Vomiting (12%)</li>
+        <li>Constipation (12%)</li>
+        <li>Injection site reactions</li>
+      </ul>
+
+      <h3>Fitness Protocol Notes</h3>
+      <p>Same as semaglutide — resistance training is critical for preserving lean mass during treatment.</p>
+
+      <div class="citation">
+        Jastreboff AM et al. "Tirzepatide Once Weekly for the Treatment of Obesity." <em>New England Journal of Medicine</em>, 2022.
+      </div>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=tirzepatide+weight+loss" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=tirzepatide" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+    <!-- ── LIRAGLUTIDE ── -->
+    <div class="med-card">
+      <h2>LIRAGLUTIDE</h2>
+      <div class="brand-badges">
+        <span class="brand-badge">Victoza</span>
+        <span class="brand-badge">Saxenda</span>
+      </div>
+
+      <h3>Mechanism of Action</h3>
+      <p>GLP-1 receptor agonist with 97% structural similarity to human GLP-1. Daily injection (versus weekly for semaglutide).</p>
+
+      <h3>FDA Approval</h3>
+      <ul>
+        <li>Victoza — 2010 (Type 2 Diabetes)</li>
+        <li>Saxenda — 2014 (Chronic weight management)</li>
+      </ul>
+
+      <h3>Clinical Trial Results</h3>
+      <p>SCALE trials — average 8% body weight reduction over 56 weeks. Earlier generation with less weight loss than semaglutide.</p>
+
+      <h3>Side Effects</h3>
+      <ul>
+        <li>Nausea (40%)</li>
+        <li>Diarrhea (21%)</li>
+        <li>Constipation (19%)</li>
+        <li>Vomiting (16%)</li>
+        <li>Headache (14%)</li>
+      </ul>
+
+      <div class="citation">
+        Pi-Sunyer X et al. "A Randomized, Controlled Trial of 3.0 mg of Liraglutide in Weight Management." <em>New England Journal of Medicine</em>, 2015.
+      </div>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=liraglutide+weight+management" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=liraglutide" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+    <!-- ── DULAGLUTIDE ── -->
+    <div class="med-card">
+      <h2>DULAGLUTIDE</h2>
+      <div class="brand-badges">
+        <span class="brand-badge">Trulicity</span>
+      </div>
+
+      <h3>Mechanism of Action</h3>
+      <p>GLP-1 receptor agonist. Weekly injection. Primarily for Type 2 Diabetes with moderate weight loss effects.</p>
+
+      <h3>FDA Approval</h3>
+      <ul>
+        <li>Trulicity — 2014 (Type 2 Diabetes)</li>
+      </ul>
+
+      <h3>Clinical Trial Results</h3>
+      <p>REWIND trial — modest weight loss (approximately 3-4 kg over 5 years), with primary cardiovascular outcome benefit.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=dulaglutide+trulicity" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+      </div>
+    </div>
+
+    <!-- ── EXENATIDE ── -->
+    <div class="med-card">
+      <h2>EXENATIDE</h2>
+      <div class="brand-badges">
+        <span class="brand-badge">Byetta (twice daily)</span>
+        <span class="brand-badge">Bydureon (weekly)</span>
+      </div>
+
+      <h3>Mechanism of Action</h3>
+      <p>Synthetic exendin-4, a GLP-1 receptor agonist derived from Gila monster venom. The first GLP-1 receptor agonist approved.</p>
+
+      <h3>FDA Approval</h3>
+      <ul>
+        <li>Byetta — 2005</li>
+        <li>Bydureon — 2012</li>
+      </ul>
+
+      <h3>Clinical Trial Results</h3>
+      <p>Moderate weight loss (2-4 kg). First generation agent, largely replaced by newer medications.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=exenatide+byetta" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+      </div>
+    </div>
+
+    <!-- ── ORAL SEMAGLUTIDE ── -->
+    <div class="med-card">
+      <h2>ORAL SEMAGLUTIDE</h2>
+      <div class="brand-badges">
+        <span class="brand-badge">Rybelsus</span>
+      </div>
+
+      <h3>Mechanism of Action</h3>
+      <p>Same active compound as injectable semaglutide but formulated with SNAC (sodium N-[8-(2-hydroxybenzoyl)amino] caprylate) absorption enhancer for oral bioavailability. Must be taken fasting with 4 oz of water or less, 30 minutes before food.</p>
+
+      <h3>FDA Approval</h3>
+      <ul>
+        <li>Rybelsus — 2019 (Type 2 Diabetes), weight management indication in trials</li>
+      </ul>
+
+      <h3>Clinical Trial Results</h3>
+      <p>PIONEER trials — weight loss less than injectable formulation but still significant (approximately 5-7%).</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=rybelsus+oral+semaglutide" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ TAB: GLP-2 AGONISTS ════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-glp2">
+  <div class="container">
+
+    <div class="tab-section-header">
+      <h2>GLP-2 RECEPTOR AGONISTS</h2>
+      <p>GLP-2 is a completely different pathway from GLP-1. These medications are NOT used for weight loss. Included here for educational completeness.</p>
+    </div>
+
+    <!-- ── TEDUGLUTIDE ── -->
+    <div class="med-card">
+      <h2>TEDUGLUTIDE</h2>
+      <div class="brand-badges">
+        <span class="brand-badge">Gattex (US)</span>
+        <span class="brand-badge">Revestive (EU)</span>
+      </div>
+
+      <h3>Mechanism of Action</h3>
+      <p>GLP-2 receptor agonist. NOT for weight loss. Promotes intestinal mucosal growth, increases villus height, crypt depth, and mesenteric blood flow.</p>
+
+      <h3>FDA Approval</h3>
+      <ul>
+        <li>Gattex — 2012 (Short Bowel Syndrome / SBS)</li>
+      </ul>
+
+      <h3>Clinical Context</h3>
+      <p>GLP-2 is a completely different pathway from GLP-1. While GLP-1 agonists target appetite and glucose metabolism, GLP-2 agonists target intestinal health and nutrient absorption. Teduglutide is used exclusively for patients with Short Bowel Syndrome who are dependent on parenteral nutrition.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=teduglutide+GLP-2" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ TAB: DUAL/TRIPLE AGONISTS ══════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-dual">
+  <div class="container">
+
+    <div class="tab-section-header">
+      <h2>DUAL AND TRIPLE AGONISTS</h2>
+      <p>The next generation of GLP-based therapies targeting multiple receptor pathways simultaneously for greater efficacy.</p>
+    </div>
+
+    <!-- ── RETATRUTIDE ── -->
+    <div class="med-card">
+      <h2>RETATRUTIDE</h2>
+      <div class="brand-badges">
+        <span class="status-badge">Phase 3 Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>GLP-1 + GIP + Glucagon triple agonist — the first triple receptor agonist in development.</p>
+
+      <h3>Developer</h3>
+      <p>Eli Lilly and Company</p>
+
+      <h3>Early Results</h3>
+      <p>Phase 2 — up to 24.2% weight loss at 48 weeks. The most powerful weight loss agent studied to date.</p>
+
+      <div class="citation">
+        Jastreboff AM et al. "Triple-Hormone-Receptor Agonist Retatrutide for Obesity." <em>New England Journal of Medicine</em>, 2023.
+      </div>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=retatrutide+triple+agonist" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=retatrutide" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+    <!-- ── CAGRISEMA ── -->
+    <div class="med-card">
+      <h2>CAGRISEMA</h2>
+      <div class="brand-badges">
+        <span class="status-badge">Phase 3 Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>Amylin analog (Cagrilintide) + GLP-1 agonist (Semaglutide) combination therapy.</p>
+
+      <h3>Developer</h3>
+      <p>Novo Nordisk</p>
+
+      <h3>Mechanism</h3>
+      <p>Combines appetite suppression from two distinct pathways — amylin and GLP-1 — for synergistic weight loss effects.</p>
+
+      <h3>Early Results</h3>
+      <p>Phase 2 — up to 17.1% weight loss at 32 weeks.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=cagrilintide+semaglutide" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=CagriSema" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+    <!-- ── ORFORGLIPRON ── -->
+    <div class="med-card">
+      <h2>ORFORGLIPRON</h2>
+      <div class="brand-badges">
+        <span class="status-badge">Phase 3 Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>Oral non-peptide GLP-1 receptor agonist (small molecule).</p>
+
+      <h3>Developer</h3>
+      <p>Eli Lilly and Company</p>
+
+      <h3>Significance</h3>
+      <p>If approved, would be the first non-peptide oral GLP-1 — no injection needed, no fasting requirement. A potential game-changer for patient accessibility and compliance.</p>
+
+      <h3>Early Results</h3>
+      <p>Phase 2 — up to 14.7% weight loss at 36 weeks.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=orforglipron+oral+GLP-1" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=orforglipron" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ TAB: ORAL GLP ══════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-oral">
+  <div class="container">
+
+    <div class="tab-section-header">
+      <h2>ORAL GLP THERAPY</h2>
+      <p>The shift from injectable to oral delivery represents one of the most significant advances in GLP medication development.</p>
+    </div>
+
+    <!-- ── ORAL SEMAGLUTIDE (RYBELSUS) ── -->
+    <div class="med-card">
+      <h2>ORAL SEMAGLUTIDE (RYBELSUS)</h2>
+      <div class="brand-badges">
+        <span class="brand-badge">Rybelsus</span>
+        <span class="brand-badge">FDA Approved</span>
+      </div>
+
+      <h3>Oral Delivery Mechanism</h3>
+      <p>Rybelsus uses SNAC (sodium N-[8-(2-hydroxybenzoyl)amino] caprylate) as an absorption enhancer. SNAC creates a localized pH increase in the stomach, protecting semaglutide from degradation and facilitating transcellular absorption through the gastric epithelium.</p>
+
+      <h3>Dosing Requirements</h3>
+      <ul>
+        <li>Must be taken on an empty stomach</li>
+        <li>Swallow whole with no more than 4 oz (120 mL) of plain water</li>
+        <li>Wait at least 30 minutes before eating, drinking, or taking other oral medications</li>
+        <li>Available in 3 mg, 7 mg, and 14 mg tablets</li>
+      </ul>
+
+      <h3>Limitations vs Injectable</h3>
+      <ul>
+        <li>Lower bioavailability than subcutaneous injection (approximately 1% oral bioavailability)</li>
+        <li>Less weight loss than injectable semaglutide (approximately 5-7% vs 14.9%)</li>
+        <li>Strict fasting requirements reduce convenience</li>
+        <li>Food and other medications significantly reduce absorption</li>
+      </ul>
+
+      <h3>Clinical Trial Results</h3>
+      <p>PIONEER trials demonstrated significant weight loss, though less than injectable formulations. PIONEER 1-10 trials established efficacy across multiple populations.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=rybelsus+oral+semaglutide" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=oral+semaglutide" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+    <!-- ── ORFORGLIPRON — THE FUTURE ── -->
+    <div class="med-card">
+      <h2>ORFORGLIPRON — THE FUTURE OF ORAL GLP</h2>
+      <div class="brand-badges">
+        <span class="status-badge">Phase 3 Clinical Trials</span>
+      </div>
+
+      <h3>Why Orforglipron Changes Everything</h3>
+      <p>Unlike Rybelsus, orforglipron is a small molecule — not a peptide. This means it does not require the complex SNAC absorption enhancer system and eliminates the strict fasting requirements that limit Rybelsus.</p>
+
+      <h3>Advantages Over Rybelsus</h3>
+      <ul>
+        <li>No fasting requirement before dosing</li>
+        <li>No injection needed</li>
+        <li>Small molecule — potentially lower manufacturing cost</li>
+        <li>Better oral bioavailability as a non-peptide compound</li>
+        <li>Room-temperature stable (no cold chain requirement)</li>
+      </ul>
+
+      <h3>Early Results</h3>
+      <p>Phase 2 — up to 14.7% weight loss at 36 weeks, approaching injectable semaglutide efficacy with oral convenience.</p>
+
+      <h3>Developer</h3>
+      <p>Eli Lilly and Company</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=orforglipron+oral+GLP-1" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=orforglipron" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ TAB: EMERGING RESEARCH ═════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-emerging">
+  <div class="container">
+
+    <div class="tab-section-header">
+      <h2>EMERGING GLP RESEARCH</h2>
+      <p>Agents currently in clinical trials that may reshape obesity and metabolic disease treatment in the coming years.</p>
+    </div>
+
+    <!-- ── RETATRUTIDE ── -->
+    <div class="med-card">
+      <h2>RETATRUTIDE</h2>
+      <div class="brand-badges">
+        <span class="status-badge">In Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>GLP-1 + GIP + Glucagon triple receptor agonist. The first triple agonist in clinical development.</p>
+
+      <h3>Developer</h3>
+      <p>Eli Lilly and Company</p>
+
+      <h3>Phase 2 Results</h3>
+      <p>Up to 24.2% weight loss at 48 weeks — the most powerful weight loss observed in any pharmacotherapy trial to date. The glucagon component may provide additional metabolic benefits including hepatic fat reduction.</p>
+
+      <h3>Current Status</h3>
+      <p>Phase 3 trials ongoing. If approved, could represent the most effective obesity pharmacotherapy available.</p>
+
+      <div class="citation">
+        Jastreboff AM et al. "Triple-Hormone-Receptor Agonist Retatrutide for Obesity." <em>New England Journal of Medicine</em>, 2023.
+      </div>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=retatrutide+triple+agonist" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=retatrutide" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+    <!-- ── CAGRISEMA ── -->
+    <div class="med-card">
+      <h2>CAGRISEMA</h2>
+      <div class="brand-badges">
+        <span class="status-badge">In Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>Amylin analog (Cagrilintide) + GLP-1 agonist (Semaglutide) combination.</p>
+
+      <h3>Developer</h3>
+      <p>Novo Nordisk</p>
+
+      <h3>Phase 2 Results</h3>
+      <p>Up to 17.1% weight loss at 32 weeks. Combines two distinct appetite-suppression pathways for enhanced efficacy.</p>
+
+      <h3>Current Status</h3>
+      <p>Phase 3 trials ongoing. Represents Novo Nordisk's next-generation approach beyond standalone semaglutide.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=cagrilintide+semaglutide" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=CagriSema" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+    <!-- ── ORFORGLIPRON ── -->
+    <div class="med-card">
+      <h2>ORFORGLIPRON</h2>
+      <div class="brand-badges">
+        <span class="status-badge">In Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>Oral non-peptide GLP-1 receptor agonist (small molecule).</p>
+
+      <h3>Developer</h3>
+      <p>Eli Lilly and Company</p>
+
+      <h3>Phase 2 Results</h3>
+      <p>Up to 14.7% weight loss at 36 weeks. First non-peptide oral GLP-1 — no injection, no fasting requirement.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=orforglipron+oral+GLP-1" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+        <a href="https://clinicaltrials.gov/search?term=orforglipron" target="_blank" rel="noopener" class="research-link">&#128300; ClinicalTrials</a>
+      </div>
+    </div>
+
+    <!-- ── SURVODUTIDE ── -->
+    <div class="med-card">
+      <h2>SURVODUTIDE (BI 456906)</h2>
+      <div class="brand-badges">
+        <span class="status-badge">In Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>Dual glucagon + GLP-1 receptor agonist.</p>
+
+      <h3>Developer</h3>
+      <p>Boehringer Ingelheim / Zealand Pharma</p>
+
+      <h3>Significance</h3>
+      <p>The glucagon component differentiates survodutide from pure GLP-1 agonists. Glucagon receptor activation may increase energy expenditure and promote hepatic fat reduction, making it particularly interesting for patients with MASLD/NASH alongside obesity.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=survodutide+BI+456906" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+      </div>
+    </div>
+
+    <!-- ── PEMVIDUTIDE ── -->
+    <div class="med-card">
+      <h2>PEMVIDUTIDE</h2>
+      <div class="brand-badges">
+        <span class="status-badge">In Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>Dual GLP-1 + Glucagon receptor agonist.</p>
+
+      <h3>Developer</h3>
+      <p>Altimmune</p>
+
+      <h3>Significance</h3>
+      <p>Another dual agonist approach combining GLP-1 and glucagon pathways. Targets both weight loss and liver fat reduction. Early data shows promise for MASLD/NASH treatment alongside obesity management.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=pemvidutide+altimmune" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+      </div>
+    </div>
+
+    <!-- ── DANUGLIPRON ── -->
+    <div class="med-card">
+      <h2>DANUGLIPRON</h2>
+      <div class="brand-badges">
+        <span class="status-badge">In Clinical Trials</span>
+      </div>
+
+      <h3>Type</h3>
+      <p>Oral GLP-1 receptor agonist (small molecule).</p>
+
+      <h3>Developer</h3>
+      <p>Pfizer</p>
+
+      <h3>Development Challenges</h3>
+      <p>Pfizer has faced development challenges with danuglipron, including issues with the twice-daily dosing formulation. The company has shifted focus to a once-daily modified-release version. Demonstrates the difficulty of developing effective oral GLP-1 small molecules.</p>
+
+      <div class="research-links">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/?term=danuglipron+pfizer" target="_blank" rel="noopener" class="research-link">&#128218; PubMed</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ TAB: FITNESS PROTOCOL ══════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-fitness">
+  <div class="container">
+
+    <div class="tab-section-header">
+      <h2>TRAINING ON GLP MEDICATIONS &mdash; THE PROTOCOL</h2>
+      <p>Evidence-based training and nutrition protocols designed to preserve lean mass and optimize body composition during GLP medication use. Developed by Dr. Lovato, NASM CNC/CES/PES.</p>
+    </div>
+
+    <!-- PROTOCOL 1 -->
+    <div class="protocol-card">
+      <div class="protocol-number">1</div>
+      <h3>RESISTANCE TRAINING</h3>
+      <p>Minimum 3x/week, targeting all major muscle groups. Compound movements prioritized: squat, deadlift, bench press, overhead press, rows. Progressive overload tracked session-to-session. Phase-appropriate rep ranges: hypertrophy (8-12 reps), strength (4-6 reps), endurance (12-15 reps). Without structured resistance training, 25-39% of weight lost on GLP medications will be lean mass.</p>
+      <div class="citation">Frontiers in Endocrinology, 2026 — Lean mass loss during GLP-1 RA therapy without resistance exercise.</div>
+    </div>
+
+    <!-- PROTOCOL 2 -->
+    <div class="protocol-card">
+      <div class="protocol-number">2</div>
+      <h3>PROTEIN INTAKE</h3>
+      <p>1.2-1.6g/kg bodyweight daily — prioritize protein at every meal. Use the "protein first" eating strategy: consume protein before carbohydrates and fats at each meal. Target a leucine threshold of 2.5g per meal to maximize muscle protein synthesis. GLP medications reduce appetite, making protein prioritization critical. Consider protein supplementation (whey, casein, plant-based) if whole food intake is insufficient.</p>
+      <div class="citation">Journal of the International Society of Sports Nutrition, 2025 — Protein requirements during pharmacological weight loss.</div>
+    </div>
+
+    <!-- PROTOCOL 3 -->
+    <div class="protocol-card">
+      <div class="protocol-number">3</div>
+      <h3>INJECTION DAY MANAGEMENT</h3>
+      <p>Reduce workout intensity by 20-30% on injection day. Nausea management: consume a light, protein-rich meal 1-2 hours before training. Avoid high-intensity training on injection day. Schedule injections on rest days or light training days when possible. Stay hydrated — nausea is often exacerbated by dehydration. Ginger tea or ginger supplements may help manage GI side effects.</p>
+    </div>
+
+    <!-- PROTOCOL 4 -->
+    <div class="protocol-card">
+      <div class="protocol-number">4</div>
+      <h3>PROGRESSIVE OVERLOAD</h3>
+      <p>Track every session. Volume (sets x reps x weight) must increase over time to preserve and build muscle during caloric deficit. Use a training log or app. Even small increments (2.5 lb increases, 1 additional rep) constitute progressive overload. During GLP-medicated caloric deficit, maintaining strength is the primary goal — any strength gain is exceptional.</p>
+    </div>
+
+    <!-- PROTOCOL 5 -->
+    <div class="protocol-card">
+      <div class="protocol-number">5</div>
+      <h3>CREATINE MONOHYDRATE</h3>
+      <p>3-5g daily creatine monohydrate. The supplement with the strongest evidence base for muscle preservation during GLP medication use. Improves intracellular hydration, enhances ATP regeneration, and supports lean mass retention during caloric deficit. No loading phase necessary — consistent daily dosing achieves saturation within 3-4 weeks. Take with any meal.</p>
+      <div class="citation">Frontiers in Nutrition, 2025 — Creatine supplementation during pharmacological caloric restriction.</div>
+    </div>
+
+    <!-- PROTOCOL 6 -->
+    <div class="protocol-card">
+      <div class="protocol-number">6</div>
+      <h3>HMB (BETA-HYDROXY BETA-METHYLBUTYRATE)</h3>
+      <p>3g daily HMB. Anti-catabolic supplement that helps prevent muscle protein breakdown during caloric deficit. Particularly effective in the early weeks of GLP therapy when caloric restriction is most aggressive. Can be taken with meals — split into 1g three times daily for optimal blood levels. Works synergistically with resistance training and adequate protein.</p>
+      <div class="citation">Frontiers in Nutrition, 2025 — HMB and muscle preservation during medically-supervised weight loss.</div>
+    </div>
+
+    <!-- PROTOCOL 7 -->
+    <div class="protocol-card">
+      <div class="protocol-number">7</div>
+      <h3>HYDRATION AND ELECTROLYTES</h3>
+      <p>Minimum 3L water daily. Electrolytes are mandatory — not optional. GLP medications can cause significant fluid loss through GI side effects (nausea, diarrhea, vomiting). Key electrolytes: sodium (2000-3000mg), potassium (3500-4700mg from food and supplements), magnesium (400-600mg). Consider an electrolyte supplement without added sugar. Signs of electrolyte imbalance: muscle cramps, dizziness, heart palpitations, fatigue.</p>
+    </div>
+
+    <!-- PROTOCOL 8 -->
+    <div class="protocol-card">
+      <div class="protocol-number">8</div>
+      <h3>SLEEP OPTIMIZATION</h3>
+      <p>7-9 hours nightly. GLP medications can affect sleep quality — some users report difficulty falling or staying asleep. Magnesium glycinate (200-400mg) before bed supports both sleep quality and electrolyte balance. Maintain consistent sleep/wake times. Avoid screens 1 hour before bed. Keep the bedroom cool (65-68F). Poor sleep increases cortisol, which promotes lean mass loss during caloric deficit.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ TAB: SKIN CHANGES ══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-skin">
+  <div class="container">
+
+    <div class="tab-section-header">
+      <h2>GLP MEDICATIONS AND YOUR SKIN &mdash; DEBORA'S GUIDE</h2>
+      <p>By Debora Lovato, Licensed Esthetician, NASM CNC/CES/PES, GLP-1 Skin Specialist</p>
+    </div>
+
+    <!-- SECTION 1: FACIAL VOLUME LOSS -->
+    <div class="skin-section">
+      <h3>FACIAL VOLUME LOSS</h3>
+      <p><strong>Mechanism:</strong> Rapid fat loss reduces buccal and malar fat pads — the fat compartments that give your face its youthful volume and contour. This is sometimes called "Ozempic face" in popular media, though it occurs with any rapid weight loss method.</p>
+      <p style="margin-top:12px;"><strong>Timeline:</strong> Typically noticeable 3-6 months into treatment, especially with faster weight loss rates.</p>
+      <h3 style="color:var(--teal);">Management</h3>
+      <ul>
+        <li>Hyaluronic acid dermal fillers (consult a board-certified dermatologist or plastic surgeon)</li>
+        <li>Facial exercises to maintain muscle tone in the face</li>
+        <li>Collagen supplementation (15g collagen peptides daily)</li>
+        <li>Gradual weight loss rate — discuss titration speed with your physician</li>
+        <li>Topical retinoids to support skin cell turnover</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 2: BODY SKIN LAXITY -->
+    <div class="skin-section">
+      <h3>BODY SKIN LAXITY</h3>
+      <p><strong>Why it happens:</strong> Skin collagen and elastin fibers cannot retract fast enough to keep pace with rapid weight loss. The skin's structural proteins need time to remodel. Age, sun exposure history, smoking history, and genetics all affect skin elasticity.</p>
+      <h3 style="color:var(--teal);">Prevention</h3>
+      <ul>
+        <li>Slower weight loss rate (1-2 lbs/week maximum when possible)</li>
+        <li>Collagen supplementation (15g daily with Vitamin C for absorption)</li>
+        <li>Adequate hydration (minimum 3L daily)</li>
+        <li>Resistance training to fill the space under the skin with muscle</li>
+      </ul>
+      <h3 style="color:var(--teal);">Treatment Options</h3>
+      <ul>
+        <li>RF (radiofrequency) skin tightening — non-invasive</li>
+        <li>Microneedling — stimulates collagen production</li>
+        <li>Laser treatments — fractional CO2, Erbium</li>
+        <li>Surgical options — abdominoplasty, arm lift, thigh lift (for severe cases)</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 3: HAIR CHANGES -->
+    <div class="skin-section">
+      <h3>HAIR CHANGES</h3>
+      <p><strong>Telogen effluvium:</strong> Stress-related hair shedding triggered by rapid weight loss. The body redirects resources away from hair growth during significant caloric deficit. This is a physiological response, not a direct medication side effect.</p>
+      <p style="margin-top:12px;"><strong>Timeline:</strong> Typically begins 2-4 months after significant weight loss. Usually resolves 6-12 months after weight stabilizes, assuming adequate nutrition.</p>
+      <h3 style="color:var(--teal);">Intervention</h3>
+      <ul>
+        <li>Biotin supplementation (5000 mcg daily)</li>
+        <li>Zinc (15-30 mg daily)</li>
+        <li>Check iron levels — ferritin should be above 40 ng/mL</li>
+        <li>Protein adequacy is critical — inadequate protein worsens hair loss</li>
+        <li>Consider a dermatologist referral if shedding is severe or prolonged</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 4: DEBORA'S 5-STEP PROTOCOL -->
+    <div class="skin-section" style="border-color:var(--border-gold);">
+      <h3>DEBORA'S 5-STEP POST-GLP SKIN PROTOCOL</h3>
+      <p style="margin-bottom:24px;">A comprehensive approach to skin health during and after GLP medication therapy.</p>
+
+      <div style="margin-bottom:20px;">
+        <div class="step-label">Step 1</div>
+        <p><strong>Collagen + Vitamin C</strong><br />
+        Collagen peptides 15g/day + 50mg Vitamin C, taken 30-60 minutes before training. Vitamin C is essential for collagen synthesis. Studies show that collagen peptide supplementation combined with resistance training improves skin elasticity and hydration.</p>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div class="step-label">Step 2</div>
+        <p><strong>Omega-3 Fatty Acids</strong><br />
+        2-3g EPA+DHA daily from fish oil or algae-based supplement. Omega-3s support skin barrier function, reduce inflammation, and improve skin hydration from the inside out. Take with a fat-containing meal for optimal absorption.</p>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div class="step-label">Step 3</div>
+        <p><strong>Hydration Protocol</strong><br />
+        Minimum 3L water daily + oral hyaluronic acid supplement (120-240mg daily). Hyaluronic acid holds up to 1000x its weight in water. Combined with adequate water intake, this supports skin plumpness and elasticity from within.</p>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div class="step-label">Step 4</div>
+        <p><strong>Professional Treatments</strong><br />
+        Monthly facials with a licensed esthetician. Quarterly RF (radiofrequency) skin tightening or microneedling sessions. These professional treatments stimulate collagen and elastin production at deeper skin layers that topical products cannot reach.</p>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div class="step-label">Step 5</div>
+        <p><strong>Daily Protection</strong><br />
+        SPF 30+ every single day — even indoors, even on cloudy days. UV damage is the number one cause of collagen breakdown. Use medical-grade skincare: retinol (evening), Vitamin C serum (morning), and a quality moisturizer with ceramides.</p>
+      </div>
+
+      <div style="text-align:center;margin-top:32px;">
+        <a href="/book.html" class="btn-gold">Book a Consultation with Debora</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ TOP RESEARCHERS ════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="container section">
+  <h2 class="section-title">TOP GLP RESEARCHERS</h2>
+  <p class="section-subtitle">The scientists and physicians leading GLP research worldwide. Explore their publications directly.</p>
+
+  <div class="researcher-grid">
+
+    <div class="researcher-card">
+      <h4>Dr. Daniel Drucker</h4>
+      <div class="institution">Sinai Health System, Toronto</div>
+      <div class="contribution">Pioneer of GLP-1 biology. Foundational research on incretin hormones and their therapeutic applications.</div>
+      <a href="https://scholar.google.com/scholar?q=Daniel+Drucker+GLP-1" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. Ania Jastreboff</h4>
+      <div class="institution">Yale School of Medicine</div>
+      <div class="contribution">Principal Investigator, SURMOUNT trials (tirzepatide). Lead researcher on retatrutide triple agonist.</div>
+      <a href="https://scholar.google.com/scholar?q=Ania+Jastreboff+obesity" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. John Wilding</h4>
+      <div class="institution">University of Liverpool</div>
+      <div class="contribution">Principal Investigator, STEP trials (semaglutide/Wegovy). Lead author on landmark NEJM publications.</div>
+      <a href="https://scholar.google.com/scholar?q=John+Wilding+semaglutide" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. Robert Kushner</h4>
+      <div class="institution">Northwestern University</div>
+      <div class="contribution">Obesity medicine specialist. Research on long-term outcomes of pharmacological weight management.</div>
+      <a href="https://scholar.google.com/scholar?q=Robert+Kushner+obesity+medicine" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. Carel Le Roux</h4>
+      <div class="institution">University College Dublin</div>
+      <div class="contribution">Research bridging metabolic surgery and GLP pharmacotherapy. Gut hormone physiology expert.</div>
+      <a href="https://scholar.google.com/scholar?q=Carel+Le+Roux+GLP+obesity" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. Randy Seeley</h4>
+      <div class="institution">University of Michigan</div>
+      <div class="contribution">Obesity neuroscience. Research on brain-gut axis and central mechanisms of appetite regulation.</div>
+      <a href="https://scholar.google.com/scholar?q=Randy+Seeley+obesity+neuroscience" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. Jens Holst</h4>
+      <div class="institution">University of Copenhagen</div>
+      <div class="contribution">Incretin physiology pioneer. Fundamental research on GLP-1 and GIP hormone biology.</div>
+      <a href="https://scholar.google.com/scholar?q=Jens+Holst+incretin+GLP-1" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. Michael Nauck</h4>
+      <div class="institution">Ruhr-Universitat Bochum</div>
+      <div class="contribution">GLP clinical research. Extensive publications on incretin-based therapies for diabetes and obesity.</div>
+      <a href="https://scholar.google.com/scholar?q=Michael+Nauck+GLP-1+clinical" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. Luc Van Gaal</h4>
+      <div class="institution">University of Antwerp</div>
+      <div class="contribution">Obesity pharmacotherapy. Research on cardiovascular outcomes of weight loss medications.</div>
+      <a href="https://scholar.google.com/scholar?q=Luc+Van+Gaal+obesity+pharmacotherapy" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+    <div class="researcher-card">
+      <h4>Dr. Patrick O'Neil</h4>
+      <div class="institution">Medical University of South Carolina</div>
+      <div class="contribution">Behavioral obesity research. Integration of behavioral interventions with pharmacotherapy.</div>
+      <a href="https://scholar.google.com/scholar?q=Patrick+O%27Neil+behavioral+obesity" target="_blank" rel="noopener" class="scholar-link">Google Scholar &#8594;</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ RESEARCH INSTITUTIONS ══════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="container" style="padding-bottom:60px;">
+  <h2 class="section-title">RESEARCH INSTITUTIONS</h2>
+  <p class="section-subtitle">Explore research and resources from leading organizations in metabolic medicine and obesity science.</p>
+
+  <div class="institution-grid">
+    <a href="https://www.novonordisk.com/science.html" target="_blank" rel="noopener" class="institution-btn">Novo Nordisk Research</a>
+    <a href="https://www.lilly.com/science" target="_blank" rel="noopener" class="institution-btn">Eli Lilly Science</a>
+    <a href="https://www.niddk.nih.gov/" target="_blank" rel="noopener" class="institution-btn">NIH NIDDK</a>
+    <a href="https://www.who.int/" target="_blank" rel="noopener" class="institution-btn">WHO</a>
+    <a href="https://diabetes.org/" target="_blank" rel="noopener" class="institution-btn">American Diabetes Association</a>
+    <a href="https://obesitymedicine.org/" target="_blank" rel="noopener" class="institution-btn">Obesity Medicine Association</a>
+    <a href="https://www.obesity.org/" target="_blank" rel="noopener" class="institution-btn">The Obesity Society</a>
+    <a href="https://easo.org/" target="_blank" rel="noopener" class="institution-btn">EASO</a>
+    <a href="https://www.nejm.org/" target="_blank" rel="noopener" class="institution-btn">NEJM</a>
+    <a href="https://www.thelancet.com/" target="_blank" rel="noopener" class="institution-btn">The Lancet</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ PDF DOWNLOAD ═══════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="pdf-section">
+  <button class="btn-gold" onclick="downloadPDF()">Download Full GLP Guide as PDF</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════ SCRIPTS ════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script src="js/supabase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/forge-ai-button.js"></script>
+<script>
+  // ── TAB SWITCHING ──
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      // Remove active from all buttons
+      document.querySelectorAll('.tab-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      // Remove active from all tab content
+      document.querySelectorAll('.tab-content').forEach(function(tc) {
+        tc.classList.remove('active');
+      });
+      // Activate clicked button
+      btn.classList.add('active');
+      // Activate corresponding tab content
+      var tabId = 'tab-' + btn.getAttribute('data-tab');
+      var tabEl = document.getElementById(tabId);
+      if (tabEl) {
+        tabEl.classList.add('active');
+      }
+      // Scroll to top of tab content
+      window.scrollTo({ top: document.querySelector('.tab-nav').offsetTop - 80, behavior: 'smooth' });
+    });
+  });
+
+  // ── PDF DOWNLOAD ──
+  function downloadPDF() {
+    // Show all tabs for printing
+    var tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(function(t) {
+      t.setAttribute('data-was-active', t.classList.contains('active'));
+      t.classList.add('active');
+    });
+    // Trigger print
+    window.print();
+    // Restore tab state after print
+    setTimeout(function() {
+      tabs.forEach(function(t) {
+        if (t.getAttribute('data-was-active') !== 'true') {
+          t.classList.remove('active');
+        }
+        t.removeAttribute('data-was-active');
+      });
+    }, 500);
+  }
+
+  // ── MOBILE MENU ──
+  document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+    var nav = document.querySelector('.nav-links');
+    nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+  });
+</script>
+</body>
+</html>
