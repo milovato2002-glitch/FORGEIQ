@@ -367,6 +367,62 @@ h4,h5,.category-header{font-family:'Barlow Condensed',sans-serif;font-weight:600
   <button class="btn-next" onclick="nextStep()">NEXT</button>
 </div>
 
+<!-- ════════════════════ STEP 4C — SUPPLEMENTS ════════════════════ -->
+<div class="step" id="step4c">
+  <h1 class="step-heading">ARE YOU CURRENTLY TAKING ANY SUPPLEMENTS?</h1>
+  <p class="step-sub">Your coach uses this to avoid redundant recommendations and identify real gaps.</p>
+
+  <div class="tile-grid" data-field="currentSupplements" data-type="multi">
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Protein powder (whey, plant-based, casein)"><span class="check-icon"></span>Protein powder (whey, plant-based, casein)</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Creatine monohydrate"><span class="check-icon"></span>Creatine monohydrate</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Pre-workout"><span class="check-icon"></span>Pre-workout</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="BCAAs"><span class="check-icon"></span>BCAAs</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Multivitamin"><span class="check-icon"></span>Multivitamin</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Vitamin D"><span class="check-icon"></span>Vitamin D</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Magnesium"><span class="check-icon"></span>Magnesium</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Omega-3 fish oil"><span class="check-icon"></span>Omega-3 fish oil</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Collagen peptides"><span class="check-icon"></span>Collagen peptides</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Probiotics"><span class="check-icon"></span>Probiotics</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Greens powder"><span class="check-icon"></span>Greens powder</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Ashwagandha or adaptogen"><span class="check-icon"></span>Ashwagandha or adaptogen</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Zinc"><span class="check-icon"></span>Zinc</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="B-Complex or B12"><span class="check-icon"></span>B-Complex or B12</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Fiber supplement"><span class="check-icon"></span>Fiber supplement</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Electrolytes"><span class="check-icon"></span>Electrolytes</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Fat burner or thermogenic"><span class="check-icon"></span>Fat burner or thermogenic</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Testosterone booster (OTC)"><span class="check-icon"></span>Testosterone booster (OTC)</label>
+    <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="None — I don't take supplements"><span class="check-icon"></span>None — I don't take supplements</label>
+    <label class="tile" onclick="toggleSupplementOther(this)"><input type="checkbox" value="Other"><span class="check-icon"></span>Other</label>
+  </div>
+  <div id="supplementOtherWrap" style="display:none;margin-bottom:24px">
+    <input type="text" id="supplementOtherText" placeholder="What other supplements do you take?" style="width:100%;background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:12px 16px;color:#e8edf5;font-family:'Barlow',sans-serif;font-size:15px;outline:none">
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">What is your monthly supplement budget?</label>
+    <div class="radio-row" data-field="supplementBudget" data-type="single">
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementBudget" value="I prefer not to spend on supplements"><span class="radio-icon"></span>I prefer not to spend on supplements</label>
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementBudget" value="Under $50/month"><span class="radio-icon"></span>Under $50/month</label>
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementBudget" value="$50-100/month"><span class="radio-icon"></span>$50-100/month</label>
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementBudget" value="$100-200/month"><span class="radio-icon"></span>$100-200/month</label>
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementBudget" value="I invest heavily in supplementation"><span class="radio-icon"></span>I invest heavily in supplementation</label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">What is your approach to supplements?</label>
+    <div class="radio-row" data-field="supplementPhilosophy" data-type="single">
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementPhilosophy" value="Only what has strong research behind it"><span class="radio-icon"></span>Only what has strong research behind it</label>
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementPhilosophy" value="Open to most things if there's some evidence"><span class="radio-icon"></span>Open to most things if there's some evidence</label>
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementPhilosophy" value="I follow what my coach recommends"><span class="radio-icon"></span>I follow what my coach recommends</label>
+      <label class="tile" onclick="selectRadioTile(this)"><input type="radio" name="supplementPhilosophy" value="I like to experiment and track results"><span class="radio-icon"></span>I like to experiment and track results</label>
+    </div>
+  </div>
+
+  <div class="disclaimer">FORGEIQ uses this to personalize your programming. This is not medical advice. Always consult your physician before changing medications or supplements.</div>
+  <button class="btn-next" onclick="nextStep()">NEXT</button>
+</div>
+
 <!-- ════════════════════ STEP 5 — EATING HABITS ════════════════════ -->
 <div class="step" id="step5">
   <h1 class="step-heading">LET'S TALK ABOUT FOOD</h1>
@@ -436,17 +492,6 @@ h4,h5,.category-header{font-family:'Barlow Condensed',sans-serif;font-weight:600
       <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Shellfish"><span class="check-icon"></span>Shellfish</label>
       <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Soy"><span class="check-icon"></span>Soy</label>
       <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="None"><span class="check-icon"></span>None</label>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Current supplements?</label>
-    <div class="tile-grid" data-field="supplements" data-type="multi">
-      <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Protein powder"><span class="check-icon"></span>Protein powder</label>
-      <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Creatine"><span class="check-icon"></span>Creatine</label>
-      <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Vitamins"><span class="check-icon"></span>Vitamins</label>
-      <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="None"><span class="check-icon"></span>None</label>
-      <label class="tile" onclick="toggleTile(this)"><input type="checkbox" value="Other"><span class="check-icon"></span>Other</label>
     </div>
   </div>
 
@@ -676,11 +721,11 @@ h4,h5,.category-header{font-family:'Barlow Condensed',sans-serif;font-weight:600
 
 <script>
 /* ══════════════════════════════════════════════════════════
-   FORGEIQ ONBOARDING — 10-STEP FLOW
+   FORGEIQ ONBOARDING — 12-STEP FLOW (10 user-facing)
    ══════════════════════════════════════════════════════════ */
 
-var STEPS = ['step1','step2','step3','step4','step4b','step5','step6','step7','step8','step9','step10'];
-var STEP_DISPLAY_NUM = [1,2,3,4,4,5,6,7,8,9,10];
+var STEPS = ['step1','step2','step3','step4','step4b','step4c','step5','step6','step7','step8','step9','step10'];
+var STEP_DISPLAY_NUM = [1,2,3,4,4,4,5,6,7,8,9,10];
 var TOTAL_DISPLAY_STEPS = 10;
 var currentIndex = 0;
 
@@ -696,7 +741,12 @@ var profile = {
   trackCalories: '',
   waterIntake: '',
   foodAllergies: [],
-  supplements: [],
+  supplements: {
+    currentSupplements: [],
+    otherSupplement: '',
+    budget: '',
+    philosophy: ''
+  },
   nutritionGoals: [],
   currentWeight: '',
   goalWeight: '',
@@ -737,6 +787,19 @@ function selectRadioTile(tile) {
   if (radio) radio.checked = true;
 }
 
+/* ── Supplement Other Toggle ── */
+function toggleSupplementOther(tile) {
+  toggleTile(tile);
+  var wrap = document.getElementById('supplementOtherWrap');
+  if (tile.classList.contains('selected')) {
+    wrap.style.display = 'block';
+    document.getElementById('supplementOtherText').focus();
+  } else {
+    wrap.style.display = 'none';
+    document.getElementById('supplementOtherText').value = '';
+  }
+}
+
 /* ── Collect Data from Current Step ── */
 function collectStepData() {
   var stepEl = document.getElementById(STEPS[currentIndex]);
@@ -765,6 +828,22 @@ function collectStepData() {
     profile.goalWeight = document.getElementById('goalWeight').value;
     profile.currentBF = document.getElementById('currentBF').value;
     profile.goalBF = document.getElementById('goalBF').value;
+  }
+
+  // Supplement step (step 4c)
+  if (STEPS[currentIndex] === 'step4c') {
+    var suppVals = [];
+    stepEl.querySelectorAll('[data-field="currentSupplements"] .tile.selected input').forEach(function(inp) {
+      suppVals.push(inp.value);
+    });
+    var budgetSel = stepEl.querySelector('[data-field="supplementBudget"] .tile.selected input');
+    var philSel = stepEl.querySelector('[data-field="supplementPhilosophy"] .tile.selected input');
+    profile.supplements = {
+      currentSupplements: suppVals,
+      otherSupplement: document.getElementById('supplementOtherText').value || '',
+      budget: budgetSel ? budgetSel.value : '',
+      philosophy: philSel ? philSel.value : ''
+    };
   }
 }
 
@@ -800,7 +879,7 @@ function updateProgress() {
 function updateNavButtons() {
   document.getElementById('btnBack').style.display = currentIndex === 0 ? 'none' : 'inline-block';
 
-  var skippable = ['step4', 'step4b', 'step5', 'step7'];
+  var skippable = ['step4', 'step4b', 'step4c', 'step5', 'step7'];
   document.getElementById('btnSkip').style.display = skippable.indexOf(STEPS[currentIndex]) !== -1 ? 'inline-block' : 'none';
 }
 
@@ -862,7 +941,9 @@ function dismissStrengthNudge() {
 function buildPlanReveal() {
   var conditions = profile.healthConditions || [];
   var meds = profile.medications || [];
-  var allFlags = conditions.concat(meds.filter(function(m) { return m !== 'None of the above'; }));
+  var supps = (profile.supplements && profile.supplements.currentSupplements) || [];
+  var suppFiltered = supps.filter(function(s) { return s !== 'None — I don\'t take supplements' && s !== 'Other'; });
+  var allFlags = conditions.concat(meds.filter(function(m) { return m !== 'None of the above'; })).concat(suppFiltered);
 
   var condText = document.getElementById('planConditions');
   var flagsEl = document.getElementById('planFlags');
@@ -956,5 +1037,7 @@ function completeOnboarding() {
 updateProgress();
 updateNavButtons();
 </script>
+<script src="/js/supabase-config.js"></script>
+<script src="/js/forge-ai-button.js"></script>
 </body>
 </html>

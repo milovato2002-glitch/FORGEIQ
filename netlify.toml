@@ -52,3 +52,13 @@
   from = "/onboarding"
   to = "/onboarding.html"
   status = 200
+
+[[redirects]]
+  from = "/glp-hub"
+  to = "/glp-hub.html"
+  status = 200
+
+[[redirects]]
+  from = "/peptide-library"
+  to = "/peptide-library.html"
+  status = 200
