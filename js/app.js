@@ -1,7 +1,7 @@
-// AdaptFit i18n Engine + Core Utilities
-// Supports: English (en), Spanish (es), Brazilian Portuguese (pt)
+// ForgeIQ Core Utilities
+// Language (en, es, pt), Profile, AI Coach, Navigation, Helpers
 
-const AdaptFit = (() => {
+const ForgeIQ = (() => {
 
   // ─── Language Engine ───────────────────────────────────────────
   let _locale = {};
@@ -12,7 +12,7 @@ const AdaptFit = (() => {
       const res = await fetch(`/locales/${lang}.json`);
       _locale = await res.json();
       _lang = lang;
-      localStorage.setItem('adaptfit_lang', lang);
+      localStorage.setItem('forgeiq_lang', lang);
       applyTranslations();
       return true;
     } catch (e) {
@@ -34,7 +34,7 @@ const AdaptFit = (() => {
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       const translation = t(key);
-      if (translation) {
+      if (translation && translation !== key) {
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
           el.placeholder = translation;
         } else {
@@ -45,51 +45,43 @@ const AdaptFit = (() => {
     document.querySelectorAll('[data-i18n-html]').forEach(el => {
       const key = el.getAttribute('data-i18n-html');
       const translation = t(key);
-      if (translation) el.innerHTML = translation;
+      if (translation && translation !== key) el.innerHTML = translation;
     });
   }
 
   function getCurrentLang() { return _lang; }
 
-  // ─── User Profile & Session ────────────────────────────────────
+
+  // ─── Profile Management ────────────────────────────────────────
   function getProfile() {
     try {
-      return JSON.parse(localStorage.getItem('adaptfit_profile') || '{}');
+      return JSON.parse(localStorage.getItem('forgeiq_profile') || '{}');
     } catch { return {}; }
   }
 
   function setProfile(profileData) {
     const existing = getProfile();
     const updated = { ...existing, ...profileData };
-    localStorage.setItem('adaptfit_profile', JSON.stringify(updated));
+    localStorage.setItem('forgeiq_profile', JSON.stringify(updated));
     return updated;
   }
 
   function clearProfile() {
-    localStorage.removeItem('adaptfit_profile');
-    localStorage.removeItem('adaptfit_lang');
-    localStorage.removeItem('adaptfit_session');
+    localStorage.removeItem('forgeiq_profile');
+    localStorage.removeItem('forgeiq_lang');
   }
 
-  // ─── Supabase Auth Helpers ─────────────────────────────────────
-  // NOTE: Replace SUPABASE_URL and SUPABASE_ANON_KEY via environment
-  // These are injected at build time — never hardcode real keys here
-  const SUPABASE_URL = window.SUPABASE_URL || '';
-  const SUPABASE_KEY = window.SUPABASE_ANON_KEY || '';
 
-  async function supabaseFetch(endpoint, method = 'GET', body = null, token = null) {
-    const headers = {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${token || SUPABASE_KEY}`
-    };
-    const options = { method, headers };
-    if (body) options.body = JSON.stringify(body);
-    const res = await fetch(`${SUPABASE_URL}${endpoint}`, options);
-    return res.json();
+  // ─── Greeting ──────────────────────────────────────────────────
+  function getGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return t('dashboard.greeting_morning');
+    if (hour < 17) return t('dashboard.greeting_afternoon');
+    return t('dashboard.greeting_evening');
   }
 
-  // ─── AI Coach ─────────────────────────────────────────────────
+
+  // ─── AI Coach ──────────────────────────────────────────────────
   let _conversationHistory = [];
 
   async function askCoach(userMessage) {
@@ -106,8 +98,9 @@ const AdaptFit = (() => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: _conversationHistory,
-          userProfile: profile,
+          message: userMessage,
+          history: _conversationHistory.slice(0, -1),
+          profile: profile,
           language: lang
         })
       });
@@ -133,33 +126,10 @@ const AdaptFit = (() => {
     _conversationHistory = [];
   }
 
-  // ─── Readiness Check ──────────────────────────────────────────
-  function logReadiness(level) {
-    const profile = getProfile();
-    const today = new Date().toISOString().split('T')[0];
-    const readiness = profile.readiness_log || {};
-    readiness[today] = level;
-    setProfile({ readiness_log: readiness, last_readiness: level });
-    return level;
-  }
 
-  function getTodayReadiness() {
-    const profile = getProfile();
-    const today = new Date().toISOString().split('T')[0];
-    return profile.readiness_log?.[today] || null;
-  }
-
-  // ─── Streak Tracking ──────────────────────────────────────────
-  function logActivity() {
-    const profile = getProfile();
-    const today = new Date().toISOString().split('T')[0];
-    const log = profile.activity_log || {};
-    log[today] = true;
-    setProfile({ activity_log: log });
-    return calculateStreak(log);
-  }
-
+  // ─── Streak Calculation ────────────────────────────────────────
   function calculateStreak(log) {
+    if (!log) return 0;
     let streak = 0;
     const today = new Date();
     for (let i = 0; i < 365; i++) {
@@ -176,40 +146,200 @@ const AdaptFit = (() => {
     return calculateStreak(profile.activity_log || {});
   }
 
-  // ─── Greeting ─────────────────────────────────────────────────
-  function getGreeting() {
-    const hour = new Date().getHours();
-    if (hour < 12) return t('dashboard.greeting_morning');
-    if (hour < 17) return t('dashboard.greeting_afternoon');
-    return t('dashboard.greeting_evening');
+
+  // ─── Navigation ────────────────────────────────────────────────
+  function navigateBack() {
+    if (window.history.length > 1) {
+      history.back();
+    } else {
+      window.location.href = '/dashboard.html';
+    }
   }
 
-  // ─── Init ─────────────────────────────────────────────────────
+  function initNav() {
+    const path = window.location.pathname;
+    const navMap = {
+      '/dashboard.html': 'Dashboard',
+      '/workout-log.html': 'Train',
+      '/train.html': 'Train',
+      '/progress.html': 'Progress',
+      '/debora.html': 'Debora',
+      '/resources.html': 'Resources',
+      '/book.html': 'Book'
+    };
+
+    const activeName = navMap[path];
+    if (!activeName) return;
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      if (link.textContent.trim() === activeName) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+
+  // ─── PDF Download Helper ───────────────────────────────────────
+  function downloadPDF(title, content) {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${title} — FORGEIQ</title>
+        <style>
+          body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #222; padding: 40px; max-width: 800px; margin: 0 auto; }
+          .pdf-header { border-bottom: 2px solid #c9a84c; padding-bottom: 16px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; }
+          .pdf-logo { font-size: 1.8rem; font-weight: 700; letter-spacing: 3px; color: #222; }
+          .pdf-logo span { color: #c9a84c; }
+          .pdf-date { font-size: 0.8rem; color: #888; }
+          .pdf-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 24px; }
+          .pdf-content { line-height: 1.7; font-size: 0.95rem; }
+          .pdf-content table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+          .pdf-content th, .pdf-content td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; font-size: 0.85rem; }
+          .pdf-content th { background: #f5f5f5; font-weight: 600; }
+          .pdf-footer { border-top: 1px solid #ddd; padding-top: 16px; margin-top: 48px; font-size: 0.75rem; color: #999; text-align: center; }
+          @media print { body { padding: 20px; } }
+        </style>
+      </head>
+      <body>
+        <div class="pdf-header">
+          <div class="pdf-logo">FORGE<span>IQ</span></div>
+          <div class="pdf-date">${formatDate(new Date())}</div>
+        </div>
+        <div class="pdf-title">${title}</div>
+        <div class="pdf-content">${content}</div>
+        <div class="pdf-footer">
+          FORGEIQ — AI Fitness Coaching by Dr. Michael and Debora Lovato
+          <br/>forgeiq.com — We never have to quit.
+        </div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    setTimeout(() => { printWindow.print(); }, 500);
+  }
+
+
+  // ─── Toast Notification ────────────────────────────────────────
+  function toast(message, type = 'info', duration = 3000) {
+    // Remove existing toast
+    const existing = document.getElementById('forgeiq-toast');
+    if (existing) existing.remove();
+
+    const el = document.createElement('div');
+    el.id = 'forgeiq-toast';
+    el.textContent = message;
+
+    const colors = {
+      success: { bg: 'rgba(39,174,96,0.95)', color: '#fff' },
+      error:   { bg: 'rgba(231,76,60,0.95)', color: '#fff' },
+      info:    { bg: 'rgba(201,168,76,0.95)', color: '#0a0a0a' },
+      warning: { bg: 'rgba(243,156,18,0.95)', color: '#0a0a0a' }
+    };
+    const c = colors[type] || colors.info;
+
+    Object.assign(el.style, {
+      position: 'fixed',
+      bottom: '24px',
+      left: '50%',
+      transform: 'translateX(-50%) translateY(20px)',
+      background: c.bg,
+      color: c.color,
+      padding: '12px 28px',
+      borderRadius: '8px',
+      fontFamily: "'DM Sans', sans-serif",
+      fontSize: '0.88rem',
+      fontWeight: '500',
+      zIndex: '9999',
+      opacity: '0',
+      transition: 'opacity 0.3s, transform 0.3s',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+      maxWidth: '90vw',
+      textAlign: 'center'
+    });
+
+    document.body.appendChild(el);
+
+    // Animate in
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateX(-50%) translateY(0)';
+    });
+
+    // Auto remove
+    setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-50%) translateY(20px)';
+      setTimeout(() => el.remove(), 300);
+    }, duration);
+  }
+
+
+  // ─── Format Date Helper ────────────────────────────────────────
+  function formatDate(date, style = 'long') {
+    if (!date) return '';
+    const d = date instanceof Date ? date : new Date(date);
+    if (isNaN(d.getTime())) return '';
+
+    if (style === 'short') {
+      return d.toLocaleDateString(_lang === 'pt' ? 'pt-BR' : _lang === 'es' ? 'es-ES' : 'en-US', {
+        month: 'short', day: 'numeric'
+      });
+    }
+    if (style === 'iso') {
+      return d.toISOString().split('T')[0];
+    }
+    // long (default)
+    return d.toLocaleDateString(_lang === 'pt' ? 'pt-BR' : _lang === 'es' ? 'es-ES' : 'en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
+
+
+  // ─── Init ──────────────────────────────────────────────────────
   async function init() {
-    const savedLang = localStorage.getItem('adaptfit_lang') || 'en';
+    const savedLang = localStorage.getItem('forgeiq_lang') || 'en';
     await loadLanguage(savedLang);
+    initNav();
+
+    // Sync lang toggle buttons if present
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim() === savedLang.toUpperCase());
+    });
   }
 
-  // Public API
+
+  // ─── Public API ────────────────────────────────────────────────
   return {
     init,
     loadLanguage,
     t,
     getCurrentLang,
+    applyTranslations,
     getProfile,
     setProfile,
     clearProfile,
+    getGreeting,
     askCoach,
     clearConversation,
-    logReadiness,
-    getTodayReadiness,
-    logActivity,
+    calculateStreak,
     getStreak,
-    getGreeting,
-    supabaseFetch
+    navigateBack,
+    initNav,
+    downloadPDF,
+    toast,
+    formatDate
   };
 
 })();
 
+// Backward compatibility alias
+const AdaptFit = ForgeIQ;
+
 // Auto-init on DOM ready
-document.addEventListener('DOMContentLoaded', () => AdaptFit.init());
+document.addEventListener('DOMContentLoaded', () => ForgeIQ.init());

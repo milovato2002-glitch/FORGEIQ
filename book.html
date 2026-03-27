@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Book a Session</title>
+  <meta name="description" content="Book direct coaching sessions with Dr. Michael Lovato and Debora Lovato. Strength coaching, nutrition, skin wellness, and the full FORGEIQ transformation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #0a1628;
+      --bg-secondary: #0e1e36;
+      --card-bg: #142444;
+      --gold: #f0a500;
+      --gold-hover: #ffb820;
+      --gold-dim: rgba(240,165,0,0.12);
+      --red: #e63946;
+      --green: #2dc653;
+      --teal: #2dd4bf;
+      --amber: #f4a261;
+      --text-primary: #e8edf5;
+      --text-secondary: #8fa3c0;
+      --text-muted: #4a6080;
+      --border-gold: rgba(240,165,0,0.18);
+      --border-subtle: rgba(255,255,255,0.07);
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-condensed: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,22,40,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-back {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a.active { color: var(--gold); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-family: var(--font-condensed);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .nav-login {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-login:hover { color: var(--text-primary); }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--gold-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: 3px;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .section-subtext {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin: 0 auto 50px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 100px 24px 60px;
+      position: relative;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(240,165,0,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      letter-spacing: 6px;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ── PROVIDER HEADING ── */
+    .provider-heading {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+    .provider-heading h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      letter-spacing: 3px;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .provider-heading .subtitle {
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 1rem;
+      letter-spacing: 1.5px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    /* ── SERVICE GRID ── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-bottom: 30px;
+    }
+
+    /* ── SERVICE CARD ── */
+    .service-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 36px 30px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .service-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-3px);
+    }
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      letter-spacing: 2px;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .service-card .desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .service-card .price {
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+    .service-card .price span {
+      font-weight: 400;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .btn-book {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 12px 28px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      text-align: center;
+      width: 100%;
+    }
+    .btn-book:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+
+    /* ── COMBINED CARD ── */
+    .combined-section {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .service-card.combined {
+      border-color: var(--border-gold);
+      background: linear-gradient(135deg, var(--card-bg), rgba(240,165,0,0.05));
+    }
+    .service-card.combined h3 {
+      color: var(--gold);
+      font-size: 1.6rem;
+    }
+
+    /* ── SMART TRIGGERS ── */
+    .triggers-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 44px 36px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .triggers-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .triggers-card .intro {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+    .triggers-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .triggers-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .triggers-list li .trigger-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: rgba(45,212,191,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--teal);
+      margin-top: 2px;
+    }
+    .triggers-list .arrow {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 520px;
+      padding: 44px 36px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    .modal-close:hover { color: var(--text-primary); }
+    .modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .modal .modal-service {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .modal .modal-price {
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+    }
+    .modal-step { display: none; }
+    .modal-step.active { display: block; }
+
+    /* Step 1 - Date Picker */
+    .date-label {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .date-input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: var(--card-bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .date-input:focus {
+      border-color: var(--gold);
+    }
+
+    /* Step 2 - Payment */
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .payment-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+    }
+    .payment-row .pay-label {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      min-width: 80px;
+      text-transform: uppercase;
+    }
+    .payment-row .pay-handle {
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .payment-note {
+      background: var(--gold-dim);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      margin-bottom: 28px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .payment-note strong {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Step 3 - Confirmation */
+    .confirm-buttons {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .btn-notify {
+      flex: 1;
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-notify.doc {
+      background: var(--gold);
+      color: var(--bg-primary);
+    }
+    .btn-notify.doc:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+    .btn-notify.debora {
+      background: var(--teal);
+      color: var(--bg-primary);
+    }
+    .btn-notify.debora:hover {
+      background: #38e8cf;
+      transform: translateY(-2px);
+    }
+    .confirmation-msg {
+      display: none;
+      background: rgba(45,198,83,0.1);
+      border: 1px solid rgba(45,198,83,0.25);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      color: var(--green);
+      font-size: 1rem;
+      line-height: 1.7;
+      text-align: center;
+    }
+    .confirmation-msg.show { display: block; }
+
+    .btn-modal {
+      display: block;
+      width: 100%;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      margin-top: 24px;
+      background: var(--gold);
+      color: var(--bg-primary);
+    }
+    .btn-modal:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+    .btn-modal:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--gold);
+      margin: 0 auto 60px;
+      border-radius: 2px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      nav { padding: 12px 18px; }
+      .page-header { padding: 80px 18px 40px; }
+      .section { padding: 60px 0; }
+      .triggers-card { padding: 30px 24px; }
+    }
+    @media (max-width: 600px) {
+      .lang-toggle { display: none; }
+      .nav-login { display: none; }
+      .modal { padding: 32px 24px; }
+      .confirm-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
+  <nav>
+    <div class="nav-left">
+      <button class="nav-back" onclick="if(window.history.length>1)history.back();else window.location.href='dashboard.html';" aria-label="Go back">&#8592;</button>
+      <a href="index.html" class="logo">FORGEIQ</a>
+    </div>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="workout-log.html">Train</a>
+      <a href="progress.html">Progress</a>
+      <a href="debora.html">Debora</a>
+      <a href="resources.html">Resources</a>
+      <a href="book.html" class="active">Book</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button class="lang-btn active">EN</button>
+        <button class="lang-btn">ES</button>
+        <button class="lang-btn">PT</button>
+      </div>
+      <a href="login.html" class="nav-login">Log In</a>
+      <a href="signup.html" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════ PAGE HEADER ═══════════════════════ -->
+  <header class="page-header">
+    <h1>BOOK A SESSION</h1>
+    <p>Direct coaching from Doc and Debora. Real humans. Real results.</p>
+  </header>
+
+  <!-- ═══════════════════════ DOC'S SERVICES ═══════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="provider-heading">
+        <h2>DR. MICHAEL LOVATO, EdD</h2>
+        <div class="subtitle">Head Strength Coach &middot; Army Combat Engineer</div>
+      </div>
+      <div class="services-grid">
+
+        <div class="service-card" data-provider="doc">
+          <h3>1-ON-1 STRENGTH COACHING</h3>
+          <p class="desc">2 Zoom sessions per month + unlimited messaging support. Custom programming, form review, and accountability.</p>
+          <div class="price">$179 <span>/month</span></div>
+          <button class="btn-book" onclick="openBooking('1-on-1 Strength Coaching', '$179/month', 'doc')">Book Now</button>
+        </div>
+
+        <div class="service-card" data-provider="doc">
+          <h3>CUSTOM PROGRAM DESIGN</h3>
+          <p class="desc">Weekly check-ins, progressive program updates, and full assessment review.</p>
+          <div class="price">$149 <span>/month</span></div>
+          <button class="btn-book" onclick="openBooking('Custom Program Design', '$149/month', 'doc')">Book Now</button>
+        </div>
+
+        <div class="service-card" data-provider="doc">
+          <h3>NUTRITION COACHING (NASM CNC)</h3>
+          <p class="desc">Messaging-based nutrition coaching. Macro targets, meal guidance, supplement recommendations.</p>
+          <div class="price">$99 <span>/month</span></div>
+          <button class="btn-book" onclick="openBooking('Nutrition Coaching (NASM CNC)', '$99/month', 'doc')">Book Now</button>
+        </div>
+
+        <div class="service-card" data-provider="doc">
+          <h3>FREE 20-MIN DISCOVERY CALL</h3>
+          <p class="desc">No commitment. No pressure. Just a conversation about your goals and how Doc can help.</p>
+          <div class="price" style="color: var(--green);">Free</div>
+          <button class="btn-book" onclick="openBooking('Free 20-min Discovery Call', 'Free', 'doc')">Book Now</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════ DEBORA'S SERVICES ═══════════════════════ -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="provider-heading">
+        <h2>DEBORA LOVATO</h2>
+        <div class="subtitle">Nutrition and Wellness Director</div>
+      </div>
+      <div class="services-grid">
+
+        <div class="service-card" data-provider="debora">
+          <h3>POST-TRANSFORMATION SKIN CONSULTATION</h3>
+          <p class="desc">45-minute Zoom consultation. Skin laxity assessment, treatment recommendations, supplement protocol.</p>
+          <div class="price">$149 <span>one-time</span></div>
+          <button class="btn-book" onclick="openBooking('Post-Transformation Skin Consultation', '$149 one-time', 'debora')">Book Now</button>
+        </div>
+
+        <div class="service-card" data-provider="debora">
+          <h3>GLP-1 SKIN AND WELLNESS CONSULT</h3>
+          <p class="desc">30-minute Zoom consultation. GLP-1 aesthetic side effects, skin protocol, wellness guidance.</p>
+          <div class="price">$99 <span>one-time</span></div>
+          <button class="btn-book" onclick="openBooking('GLP-1 Skin and Wellness Consult', '$99 one-time', 'debora')">Book Now</button>
+        </div>
+
+        <div class="service-card" data-provider="debora">
+          <h3>COUPLES WELLNESS CONSULTATION</h3>
+          <p class="desc">45-minute Zoom consultation. Both partners, shared goals, individual recommendations.</p>
+          <div class="price">$179 <span>one-time</span></div>
+          <button class="btn-book" onclick="openBooking('Couples Wellness Consultation', '$179 one-time', 'debora')">Book Now</button>
+        </div>
+
+        <div class="service-card" data-provider="debora">
+          <h3>ONGOING SKIN COACHING</h3>
+          <p class="desc">Monthly messaging-based skin and wellness coaching. Product recommendations, progress tracking.</p>
+          <div class="price">$79 <span>/month</span></div>
+          <button class="btn-book" onclick="openBooking('Ongoing Skin Coaching', '$79/month', 'debora')">Book Now</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════ COMBINED PACKAGE ═══════════════════════ -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="provider-heading">
+        <h2>THE FULL EXPERIENCE</h2>
+        <div class="subtitle">Doc + Debora Together</div>
+      </div>
+      <div class="combined-section">
+        <div class="service-card combined">
+          <h3>DOC + DEBORA FULL TRANSFORMATION PACKAGE</h3>
+          <p class="desc">Complete coaching: strength, nutrition, skin, wellness. The full FORGEIQ experience.</p>
+          <div class="price">$299 <span>/month</span></div>
+          <button class="btn-book" onclick="openBooking('Doc + Debora Full Transformation Package', '$299/month', 'both')">Book Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════ AI SMART BOOKING TRIGGERS ═══════════════════════ -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="triggers-card">
+        <h3>AI SMART BOOKING TRIGGERS</h3>
+        <p class="intro">Your AI coach may suggest booking when:</p>
+        <ul class="triggers-list">
+          <li>
+            <div class="trigger-icon">&#9889;</div>
+            <div>You log 3+ sessions asking about form <span class="arrow">&rarr;</span> Free Discovery Call with Doc</div>
+          </li>
+          <li>
+            <div class="trigger-icon">&#9889;</div>
+            <div>Veteran mode + 60 days active <span class="arrow">&rarr;</span> Doc veteran coaching</div>
+          </li>
+          <li>
+            <div class="trigger-icon">&#9889;</div>
+            <div>50+ flag + joint pain logged <span class="arrow">&rarr;</span> Doc $149 coaching</div>
+          </li>
+          <li>
+            <div class="trigger-icon">&#9889;</div>
+            <div>GLP-1 flag + 30 days active <span class="arrow">&rarr;</span> Debora $99 GLP-1 consult</div>
+          </li>
+          <li>
+            <div class="trigger-icon">&#9889;</div>
+            <div>Goal weight reached or within 10 lbs <span class="arrow">&rarr;</span> Debora $149 post-transformation consult</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ BOOKING MODAL ═══════════════════════ -->
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeBooking()">&times;</button>
+
+      <!-- STEP 1: Select Date -->
+      <div class="modal-step active" id="step1">
+        <h2>BOOK YOUR SESSION</h2>
+        <div class="modal-service" id="modalService"></div>
+        <div class="modal-price" id="modalPrice"></div>
+        <label class="date-label">Preferred Start Date</label>
+        <input type="date" class="date-input" id="bookingDate" />
+        <button class="btn-modal" id="btnStep1Next" onclick="goToStep(2)" disabled>Next</button>
+      </div>
+
+      <!-- STEP 2: Payment -->
+      <div class="modal-step" id="step2">
+        <h2>SEND PAYMENT</h2>
+        <div class="modal-service" id="modalService2"></div>
+        <div class="modal-price" id="modalPrice2"></div>
+
+        <div class="payment-methods">
+          <div class="payment-row">
+            <span class="pay-label">Venmo</span>
+            <span class="pay-handle">@DrLovato-FORGEIQ</span>
+          </div>
+          <div class="payment-row">
+            <span class="pay-label">CashApp</span>
+            <span class="pay-handle">$ForgeIQCoaching</span>
+          </div>
+          <div class="payment-row">
+            <span class="pay-label">Zelle</span>
+            <span class="pay-handle">coaching@forgeiq.com</span>
+          </div>
+          <div class="payment-row">
+            <span class="pay-label">PayPal</span>
+            <span class="pay-handle">paypal.me/forgeiqcoaching</span>
+          </div>
+          <div class="payment-row">
+            <span class="pay-label">Apple Pay</span>
+            <span class="pay-handle">Apple Pay available — contact us</span>
+          </div>
+          <div class="payment-row">
+            <span class="pay-label">Card</span>
+            <span class="pay-handle">Contact us directly for card payment</span>
+          </div>
+        </div>
+
+        <div class="payment-note">
+          <strong>Amount:</strong> <span id="payAmount"></span><br />
+          <strong>Note to include:</strong> <span id="payNote"></span>
+        </div>
+
+        <button class="btn-modal" onclick="goToStep(3)">I have Sent Payment</button>
+      </div>
+
+      <!-- STEP 3: Notify -->
+      <div class="modal-step" id="step3">
+        <h2>ALMOST DONE</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 24px;">Let us know you are ready. Tap the button below to send your notification.</p>
+
+        <div class="confirm-buttons" id="confirmButtons">
+          <!-- Buttons injected by JS based on provider -->
+        </div>
+
+        <div class="confirmation-msg" id="confirmMsg"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
+  <script>
+    /* ── Booking State ── */
+    let currentService = '';
+    let currentPrice = '';
+    let currentProvider = '';
+    let currentStep = 1;
+
+    /* ── Set min date to today ── */
+    (function() {
+      var dateInput = document.getElementById('bookingDate');
+      var today = new Date();
+      var yyyy = today.getFullYear();
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var dd = String(today.getDate()).padStart(2, '0');
+      dateInput.setAttribute('min', yyyy + '-' + mm + '-' + dd);
+      dateInput.addEventListener('change', function() {
+        document.getElementById('btnStep1Next').disabled = !this.value;
+      });
+    })();
+
+    /* ── Open Booking Modal ── */
+    function openBooking(service, price, provider) {
+      currentService = service;
+      currentPrice = price;
+      currentProvider = provider;
+      currentStep = 1;
+
+      document.getElementById('modalService').textContent = service;
+      document.getElementById('modalPrice').textContent = price;
+      document.getElementById('modalService2').textContent = service;
+      document.getElementById('modalPrice2').textContent = price;
+      document.getElementById('payAmount').textContent = price;
+      document.getElementById('payNote').textContent = service + ' + your email address';
+      document.getElementById('bookingDate').value = '';
+      document.getElementById('btnStep1Next').disabled = true;
+
+      /* Build Step 3 buttons */
+      var btnContainer = document.getElementById('confirmButtons');
+      btnContainer.innerHTML = '';
+      var confirmMsg = document.getElementById('confirmMsg');
+      confirmMsg.classList.remove('show');
+      confirmMsg.textContent = '';
+
+      if (provider === 'doc' || provider === 'both') {
+        var btnDoc = document.createElement('button');
+        btnDoc.className = 'btn-notify doc';
+        btnDoc.textContent = 'Notify Doc';
+        btnDoc.onclick = function() { showConfirmation('Doc'); };
+        btnContainer.appendChild(btnDoc);
+      }
+      if (provider === 'debora' || provider === 'both') {
+        var btnDeb = document.createElement('button');
+        btnDeb.className = 'btn-notify debora';
+        btnDeb.textContent = 'Notify Debora';
+        btnDeb.onclick = function() { showConfirmation('Debora'); };
+        btnContainer.appendChild(btnDeb);
+      }
+
+      showStep(1);
+      document.getElementById('bookingModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    /* ── Close Booking Modal ── */
+    function closeBooking() {
+      document.getElementById('bookingModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ── Navigate Steps ── */
+    function goToStep(step) {
+      currentStep = step;
+      showStep(step);
+    }
+
+    function showStep(step) {
+      var steps = document.querySelectorAll('.modal-step');
+      for (var i = 0; i < steps.length; i++) {
+        steps[i].classList.remove('active');
+      }
+      document.getElementById('step' + step).classList.add('active');
+    }
+
+    /* ── Show Confirmation ── */
+    function showConfirmation(person) {
+      var confirmMsg = document.getElementById('confirmMsg');
+      confirmMsg.textContent = 'Thank you! ' + person + ' will confirm your session within 24 hours. Check your email for details.';
+      confirmMsg.classList.add('show');
+      var buttons = document.querySelectorAll('#confirmButtons .btn-notify');
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].style.display = 'none';
+      }
+    }
+
+    /* ── Close on overlay click ── */
+    document.getElementById('bookingModal').addEventListener('click', function(e) {
+      if (e.target === this) closeBooking();
+    });
+
+    /* ── Close on Escape ── */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeBooking();
+    });
+  </script>
+
+</body>
+</html>

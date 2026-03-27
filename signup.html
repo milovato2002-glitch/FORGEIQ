@@ -23,52 +23,134 @@
       color: var(--text);
       font-family: var(--font-body);
       min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
     }
-    .left-panel {
+
+    /* ── NAV ── */
+    nav {
       background: var(--dark);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-back {
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+    .nav-links a {
+      color: var(--text-dim);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a.active { color: var(--gold); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* ── LAYOUT ── */
+    .page-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 40% 60%;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+      background: var(--card);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 48px;
+      justify-content: center;
+      padding: 64px 48px;
       position: relative;
       overflow: hidden;
     }
     .left-panel::before {
       content: '';
       position: absolute;
-      top: -100px; left: -100px;
+      top: -120px; left: -120px;
       width: 400px; height: 400px;
       background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
       pointer-events: none;
     }
-    .brand-logo {
-      font-family: var(--font-display);
-      font-size: 2.2rem;
-      letter-spacing: 3px;
-      color: var(--white);
-      text-decoration: none;
-    }
-    .brand-logo span { color: var(--gold); }
 
-    .value-props { position: relative; z-index: 1; }
-    .value-props h2 {
+    .left-heading {
       font-family: var(--font-display);
-      font-size: 2.8rem;
+      font-size: 2.6rem;
       letter-spacing: 1px;
       color: var(--white);
       line-height: 1.05;
-      margin-bottom: 32px;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
     }
-    .value-props h2 em { font-style: normal; color: var(--gold); }
+    .left-heading em { font-style: normal; color: var(--gold); }
 
     .prop-item {
       display: flex;
       align-items: flex-start;
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
     }
     .prop-icon {
       width: 40px; height: 40px;
@@ -78,14 +160,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
       flex-shrink: 0;
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
     }
     .prop-title {
       font-weight: 600;
       font-size: 0.9rem;
       color: var(--white);
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
     .prop-desc {
       font-size: 0.82rem;
@@ -101,11 +186,27 @@
       background: rgba(39,174,96,0.05);
       border: 1px solid rgba(39,174,96,0.12);
       border-radius: 8px;
+      margin-top: 20px;
+      position: relative;
+      z-index: 1;
     }
-    .trust-icon { font-size: 1.3rem; }
+    .trust-icon {
+      width: 32px; height: 32px;
+      background: rgba(39,174,96,0.1);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
     .trust-text { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
     .trust-text strong { color: var(--green); }
 
+    /* ── RIGHT PANEL ── */
     .right-panel {
       display: flex;
       align-items: center;
@@ -113,26 +214,6 @@
       padding: 48px;
     }
     .auth-box { width: 100%; max-width: 420px; }
-
-    .lang-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 36px;
-      justify-content: flex-end;
-    }
-    .lang-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-transform: uppercase;
-    }
-    .lang-btn:hover, .lang-btn.active { border-color: var(--gold); color: var(--gold); }
 
     .auth-label {
       font-family: var(--font-mono);
@@ -169,7 +250,7 @@
     }
     .field input {
       width: 100%;
-      background: var(--card);
+      background: var(--dark);
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--white);
@@ -191,7 +272,7 @@
     .field-error.show { display: block; }
 
     .password-strength {
-      height: 3px;
+      height: 4px;
       background: var(--border);
       border-radius: 2px;
       margin-top: 8px;
@@ -202,6 +283,14 @@
       width: 0%;
       border-radius: 2px;
       transition: width 0.3s, background 0.3s;
+    }
+    .strength-label {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .global-error {
@@ -224,6 +313,7 @@
       line-height: 1.5;
     }
     .terms-row a { color: var(--gold); text-decoration: none; }
+    .terms-row a:hover { text-decoration: underline; }
 
     .btn-submit {
       width: 100%;
@@ -264,155 +354,194 @@
       margin-top: 20px;
     }
     .switch-row a { color: var(--gold); text-decoration: none; font-weight: 600; }
+    .switch-row a:hover { text-decoration: underline; }
 
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+    }
     @media (max-width: 768px) {
-      body { grid-template-columns: 1fr; }
+      .page-body { grid-template-columns: 1fr; }
       .left-panel { display: none; }
-      .right-panel { padding: 32px 24px; align-items: flex-start; padding-top: 60px; }
+      .right-panel { padding: 32px 24px; align-items: flex-start; padding-top: 48px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- LEFT — Value Props -->
-  <div class="left-panel">
-    <a href="/index.html" class="brand-logo">FORGE<span>IQ</span></a>
+  <!-- ── NAVIGATION ── -->
+  <nav>
+    <div class="nav-left">
+      <button class="nav-back" onclick="if(window.history.length>1)history.back();else window.location.href='/index.html';" aria-label="Go back">&#8592;</button>
+      <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/train.html">Train</a>
+      <a href="/progress.html">Progress</a>
+      <a href="/debora.html">Debora</a>
+      <a href="/resources.html">Resources</a>
+      <a href="/book.html">Book</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="switchLang('en')">EN</button>
+        <button class="lang-btn" onclick="switchLang('es')">ES</button>
+        <button class="lang-btn" onclick="switchLang('pt')">PT</button>
+      </div>
+    </div>
+  </nav>
 
-    <div class="value-props">
-      <h2>Coaching Built<br/>for <em>Your</em> Reality.</h2>
+  <!-- ── MAIN LAYOUT ── -->
+  <div class="page-body">
+
+    <!-- LEFT — Value Propositions -->
+    <div class="left-panel">
+      <h2 class="left-heading">Coaching Built<br/>for <em>Your</em> Reality.</h2>
 
       <div class="prop-item">
-        <div class="prop-icon">🤖</div>
+        <div class="prop-icon">AI</div>
         <div>
           <div class="prop-title">AI Coach That Knows You</div>
           <div class="prop-desc">Not a generic plan. Your goals, your injuries, your medication — every session adapts to your reality.</div>
         </div>
       </div>
+
       <div class="prop-item">
-        <div class="prop-icon">💊</div>
+        <div class="prop-icon">3x</div>
         <div>
-          <div class="prop-title">GLP-1 / AOM Specialized</div>
-          <div class="prop-desc">The only AI coaching platform built specifically for clients on weight-loss medications. Muscle preservation is our priority.</div>
-        </div>
-      </div>
-      <div class="prop-item">
-        <div class="prop-icon">🎖️</div>
-        <div>
-          <div class="prop-title">Veteran & Injury Support</div>
-          <div class="prop-desc">Built by a combat veteran who lost 98 lbs and trains through torn shoulders, knee surgery, and PTSD. We get it.</div>
-        </div>
-      </div>
-      <div class="prop-item">
-        <div class="prop-icon">🌍</div>
-        <div>
-          <div class="prop-title">English · Español · Português</div>
+          <div class="prop-title">English / Espanol / Portugues</div>
           <div class="prop-desc">The first AI fitness coach to serve you in three languages — natively, from day one.</div>
         </div>
       </div>
-      <!-- Powered by Claude prop -->
-      <div class="prop-item" style="background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);border-radius:8px;padding:14px;margin-top:4px;">
-        <div style="width:40px;height:40px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#c9a84c" stroke-width="1.5"/><circle cx="8" cy="8" r="3" fill="#c9a84c"/></svg>
-        </div>
+
+      <div class="prop-item">
+        <div class="prop-icon">CES</div>
         <div>
-          <div class="prop-title" style="color:var(--gold);">Powered by Claude · Anthropic</div>
-          <div class="prop-desc">The same AI trusted by researchers, clinicians, and Fortune 500 companies — now your personal fitness coach.</div>
+          <div class="prop-title">Built by Real Coaches</div>
+          <div class="prop-desc">NASM CNC, CES, PES certified. Dr. Lovato lost 98 lbs and trains through injuries daily. Debora specializes in GLP-1 skin and confidence.</div>
+        </div>
+      </div>
+
+      <div class="prop-item">
+        <div class="prop-icon">NQ</div>
+        <div>
+          <div class="prop-title">We Never Quit</div>
+          <div class="prop-desc">Army veteran discipline meets real-world compassion. Whether you are on GLP-1, recovering from surgery, or starting from zero — this is your platform.</div>
+        </div>
+      </div>
+
+      <div class="trust-row">
+        <div class="trust-icon">S</div>
+        <div class="trust-text">
+          <strong>Your data stays yours.</strong> No ads. No selling your information.
+          Built on Supabase with row-level security.
         </div>
       </div>
     </div>
 
-    <div class="trust-row">
-      <div class="trust-icon">🔒</div>
-      <div class="trust-text">
-        <strong>Your data stays yours.</strong> No ads. No selling your information.
-        Built on Supabase with row-level security — only you can see your data.
-      </div>
-    </div>
-  </div>
+    <!-- RIGHT — Signup Form -->
+    <div class="right-panel">
+      <div class="auth-box">
 
-  <!-- RIGHT — Signup Form -->
-  <div class="right-panel">
-    <div class="auth-box">
+        <div class="auth-label">Free to Start</div>
+        <h1 class="auth-title" data-i18n="auth.signup_title">CREATE ACCOUNT</h1>
+        <p class="auth-sub" data-i18n="auth.signup_sub">No credit card required.</p>
 
-      <div class="lang-row">
-        <button class="lang-btn active" onclick="switchLang('en')">EN</button>
-        <button class="lang-btn" onclick="switchLang('es')">ES</button>
-        <button class="lang-btn" onclick="switchLang('pt')">PT</button>
-      </div>
+        <div class="global-error" id="globalError"></div>
 
-      <div class="auth-label">Free to Start</div>
-      <h1 class="auth-title" data-i18n="auth.signup_title">Create Account</h1>
-      <p class="auth-sub" data-i18n="auth.signup_sub">No credit card required.</p>
-
-      <div class="global-error" id="globalError"></div>
-
-      <div class="field">
-        <label data-i18n="auth.name_label">Full Name</label>
-        <input type="text" id="fullName" placeholder="Your full name" autocomplete="name" />
-        <div class="field-error" id="nameError"></div>
-      </div>
-
-      <div class="field">
-        <label data-i18n="auth.email_label">Email Address</label>
-        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
-        <div class="field-error" id="emailError"></div>
-      </div>
-
-      <div class="field">
-        <label data-i18n="auth.password_label">Password</label>
-        <input type="password" id="password" placeholder="Min. 8 characters"
-               autocomplete="new-password" oninput="checkStrength(this.value)" />
-        <div class="password-strength">
-          <div class="strength-bar" id="strengthBar"></div>
+        <div class="field">
+          <label data-i18n="auth.name_label">Full Name</label>
+          <input type="text" id="fullName" placeholder="Your full name" autocomplete="name" />
+          <div class="field-error" id="nameError"></div>
         </div>
-        <div class="field-error" id="passwordError"></div>
+
+        <div class="field">
+          <label data-i18n="auth.email_label">Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+          <div class="field-error" id="emailError"></div>
+        </div>
+
+        <div class="field">
+          <label data-i18n="auth.password_label">Password</label>
+          <input type="password" id="password" placeholder="Min. 8 characters"
+                 autocomplete="new-password" oninput="checkStrength(this.value)" />
+          <div class="password-strength">
+            <div class="strength-bar" id="strengthBar"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel"></div>
+          <div class="field-error" id="passwordError"></div>
+        </div>
+
+        <div class="terms-row">
+          By creating an account you agree to our
+          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </div>
+
+        <button class="btn-submit" id="signupBtn" onclick="handleSignup()">
+          <span data-i18n="auth.signup_btn">Create Account</span>
+          <div class="spinner"></div>
+        </button>
+
+        <div class="switch-row">
+          <span data-i18n="auth.has_account">Already have an account?</span>
+          <a href="/login.html" data-i18n="auth.login_link"> Log in</a>
+        </div>
+
       </div>
-
-      <div class="terms-row">
-        By creating an account you agree to our
-        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-      </div>
-
-      <button class="btn-submit" id="signupBtn" onclick="handleSignup()">
-        <span data-i18n="auth.signup_btn">Create Account</span>
-        <div class="spinner"></div>
-      </button>
-
-      <div class="switch-row">
-        <span data-i18n="auth.has_account">Already have an account?</span>
-        <a href="/login.html" data-i18n="auth.login_link"> Log in</a>
-      </div>
-
     </div>
+
   </div>
 
   <script src="/js/supabase-config.js"></script>
   <script src="/js/app.js"></script>
   <script>
-    if (SupabaseClient.isLoggedIn()) window.location.href = '/dashboard.html';
+    // Redirect if already logged in
+    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.isLoggedIn()) {
+      window.location.href = '/dashboard.html';
+    }
 
     function checkStrength(val) {
       const bar = document.getElementById('strengthBar');
+      const label = document.getElementById('strengthLabel');
       let score = 0;
       if (val.length >= 8)  score++;
       if (val.length >= 12) score++;
       if (/[A-Z]/.test(val)) score++;
       if (/[0-9]/.test(val)) score++;
       if (/[^A-Za-z0-9]/.test(val)) score++;
+
       const pct = (score / 5) * 100;
       bar.style.width = pct + '%';
-      bar.style.background = score <= 2 ? '#e74c3c' : score <= 3 ? '#f39c12' : '#27ae60';
+
+      if (score <= 1) {
+        bar.style.background = '#e74c3c';
+        label.textContent = val.length > 0 ? 'Weak' : '';
+        label.style.color = '#e74c3c';
+      } else if (score <= 2) {
+        bar.style.background = '#e74c3c';
+        label.textContent = 'Fair';
+        label.style.color = '#e74c3c';
+      } else if (score <= 3) {
+        bar.style.background = '#f39c12';
+        label.textContent = 'Good';
+        label.style.color = '#f39c12';
+      } else {
+        bar.style.background = '#27ae60';
+        label.textContent = 'Strong';
+        label.style.color = '#27ae60';
+      }
     }
 
     async function handleSignup() {
-      const btn      = document.getElementById('signupBtn');
-      const name     = document.getElementById('fullName').value.trim();
-      const email    = document.getElementById('email').value.trim();
-      const pass     = document.getElementById('password').value;
+      const btn = document.getElementById('signupBtn');
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const pass = document.getElementById('password').value;
       const globalErr = document.getElementById('globalError');
 
       // Clear
-      ['nameError','emailError','passwordError'].forEach(id => {
+      ['nameError', 'emailError', 'passwordError'].forEach(id => {
         document.getElementById(id).classList.remove('show');
       });
       globalErr.classList.remove('show');
@@ -420,17 +549,17 @@
       // Validate
       let valid = true;
       if (!name || name.length < 2) {
-        document.getElementById('nameError').textContent = AdaptFit.t('errors.required');
+        document.getElementById('nameError').textContent = ForgeIQ.t('errors.required');
         document.getElementById('nameError').classList.add('show');
         valid = false;
       }
       if (!email || !email.includes('@')) {
-        document.getElementById('emailError').textContent = AdaptFit.t('errors.invalid_email');
+        document.getElementById('emailError').textContent = ForgeIQ.t('errors.invalid_email');
         document.getElementById('emailError').classList.add('show');
         valid = false;
       }
       if (!pass || pass.length < 8) {
-        document.getElementById('passwordError').textContent = AdaptFit.t('errors.password_short');
+        document.getElementById('passwordError').textContent = ForgeIQ.t('errors.password_short');
         document.getElementById('passwordError').classList.add('show');
         valid = false;
       }
@@ -442,19 +571,19 @@
       try {
         const result = await SupabaseClient.signUp(email, pass, {
           full_name: name,
-          lang: AdaptFit.getCurrentLang()
+          lang: ForgeIQ.getCurrentLang()
         });
         if (result.user || result.id) {
           // Auto sign in after signup
           await SupabaseClient.signIn(email, pass);
           window.location.href = '/onboarding.html';
         } else {
-          const msg = result.msg || result.error_description || AdaptFit.t('errors.generic');
+          const msg = result.msg || result.error_description || ForgeIQ.t('errors.generic');
           globalErr.textContent = msg;
           globalErr.classList.add('show');
         }
       } catch (e) {
-        globalErr.textContent = AdaptFit.t('errors.generic');
+        globalErr.textContent = ForgeIQ.t('errors.generic');
         globalErr.classList.add('show');
       } finally {
         btn.classList.remove('loading');
@@ -467,9 +596,9 @@
     });
 
     async function switchLang(lang) {
-      await AdaptFit.loadLanguage(lang);
+      await ForgeIQ.loadLanguage(lang);
       document.querySelectorAll('.lang-btn').forEach(b => {
-        b.classList.toggle('active', b.textContent === lang.toUpperCase());
+        b.classList.toggle('active', b.textContent.trim() === lang.toUpperCase());
       });
     }
   </script>

@@ -3,140 +3,1515 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FORGEIQ — Resources and Links</title>
+  <title>FORGEIQ — Resources</title>
+  <meta name="description" content="Evidence-based fitness, nutrition, and wellness education from Dr. Lovato and Debora. GLP-1 education, peptides, supplements, mental health, injury recovery, post-transformation guidance." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
   <style>
+    /* ── RESET & VARIABLES ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --black:#080809; --dark:#0f1114; --card:#14171d; --border:#22262f;
-      --muted:#363c47; --text-dim:#7a8290; --text:#d8dde6; --white:#f2f5fa;
-      --gold:#c9a84c; --gold-lt:#e0c06a; --gold-dim:#7a6128;
-      --green:#22a85a; --blue:#2471a3; --purple:#8e5fbf; --red:#c0392b;
-      --font-d:'Bebas Neue',sans-serif; --font-b:'DM Sans',sans-serif; --font-m:'Space Mono',monospace;
+      --bg-primary: #0a1628;
+      --bg-secondary: #0e1e36;
+      --card-bg: #142444;
+      --gold: #f0a500;
+      --gold-hover: #ffb820;
+      --gold-dim: rgba(240,165,0,0.12);
+      --teal: #2dd4bf;
+      --amber: #f4a261;
+      --text-primary: #e8edf5;
+      --text-secondary: #8fa3c0;
+      --text-muted: #4a6080;
+      --border-gold: rgba(240,165,0,0.18);
+      --border-subtle: rgba(255,255,255,0.07);
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-condensed: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
     }
-    body { background:var(--black); color:var(--text); font-family:var(--font-b); min-height:100vh; }
-    nav { background:var(--dark); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
-    .nav-logo { font-family:var(--font-d); font-size:1.5rem; letter-spacing:3px; color:var(--white); text-decoration:none; }
-    .nav-logo span { color:var(--gold); }
-    .nav-links { display:flex; gap:4px; }
-    .nav-link { color:var(--text-dim); text-decoration:none; font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:7px 12px; border-radius:4px; transition:all 0.2s; font-family:var(--font-m); }
-    .nav-link:hover { color:var(--white); }
-    .nav-link.active { color:var(--gold); background:rgba(201,168,76,0.06); }
-    .nav-user { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:0.85rem; color:var(--black); text-decoration:none; }
-    .page { max-width:1000px; margin:0 auto; padding:32px; }
-    .page-title { font-family:var(--font-d); font-size:2.8rem; letter-spacing:1px; color:var(--white); line-height:1; margin-bottom:8px; }
-    .page-title em { font-style:normal; color:var(--gold); }
-    .section-hd { font-family:var(--font-d); font-size:1.6rem; letter-spacing:1px; color:var(--white); margin:32px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border); }
-    .resource-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin-bottom:12px; }
-    .res-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; transition:border-color 0.2s; }
-    .res-card:hover { border-color:var(--gold); }
-    .res-name { font-weight:700; font-size:0.9rem; color:var(--white); margin-bottom:4px; }
-    .res-desc { font-size:0.78rem; color:var(--text-dim); line-height:1.5; margin-bottom:10px; }
-    .res-link { display:inline-block; font-family:var(--font-m); font-size:0.6rem; color:var(--gold); text-transform:uppercase; letter-spacing:1px; text-decoration:none; transition:color 0.2s; }
-    .res-link:hover { color:var(--gold-lt); }
-    .crisis-card { background:rgba(192,57,43,0.06); border:2px solid rgba(192,57,43,0.25); border-radius:12px; padding:24px; text-align:center; margin-bottom:20px; }
-    .crisis-card h3 { font-family:var(--font-d); font-size:2rem; color:var(--red); letter-spacing:1px; margin-bottom:8px; }
-    .crisis-card p { font-size:0.88rem; color:var(--text-dim); line-height:1.6; }
-    .crisis-card a { color:var(--white); font-weight:700; text-decoration:underline; }
-    @media(max-width:700px) { .page{padding:20px 16px;} .nav-links{display:none;} .resource-grid{grid-template-columns:1fr;} }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,22,40,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-back {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a.active { color: var(--gold); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-family: var(--font-condensed);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .nav-login {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-login:hover { color: var(--text-primary); }
+    .nav-cta {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--gold-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 80px 24px 50px;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      letter-spacing: 6px;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.08rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ── RESOURCE TILE GRID ── */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── RESOURCE TILE (collapsed card) ── */
+    .resource-tile {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 36px 30px;
+      transition: border-color 0.3s, transform 0.3s;
+      cursor: default;
+    }
+    .resource-tile:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-3px);
+    }
+    .tile-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--gold-dim);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+    .tile-title {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      letter-spacing: 2px;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .tile-author {
+      font-family: var(--font-condensed);
+      font-size: 0.82rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .tile-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 22px;
+    }
+    .btn-read-more {
+      display: inline-block;
+      background: transparent;
+      color: var(--gold);
+      padding: 10px 24px;
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-read-more:hover {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+      transform: translateY(-1px);
+    }
+
+    /* ── EXPANDED RESOURCE PANEL ── */
+    .resource-expanded {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 200;
+      background: var(--bg-primary);
+      overflow-y: auto;
+      animation: fadeSlideIn 0.35s ease;
+    }
+    .resource-expanded.active {
+      display: block;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .expanded-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(10,22,40,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .expanded-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-close-resource {
+      background: none;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-close-resource:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .expanded-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      color: var(--text-primary);
+    }
+    .btn-pdf {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 8px 20px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-pdf:hover { background: var(--gold-hover); }
+
+    .expanded-body {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 50px 24px 80px;
+    }
+    .expanded-body h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 3px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .expanded-author-line {
+      font-family: var(--font-condensed);
+      font-size: 0.92rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+    .expanded-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      letter-spacing: 2px;
+      color: var(--text-primary);
+      margin: 44px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .expanded-body h3 {
+      font-family: var(--font-condensed);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 28px 0 10px;
+    }
+    .expanded-body p {
+      color: var(--text-secondary);
+      font-size: 0.96rem;
+      line-height: 1.85;
+      margin-bottom: 14px;
+    }
+    .expanded-body ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 14px;
+    }
+    .expanded-body ul li {
+      color: var(--text-secondary);
+      font-size: 0.94rem;
+      line-height: 1.8;
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .expanded-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+    .expanded-body strong { color: var(--text-primary); }
+
+    .disclaimer-box {
+      background: rgba(240,165,0,0.06);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin: 32px 0;
+    }
+    .disclaimer-box p {
+      color: var(--amber);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+    .disclaimer-box strong {
+      color: var(--gold);
+    }
+
+    .fda-disclaimer {
+      background: rgba(227,57,70,0.06);
+      border: 1px solid rgba(227,57,70,0.25);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      margin: 32px 0;
+    }
+    .fda-disclaimer p {
+      color: #f08080;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+    .fda-disclaimer strong {
+      color: #e63946;
+    }
+
+    .crisis-box {
+      background: rgba(227,57,70,0.08);
+      border: 2px solid rgba(227,57,70,0.3);
+      border-radius: var(--radius);
+      padding: 26px;
+      margin: 32px 0;
+      text-align: center;
+    }
+    .crisis-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: #e63946;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .crisis-box p {
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    .crisis-box a {
+      color: var(--text-primary);
+      font-weight: 500;
+      text-decoration: underline;
+    }
+
+    .citation {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-style: italic;
+      display: block;
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-family: var(--font-condensed);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .tier-1 { background: rgba(45,212,191,0.12); color: var(--teal); border: 1px solid rgba(45,212,191,0.25); }
+    .tier-2 { background: rgba(240,165,0,0.12); color: var(--gold); border: 1px solid var(--border-gold); }
+    .tier-3 { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+
+    .expanded-actions {
+      display: flex;
+      gap: 14px;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .btn-gold {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 14px 36px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-gold:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: var(--text-primary);
+      padding: 14px 36px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: 1px solid var(--border-gold);
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* ── MOBILE MENU ── */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .resource-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 12px 18px; }
+      .nav-links, .lang-toggle { display: none; }
+      .mobile-menu-btn { display: block; }
+      .page-header { padding: 50px 18px 30px; }
+      .page-header h1 { font-size: 2.4rem; letter-spacing: 4px; }
+      .resource-grid { padding: 0 18px 60px; }
+      .resource-tile { padding: 26px 22px; }
+      .expanded-header { padding: 14px 18px; }
+      .expanded-body { padding: 30px 18px 60px; }
+      .expanded-actions { flex-direction: column; }
+      .expanded-actions a, .expanded-actions button { width: 100%; text-align: center; }
+    }
+
+    /* ── PRINT STYLES ── */
+    @media print {
+      nav, .expanded-header, .expanded-actions { display: none !important; }
+      .resource-expanded { position: static; overflow: visible; }
+      .expanded-body { padding: 20px; max-width: 100%; }
+      .expanded-body h1 { font-size: 1.8rem; color: #000; }
+      .expanded-body h2 { font-size: 1.4rem; color: #000; border-bottom-color: #ccc; }
+      .expanded-body h3 { color: #333; }
+      .expanded-body p, .expanded-body li { color: #222; font-size: 0.9rem; }
+      .disclaimer-box, .fda-disclaimer, .crisis-box { border-color: #999; }
+      .disclaimer-box p, .fda-disclaimer p { color: #444; }
+      body { background: #fff; color: #000; }
+      .print-header { display: block !important; text-align: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #000; }
+      .print-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; }
+      .print-header p { font-size: 0.8rem; color: #666; }
+      .print-footer { display: block !important; text-align: center; margin-top: 30px; padding-top: 16px; border-top: 1px solid #999; font-size: 0.75rem; color: #888; }
+    }
+    .print-header, .print-footer { display: none; }
   </style>
 </head>
 <body>
 
+<!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
 <nav>
-  <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
-  <div class="nav-links">
-    <a href="/dashboard.html" class="nav-link">Dashboard</a>
-    <a href="/workout-log.html" class="nav-link">Workouts</a>
-    <a href="/nutrition.html" class="nav-link">Nutrition</a>
-    <a href="/resources.html" class="nav-link active">Resources</a>
-    <a href="/booking.html" class="nav-link">Book</a>
+  <div class="nav-left">
+    <button class="nav-back" onclick="if(window.history.length>1)history.back();else window.location.href='/dashboard.html';" aria-label="Go back">&#8592;</button>
+    <a href="index.html" class="logo">FORGEIQ</a>
   </div>
-  <div><a href="/profile.html" class="nav-user">?</a></div>
+  <div class="nav-links">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="train.html">Train</a>
+    <a href="progress.html">Progress</a>
+    <a href="debora.html">Debora</a>
+    <a href="resources.html" class="active">Resources</a>
+    <a href="book.html">Book</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active">EN</button>
+      <button class="lang-btn">ES</button>
+      <button class="lang-btn">PT</button>
+    </div>
+    <a href="login.html" class="nav-login">Log In</a>
+    <a href="signup.html" class="nav-cta">Get Started</a>
+  </div>
+  <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex';" aria-label="Toggle menu">&#9776;</button>
 </nav>
 
-<div class="page">
+<!-- ═══════════════════════ PAGE HEADER ═══════════════════════ -->
+<div class="page-header">
+  <h1>RESOURCES</h1>
+  <p>Evidence-based education from Dr. Lovato and Debora. Every article is cited. Every recommendation has research behind it.</p>
+</div>
 
-  <div style="margin-bottom:28px;">
-    <div class="page-title">Resources and <em>Links</em></div>
-    <p style="font-size:0.92rem;color:var(--text-dim);line-height:1.6;max-width:560px;">Curated resources from authoritative sources. All links open in a new tab. Knowledge is power — use it.</p>
+<!-- ═══════════════════════ RESOURCE TILES GRID ═══════════════════════ -->
+<div class="resource-grid">
+
+  <!-- TILE 1: GLP-1 Education Hub -->
+  <div class="resource-tile">
+    <div class="tile-icon">&#128138;</div>
+    <div class="tile-title">GLP-1 EDUCATION HUB</div>
+    <div class="tile-author">Dr. Lovato + Debora</div>
+    <p class="tile-desc">How GLP-1 medications work, muscle preservation, nutrition adjustments, skin changes, long-term management.</p>
+    <button class="btn-read-more" onclick="openResource('glp1')">Read More &#8594;</button>
   </div>
 
-  <!-- VETERAN CRISIS -->
-  <div class="crisis-card">
-    <h3>Veterans Crisis Line</h3>
-    <p><a href="tel:988">Call 988, Press 1</a> | Text 838255 | <a href="https://www.veteranscrisisline.net/get-help-now/chat/" target="_blank" rel="noopener">Online Chat</a></p>
-    <p style="margin-top:8px;">Free, confidential support 24/7 for Veterans and their loved ones.</p>
+  <!-- TILE 2: Peptide Education Hub -->
+  <div class="resource-tile">
+    <div class="tile-icon">&#9879;</div>
+    <div class="tile-title">PEPTIDE EDUCATION HUB</div>
+    <div class="tile-author">Dr. Lovato</div>
+    <p class="tile-desc">BPC-157, TB-500, GH secretagogues -- mechanism, research, scope-of-practice limits.</p>
+    <button class="btn-read-more" onclick="openResource('peptides')">Read More &#8594;</button>
   </div>
 
-  <!-- NUTRITION DATABASES -->
-  <div class="section-hd">Nutrition Databases</div>
-  <div class="resource-grid">
-    <div class="res-card"><div class="res-name">USDA FoodData Central</div><div class="res-desc">Official US government food composition database. The gold standard for macro and micronutrient data.</div><a href="https://fdc.nal.usda.gov" target="_blank" rel="noopener" class="res-link">Visit fdc.nal.usda.gov &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Cronometer</div><div class="res-desc">Comprehensive nutrient tracking with micronutrient detail. Excellent for GLP-1 users monitoring deficiencies.</div><a href="https://cronometer.com" target="_blank" rel="noopener" class="res-link">Visit cronometer.com &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Examine.com</div><div class="res-desc">Evidence-based supplement and nutrition research. Independent, unbiased analysis of studies.</div><a href="https://examine.com" target="_blank" rel="noopener" class="res-link">Visit examine.com &rarr;</a></div>
-    <div class="res-card"><div class="res-name">MyFitnessPal</div><div class="res-desc">Large food database for calorie and macro tracking. Community-driven with barcode scanning.</div><a href="https://www.myfitnesspal.com" target="_blank" rel="noopener" class="res-link">Visit myfitnesspal.com &rarr;</a></div>
+  <!-- TILE 3: Supplement Reference Library -->
+  <div class="resource-tile">
+    <div class="tile-icon">&#128218;</div>
+    <div class="tile-title">SUPPLEMENT REFERENCE LIBRARY</div>
+    <div class="tile-author">Dr. Lovato</div>
+    <p class="tile-desc">Full evidence-tiered library, searchable by goal and population.</p>
+    <button class="btn-read-more" onclick="openResource('supplements')">Read More &#8594;</button>
   </div>
 
-  <!-- RESEARCH -->
-  <div class="section-hd">Research and Science</div>
-  <div class="resource-grid">
-    <div class="res-card"><div class="res-name">PubMed</div><div class="res-desc">NIH database of biomedical literature. The primary source for peer-reviewed fitness and nutrition research.</div><a href="https://pubmed.ncbi.nlm.nih.gov" target="_blank" rel="noopener" class="res-link">Visit pubmed.ncbi.nlm.nih.gov &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Google Scholar</div><div class="res-desc">Broad academic search engine covering journals, theses, and conference papers across all disciplines.</div><a href="https://scholar.google.com" target="_blank" rel="noopener" class="res-link">Visit scholar.google.com &rarr;</a></div>
-    <div class="res-card"><div class="res-name">NSCA Research</div><div class="res-desc">National Strength and Conditioning Association. Leading organization for strength and conditioning science.</div><a href="https://www.nsca.com" target="_blank" rel="noopener" class="res-link">Visit nsca.com &rarr;</a></div>
-    <div class="res-card"><div class="res-name">NIH Exercise Resources</div><div class="res-desc">National Institutes of Health exercise and physical activity guidelines and research.</div><a href="https://www.nih.gov" target="_blank" rel="noopener" class="res-link">Visit nih.gov &rarr;</a></div>
+  <!-- TILE 4: Mental Health and Fitness -->
+  <div class="resource-tile">
+    <div class="tile-icon">&#129504;</div>
+    <div class="tile-title">MENTAL HEALTH AND FITNESS</div>
+    <div class="tile-author">Dr. Lovato</div>
+    <p class="tile-desc">PTSD, anxiety, depression -- fitness as therapy, when to seek clinical support.</p>
+    <button class="btn-read-more" onclick="openResource('mental')">Read More &#8594;</button>
   </div>
 
-  <!-- CERTIFICATION BODIES -->
-  <div class="section-hd">Certification Bodies</div>
-  <div class="resource-grid">
-    <div class="res-card"><div class="res-name">NASM</div><div class="res-desc">National Academy of Sports Medicine. Our primary certification body for OPT model, CNC, CES, and PES.</div><a href="https://www.nasm.org" target="_blank" rel="noopener" class="res-link">Visit nasm.org &rarr;</a></div>
-    <div class="res-card"><div class="res-name">ACE</div><div class="res-desc">American Council on Exercise. Research-backed certifications and continuing education.</div><a href="https://www.acefitness.org" target="_blank" rel="noopener" class="res-link">Visit acefitness.org &rarr;</a></div>
-    <div class="res-card"><div class="res-name">ISSA</div><div class="res-desc">International Sports Sciences Association. Online fitness certifications and specializations.</div><a href="https://www.issaonline.com" target="_blank" rel="noopener" class="res-link">Visit issaonline.com &rarr;</a></div>
-    <div class="res-card"><div class="res-name">NSCA</div><div class="res-desc">National Strength and Conditioning Association. CSCS and NSCA-CPT certifications.</div><a href="https://www.nsca.com" target="_blank" rel="noopener" class="res-link">Visit nsca.com &rarr;</a></div>
-    <div class="res-card"><div class="res-name">USAPL</div><div class="res-desc">USA Powerlifting. Competitive powerlifting federation and drug-tested events.</div><a href="https://www.usapowerlifting.com" target="_blank" rel="noopener" class="res-link">Visit usapowerlifting.com &rarr;</a></div>
-    <div class="res-card"><div class="res-name">USPA</div><div class="res-desc">United States Powerlifting Association. Multi-federation powerlifting competition.</div><a href="https://www.uspa.net" target="_blank" rel="noopener" class="res-link">Visit uspa.net &rarr;</a></div>
-    <div class="res-card"><div class="res-name">CrossFit</div><div class="res-desc">CrossFit methodology, affiliate gym locator, and competition information.</div><a href="https://www.crossfit.com" target="_blank" rel="noopener" class="res-link">Visit crossfit.com &rarr;</a></div>
+  <!-- TILE 5: Injury and Recovery Guide -->
+  <div class="resource-tile">
+    <div class="tile-icon">&#129657;</div>
+    <div class="tile-title">INJURY AND RECOVERY GUIDE</div>
+    <div class="tile-author">Dr. Lovato</div>
+    <p class="tile-desc">NASM CES protocols, common injuries, return-to-training timelines.</p>
+    <button class="btn-read-more" onclick="openResource('injury')">Read More &#8594;</button>
   </div>
 
-  <!-- GOVERNMENT HEALTH -->
-  <div class="section-hd">Government Health Resources</div>
-  <div class="resource-grid">
-    <div class="res-card"><div class="res-name">CDC Physical Activity Guidelines</div><div class="res-desc">Federal guidelines for physical activity across all age groups and fitness levels.</div><a href="https://www.cdc.gov/physical-activity-basics/" target="_blank" rel="noopener" class="res-link">Visit cdc.gov &rarr;</a></div>
-    <div class="res-card"><div class="res-name">ACSM Guidelines</div><div class="res-desc">American College of Sports Medicine exercise testing and prescription guidelines.</div><a href="https://www.acsm.org" target="_blank" rel="noopener" class="res-link">Visit acsm.org &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Mayo Clinic Fitness</div><div class="res-desc">Evidence-based fitness information from one of the most trusted medical institutions.</div><a href="https://www.mayoclinic.org" target="_blank" rel="noopener" class="res-link">Visit mayoclinic.org &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Harvard Health Fitness</div><div class="res-desc">Harvard Medical School health and fitness education for the public.</div><a href="https://www.health.harvard.edu" target="_blank" rel="noopener" class="res-link">Visit health.harvard.edu &rarr;</a></div>
-  </div>
-
-  <!-- TOP COACHES BY CATEGORY -->
-  <div class="section-hd">Top Coaches by Category (YouTube)</div>
-  <div class="resource-grid">
-    <div class="res-card"><div class="res-name">Strength and Powerlifting</div><div class="res-desc">Brian Shaw, Stefi Cohen, Alan Thrall, Juggernaut Training Systems</div><a href="https://www.youtube.com/results?search_query=powerlifting+coaching" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Olympic Lifting</div><div class="res-desc">Catalyst Athletics, Hookgrip, Dmitry Klokov</div><a href="https://www.youtube.com/results?search_query=olympic+weightlifting+technique" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Bodybuilding and Hypertrophy</div><div class="res-desc">Jeff Nippard, Renaissance Periodization, Jonnie Candito</div><a href="https://www.youtube.com/results?search_query=hypertrophy+training+science" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">GLP-1 and Weight Loss Science</div><div class="res-desc">Glucose Goddess, obesity medicine educators</div><a href="https://www.youtube.com/results?search_query=GLP-1+weight+loss+science" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Mobility and Recovery</div><div class="res-desc">Kelly Starrett, Tom Morrison, GMB Fitness</div><a href="https://www.youtube.com/results?search_query=mobility+recovery+training" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Nutrition Science</div><div class="res-desc">Layne Norton, Renaissance Periodization nutrition</div><a href="https://www.youtube.com/results?search_query=nutrition+science+evidence+based" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Running and Cardio</div><div class="res-desc">The Running Channel, USATF coaches</div><a href="https://www.youtube.com/results?search_query=running+coaching+technique" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Functional Fitness and Hyrox</div><div class="res-desc">Hyrox official, functional fitness educators</div><a href="https://www.youtube.com/results?search_query=hyrox+functional+fitness" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Senior and 50+ Fitness</div><div class="res-desc">Strength for seniors educators, ACSM senior resources</div><a href="https://www.youtube.com/results?search_query=senior+fitness+over+50+strength" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-    <div class="res-card"><div class="res-name">Mental Health and Fitness</div><div class="res-desc">Fitness and mental health researchers, veteran fitness programs</div><a href="https://www.youtube.com/results?search_query=mental+health+fitness+veterans" target="_blank" rel="noopener" class="res-link">Search YouTube &rarr;</a></div>
-  </div>
-
-  <!-- VETERAN AND FIRST RESPONDER -->
-  <div class="section-hd">Veteran and First Responder Resources</div>
-  <div class="resource-grid">
-    <div class="res-card" style="border-color:rgba(201,168,76,0.2);"><div class="res-name">VA Whole Health Program</div><div class="res-desc">Comprehensive veteran health and wellness through the VA system.</div><a href="https://www.va.gov/wholehealth/" target="_blank" rel="noopener" class="res-link">Visit va.gov &rarr;</a></div>
-    <div class="res-card" style="border-color:rgba(201,168,76,0.2);"><div class="res-name">Team Red White and Blue</div><div class="res-desc">Connecting veterans through physical and social activity.</div><a href="https://www.teamrwb.org" target="_blank" rel="noopener" class="res-link">Visit teamrwb.org &rarr;</a></div>
-    <div class="res-card" style="border-color:rgba(201,168,76,0.2);"><div class="res-name">Stack Up</div><div class="res-desc">Supporting veterans through gaming, fitness, and community.</div><a href="https://www.stackup.org" target="_blank" rel="noopener" class="res-link">Visit stackup.org &rarr;</a></div>
-    <div class="res-card" style="border-color:rgba(201,168,76,0.2);"><div class="res-name">First Responder Wellness</div><div class="res-desc">Mental health and fitness resources for first responders and their families.</div><a href="https://www.youtube.com/results?search_query=first+responder+wellness+program" target="_blank" rel="noopener" class="res-link">Search Resources &rarr;</a></div>
+  <!-- TILE 6: Post-Transformation Guide -->
+  <div class="resource-tile">
+    <div class="tile-icon">&#10024;</div>
+    <div class="tile-title">POST-TRANSFORMATION GUIDE</div>
+    <div class="tile-author">Debora</div>
+    <p class="tile-desc">Skin laxity, body confidence, what changes after significant weight loss, what helps.</p>
+    <button class="btn-read-more" onclick="openResource('posttransform')">Read More &#8594;</button>
   </div>
 
 </div>
 
-<script src="/js/supabase-config.js"></script>
-<script src="/js/app.js"></script>
-<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ══════════════════ EXPANDED RESOURCE PANELS ═══════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ══════════════════ 1. GLP-1 EDUCATION HUB ═══════════════════════ -->
+<div id="resource-glp1" class="resource-expanded">
+  <div class="expanded-header">
+    <div class="expanded-header-left">
+      <button class="btn-close-resource" onclick="closeResource('glp1')">&#8592; Back</button>
+      <span class="expanded-title">GLP-1 EDUCATION HUB</span>
+    </div>
+    <button class="btn-pdf" onclick="printResource('glp1')">&#128196; Download PDF</button>
+  </div>
+  <div class="expanded-body" id="print-glp1">
+    <div class="print-header"><h2>FORGEIQ -- GLP-1 Education Hub</h2><p>forgeiq.netlify.app/resources.html</p></div>
+
+    <h1>GLP-1 EDUCATION HUB</h1>
+    <div class="expanded-author-line">By Dr. Michael P. Lovato, EdD &amp; Debora Lovato</div>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> This content is educational. It is not medical advice. Consult your physician before starting, stopping, or changing any medication. FORGEIQ does not prescribe medications.</p>
+    </div>
+
+    <!-- Section: How GLP-1 Medications Work -->
+    <h2>HOW GLP-1 MEDICATIONS WORK</h2>
+    <p>GLP-1 receptor agonists are a class of medications that mimic the action of glucagon-like peptide-1, an incretin hormone naturally produced in the gut. When you eat, your body releases GLP-1 to signal the pancreas to produce insulin. These medications amplify that signal, but they do far more than manage blood sugar.</p>
+    <p><strong>Mechanism of action:</strong> GLP-1 receptor agonists bind to GLP-1 receptors throughout the body, including in the pancreas, brain, and gastrointestinal tract. They enhance glucose-dependent insulin secretion, meaning they help your body release insulin when blood sugar is elevated but do not cause dangerous drops when blood sugar is normal. They suppress glucagon secretion, which reduces the liver's glucose output.</p>
+    <p><strong>Appetite regulation:</strong> GLP-1 medications act on the hypothalamus to reduce appetite and increase satiety. This is one of the primary mechanisms behind their weight loss effects. Patients consistently report feeling full sooner and experiencing fewer cravings.</p>
+    <p><strong>Gastric emptying:</strong> These medications slow the rate at which food leaves the stomach, contributing to prolonged feelings of fullness after meals. This delayed gastric emptying is also why nausea is a common side effect, particularly during dose escalation.</p>
+    <p><strong>Insulin sensitivity:</strong> Beyond direct insulin effects, GLP-1 receptor agonists improve overall insulin sensitivity, which means the body uses insulin more efficiently over time. This contributes to improved metabolic markers beyond weight alone.</p>
+    <span class="citation">Source: Drucker, D.J. "Mechanisms of Action and Therapeutic Application of Glucagon-like Peptide-1." Cell Metabolism, 2018. | NIH National Institute of Diabetes and Digestive and Kidney Diseases, 2024.</span>
+
+    <!-- Section: Common GLP-1 Medications -->
+    <h2>COMMON GLP-1 MEDICATIONS</h2>
+
+    <h3>Ozempic (Semaglutide - Injectable)</h3>
+    <p>FDA-approved for type 2 diabetes management. Administered as a once-weekly subcutaneous injection. Semaglutide has a 94% structural similarity to human GLP-1, which gives it a long half-life and strong receptor binding. Typical doses range from 0.25mg to 2.0mg weekly, with gradual dose escalation to manage gastrointestinal side effects.</p>
+    <span class="citation">Source: Novo Nordisk prescribing information; FDA approval 2017.</span>
+
+    <h3>Wegovy (Semaglutide - Injectable)</h3>
+    <p>The same active ingredient as Ozempic but FDA-approved specifically for chronic weight management in adults with obesity (BMI 30+) or overweight (BMI 27+) with at least one weight-related condition. The maximum dose of Wegovy (2.4mg weekly) is higher than Ozempic. Clinical trials showed an average weight loss of approximately 15% of body weight over 68 weeks.</p>
+    <span class="citation">Source: Wilding, J.P.H. et al. "Once-Weekly Semaglutide in Adults with Overweight or Obesity." NEJM, 2021.</span>
+
+    <h3>Mounjaro (Tirzepatide - Injectable)</h3>
+    <p>A dual GIP/GLP-1 receptor agonist, meaning it activates two incretin pathways instead of one. FDA-approved for type 2 diabetes. Tirzepatide demonstrated significant weight loss in clinical trials, with some participants losing over 20% of body weight. The dual mechanism appears to produce greater metabolic improvements than GLP-1 alone.</p>
+    <span class="citation">Source: Jastreboff, A.M. et al. "Tirzepatide Once Weekly for the Treatment of Obesity." NEJM, 2022.</span>
+
+    <h3>Zepbound (Tirzepatide - Injectable)</h3>
+    <p>The same molecule as Mounjaro but FDA-approved specifically for chronic weight management. Available in doses from 2.5mg to 15mg weekly. The SURMOUNT clinical trial program showed average weight reductions of 18-22.5% of body weight at the highest doses, making it one of the most effective pharmaceutical weight loss interventions ever studied.</p>
+    <span class="citation">Source: FDA approval 2023; Eli Lilly SURMOUNT trial data.</span>
+
+    <h3>Rybelsus (Oral Semaglutide)</h3>
+    <p>The first oral GLP-1 receptor agonist, taken as a daily tablet. Must be taken on an empty stomach with no more than 4 ounces of plain water, and the patient must wait at least 30 minutes before eating, drinking, or taking other medications. Available in 3mg, 7mg, and 14mg doses. While convenient, the oral form generally produces somewhat less weight loss than the injectable form at equivalent doses.</p>
+    <span class="citation">Source: Aroda, V.R. et al. "PIONEER Trials." Lancet Diabetes and Endocrinology, 2019.</span>
+
+    <!-- Section: Muscle Preservation -->
+    <h2>MUSCLE PRESERVATION WHILE ON GLP-1</h2>
+    <p>One of the most significant concerns with GLP-1 medications is the potential loss of lean muscle mass alongside fat. Research indicates that without intervention, up to 20-40% of total weight lost can come from lean tissue rather than fat. This is where FORGEIQ becomes critical.</p>
+
+    <h3>Resistance Training Is Non-Negotiable</h3>
+    <p>Progressive resistance training is the single most effective strategy for preserving muscle during GLP-1-assisted weight loss. Studies show that individuals who engage in structured resistance training during caloric deficit retain significantly more lean mass compared to those who rely on diet alone or diet plus cardio. Aim for a minimum of three resistance training sessions per week, targeting all major muscle groups.</p>
+    <span class="citation">Source: Oppert, J.M. et al. "Exercise Training in the Management of Overweight and Obesity in Adults." Frontiers in Endocrinology, 2026.</span>
+
+    <h3>Protein Intake: 1.0-1.2g Per Pound of Body Weight</h3>
+    <p>When on GLP-1 medications, appetite suppression can make it difficult to consume adequate protein. However, maintaining high protein intake is essential for muscle preservation. Target 1.0 to 1.2 grams of protein per pound of body weight daily. Prioritize protein at every meal. Consider supplementation with whey protein isolate or plant-based protein powders to meet daily targets when whole food intake is limited by reduced appetite.</p>
+    <span class="citation">Source: Morton, R.W. et al. "A Systematic Review of Protein Supplements and Resistance Training." British Journal of Sports Medicine, 2018. | MDPI Nutrients, 2025.</span>
+
+    <h3>Creatine Monohydrate</h3>
+    <p>Creatine monohydrate at 3-5 grams daily supports muscle retention during caloric deficit. It enhances ATP regeneration, supports training intensity, and has been shown in multiple studies to improve lean mass retention when combined with resistance training. It is the most extensively researched sports supplement with a strong safety profile.</p>
+    <span class="citation">Source: Kreider, R.B. et al. "International Society of Sports Nutrition Position Stand: Creatine." JISSN, 2017.</span>
+
+    <h3>HMB (Beta-Hydroxy Beta-Methylbutyrate)</h3>
+    <p>HMB is a metabolite of the amino acid leucine that has been shown to reduce muscle protein breakdown, particularly during caloric restriction. A dose of 3 grams daily may help preserve lean tissue in individuals undergoing significant weight loss. It is especially relevant for older adults and those in catabolic states.</p>
+    <span class="citation">Source: Wilson, J.M. et al. "Effects of HMB on Exercise Performance and Body Composition." JISSN, 2013.</span>
+
+    <!-- Section: Nutrition Adjustments -->
+    <h2>NUTRITION ADJUSTMENTS ON GLP-1</h2>
+
+    <h3>Smaller, More Frequent Meals</h3>
+    <p>Due to delayed gastric emptying, large meals can cause significant discomfort, nausea, and even vomiting. Shift to 4-6 smaller meals throughout the day. Each meal should be calorie-dense enough to meet your nutritional needs despite reduced overall volume.</p>
+
+    <h3>Protein First at Every Meal</h3>
+    <p>With reduced appetite and smaller meal sizes, every bite counts. Start each meal with your protein source before moving to vegetables and then carbohydrates. This prioritization ensures you hit protein targets even when you cannot finish an entire meal.</p>
+
+    <h3>Hydration Is Critical</h3>
+    <p>GLP-1 medications can cause dehydration through reduced fluid intake (due to diminished thirst signals) and gastrointestinal side effects. Aim for a minimum of half your body weight in ounces of water daily. Sip water throughout the day rather than drinking large amounts at once, as large volumes can worsen nausea.</p>
+
+    <h3>Electrolyte Balance</h3>
+    <p>Nausea, vomiting, and diarrhea associated with GLP-1 medications can deplete electrolytes. Supplement with sodium, potassium, and magnesium as needed. Consider a quality electrolyte supplement, especially during the dose-escalation phase when gastrointestinal side effects are most pronounced.</p>
+    <span class="citation">Source: Mechanick, J.I. et al. "Clinical Practice Guidelines for the Nutritional Management of Patients on GLP-1 Therapy." Frontiers in Endocrinology, 2026. | PubMed, 2024.</span>
+
+    <!-- Section: Skin Changes -->
+    <h2>SKIN CHANGES AND GLP-1</h2>
+    <p><em>Section authored by Debora Lovato, Licensed Esthetician, NASM CNC/CES/PES</em></p>
+
+    <h3>Facial Volume Loss</h3>
+    <p>Rapid weight loss from GLP-1 medications frequently leads to noticeable facial volume loss, sometimes called "Ozempic face." The buccal fat pads diminish, and the overlying skin, which had been stretched by the volume beneath it, can appear loose or hollow. This is particularly pronounced in patients over 40, when collagen production has already slowed.</p>
+
+    <h3>Skin Laxity</h3>
+    <p>Significant and rapid weight loss often outpaces the skin's ability to retract. Collagen and elastin fibers can only contract so much, and the rate of weight loss with GLP-1 medications frequently exceeds the skin's remodeling capacity. Common areas of concern include the abdomen, inner arms, inner thighs, and the neck and jawline.</p>
+
+    <h3>Collagen Supplementation</h3>
+    <p>Hydrolyzed collagen peptides at 10-15 grams daily, taken with vitamin C to support absorption and synthesis, can support skin integrity during weight loss. While collagen supplementation cannot fully prevent laxity from major weight loss, research suggests it can improve skin elasticity, hydration, and dermal collagen density over time.</p>
+
+    <h3>Debora's Recommendations</h3>
+    <ul>
+      <li>Begin collagen supplementation before starting GLP-1 or as early as possible in the weight loss process</li>
+      <li>Stay aggressively hydrated -- skin hydration is directly tied to elasticity</li>
+      <li>Use topical retinoids and vitamin C serums to stimulate collagen production in the skin</li>
+      <li>Consider professional treatments such as radiofrequency skin tightening, microneedling with PRP, or laser treatments as your weight stabilizes</li>
+      <li>Give your body time -- skin remodeling can continue for 1-2 years after weight stabilization</li>
+      <li>Address the emotional component -- body image after rapid weight loss is complex, and support matters</li>
+    </ul>
+    <span class="citation">Source: Bolke, L. et al. "A Collagen Supplement Improves Skin Hydration, Elasticity, Roughness, and Density." MDPI Nutrients, 2019. | NIH Dermatology Research, 2024.</span>
+
+    <!-- Section: Long-Term Management -->
+    <h2>LONG-TERM MANAGEMENT</h2>
+
+    <h3>What Happens When Stopping GLP-1 Medications</h3>
+    <p>Research consistently shows that weight regain occurs in the majority of patients who discontinue GLP-1 medications without establishing robust lifestyle habits. The STEP-1 extension trial showed that participants regained approximately two-thirds of lost weight within one year of stopping semaglutide. This underscores the critical importance of building sustainable exercise and nutrition habits while on the medication.</p>
+    <span class="citation">Source: Wilding, J.P.H. et al. "Weight Regain After Withdrawal of Semaglutide." Diabetes, Obesity and Metabolism, 2022.</span>
+
+    <h3>Maintaining Muscle</h3>
+    <p>The muscle you build while on GLP-1 is your insurance policy against regain. Higher lean mass means a higher resting metabolic rate, better glucose disposal, and greater functional capacity. Continue resistance training at the same intensity or higher even as weight loss slows or stabilizes.</p>
+
+    <h3>Metabolic Adaptation</h3>
+    <p>Significant weight loss leads to metabolic adaptation -- your body becomes more efficient and burns fewer calories than predicted for your new weight. This is normal and expected. Strategies to mitigate this include maintaining or increasing muscle mass, periodic diet breaks, and avoiding excessively low caloric intake during the weight loss phase.</p>
+    <span class="citation">Source: Trexler, E.T. et al. "Metabolic Adaptation to Weight Loss." JISSN, 2014. | NIH, 2024.</span>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> This content is educational. It is not medical advice. Consult your physician before starting, stopping, or changing any medication or supplement regimen. FORGEIQ does not prescribe or sell medications.</p>
+    </div>
+
+    <div class="expanded-actions">
+      <button class="btn-gold" onclick="printResource('glp1')">&#128196; Download PDF</button>
+      <a href="book.html" class="btn-outline">Book a Session</a>
+    </div>
+
+    <div class="print-footer">FORGEIQ &mdash; We Never Have to Quit. &mdash; forgeiq.netlify.app &mdash; This content is educational only and does not constitute medical advice.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ 2. PEPTIDE EDUCATION HUB ═══════════════════════ -->
+<div id="resource-peptides" class="resource-expanded">
+  <div class="expanded-header">
+    <div class="expanded-header-left">
+      <button class="btn-close-resource" onclick="closeResource('peptides')">&#8592; Back</button>
+      <span class="expanded-title">PEPTIDE EDUCATION HUB</span>
+    </div>
+    <button class="btn-pdf" onclick="printResource('peptides')">&#128196; Download PDF</button>
+  </div>
+  <div class="expanded-body" id="print-peptides">
+    <div class="print-header"><h2>FORGEIQ -- Peptide Education Hub</h2><p>forgeiq.netlify.app/resources.html</p></div>
+
+    <h1>PEPTIDE EDUCATION HUB</h1>
+    <div class="expanded-author-line">By Dr. Michael P. Lovato, EdD</div>
+
+    <div class="fda-disclaimer">
+      <p><strong>FDA Disclaimer:</strong> Peptides discussed here are NOT FDA-approved for human use. This content is educational only. FORGEIQ does not sell, prescribe, or recommend peptides. Discuss with your physician before considering any peptide protocol.</p>
+    </div>
+
+    <!-- Section: What Are Peptides -->
+    <h2>WHAT ARE PEPTIDES</h2>
+    <p>Peptides are short chains of amino acids, typically consisting of 2 to 50 amino acids linked by peptide bonds. They function as signaling molecules in the body, influencing a wide range of biological processes including tissue repair, immune function, hormone release, and inflammation regulation. Unlike proteins, which are larger and more complex, peptides are small enough to be absorbed and utilized more readily by the body.</p>
+    <p>The human body naturally produces thousands of peptides that regulate everything from sleep to healing. Synthetic peptides are designed to mimic or enhance these natural signaling processes. The field of peptide research has expanded significantly in recent years, though it is important to note that most research remains in preclinical stages.</p>
+    <span class="citation">Source: Fosgerau, K. and Hoffmann, T. "Peptide Therapeutics: Current Status and Future Directions." Drug Discovery Today, 2015.</span>
+
+    <!-- Section: BPC-157 -->
+    <h2>BPC-157 (BODY PROTECTION COMPOUND)</h2>
+    <p>BPC-157 is a pentadecapeptide, meaning it consists of 15 amino acids. It is derived from a protective protein found in human gastric juice. The "Body Protection Compound" name reflects its observed protective effects on various tissues in animal studies.</p>
+
+    <h3>Research on Tendon and Ligament Healing</h3>
+    <p>Animal studies have shown that BPC-157 accelerates the healing of tendons, ligaments, and muscles. In rat models, BPC-157 increased tendon-to-bone healing, promoted the outgrowth of tendon fibroblasts, and improved the functional recovery of injured Achilles tendons. The proposed mechanism involves the upregulation of growth hormone receptors and the stimulation of nitric oxide production, which enhances blood flow to injured areas.</p>
+    <span class="citation">Source: Krivic, A. et al. "Achilles Detachment in Rat and Pentadecapeptide BPC 157 Healing." Muscles, Ligaments, and Tendons Journal, 2017.</span>
+
+    <h3>Gut Healing Properties</h3>
+    <p>Given its origin in gastric juice, BPC-157 has been extensively studied for gastrointestinal applications in animal models. Research has demonstrated protective effects against various forms of GI damage, including NSAID-induced lesions, inflammatory bowel conditions, and esophageal damage. It appears to promote angiogenesis (new blood vessel formation) and modulate the nitric oxide system in the GI tract.</p>
+    <span class="citation">Source: Sikiric, P. et al. "Brain-Gut Axis and Pentadecapeptide BPC 157." Current Neuropharmacology, 2016.</span>
+
+    <h3>Other Studied Effects</h3>
+    <ul>
+      <li>Wound healing acceleration in soft tissue injuries</li>
+      <li>Neuroprotective properties observed in animal models of brain injury</li>
+      <li>Cardioprotective effects in animal studies of heart damage</li>
+      <li>Potential anti-inflammatory properties through modulation of the nitric oxide pathway</li>
+    </ul>
+
+    <!-- Section: TB-500 -->
+    <h2>TB-500 (THYMOSIN BETA-4)</h2>
+    <p>TB-500 is a synthetic version of Thymosin Beta-4, a naturally occurring 43-amino acid peptide found in virtually all human and animal cells. Thymosin Beta-4 plays a fundamental role in cell migration, blood vessel formation, and tissue repair. TB-500 replicates the active region of Thymosin Beta-4.</p>
+
+    <h3>Tissue Repair</h3>
+    <p>In animal studies, TB-500 has demonstrated the ability to promote tissue repair through several mechanisms: upregulation of actin (a protein essential for cell structure and movement), promotion of cell migration to injury sites, stimulation of new blood vessel formation, and reduction of inflammation at the cellular level. These properties have made it a subject of interest in wound healing and musculoskeletal repair research.</p>
+    <span class="citation">Source: Goldstein, A.L. and Kleinman, H.K. "Thymosin Beta-4: Actin-Sequestering Protein Moonlights to Repair Injured Tissues." Trends in Molecular Medicine, 2005.</span>
+
+    <h3>Inflammation Reduction</h3>
+    <p>TB-500 has shown anti-inflammatory properties in multiple animal models. It appears to modulate inflammatory cytokines and promote the resolution of inflammation rather than simply suppressing it. This distinction is important because healthy inflammation is necessary for the initial healing response; the goal is to support the body's transition from the inflammatory phase to the repair phase.</p>
+
+    <h3>Heart Tissue Research</h3>
+    <p>Some of the most promising research on Thymosin Beta-4 involves cardiac tissue. Animal studies have shown it can activate cardiac progenitor cells after heart damage, promote new blood vessel growth in damaged heart tissue, and reduce scar formation. Early-phase human clinical trials for cardiac applications have been initiated but remain in progress.</p>
+    <span class="citation">Source: Smart, N. et al. "Thymosin Beta-4 and Cardiac Repair." Annals of the New York Academy of Sciences, 2012.</span>
+
+    <!-- Section: GH Secretagogues -->
+    <h2>GH SECRETAGOGUES</h2>
+    <p>Growth hormone secretagogues are compounds that stimulate the pituitary gland to produce and release more growth hormone. Unlike exogenous growth hormone (which provides the hormone directly), secretagogues work through the body's own regulatory pathways, which may offer a more physiological pattern of GH release.</p>
+
+    <h3>Ipamorelin</h3>
+    <p>Ipamorelin is a selective growth hormone secretagogue that stimulates GH release through the ghrelin receptor. It is considered one of the more selective GH secretagogues because it causes minimal increases in cortisol, prolactin, or other hormones. In research settings, it has been studied for its potential to support muscle recovery, improve sleep quality, and enhance body composition. Animal studies have shown benefits for bone density and joint health.</p>
+    <span class="citation">Source: Raun, K. et al. "Ipamorelin, the First Selective Growth Hormone Secretagogue." European Journal of Endocrinology, 1998.</span>
+
+    <h3>CJC-1295</h3>
+    <p>CJC-1295 is a synthetic analog of Growth Hormone Releasing Hormone (GHRH). It works by extending the half-life of endogenous GHRH through a Drug Affinity Complex (DAC) that allows it to bind to albumin in the bloodstream. This results in a sustained elevation of growth hormone levels rather than a sharp spike. It is often studied in combination with Ipamorelin for synergistic effects.</p>
+    <span class="citation">Source: Teichman, S.L. et al. "Prolonged Stimulation of Growth Hormone and Insulin-Like Growth Factor I Secretion by CJC-1295." JCEM, 2006.</span>
+
+    <h3>MK-677 (Ibutamoren)</h3>
+    <p>MK-677 is technically not a peptide but a non-peptide growth hormone secretagogue that mimics ghrelin. It is taken orally, which distinguishes it from most peptide-based secretagogues. Research has shown it can increase growth hormone and IGF-1 levels, and human studies have demonstrated improvements in sleep quality, lean mass, and bone density in elderly populations. Notable side effects include increased appetite and potential insulin resistance with prolonged use.</p>
+    <span class="citation">Source: Nass, R. et al. "Effects of an Oral Ghrelin Mimetic on Body Composition and Clinical Outcomes in Healthy Older Adults." Annals of Internal Medicine, 2008.</span>
+
+    <!-- Section: Research Status -->
+    <h2>RESEARCH STATUS</h2>
+    <p>It is critical to understand the current limitations of peptide research:</p>
+    <ul>
+      <li><strong>Most evidence is from animal studies.</strong> The majority of BPC-157 and TB-500 research has been conducted in rat and mouse models. Animal results do not always translate to humans.</li>
+      <li><strong>Limited human clinical trials.</strong> Very few randomized, double-blind, placebo-controlled human trials exist for most peptides discussed here. MK-677 has more human data than most.</li>
+      <li><strong>Dosing protocols are not established.</strong> Without robust human trials, optimal dosing, frequency, and duration remain largely unknown and are based on anecdotal reports and extrapolation from animal data.</li>
+      <li><strong>Purity and sourcing concerns.</strong> Peptides obtained outside of clinical research settings may vary significantly in purity, potency, and contamination risk. There is no regulatory oversight for consumer-market peptides.</li>
+      <li><strong>Long-term safety is unknown.</strong> The long-term effects of exogenous peptide use in humans have not been established.</li>
+    </ul>
+
+    <!-- Section: Scope of Practice -->
+    <h2>SCOPE OF PRACTICE</h2>
+    <p>FORGEIQ operates strictly within our scope of practice as fitness and nutrition professionals:</p>
+    <ul>
+      <li><strong>We educate.</strong> We provide research-based information so our clients can have informed conversations with their physicians.</li>
+      <li><strong>We do not prescribe.</strong> Peptides are not within the scope of practice for personal trainers, nutrition coaches, or fitness platforms.</li>
+      <li><strong>We do not recommend.</strong> We present research without recommending that any individual use any peptide.</li>
+      <li><strong>We do not sell.</strong> FORGEIQ has no financial relationship with any peptide supplier, manufacturer, or compounding pharmacy.</li>
+      <li><strong>We defer to physicians.</strong> Any decision regarding peptide use must be made in consultation with a licensed medical professional.</li>
+    </ul>
+
+    <div class="fda-disclaimer">
+      <p><strong>FDA Disclaimer:</strong> Peptides discussed here are NOT FDA-approved for human use. This content is educational only. FORGEIQ does not sell, prescribe, or recommend peptides. Discuss with your physician.</p>
+    </div>
+
+    <div class="expanded-actions">
+      <button class="btn-gold" onclick="printResource('peptides')">&#128196; Download PDF</button>
+      <a href="book.html" class="btn-outline">Book a Session</a>
+    </div>
+
+    <div class="print-footer">FORGEIQ &mdash; We Never Have to Quit. &mdash; forgeiq.netlify.app &mdash; This content is educational only and does not constitute medical advice.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ 3. SUPPLEMENT REFERENCE LIBRARY ═════════════════ -->
+<div id="resource-supplements" class="resource-expanded">
+  <div class="expanded-header">
+    <div class="expanded-header-left">
+      <button class="btn-close-resource" onclick="closeResource('supplements')">&#8592; Back</button>
+      <span class="expanded-title">SUPPLEMENT REFERENCE LIBRARY</span>
+    </div>
+    <button class="btn-pdf" onclick="printResource('supplements')">&#128196; Download PDF</button>
+  </div>
+  <div class="expanded-body" id="print-supplements">
+    <div class="print-header"><h2>FORGEIQ -- Supplement Reference Library</h2><p>forgeiq.netlify.app/resources.html</p></div>
+
+    <h1>SUPPLEMENT REFERENCE LIBRARY</h1>
+    <div class="expanded-author-line">By Dr. Michael P. Lovato, EdD</div>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> This content is educational. Supplements are not substitutes for a balanced diet or medical treatment. Consult your physician before starting any supplement, especially if you take medications or have health conditions.</p>
+    </div>
+
+    <p>Every supplement in this library is classified into one of three evidence tiers. Tier 1 supplements have robust, repeated evidence supporting their use for general populations. Tier 2 supplements have strong evidence for specific populations or goals. Tier 3 supplements have limited, mixed, or insufficient evidence and are presented for educational purposes only.</p>
+
+    <!-- TIER 1 -->
+    <h2>TIER 1 — ALWAYS RECOMMEND</h2>
+    <p><span class="tier-badge tier-1">Tier 1 — Strong Evidence</span></p>
+    <p>These supplements have extensive research backing, strong safety profiles, and broad applicability. They are appropriate for most healthy adults pursuing fitness goals.</p>
+
+    <h3>Protein (Whey, Casein, Plant-Based)</h3>
+    <p>Protein supplementation supports muscle protein synthesis, recovery, and satiety. Whey protein isolate is the gold standard for post-workout supplementation due to its rapid absorption and high leucine content. Casein is ideal before bed due to its slow digestion. Plant-based proteins (pea, rice, soy) are effective alternatives for those avoiding dairy. Target 1.6-2.2g/kg body weight daily from all sources combined.</p>
+    <span class="citation">Source: Morton, R.W. et al. "A Systematic Review, Meta-Analysis and Meta-Regression of the Effect of Protein Supplementation on Resistance Training-Induced Gains in Muscle Mass and Strength." British Journal of Sports Medicine, 2018.</span>
+
+    <h3>Creatine Monohydrate</h3>
+    <p>The most studied and effective sports supplement in existence. Creatine monohydrate at 3-5g daily increases intramuscular phosphocreatine stores, enhancing ATP regeneration during high-intensity exercise. Benefits include increased strength, power output, lean mass, and improved recovery. Extensive safety data supports long-term use. No loading phase is required, though 20g/day for 5-7 days can saturate stores faster.</p>
+    <span class="citation">Source: Kreider, R.B. et al. "International Society of Sports Nutrition Position Stand: Safety and Efficacy of Creatine Supplementation." JISSN, 2017.</span>
+
+    <h3>Vitamin D3 + K2</h3>
+    <p>Vitamin D deficiency affects an estimated 42% of US adults and is associated with reduced muscle function, impaired immune function, and poor bone health. Vitamin D3 (cholecalciferol) at 2,000-5,000 IU daily is recommended for most adults, with blood testing to optimize levels between 40-60 ng/mL. Vitamin K2 (MK-7 form, 100-200mcg) directs calcium to bones and away from arterial walls, making it an essential companion to vitamin D supplementation.</p>
+    <span class="citation">Source: Forrest, K.Y. and Stuhldreher, W.L. "Prevalence and Correlates of Vitamin D Deficiency in US Adults." Nutrition Research, 2011. | Knapen, M.H. et al. "Menaquinone-7 Supplementation Study." Thrombosis and Haemostasis, 2015.</span>
+
+    <h3>Magnesium</h3>
+    <p>Magnesium is involved in over 300 enzymatic reactions including energy production, muscle contraction, protein synthesis, and nervous system regulation. Up to 50% of Americans do not meet the recommended daily intake. Magnesium glycinate (200-400mg elemental magnesium daily) is preferred for its high bioavailability and minimal gastrointestinal side effects. It supports sleep quality, reduces muscle cramps, and may improve exercise performance.</p>
+    <span class="citation">Source: Zhang, Y. et al. "Effects of Magnesium Supplementation on Physical Performance." Clinical Journal of Sport Medicine, 2017. | NIH Office of Dietary Supplements, 2024.</span>
+
+    <h3>Omega-3 Fatty Acids (EPA/DHA)</h3>
+    <p>Omega-3 fatty acids from fish oil support cardiovascular health, reduce systemic inflammation, support joint health, and may enhance muscle protein synthesis. A combined dose of 2-3g EPA/DHA daily is recommended. Higher EPA ratios are preferred for anti-inflammatory effects, while balanced EPA/DHA supports broader health markers. Choose molecularly distilled products tested for heavy metals and oxidation.</p>
+    <span class="citation">Source: Calder, P.C. "Omega-3 Fatty Acids and Inflammatory Processes." MDPI Nutrients, 2010. | ISSN Position Stand on Omega-3, 2020.</span>
+
+    <!-- TIER 2 -->
+    <h2>TIER 2 — POPULATION-SPECIFIC</h2>
+    <p><span class="tier-badge tier-2">Tier 2 — Good Evidence for Specific Groups</span></p>
+    <p>These supplements have solid evidence when applied to the right populations or goals. They are not universally necessary but can be highly beneficial in specific contexts.</p>
+
+    <h3>Collagen Peptides</h3>
+    <p>Hydrolyzed collagen peptides (10-15g daily) support skin elasticity, joint health, and connective tissue integrity. Particularly relevant for GLP-1 users experiencing skin laxity, individuals over 40, and those with joint pain. Take with vitamin C (50-100mg) to enhance collagen synthesis. Research shows improvements in skin hydration and elasticity after 8-12 weeks of consistent use.</p>
+    <span class="citation">Source: Bolke, L. et al. "A Collagen Supplement Improves Skin Hydration, Elasticity, Roughness, and Density." MDPI Nutrients, 2019.</span>
+
+    <h3>HMB (Beta-Hydroxy Beta-Methylbutyrate)</h3>
+    <p>HMB at 3g daily reduces muscle protein breakdown, particularly during caloric restriction, intense training, or in older adults. It is the metabolite of leucine responsible for its anti-catabolic effects. Most relevant for individuals on GLP-1 medications losing weight rapidly, older adults at risk of sarcopenia, and those recovering from injury or surgery.</p>
+    <span class="citation">Source: Wilson, J.M. et al. "International Society of Sports Nutrition Position Stand: HMB." JISSN, 2013.</span>
+
+    <h3>Fiber Supplement</h3>
+    <p>Psyllium husk or other soluble fiber supplements (5-10g daily) support digestive health, blood sugar regulation, and satiety. Particularly relevant for individuals whose appetite suppression from GLP-1 medications reduces overall food volume and fiber intake. Adequate fiber is essential for gut health, and supplementation can fill the gap when whole food intake is limited.</p>
+    <span class="citation">Source: McRorie, J.W. "Evidence-Based Approach to Fiber Supplements and Clinically Meaningful Health Benefits." Nutrition Today, 2015.</span>
+
+    <h3>Electrolytes</h3>
+    <p>Electrolyte supplementation (sodium, potassium, magnesium) is critical during intense training, ketogenic or very low carbohydrate diets, GLP-1 medication use, and hot weather training. Symptoms of electrolyte imbalance include cramping, fatigue, headache, dizziness, and heart palpitations. Choose products without excessive sugar or artificial additives.</p>
+    <span class="citation">Source: Shirreffs, S.M. and Sawka, M.N. "Fluid and Electrolyte Needs for Training, Competition, and Recovery." Journal of Sports Sciences, 2011.</span>
+
+    <h3>Ashwagandha (KSM-66)</h3>
+    <p>Ashwagandha root extract (KSM-66 standardized to 5% withanolides, 300-600mg daily) has demonstrated benefits for stress reduction (cortisol lowering), improved sleep quality, enhanced recovery from exercise, and modest improvements in strength and body composition. Most relevant for individuals with high stress, anxiety, or sleep disruption affecting their training and recovery.</p>
+    <span class="citation">Source: Wankhede, S. et al. "Examining the Effect of Withania Somnifera Supplementation on Muscle Strength and Recovery." JISSN, 2015.</span>
+
+    <h3>Zinc + Copper</h3>
+    <p>Zinc (15-30mg daily) supports immune function, testosterone production, protein synthesis, and wound healing. Zinc supplementation should always be paired with copper (1-2mg daily) because chronic zinc supplementation can deplete copper stores. This combination is particularly relevant for athletes with high sweat rates, vegetarians, and older adults.</p>
+    <span class="citation">Source: Prasad, A.S. "Zinc: An Overview." Nutrition, 1995. | NIH Office of Dietary Supplements, 2024.</span>
+
+    <h3>B-Complex Vitamins</h3>
+    <p>B vitamins are essential cofactors in energy metabolism, red blood cell production, and neurological function. A comprehensive B-complex is recommended for individuals on caloric restriction, those with high physical demands, older adults (B12 absorption decreases with age), and vegetarians or vegans (B12 is found primarily in animal products). Look for methylated forms (methylfolate, methylcobalamin) for optimal bioavailability.</p>
+    <span class="citation">Source: Kennedy, D.O. "B Vitamins and the Brain: Mechanisms, Dose, and Efficacy." MDPI Nutrients, 2016.</span>
+
+    <!-- TIER 3 -->
+    <h2>TIER 3 — EDUCATIONAL ONLY</h2>
+    <p><span class="tier-badge tier-3">Tier 3 — Limited or Mixed Evidence</span></p>
+    <p>These supplements are widely marketed but have limited, inconsistent, or insufficient evidence to support strong recommendations. They are presented here for educational purposes so our clients can make informed decisions.</p>
+
+    <h3>Beta-Alanine</h3>
+    <p>Beta-alanine (3-6g daily) increases intramuscular carnosine concentrations, which buffers hydrogen ions during high-intensity exercise. The evidence supports modest improvements in exercise capacity lasting 1-4 minutes (e.g., high-rep sets, sprints). It does not improve maximal strength or endurance performance. The common side effect of tingling (paresthesia) is harmless but uncomfortable for some. Benefits are modest and most relevant for competitive athletes.</p>
+    <span class="citation">Source: Trexler, E.T. et al. "International Society of Sports Nutrition Position Stand: Beta-Alanine." JISSN, 2015.</span>
+
+    <h3>BCAAs (Branched-Chain Amino Acids)</h3>
+    <p>BCAAs (leucine, isoleucine, valine) were once among the most popular sports supplements. However, current evidence suggests that if total daily protein intake is adequate (1.6g/kg or more), additional BCAA supplementation provides no measurable benefit for muscle growth or recovery. They may have limited utility for individuals training fasted or unable to consume adequate protein from food.</p>
+    <span class="citation">Source: Wolfe, R.R. "Branched-Chain Amino Acids and Muscle Protein Synthesis in Humans: Myth or Reality?" JISSN, 2017.</span>
+
+    <h3>Glutamine</h3>
+    <p>Glutamine is the most abundant amino acid in the body and plays roles in immune function and gut health. While popular in the bodybuilding community, research does not support glutamine supplementation for muscle building or recovery in healthy, well-nourished individuals. It may have applications during severe physiological stress (burns, critical illness, prolonged endurance events) but is unnecessary for general fitness populations.</p>
+    <span class="citation">Source: Gleeson, M. "Dosing and Efficacy of Glutamine Supplementation in Human Exercise and Sport Training." Journal of Nutrition, 2008.</span>
+
+    <h3>CLA (Conjugated Linoleic Acid)</h3>
+    <p>CLA has been marketed as a fat loss supplement based on animal studies showing dramatic reductions in body fat. Human studies, however, show inconsistent and modest effects at best, with typical fat loss of only 0.1-0.2 lbs per week. Some research has raised concerns about potential negative effects on insulin sensitivity and liver health with high doses. The evidence does not support CLA as an effective fat loss supplement for most people.</p>
+    <span class="citation">Source: Whigham, L.D. et al. "Efficacy of Conjugated Linoleic Acid for Reducing Fat Mass: A Meta-Analysis in Humans." AJCN, 2007.</span>
+
+    <h3>Fat Burners (Thermogenics)</h3>
+    <p>Over-the-counter fat burners typically contain caffeine, green tea extract, capsaicin, and various other stimulants and plant extracts. While caffeine has established ergogenic effects and can modestly increase metabolic rate, proprietary "fat burner" blends are largely ineffective beyond their caffeine content. Many contain undisclosed or under-dosed ingredients. Some have been associated with adverse cardiovascular events. A cup of coffee provides the same primary active ingredient at a fraction of the cost and risk.</p>
+    <span class="citation">Source: Jeukendrup, A.E. and Randell, R. "Fat Burners: Nutrition Supplements That Increase Fat Metabolism." Obesity Reviews, 2011.</span>
+
+    <h3>Testosterone Boosters</h3>
+    <p>Over-the-counter testosterone boosters (tribulus terrestris, D-aspartic acid, fenugreek, etc.) are among the most aggressively marketed supplements in the fitness industry. The evidence for meaningful testosterone elevation from any of these ingredients is weak to nonexistent in healthy men with normal testosterone levels. Some ingredients like ashwagandha and zinc may support testosterone in deficient individuals, but they are better classified under their primary mechanisms. If you suspect low testosterone, get a blood test -- do not rely on supplements.</p>
+    <span class="citation">Source: Clemesha, C.G. et al. "Testosterone Boosters: An Assessment of the Strength of the Evidence Behind Claims." World Journal of Men's Health, 2020.</span>
+
+    <h3>Peptides</h3>
+    <p>See the dedicated Peptide Education Hub on this page for comprehensive information. Peptides are classified as Tier 3 because they are not FDA-approved for human use for the purposes commonly discussed in fitness communities, and most evidence comes from animal studies.</p>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> This content is educational. Supplements are not regulated by the FDA in the same way as pharmaceuticals. Quality, purity, and potency can vary significantly between brands. Choose third-party tested products (NSF Certified for Sport, Informed Sport, or USP verified). Consult your physician before starting any supplement.</p>
+    </div>
+
+    <div class="expanded-actions">
+      <button class="btn-gold" onclick="printResource('supplements')">&#128196; Download PDF</button>
+      <a href="book.html" class="btn-outline">Book a Session</a>
+    </div>
+
+    <div class="print-footer">FORGEIQ &mdash; We Never Have to Quit. &mdash; forgeiq.netlify.app &mdash; This content is educational only and does not constitute medical advice.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ 4. MENTAL HEALTH AND FITNESS ════════════════════ -->
+<div id="resource-mental" class="resource-expanded">
+  <div class="expanded-header">
+    <div class="expanded-header-left">
+      <button class="btn-close-resource" onclick="closeResource('mental')">&#8592; Back</button>
+      <span class="expanded-title">MENTAL HEALTH AND FITNESS</span>
+    </div>
+    <button class="btn-pdf" onclick="printResource('mental')">&#128196; Download PDF</button>
+  </div>
+  <div class="expanded-body" id="print-mental">
+    <div class="print-header"><h2>FORGEIQ -- Mental Health and Fitness</h2><p>forgeiq.netlify.app/resources.html</p></div>
+
+    <h1>MENTAL HEALTH AND FITNESS</h1>
+    <div class="expanded-author-line">By Dr. Michael P. Lovato, EdD</div>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> FORGEIQ is not a mental health provider. Exercise can support mental health but does not replace clinical care. If you are in crisis or experiencing thoughts of self-harm, please contact the resources listed at the end of this article immediately.</p>
+    </div>
+
+    <!-- Section: Exercise as Medicine -->
+    <h2>EXERCISE AS MEDICINE FOR MENTAL HEALTH</h2>
+    <p>The relationship between physical exercise and mental health is one of the most well-documented findings in health science. Exercise is not a replacement for clinical mental health treatment, but it is a powerful adjunct that can improve outcomes, reduce symptoms, and build resilience.</p>
+
+    <h3>Endorphins and the Acute Response</h3>
+    <p>During exercise, the body releases endorphins -- endogenous opioid peptides that bind to opioid receptors in the brain. This produces an analgesic effect and a feeling of well-being commonly known as the "runner's high." This acute response begins within minutes of moderate-intensity exercise and can persist for several hours afterward. For individuals dealing with anxiety or depression, this immediate neurochemical shift can provide meaningful relief.</p>
+
+    <h3>Serotonin and Long-Term Adaptation</h3>
+    <p>Regular exercise increases the production and sensitivity of serotonin, the neurotransmitter most commonly targeted by antidepressant medications (SSRIs). Studies have shown that consistent exercise over 8-12 weeks produces improvements in depression symptoms comparable to some pharmacological interventions for mild to moderate depression. This does not mean exercise replaces medication -- it means exercise is a serious intervention with real neurochemical effects.</p>
+    <span class="citation">Source: Schuch, F.B. et al. "Exercise as a Treatment for Depression: A Meta-Analysis." Journal of Psychiatric Research, 2016.</span>
+
+    <h3>BDNF and Neuroplasticity</h3>
+    <p>Exercise stimulates the production of Brain-Derived Neurotrophic Factor (BDNF), a protein that supports the growth, differentiation, and survival of neurons. BDNF is critical for neuroplasticity -- the brain's ability to form new neural connections and adapt. Lower BDNF levels have been consistently associated with depression, anxiety, and PTSD. Both aerobic exercise and resistance training increase BDNF, with acute elevations after individual sessions and chronic elevations with consistent training.</p>
+    <span class="citation">Source: Szuhany, K.L. et al. "A Meta-Analytic Review of the Effects of Exercise on Brain-Derived Neurotrophic Factor." Journal of Psychiatric Research, 2015.</span>
+
+    <h3>Dopamine and Reward Pathways</h3>
+    <p>Exercise activates the dopaminergic reward system, the same pathway involved in motivation, pleasure, and goal-directed behavior. This is particularly significant for individuals with depression, where the dopamine system is often dysregulated, leading to anhedonia (inability to feel pleasure) and amotivation. Completing a workout provides a genuine neurochemical reward that can help rebuild the brain's reward circuitry over time.</p>
+
+    <!-- Section: PTSD and Training -->
+    <h2>PTSD AND TRAINING</h2>
+    <p><em>Written from Dr. Lovato's perspective as a U.S. Army Combat Engineer veteran who manages PTSD</em></p>
+
+    <h3>Grounding Through Physical Exertion</h3>
+    <p>PTSD often manifests as hypervigilance, flashbacks, and a persistent feeling of being disconnected from the present moment. Intense physical training creates a powerful grounding effect because it forces the body and mind into the present. When you are under a heavy barbell, you cannot be anywhere else. When your muscles are burning through a set, your nervous system is anchored to the here and now. This is not theory -- this is lived experience.</p>
+
+    <h3>Routine as Stability</h3>
+    <p>One of the hallmarks of PTSD is a disrupted sense of safety and predictability. A consistent training schedule provides structure, predictability, and a sense of control in a life that can often feel chaotic. The gym becomes a controlled environment where the rules are clear: you show up, you do the work, and you leave stronger than you came in. That consistency becomes a foundation upon which other aspects of recovery can be built.</p>
+
+    <h3>Physical Competence Builds Psychological Resilience</h3>
+    <p>There is a direct relationship between physical capability and psychological confidence. When you know your body can handle difficult physical challenges, you develop a belief that you can handle difficult emotional and psychological challenges. Progressive overload in the gym is a metaphor for life: you gradually expose yourself to increasing difficulty, adapt, and grow stronger. This same principle applies to psychological recovery.</p>
+
+    <h3>The Veteran Perspective</h3>
+    <p>Military service creates a unique relationship with physical training. For many veterans, the gym is the one environment that feels familiar after transition. The discipline, the structure, the camaraderie -- these are elements of military culture that translate directly to the weight room. FORGEIQ was built with this understanding. We do not treat PTSD. We provide a training environment and coaching approach that respects where our veteran clients have been and supports where they are going.</p>
+    <span class="citation">Source: Whitworth, J.W. and Ciccolo, J.T. "Exercise and Post-Traumatic Stress Disorder in Military Veterans: A Systematic Review." Military Medicine, 2016.</span>
+
+    <!-- Section: Anxiety and Resistance Training -->
+    <h2>ANXIETY AND RESISTANCE TRAINING</h2>
+
+    <h3>Cortisol Regulation</h3>
+    <p>Chronic anxiety is associated with dysregulated cortisol -- the body's primary stress hormone. Regular resistance training has been shown to normalize the cortisol response over time. While a single intense training session temporarily elevates cortisol (an appropriate, healthy stress response), consistent training reduces baseline cortisol levels and improves the body's ability to return to homeostasis after stress. This is the hormetic principle: controlled stress exposure builds resilience to uncontrolled stress.</p>
+    <span class="citation">Source: Gordon, B.R. et al. "Association of Efficacy of Resistance Exercise Training with Depressive Symptoms." JAMA Psychiatry, 2018.</span>
+
+    <h3>Confidence Building</h3>
+    <p>Anxiety often involves a pervasive sense of inadequacy or inability to cope. Strength training provides concrete, measurable evidence of personal capability. Every rep, every set, every personal record is proof that you are capable of more than your anxiety tells you. This is not motivational rhetoric -- it is a documented psychological mechanism called self-efficacy, and resistance training is one of the most effective ways to build it.</p>
+
+    <h3>Progressive Overload as Mechanism</h3>
+    <p>The principle of progressive overload -- gradually increasing the demands placed on the body -- parallels the therapeutic concept of graded exposure. In anxiety treatment, patients gradually face feared situations in a controlled manner. In the gym, you gradually face heavier weights, more challenging movements, and greater physical demands. Both processes teach the nervous system that it can handle more than it previously believed.</p>
+
+    <!-- Section: Depression and Consistency -->
+    <h2>DEPRESSION AND CONSISTENCY</h2>
+
+    <h3>Dopamine From Achievement</h3>
+    <p>Depression often involves a shutdown of the brain's reward system. Nothing feels worth doing because nothing feels rewarding. Exercise breaks this cycle by providing a guaranteed dopamine response from physical achievement. Even a short workout produces measurable neurochemical changes. The key is starting -- not intensity, not duration, just starting. A 15-minute walk is infinitely more effective than a planned hour-long workout that never happens because depression kept you on the couch.</p>
+
+    <h3>Social Accountability</h3>
+    <p>Depression thrives in isolation. Having a training partner, a coach, or even a digital accountability system (like FORGEIQ) creates a connection point that makes it harder to withdraw completely. Accountability is not about shame or pressure -- it is about having someone who notices when you are not there, who checks in, who cares whether you showed up. That matters more than most people realize.</p>
+
+    <h3>Structure Against the Void</h3>
+    <p>When depression removes motivation and meaning, external structure becomes a lifeline. A training program provides decisions that have already been made: what to do, when to do it, how to progress. This removes the paralyzing burden of choice that depression amplifies. You do not have to decide what to do today -- the program decides. You just have to show up and follow it.</p>
+    <span class="citation">Source: Kvam, S. et al. "Exercise as a Treatment for Depression: A Meta-Analysis." Journal of Affective Disorders, 2016. | Rethorst, C.D. et al. "The Antidepressive Effects of Exercise." Sports Medicine, 2009.</span>
+
+    <!-- Section: When to Seek Clinical Support -->
+    <h2>WHEN TO SEEK CLINICAL SUPPORT</h2>
+    <p>Exercise is powerful, but it has limits. The following signs indicate that professional clinical support is needed:</p>
+    <ul>
+      <li><strong>Thoughts of self-harm or suicide.</strong> This requires immediate professional intervention. Call 988 or go to your nearest emergency room.</li>
+      <li><strong>Inability to function.</strong> If depression or anxiety prevents you from maintaining basic daily activities (hygiene, eating, work, relationships) for more than two weeks, seek professional help.</li>
+      <li><strong>Substance use as coping.</strong> If you are using alcohol, drugs, or other substances to manage emotional pain, a clinical provider can help you develop healthier coping strategies.</li>
+      <li><strong>Worsening symptoms despite exercise.</strong> If you have been training consistently for several weeks and symptoms are not improving or are getting worse, exercise alone is not sufficient for your current situation.</li>
+      <li><strong>Flashbacks, nightmares, or dissociation.</strong> These PTSD symptoms require specialized trauma therapy (such as EMDR or CPT) that goes beyond what exercise can address.</li>
+      <li><strong>Relationship breakdown.</strong> If mental health symptoms are damaging your relationships, career, or daily functioning, professional support can help before the damage becomes irreversible.</li>
+    </ul>
+    <p>Seeking help is not weakness. It is the same principle as seeing a doctor for a physical injury. Your mind deserves the same level of care as your body.</p>
+
+    <!-- Crisis Resources -->
+    <div class="crisis-box">
+      <h3>CRISIS RESOURCES</h3>
+      <p><strong><a href="tel:988">988 Suicide and Crisis Lifeline</a></strong> -- Call or text 988, available 24/7</p>
+      <p><strong><a href="tel:988">Veterans Crisis Line</a></strong> -- Call 988, press 1 | Text 838255 | <a href="https://www.veteranscrisisline.net/get-help-now/chat/" target="_blank" rel="noopener">Online Chat</a></p>
+      <p><strong>Crisis Text Line</strong> -- Text HOME to 741741</p>
+      <p style="margin-top: 12px;">Free, confidential support available 24 hours a day, 7 days a week.</p>
+    </div>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> FORGEIQ is not a mental health provider. Exercise can support mental health but does not replace clinical care. The information in this resource is educational and is not a substitute for professional diagnosis or treatment.</p>
+    </div>
+
+    <div class="expanded-actions">
+      <button class="btn-gold" onclick="printResource('mental')">&#128196; Download PDF</button>
+      <a href="book.html" class="btn-outline">Book a Session</a>
+    </div>
+
+    <div class="print-footer">FORGEIQ &mdash; We Never Have to Quit. &mdash; forgeiq.netlify.app &mdash; This content is educational only and does not constitute medical advice.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ 5. INJURY AND RECOVERY GUIDE ═══════════════════ -->
+<div id="resource-injury" class="resource-expanded">
+  <div class="expanded-header">
+    <div class="expanded-header-left">
+      <button class="btn-close-resource" onclick="closeResource('injury')">&#8592; Back</button>
+      <span class="expanded-title">INJURY AND RECOVERY GUIDE</span>
+    </div>
+    <button class="btn-pdf" onclick="printResource('injury')">&#128196; Download PDF</button>
+  </div>
+  <div class="expanded-body" id="print-injury">
+    <div class="print-header"><h2>FORGEIQ -- Injury and Recovery Guide</h2><p>forgeiq.netlify.app/resources.html</p></div>
+
+    <h1>INJURY AND RECOVERY GUIDE</h1>
+    <div class="expanded-author-line">By Dr. Michael P. Lovato, EdD (NASM CES Certified)</div>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> This content is educational and does not replace medical evaluation or physical therapy. Always consult a physician or physical therapist for diagnosis and treatment of injuries. The timelines and protocols described here are general guidelines only.</p>
+    </div>
+
+    <!-- Section: NASM Corrective Exercise Strategy -->
+    <h2>NASM CORRECTIVE EXERCISE STRATEGY</h2>
+    <p>The NASM Corrective Exercise Continuum follows a four-phase approach designed to address movement dysfunction, reduce injury risk, and support return to full training capacity. This evidence-based framework is used by certified corrective exercise specialists worldwide.</p>
+
+    <h3>Phase 1: Inhibit</h3>
+    <p>The first step is to reduce tension and activity in overactive (tight) muscles using self-myofascial release techniques. This typically involves foam rolling, lacrosse ball work, or other pressure-based techniques applied to the overactive muscle for 30-90 seconds. The goal is to reduce neural excitability and fascial adhesions that contribute to movement dysfunction. For example, if the hip flexors are chronically tight (common in individuals who sit for extended periods), foam rolling the hip flexor complex helps reduce their dominance in movement patterns.</p>
+
+    <h3>Phase 2: Lengthen</h3>
+    <p>After inhibiting the overactive muscle, the next step is to increase its length through static stretching or neuromuscular stretching techniques. Hold static stretches for 30 seconds minimum to achieve autogenic inhibition (the Golgi tendon organ response that causes the muscle to relax). This phase restores optimal length-tension relationships in the muscle, allowing it to function properly during movement.</p>
+
+    <h3>Phase 3: Activate</h3>
+    <p>With overactive muscles inhibited and lengthened, the focus shifts to activating underactive (weak) muscles through isolated strengthening exercises. These are typically performed with low load, slow tempo, and high focus on the mind-muscle connection. For example, if the gluteus medius is underactive (contributing to knee valgus), isolated exercises like side-lying hip abduction or banded clamshells are used to re-establish neural drive to the muscle.</p>
+
+    <h3>Phase 4: Integrate</h3>
+    <p>The final phase involves incorporating the corrected movement pattern into functional, multi-joint exercises that mimic real-world or sport-specific movements. This retrains the neuromuscular system to use the corrected pattern under progressively challenging conditions. For example, after addressing hip flexor tightness and glute weakness, integration might involve single-leg squats, step-ups, or lunges with an emphasis on proper knee tracking and hip engagement.</p>
+    <span class="citation">Source: Clark, M.A. and Lucett, S.C. "NASM Essentials of Corrective Exercise Training." National Academy of Sports Medicine, 2nd Edition. | NASM CES Study Guide, 2024.</span>
+
+    <!-- Section: Common Injuries -->
+    <h2>COMMON INJURIES</h2>
+
+    <h3>Shoulder: Rotator Cuff</h3>
+    <p>The rotator cuff consists of four muscles (supraspinatus, infraspinatus, teres minor, subscapularis) that stabilize the shoulder joint. Rotator cuff injuries range from tendinitis and impingement to partial and full tears. Common causes include repetitive overhead movements, poor pressing mechanics, and age-related degeneration. Symptoms include pain with overhead movements, weakness during rotation, and night pain when lying on the affected side. Early intervention with corrective exercise can prevent progression. Full tears may require surgical evaluation.</p>
+
+    <h3>Shoulder: Impingement Syndrome</h3>
+    <p>Shoulder impingement occurs when the rotator cuff tendons are compressed between the humeral head and the acromion during overhead movements. This is often caused by poor scapular mechanics (scapular dyskinesis), rounded shoulder posture, and weakness in the lower trapezius and serratus anterior. The NASM corrective approach involves inhibiting the upper trapezius and pectoralis minor, lengthening these muscles, activating the lower trapezius and serratus anterior, and integrating with corrected pressing and pulling patterns.</p>
+    <span class="citation">Source: Page, P. "Shoulder Muscle Imbalance and Subacromial Impingement Syndrome in Overhead Athletes." International Journal of Sports Physical Therapy, 2011.</span>
+
+    <h3>Knee: ACL Injury</h3>
+    <p>The anterior cruciate ligament (ACL) is one of the primary stabilizers of the knee joint, preventing anterior translation and rotation of the tibia. ACL tears are common in sports involving cutting, pivoting, and deceleration. Risk factors include weak hamstrings relative to quadriceps, poor landing mechanics (knee valgus), and weak hip external rotators. ACL reconstruction typically requires 9-12 months of rehabilitation before return to full activity. Prevention programs focusing on neuromuscular training have been shown to reduce ACL injury risk by 50-70%.</p>
+
+    <h3>Knee: Meniscus Injury</h3>
+    <p>The menisci are C-shaped cartilage structures that cushion and stabilize the knee joint. Tears can result from acute twisting injuries or gradual degeneration. Symptoms include pain along the joint line, swelling, clicking or locking, and difficulty with deep flexion. Small tears in the vascular zone may heal with conservative treatment. Larger tears or tears in the avascular zone may require arthroscopic surgery. Return to full training after meniscus surgery typically ranges from 4-12 weeks depending on whether the meniscus was trimmed or repaired.</p>
+
+    <h3>Knee: Patellofemoral Pain Syndrome</h3>
+    <p>Often called "runner's knee," patellofemoral pain involves pain around or behind the kneecap. It is frequently caused by weakness in the vastus medialis oblique (VMO) and hip abductors, tightness in the IT band and lateral quadriceps, and poor tracking of the patella in the femoral groove. The corrective approach focuses on strengthening the VMO and hip stabilizers while addressing flexibility deficits in the lateral structures.</p>
+    <span class="citation">Source: Crossley, K.M. et al. "Patellofemoral Pain Consensus Statement." British Journal of Sports Medicine, 2016.</span>
+
+    <h3>Lower Back: Disc Issues</h3>
+    <p>Intervertebral disc injuries include bulges, herniations, and degenerative disc disease. Disc herniations most commonly occur in the lumbar spine (L4-L5 and L5-S1) and can cause local pain, radiating pain (sciatica), numbness, and weakness. Many disc issues improve with conservative treatment including corrective exercise, but severe cases with progressive neurological symptoms require medical evaluation. Training modifications include avoiding loaded spinal flexion, emphasizing core stability (anti-extension, anti-rotation, anti-lateral flexion), and building hip mobility to reduce lumbar spine demands.</p>
+
+    <h3>Lower Back: SI Joint Dysfunction</h3>
+    <p>The sacroiliac (SI) joint connects the sacrum to the ilium and can become a source of pain through hypermobility, hypomobility, or inflammation. SI joint dysfunction often presents as unilateral low back or buttock pain that may refer into the groin or thigh. Contributing factors include muscle imbalances in the hip complex, poor core stability, and leg length discrepancies. Corrective strategies focus on stabilizing the pelvic girdle through targeted core and hip strengthening.</p>
+    <span class="citation">Source: McGill, S. "Low Back Disorders: Evidence-Based Prevention and Rehabilitation." Human Kinetics, 3rd Edition.</span>
+
+    <h3>Hip Injuries</h3>
+    <p>Common hip issues in the training population include hip flexor strain, hip impingement (femoroacetabular impingement or FAI), labral tears, and bursitis. Hip impingement involves abnormal contact between the femoral head and the acetabulum, often causing a pinching sensation in deep flexion or internal rotation. Training modifications include limiting squat depth to pain-free range, widening squat stance, and avoiding positions that reproduce impingement symptoms. Corrective work focuses on hip mobility, glute activation, and core stability.</p>
+
+    <h3>Ankle Injuries</h3>
+    <p>Ankle sprains are the most common musculoskeletal injury across all physical activities. The lateral ligament complex (especially the anterior talofibular ligament) is most frequently involved. Chronic ankle instability develops in approximately 40% of individuals after an initial sprain due to incomplete rehabilitation. Corrective exercise should include balance and proprioception training, peroneal strengthening, and ankle mobility work. Training around ankle injuries can focus on upper body work, seated lower body exercises, and pool-based conditioning.</p>
+    <span class="citation">Source: Hertel, J. and Corbett, R.O. "An Updated Model of Chronic Ankle Instability." Journal of Athletic Training, 2019.</span>
+
+    <!-- Section: Return-to-Training Timelines -->
+    <h2>RETURN-TO-TRAINING TIMELINES</h2>
+    <p><strong>Important:</strong> These are general guidelines only. Actual timelines depend on injury severity, individual healing capacity, surgical vs. conservative treatment, age, overall health, and physician guidance. Always defer to your physician or physical therapist for clearance.</p>
+    <ul>
+      <li><strong>Mild muscle strain (Grade 1):</strong> 1-3 weeks. Training around the injury is usually possible immediately.</li>
+      <li><strong>Moderate muscle strain (Grade 2):</strong> 3-8 weeks. Modified training around the injury after initial rest.</li>
+      <li><strong>Severe muscle strain (Grade 3, full tear):</strong> 3-6 months. May require surgical intervention.</li>
+      <li><strong>Rotator cuff tendinitis:</strong> 2-6 weeks with corrective exercise. Avoid aggravating movements during recovery.</li>
+      <li><strong>Rotator cuff repair (surgical):</strong> 4-6 months for full return. Progressive loading under physical therapy guidance.</li>
+      <li><strong>ACL reconstruction:</strong> 9-12 months. Phased rehabilitation is critical for long-term outcomes.</li>
+      <li><strong>Meniscus trim (partial meniscectomy):</strong> 4-6 weeks. Return to full training is usually straightforward.</li>
+      <li><strong>Meniscus repair:</strong> 3-4 months. Slower return due to healing requirements of the repaired tissue.</li>
+      <li><strong>Disc herniation (conservative):</strong> 6-12 weeks. Core stability work can begin early under guidance.</li>
+      <li><strong>Ankle sprain (Grade 1-2):</strong> 1-4 weeks. Balance and proprioception work should begin as soon as pain allows.</li>
+    </ul>
+
+    <!-- Section: Training Around Injury -->
+    <h2>TRAINING AROUND INJURY</h2>
+    <p>One of the most important principles Dr. Lovato emphasizes is focusing on what you CAN do, not what you cannot. An injury to one body part does not mean total training cessation. In fact, continuing to train unaffected areas has been shown to provide a neurological cross-education effect that can reduce strength loss in the injured limb.</p>
+    <ul>
+      <li><strong>Shoulder injury:</strong> Continue training legs, core, and the unaffected arm. Use machines that allow comfortable range of motion.</li>
+      <li><strong>Knee injury:</strong> Continue training upper body, core, and the unaffected leg. Seated and lying exercises for the affected leg may be possible depending on the injury.</li>
+      <li><strong>Lower back injury:</strong> Focus on supported exercises (machines, cable work), avoid loaded spinal flexion, and emphasize anti-extension core work. Walking is often beneficial.</li>
+      <li><strong>Ankle injury:</strong> Upper body training is unaffected. Seated lower body work (leg extensions, leg curls, hip abduction/adduction machines) is usually possible.</li>
+    </ul>
+    <p>Dr. Lovato trains through a torn shoulder, knee surgery recovery, a torn bicep, plantar fasciitis, and arthritis. The approach is never "stop training." The approach is "what can I do today?"</p>
+
+    <!-- Section: When to Stop -->
+    <h2>WHEN TO STOP: RED FLAGS</h2>
+    <p>Stop training and seek medical evaluation immediately if you experience any of the following:</p>
+    <ul>
+      <li><strong>Sharp, sudden pain</strong> -- especially during a movement. This may indicate an acute injury (tear, fracture, or dislocation).</li>
+      <li><strong>Significant swelling</strong> -- rapid swelling after an incident suggests structural damage that needs evaluation.</li>
+      <li><strong>Numbness or tingling</strong> -- nerve involvement requires medical assessment, particularly if it radiates down an extremity.</li>
+      <li><strong>Joint instability</strong> -- if a joint feels like it is "giving way" or cannot bear weight, stop and get evaluated.</li>
+      <li><strong>Deformity</strong> -- visible deformity of a joint or limb after an injury indicates potential fracture or dislocation. Do not attempt to continue.</li>
+      <li><strong>Pain that worsens with every rep</strong> -- mild discomfort that diminishes during warm-up is common. Pain that increases with continued activity is a warning to stop.</li>
+      <li><strong>Chest pain, dizziness, or difficulty breathing</strong> -- stop immediately. These may indicate cardiovascular or other serious medical events.</li>
+    </ul>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> This content is educational and does not replace professional medical evaluation. All return-to-training decisions should be made in consultation with your physician or physical therapist. FORGEIQ provides fitness coaching, not medical treatment.</p>
+    </div>
+
+    <div class="expanded-actions">
+      <button class="btn-gold" onclick="printResource('injury')">&#128196; Download PDF</button>
+      <a href="book.html" class="btn-outline">Book a Session</a>
+    </div>
+
+    <div class="print-footer">FORGEIQ &mdash; We Never Have to Quit. &mdash; forgeiq.netlify.app &mdash; This content is educational only and does not constitute medical advice.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ 6. POST-TRANSFORMATION GUIDE ═══════════════════ -->
+<div id="resource-posttransform" class="resource-expanded">
+  <div class="expanded-header">
+    <div class="expanded-header-left">
+      <button class="btn-close-resource" onclick="closeResource('posttransform')">&#8592; Back</button>
+      <span class="expanded-title">POST-TRANSFORMATION GUIDE</span>
+    </div>
+    <button class="btn-pdf" onclick="printResource('posttransform')">&#128196; Download PDF</button>
+  </div>
+  <div class="expanded-body" id="print-posttransform">
+    <div class="print-header"><h2>FORGEIQ -- Post-Transformation Guide</h2><p>forgeiq.netlify.app/resources.html</p></div>
+
+    <h1>POST-TRANSFORMATION GUIDE</h1>
+    <div class="expanded-author-line">By Debora Lovato -- Licensed Esthetician, NASM CNC/CES/PES</div>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> This content is educational and does not replace consultation with a dermatologist, plastic surgeon, or licensed esthetician for individualized assessment. Results vary based on individual factors including age, genetics, amount of weight lost, and rate of weight loss.</p>
+    </div>
+
+    <!-- Section: What Happens to Skin -->
+    <h2>WHAT HAPPENS TO SKIN AFTER MAJOR WEIGHT LOSS</h2>
+    <p>When you carry significant excess weight for an extended period, the skin stretches to accommodate the increased volume. This stretching damages the structural proteins that give skin its elasticity -- primarily collagen and elastin fibers. These fibers can stretch, but they have a limited ability to retract once the underlying volume is removed through weight loss.</p>
+
+    <h3>Collagen and Elastin Breakdown</h3>
+    <p>Collagen provides structural support and firmness to the skin, while elastin provides the ability to stretch and return to shape. When skin is stretched beyond its elastic capacity for extended periods, both proteins undergo mechanical damage and degradation. The body's ability to produce new collagen and elastin slows significantly after age 30, declining approximately 1-1.5% per year. This means that individuals who lose significant weight later in life face greater challenges with skin retraction.</p>
+
+    <h3>Factors Affecting Skin Elasticity After Weight Loss</h3>
+    <ul>
+      <li><strong>Total amount of weight lost:</strong> Greater weight loss typically results in more excess skin. Losses of 100+ pounds almost always involve some degree of skin laxity.</li>
+      <li><strong>Rate of weight loss:</strong> Rapid weight loss (as can occur with GLP-1 medications or bariatric surgery) gives the skin less time to adapt and retract compared to slower, gradual weight loss.</li>
+      <li><strong>Age:</strong> Younger skin has more collagen and elastin reserves and better regenerative capacity. Skin elasticity decreases progressively with age.</li>
+      <li><strong>Genetics:</strong> Some individuals have naturally more elastic skin than others. This is determined by genetic variations in collagen and elastin production.</li>
+      <li><strong>Sun exposure history:</strong> UV radiation accelerates collagen breakdown (photoaging). Years of unprotected sun exposure reduce the skin's ability to retract after weight loss.</li>
+      <li><strong>Smoking history:</strong> Smoking accelerates collagen degradation and constricts blood vessels that supply nutrients to the skin.</li>
+      <li><strong>Hydration status:</strong> Chronically dehydrated skin has less turgor and reduced ability to remodel.</li>
+      <li><strong>Nutritional status:</strong> Deficiencies in vitamin C, zinc, protein, and other nutrients impair collagen synthesis and skin repair.</li>
+    </ul>
+    <span class="citation">Source: Keen, M.A. and Hassan, I. "Vitamin E in Dermatology." Indian Dermatology Online Journal, 2016. | Ganceviciene, R. et al. "Skin Anti-Aging Strategies." Dermato-Endocrinology, 2012.</span>
+
+    <!-- Section: Skin Laxity: What Helps -->
+    <h2>SKIN LAXITY: WHAT HELPS</h2>
+
+    <h3>Collagen Supplementation</h3>
+    <p>Hydrolyzed collagen peptides at 10-15 grams daily have been shown in multiple studies to improve skin hydration, elasticity, and dermal collagen density. The peptides are absorbed in the intestine and transported to the skin, where they stimulate fibroblasts to produce new collagen. For maximum benefit, take collagen with vitamin C (at least 50mg), which is a required cofactor for collagen synthesis. Consistency matters -- research shows improvements after 8-12 weeks of daily supplementation, with continued benefits over longer periods.</p>
+    <span class="citation">Source: Bolke, L. et al. "A Collagen Supplement Improves Skin Hydration, Elasticity, Roughness, and Density: Results of an Ex Vivo Study and a Randomized Placebo-Controlled Clinical Trial." MDPI Nutrients, 2019.</span>
+
+    <h3>Hydration</h3>
+    <p>Skin hydration is directly tied to elasticity and the skin's ability to remodel. Adequate water intake (minimum half your body weight in ounces daily) supports skin turgor and provides the fluid environment necessary for enzymatic processes involved in collagen remodeling. Topical hydration through hyaluronic acid serums helps the skin's outer layers retain moisture, improving appearance and supporting the barrier function.</p>
+
+    <h3>Professional Treatments</h3>
+    <p>For moderate to significant skin laxity, professional treatments can accelerate and enhance skin tightening beyond what supplements and lifestyle alone can achieve. These treatments should be considered once weight has stabilized, as continued weight fluctuation will undermine results.</p>
+
+    <h3>Time</h3>
+    <p>This is perhaps the most underappreciated factor. Skin remodeling is a slow biological process. After weight stabilization, the skin continues to retract and remodel for 12-24 months. Many people make decisions about surgical intervention too early, before their skin has had adequate time to respond. Patience is essential -- your skin at 6 months post-weight loss will look significantly different from your skin at 18-24 months post-weight loss.</p>
+
+    <!-- Section: Body Confidence After Transformation -->
+    <h2>BODY CONFIDENCE AFTER TRANSFORMATION</h2>
+
+    <h3>The Emotional Reality</h3>
+    <p>There is a conversation that does not happen often enough in the fitness and weight loss space: losing a significant amount of weight does not automatically create body confidence. Many people expect to feel completely different about themselves after reaching their goal weight, and then are confused and disappointed when insecurity persists, shifts, or even intensifies. Loose skin, stretch marks, and a body that looks different from the "after" photos in advertisements can create a new set of emotional challenges.</p>
+
+    <h3>The Mirror Disconnect</h3>
+    <p>After carrying excess weight for years or decades, the brain develops a body image that does not update instantly with physical changes. This "phantom weight" phenomenon is real -- people who have lost significant weight often still feel and perceive themselves as their former size. They may avoid mirrors, continue wearing oversized clothing, or feel uncomfortable in situations where their body is visible. This disconnect between physical reality and psychological perception takes time and often intentional work to resolve.</p>
+
+    <h3>The Comparison Trap</h3>
+    <p>Social media presents an endless stream of "perfect" transformation photos, often enhanced by favorable lighting, angles, filters, or even surgical intervention that goes unacknowledged. Comparing your real body to these curated images is a guaranteed path to dissatisfaction. Your transformation is not diminished because your skin did not retract perfectly or because you have stretch marks. Every scar and stretch mark is evidence of a body that endured and a person who chose to change.</p>
+
+    <!-- Section: Debora's Approach -->
+    <h2>DEBORA'S APPROACH</h2>
+    <p>As both a licensed esthetician and a certified fitness professional, Debora brings a perspective that bridges the gap between the physical and emotional aspects of transformation. Her approach is rooted in whole-person support -- not just products, not just treatments, not just training, but the complete picture of who you are and what you need.</p>
+
+    <h3>Whole-Person Support</h3>
+    <ul>
+      <li><strong>Skin assessment:</strong> Individualized evaluation of skin condition, elasticity, and areas of concern to develop a realistic and effective plan.</li>
+      <li><strong>Supplement protocol:</strong> Evidence-based supplementation to support skin health from the inside out, tailored to individual needs and goals.</li>
+      <li><strong>Professional treatment recommendations:</strong> When appropriate, guidance on professional treatments that may benefit your specific situation, with honest assessment of expected outcomes.</li>
+      <li><strong>Emotional support:</strong> Acknowledgment that transformation is emotional work, not just physical work. Debora has walked this path herself and understands the complexity of rebuilding body image after major change.</li>
+      <li><strong>Realistic expectations:</strong> Honest conversations about what supplements, treatments, and time can and cannot do. No false promises. No miracle claims. Just evidence and experience.</li>
+    </ul>
+
+    <!-- Section: Professional Treatments -->
+    <h2>PROFESSIONAL TREATMENTS</h2>
+
+    <h3>Laser Skin Tightening</h3>
+    <p>Laser treatments use focused light energy to heat the deeper layers of skin (dermis), stimulating collagen production and causing existing collagen fibers to contract. Multiple sessions are typically required, spaced 4-6 weeks apart. Results develop gradually over 3-6 months as new collagen forms. Laser treatments are most effective for mild to moderate skin laxity and work best on smaller areas like the face, neck, and arms.</p>
+
+    <h3>Radiofrequency (RF) Treatments</h3>
+    <p>RF treatments deliver electromagnetic energy to heat the dermis, similar to laser but using a different energy source. RF can penetrate deeper into tissue and is effective for larger treatment areas including the abdomen and thighs. Both monopolar and bipolar RF devices are available, with varying depths of penetration. Multiple sessions are required, and results continue to improve for months after the treatment series is completed.</p>
+
+    <h3>Microneedling</h3>
+    <p>Microneedling creates controlled micro-injuries in the skin using fine needles, triggering the body's wound healing response and stimulating collagen and elastin production. When combined with PRP (platelet-rich plasma), the growth factors in the patient's own blood are delivered directly into the micro-channels, enhancing the regenerative response. This is one of the most cost-effective professional treatments for improving skin texture, reducing stretch marks, and mildly improving skin laxity.</p>
+
+    <h3>When Surgery May Be Considered</h3>
+    <p>For significant skin laxity -- particularly after losses of 100+ pounds or in areas where non-surgical treatments cannot achieve meaningful improvement -- surgical options such as abdominoplasty (tummy tuck), brachioplasty (arm lift), thigh lift, or body lift may be considered. Surgery should be a last resort after weight has been stable for at least 12-18 months, non-surgical options have been explored, and the individual has had thorough consultation with a board-certified plastic surgeon. Surgery is a legitimate option, not a failure. It is simply a tool available for situations where biology has limits.</p>
+    <span class="citation">Source: Sadick, N.S. et al. "Skin Tightening with Radiofrequency and Laser Treatments." Dermatologic Surgery, 2016. | Alam, M. et al. "Microneedling: A Comprehensive Review." Dermatologic Surgery, 2018.</span>
+
+    <!-- Section: Supplement Protocol -->
+    <h2>SUPPLEMENT PROTOCOL FOR SKIN HEALTH</h2>
+    <p>The following supplements support skin integrity, elasticity, and recovery during and after major weight loss. As with all supplements, quality matters -- choose third-party tested products.</p>
+
+    <h3>Collagen + Vitamin C</h3>
+    <p>Hydrolyzed collagen peptides: 10-15g daily. Vitamin C: 500-1000mg daily (also taken at time of collagen dose). Vitamin C is a required cofactor for collagen synthesis -- without adequate vitamin C, the body cannot properly form collagen fibers. Together, they support dermal collagen density, skin hydration, and elasticity.</p>
+    <span class="citation">Source: Pullar, J.M. et al. "The Roles of Vitamin C in Skin Health." MDPI Nutrients, 2017.</span>
+
+    <h3>Omega-3 Fatty Acids</h3>
+    <p>EPA/DHA: 2-3g combined daily. Omega-3 fatty acids reduce systemic inflammation, support the skin's lipid barrier, and help maintain skin hydration. Anti-inflammatory effects are particularly beneficial for individuals whose skin is undergoing remodeling, as chronic low-grade inflammation can impair the healing process.</p>
+    <span class="citation">Source: Pilkington, S.M. et al. "Omega-3 Fatty Acids and Skin." Lipid Technology, 2011.</span>
+
+    <h3>Vitamin E</h3>
+    <p>200-400 IU daily. Vitamin E is a fat-soluble antioxidant that protects skin cell membranes from oxidative damage. It works synergistically with vitamin C -- vitamin C regenerates vitamin E after it has neutralized a free radical. Topical and oral vitamin E both support skin health, with oral supplementation providing systemic protection.</p>
+    <span class="citation">Source: Keen, M.A. and Hassan, I. "Vitamin E in Dermatology." Indian Dermatology Online Journal, 2016.</span>
+
+    <h3>Biotin</h3>
+    <p>2,500-5,000mcg daily. Biotin (vitamin B7) supports the health of skin, hair, and nails by serving as a cofactor for carboxylase enzymes involved in fatty acid synthesis. While biotin deficiency is relatively rare, supplementation at higher doses has been associated with improvements in skin quality, nail strength, and hair growth. Note: biotin can interfere with certain lab tests (including thyroid panels) -- inform your physician if you are supplementing.</p>
+    <span class="citation">Source: Patel, D.P. et al. "A Review of the Use of Biotin for Hair Loss." Skin Appendage Disorders, 2017.</span>
+
+    <h3>Zinc</h3>
+    <p>15-30mg daily (paired with 1-2mg copper). Zinc is essential for collagen synthesis, wound healing, cell division, and immune function. It supports the structural integrity of skin and plays a role in inflammatory regulation. Zinc deficiency impairs wound healing and collagen production. Pair with copper to prevent copper depletion from long-term zinc supplementation.</p>
+    <span class="citation">Source: Kogan, S. et al. "Zinc and Wound Healing: A Review of Zinc Physiology and Clinical Applications." Wounds, 2017.</span>
+
+    <h3>Hyaluronic Acid</h3>
+    <p>100-200mg daily (oral supplement). Hyaluronic acid is a glycosaminoglycan that holds up to 1,000 times its weight in water. It is a major component of the skin's extracellular matrix. Oral supplementation has been shown to increase skin moisture and improve skin elasticity in clinical studies. It works from the inside out, complementing topical hyaluronic acid serums that work on the skin's surface layers.</p>
+    <span class="citation">Source: Kawada, C. et al. "Ingested Hyaluronan Moisturizes Dry Skin." Nutrition Journal, 2014.</span>
+
+    <div class="disclaimer-box">
+      <p><strong>Disclaimer:</strong> This content is educational. Results from supplements and treatments vary by individual. Consult with a dermatologist or licensed esthetician for personalized assessment and recommendations. FORGEIQ does not sell supplements or skincare products.</p>
+    </div>
+
+    <div class="expanded-actions">
+      <button class="btn-gold" onclick="printResource('posttransform')">&#128196; Download PDF</button>
+      <a href="book.html" class="btn-outline">Book a Session</a>
+    </div>
+
+    <div class="print-footer">FORGEIQ &mdash; We Never Have to Quit. &mdash; forgeiq.netlify.app &mdash; This content is educational only and does not constitute medical advice.</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
+<script>
+  // Open a resource panel
+  function openResource(id) {
+    var panel = document.getElementById('resource-' + id);
+    if (!panel) return;
+    panel.classList.add('active');
+    panel.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Close a resource panel
+  function closeResource(id) {
+    var panel = document.getElementById('resource-' + id);
+    if (!panel) return;
+    panel.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Close on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var panels = document.querySelectorAll('.resource-expanded.active');
+      panels.forEach(function(panel) {
+        panel.classList.remove('active');
+      });
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Print / Download PDF for a resource
+  function printResource(id) {
+    var panel = document.getElementById('resource-' + id);
+    if (!panel) return;
+
+    // Temporarily show print header/footer
+    var printHeader = panel.querySelector('.print-header');
+    var printFooter = panel.querySelector('.print-footer');
+    if (printHeader) printHeader.style.display = 'block';
+    if (printFooter) printFooter.style.display = 'block';
+
+    // Create a new window for printing
+    var printContent = panel.querySelector('.expanded-body').innerHTML;
+    var printWindow = window.open('', '_blank');
+    printWindow.document.write('<!DOCTYPE html><html><head>');
+    printWindow.document.write('<title>FORGEIQ - ' + id.toUpperCase() + '</title>');
+    printWindow.document.write('<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />');
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: "Barlow", sans-serif; color: #222; max-width: 800px; margin: 0 auto; padding: 30px; line-height: 1.7; }');
+    printWindow.document.write('h1 { font-family: "Bebas Neue", sans-serif; font-size: 2rem; letter-spacing: 3px; margin-bottom: 8px; }');
+    printWindow.document.write('h2 { font-family: "Bebas Neue", sans-serif; font-size: 1.4rem; letter-spacing: 2px; margin: 30px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #ccc; }');
+    printWindow.document.write('h3 { font-family: "Barlow Condensed", sans-serif; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #333; margin: 20px 0 8px; }');
+    printWindow.document.write('p { font-size: 0.9rem; margin-bottom: 10px; }');
+    printWindow.document.write('ul { padding-left: 20px; margin-bottom: 10px; } li { font-size: 0.9rem; margin-bottom: 4px; }');
+    printWindow.document.write('.expanded-author-line { font-family: "Barlow Condensed", sans-serif; font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }');
+    printWindow.document.write('.disclaimer-box, .fda-disclaimer { border: 1px solid #999; padding: 16px; margin: 20px 0; border-radius: 6px; }');
+    printWindow.document.write('.disclaimer-box p, .fda-disclaimer p { color: #444; font-size: 0.85rem; margin: 0; }');
+    printWindow.document.write('.crisis-box { border: 2px solid #c0392b; padding: 20px; margin: 20px 0; border-radius: 6px; text-align: center; }');
+    printWindow.document.write('.crisis-box h3 { color: #c0392b; text-align: center; }');
+    printWindow.document.write('.citation { color: #888; font-size: 0.78rem; font-style: italic; display: block; margin: 4px 0 10px; }');
+    printWindow.document.write('.tier-badge { display: inline-block; padding: 2px 8px; border: 1px solid #999; border-radius: 3px; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }');
+    printWindow.document.write('.expanded-actions, .btn-pdf { display: none; }');
+    printWindow.document.write('.print-header { text-align: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #000; }');
+    printWindow.document.write('.print-header h2 { font-family: "Bebas Neue", sans-serif; font-size: 1.6rem; letter-spacing: 3px; border: none; margin: 0; padding: 0; }');
+    printWindow.document.write('.print-header p { font-size: 0.8rem; color: #666; }');
+    printWindow.document.write('.print-footer { text-align: center; margin-top: 30px; padding-top: 16px; border-top: 1px solid #999; font-size: 0.75rem; color: #888; }');
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write(printContent);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+
+    // Wait for fonts to load, then print
+    setTimeout(function() {
+      printWindow.print();
+    }, 800);
+
+    // Reset print header/footer visibility
+    if (printHeader) printHeader.style.display = '';
+    if (printFooter) printFooter.style.display = '';
+  }
+</script>
+
 </body>
 </html>

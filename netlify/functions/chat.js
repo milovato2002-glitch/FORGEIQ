@@ -1,134 +1,193 @@
+const Anthropic = require('@anthropic-ai/sdk');
+
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Content-Type': 'application/json'
+};
+
 exports.handler = async function(event, context) {
+  // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-      },
-      body: ''
-    };
+    return { statusCode: 200, headers: CORS_HEADERS, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return {
       statusCode: 500,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: CORS_HEADERS,
       body: JSON.stringify({ error: 'API key not configured.' })
     };
   }
 
   try {
     const body = JSON.parse(event.body);
+    const { message, history, profile, language } = body;
 
-    if (body.action === 'food_search') {
-      const usdaKey = process.env.USDA_API_KEY || 'DEMO_KEY';
-      if (!body.query || body.query.trim().length < 2) {
-        return {
-          statusCode: 200,
-          headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ foods: [] })
-        };
+    // Also support legacy format
+    const userMessage = message || '';
+    const chatHistory = history || body.messages || [];
+    const userProfile = profile || body.userProfile || {};
+    const lang = language || body.language || 'en';
+
+    // Build profile section
+    const profileLines = [];
+    if (userProfile.full_name) profileLines.push(`Name: ${userProfile.full_name}`);
+    if (userProfile.primary_goal) profileLines.push(`Goal: ${userProfile.primary_goal}`);
+    if (userProfile.fitness_level) profileLines.push(`Experience Level: ${userProfile.fitness_level}`);
+    if (userProfile.health_conditions) profileLines.push(`Health Conditions: ${userProfile.health_conditions}`);
+    if (userProfile.medications) profileLines.push(`Medications: ${userProfile.medications}`);
+    if (userProfile.injuries) profileLines.push(`Injuries: ${userProfile.injuries}`);
+    if (userProfile.training_preferences) profileLines.push(`Training Preferences: ${userProfile.training_preferences}`);
+    if (userProfile.nutrition) profileLines.push(`Nutrition: ${userProfile.nutrition}`);
+    if (userProfile.flags) profileLines.push(`Flags: ${Array.isArray(userProfile.flags) ? userProfile.flags.join(', ') : userProfile.flags}`);
+    if (userProfile.age) profileLines.push(`Age: ${userProfile.age}`);
+    if (userProfile.weight) profileLines.push(`Weight: ${userProfile.weight}`);
+    if (userProfile.height) profileLines.push(`Height: ${userProfile.height}`);
+
+    const profileSection = profileLines.length > 0 ? profileLines.join('\n') : 'No profile data provided.';
+
+    const langLabel = lang === 'es' ? 'Spanish' : lang === 'pt' ? 'Brazilian Portuguese' : 'English';
+
+    const hasInjury = userProfile.injuries || (userProfile.flags && (
+      (Array.isArray(userProfile.flags) && userProfile.flags.includes('injury')) ||
+      (typeof userProfile.flags === 'string' && userProfile.flags.includes('injury'))
+    ));
+
+    const hasGlp1 = userProfile.medications?.toLowerCase?.()?.includes('glp') || (userProfile.flags && (
+      (Array.isArray(userProfile.flags) && userProfile.flags.includes('glp1')) ||
+      (typeof userProfile.flags === 'string' && userProfile.flags.includes('glp1'))
+    ));
+
+    const hasMentalHealth = userProfile.flags && (
+      (Array.isArray(userProfile.flags) && (userProfile.flags.includes('ptsd') || userProfile.flags.includes('mental_health'))) ||
+      (typeof userProfile.flags === 'string' && (userProfile.flags.includes('ptsd') || userProfile.flags.includes('mental_health')))
+    );
+
+    const systemPrompt = `You are the FORGEIQ AI Fitness Coach, built by Dr. Michael P. Lovato, EdD — U.S. Army Combat Engineer, NASM CNC, CES, PES — and Debora Lovato, NASM CNC, CES, PES, Licensed Esthetician, GLP-1 Skin Specialist.
+
+You coach in ${langLabel} — ${lang === 'es' ? 'respond ONLY in Spanish' : lang === 'pt' ? 'respond ONLY in Brazilian Portuguese' : 'respond in English'}.
+
+CLIENT PROFILE:
+${profileSection}
+
+WORKOUT OUTPUT RULES — APPLY EVERY TIME A WORKOUT IS REQUESTED:
+1. NEVER write paragraphs before the workout
+2. OUTPUT the structured workout immediately in this exact format:
+
+[WORKOUT TITLE IN CAPS]
+[Goal] | [Duration] | [Level] | [Equipment]
+
+WARM UP (5 min)
+| Exercise | Sets | Duration | Notes |
+
+MAIN WORKOUT
+| # | Exercise | Sets | Reps | Rest | Coaching Cue |
+
+COOL DOWN (5 min)
+| Exercise | Duration | Notes |
+
+COACH NOTE: [One sentence ONLY if injury flags exist — omit entirely otherwise]
+
+3. After the workout add: 'Ready to log this session? Hit Log Session below.'
+4. NEVER explain why exercises were chosen
+5. NEVER add motivational paragraphs inside workout output
+6. Rep ranges by OPT phase: Phase 1=12-20 / Phase 2=12-20 superset / Phase 3=6-12 / Phase 4=1-5 / Phase 5=explosive
+7. ALWAYS include strength training
+8. Minimum: 3 warm up exercises, 5 main exercises, 3 cool down exercises
+9. Coaching cues maximum 8 words each
+10. If user has injury flags, silently modify exercises — do not announce modifications
+
+NASM OPT MODEL:
+Phase 1 Stabilization: 12-20 reps, 1-3 sets, slow tempo, stability focus
+Phase 2 Strength Endurance: 8-12 reps superset with 12-20 reps stability, moderate tempo
+Phase 3 Hypertrophy: 6-12 reps, 3-5 sets, moderate tempo, muscle growth
+Phase 4 Maximal Strength: 1-5 reps, 4-6 sets, heavy load, full recovery
+Phase 5 Power: 1-5 reps explosive + 8-10 reps strength, fast tempo
+
+${hasGlp1 ? `GLP-1 SPECIFIC:
+- Prioritize muscle preservation
+- Protein target 1-1.2g per lb bodyweight
+- Monitor electrolytes daily
+- Flag energy dips
+- Collagen supplementation recommended
+` : ''}
+${hasInjury ? `INJURY PROTOCOLS:
+- Use NASM CES corrective exercise sequence: Inhibit → Lengthen → Activate → Integrate
+- Silently substitute exercises that aggravate flagged injuries
+- Never announce modifications
+` : ''}
+${hasMentalHealth ? `MENTAL HEALTH:
+- Be encouraging without being condescending
+- Acknowledge that showing up is the hardest part
+- If user expresses crisis: provide 988 Suicide and Crisis Lifeline
+` : ''}
+SUPPLEMENT GUIDANCE:
+- Recommend evidence-based supplements when asked
+- Always include disclaimers about consulting physician
+- Never recommend peptides or GLP-1 as supplements — those are medications
+
+DEBORA TRIGGERS:
+- If user asks about skin, laxity, confidence post-weight-loss, GLP-1 side effects → suggest Debora's track
+- Response: 'This looks like a great question for Debora\'s specialty. Want me to connect you with her track — or book a direct session?'
+
+You are direct, knowledgeable, and concise. You speak like a real coach — not a chatbot. You remember everything about this client.`;
+
+    // Build messages array from history + current message
+    const messages = [];
+
+    if (Array.isArray(chatHistory)) {
+      for (const msg of chatHistory) {
+        if (msg.role && msg.content) {
+          messages.push({ role: msg.role, content: msg.content });
+        }
       }
-      const url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(body.query)}&pageSize=8&dataType=Foundation,SR%20Legacy,Survey%20(FNDDS)&api_key=${usdaKey}`;
-      const res = await fetch(url);
-      if (!res.ok) {
-        return {
-          statusCode: 200,
-          headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ foods: [], error: 'USDA API returned status ' + res.status })
-        };
-      }
-      const data = await res.json();
+    }
+
+    // Add the current message if provided
+    if (userMessage) {
+      messages.push({ role: 'user', content: userMessage });
+    }
+
+    // Ensure we have at least one message
+    if (messages.length === 0) {
       return {
-        statusCode: 200,
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        statusCode: 400,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ error: 'No message provided.' })
       };
     }
 
-    const profile = body.userProfile || {};
-    const goal = profile.primary_goal || 'build_foundation';
-    const goalLabel = {
-      build_foundation: 'Build Your Foundation', weight_loss_support: 'Weight Loss and Medication Support',
-      body_recomp: 'Body Recomposition', athletic_performance: 'Athletic Performance',
-      discipline_driven: 'Discipline-Driven Training', pain_free_performance: 'Pain-Free Performance',
-      train_together: 'Train Together', fifty_plus: '50+ Strong',
-      mental_health_recovery: 'Mental Health and Recovery'
-    }[goal] || goal;
-    const level = profile.fitness_level || 'beginner';
-    const name = profile.full_name || 'there';
-    const flags = profile.flags || [];
-    const lang = body.language || 'en';
+    // Call Anthropic API
+    const client = new Anthropic({ apiKey });
 
-    const systemPrompt = `You are the FORGEIQ AI Coach — built on the expertise of Dr. Michael Lovato, EdD and Debora Lovato.
-
-DR. MICHAEL LOVATO, EdD: Army Combat Engineer | EdD Organizational Leadership | NASM CNC/CES/PES | 30+ AI Certifications | MA Superintendent | AILG CEO | 290 to 192 lbs through sobriety and discipline | Manages anxiety, depression, PTSD. Trains through: torn shoulder, knee surgery, torn bicep, plantar fasciitis, arthritis.
-
-DEBORA LOVATO: NASM CNC/CES/PES | Licensed Esthetician | GLP-1 skin laxity specialist | Post-weight-loss body confidence expert.
-
-MISSION: We never have to quit.
-
-NASM OPT: Phase 1 Stabilization beginners GLP-1 injury Sets 1-3 Reps 12-20. Phase 2 Strength Endurance Sets 2-4 Reps 8-12. Phase 3 Hypertrophy Sets 3-5 Reps 6-12. Phase 4 Maximal Strength Sets 4-6 Reps 1-5. Phase 5 Power athletes only.
-
-NUTRITION NASM CNC: Protein 0.7-1g/lb standard, 1-1.2g/lb GLP-1. Post-workout protein within 30-45 min.
-
-USER: Name ${name} Goal ${goalLabel} Level ${level} Flags ${flags.join(', ') || 'none'}
-
-${goal === 'weight_loss_support' || flags.includes('glp1') ? 'GLP-1 PROTOCOL: Muscle preservation priority 1. Resistance 3-4x/week. Protein 1-1.2g/lb. Monitor electrolytes B12 vitamin D.' : ''}
-${goal === 'pain_free_performance' || flags.includes('injury') ? 'INJURY: NASM CES sequence Inhibit Lengthen Activate Integrate. Phase 1 mandatory.' : ''}
-${goal === 'mental_health_recovery' || flags.includes('ptsd') ? 'MENTAL HEALTH: Acknowledge emotional state first. Fitness as therapy. Crisis 988 Press 1.' : ''}
-${goal === 'discipline_driven' ? 'DISCIPLINE MODE: Mission-oriented. Structure and accountability. Phase 2-3.' : ''}
-${goal === 'fifty_plus' ? '50+ MODE: Joint health priority. Longer recovery. Phase 1-2.' : ''}
-${goal === 'athletic_performance' ? 'ATHLETIC MODE: NASM PES protocol. SAQ training. Phase 3-5.' : ''}
-${goal === 'build_foundation' ? 'FOUNDATION MODE: NASM Phase 1 Stabilization. Core stability, movement quality, neuromuscular control.' : ''}
-${goal === 'body_recomp' ? 'RECOMP MODE: Caloric maintenance or slight deficit. High protein. Progressive resistance. Simultaneous fat loss and muscle gain.' : ''}
-${goal === 'train_together' ? 'COUPLES MODE: Partner-friendly programming. Shared challenges. Communication and accountability.' : ''}
-
-${lang === 'es' ? 'Respond ONLY in Spanish.' : lang === 'pt' ? 'Respond ONLY in Brazilian Portuguese.' : 'Respond in English.'}
-
-Be conversational and specific. Apply NASM protocols. Keep responses to 2-3 paragraphs.`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: body.messages || []
-      })
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-6-20250514',
+      max_tokens: 2000,
+      system: systemPrompt,
+      messages: messages
     });
 
-    const data = await response.json();
+    const reply = response.content?.[0]?.text || '';
 
     return {
-      statusCode: response.status,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({
-        reply: data.content ? data.content[0].text : data.error,
-        opt_phase: level === 'advanced' ? 'Phase 3' : level === 'intermediate' ? 'Phase 2' : 'Phase 1'
-      })
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ reply })
     };
 
   } catch (err) {
+    console.error('Chat function error:', err);
     return {
       statusCode: 500,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: err.message })
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ error: err.message || 'Internal server error' })
     };
   }
 };

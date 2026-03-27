@@ -1,7 +1,7 @@
 [build]
   publish = "."
   functions = "netlify/functions"
-  command = "npm install"
+  command = "cd netlify/functions && npm install"
 
 [[redirects]]
   from = "/dashboard"
@@ -16,4 +16,39 @@
 [[redirects]]
   from = "/signup"
   to = "/signup.html"
+  status = 200
+
+[[redirects]]
+  from = "/train"
+  to = "/train.html"
+  status = 200
+
+[[redirects]]
+  from = "/progress"
+  to = "/progress.html"
+  status = 200
+
+[[redirects]]
+  from = "/debora"
+  to = "/debora.html"
+  status = 200
+
+[[redirects]]
+  from = "/resources"
+  to = "/resources.html"
+  status = 200
+
+[[redirects]]
+  from = "/book"
+  to = "/book.html"
+  status = 200
+
+[[redirects]]
+  from = "/pricing"
+  to = "/pricing.html"
+  status = 200
+
+[[redirects]]
+  from = "/onboarding"
+  to = "/onboarding.html"
   status = 200

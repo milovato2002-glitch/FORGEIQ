@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Pricing</title>
+  <meta name="description" content="FORGEIQ pricing plans. AI fitness coaching from $9.99/month. Direct coaching with Dr. Lovato and Debora. Service discount for veterans, first responders, and educators." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #0a1628;
+      --bg-secondary: #0e1e36;
+      --card-bg: #142444;
+      --gold: #f0a500;
+      --gold-hover: #ffb820;
+      --gold-dim: rgba(240,165,0,0.12);
+      --red: #e63946;
+      --green: #2dc653;
+      --teal: #2dd4bf;
+      --amber: #f4a261;
+      --text-primary: #e8edf5;
+      --text-secondary: #8fa3c0;
+      --text-muted: #4a6080;
+      --border-gold: rgba(240,165,0,0.18);
+      --border-subtle: rgba(255,255,255,0.07);
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-condensed: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,22,40,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-back {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-family: var(--font-condensed);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .nav-login {
+      color: var(--text-secondary);
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-login:hover { color: var(--text-primary); }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--gold-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 100px 24px 60px;
+      position: relative;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(240,165,0,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      letter-spacing: 6px;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ── PRICING GRID ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── PRICING CARD ── */
+    .pricing-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 44px 36px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .pricing-card:hover {
+      transform: translateY(-3px);
+    }
+    .pricing-card.highlighted {
+      border-color: var(--gold);
+      position: relative;
+    }
+    .pricing-card.highlighted::before {
+      content: 'MOST POPULAR';
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--bg-primary);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      padding: 4px 18px;
+      border-radius: 100px;
+      text-transform: uppercase;
+    }
+    .pricing-card .plan-name {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 3px;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+    .pricing-card.highlighted .plan-name {
+      color: var(--gold);
+    }
+
+    /* ── PRICE DISPLAY ── */
+    .price-display {
+      margin-bottom: 28px;
+    }
+    .price-amount {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      letter-spacing: 2px;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .price-period {
+      font-family: var(--font-condensed);
+      font-weight: 400;
+      font-size: 1rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+    .price-annual {
+      display: none;
+    }
+    .price-monthly {
+      display: block;
+    }
+    body.annual .price-annual { display: block; }
+    body.annual .price-monthly { display: none; }
+
+    /* ── BILLING TOGGLE ── */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .toggle-label {
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .toggle-label.active-label { color: var(--text-primary); }
+    .toggle-track {
+      width: 44px;
+      height: 24px;
+      background: var(--border-subtle);
+      border-radius: 100px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle-track.on {
+      background: var(--gold-dim);
+    }
+    .toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      background: var(--gold);
+      border-radius: 50%;
+      transition: left 0.2s;
+    }
+    .toggle-track.on .toggle-thumb {
+      left: 23px;
+    }
+    .save-badge {
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      color: var(--green);
+      background: rgba(45,198,83,0.1);
+      padding: 3px 10px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      display: none;
+    }
+    body.annual .save-badge { display: inline-block; }
+
+    /* ── FEATURE LIST ── */
+    .features-label {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .features-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex: 1;
+    }
+    .features-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .features-list li .check {
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .btn-gold {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 14px 36px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      width: 100%;
+    }
+    .btn-gold:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+
+    .stripe-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 24px;
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--gold);
+      margin: 0 auto 60px;
+      border-radius: 2px;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: 3px;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .section-subtext {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin: 0 auto 50px;
+    }
+
+    /* ── DIRECT COACHING TABLE ── */
+    .coaching-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .coaching-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      transition: border-color 0.2s;
+    }
+    .coaching-row:hover {
+      border-color: var(--border-gold);
+    }
+    .coaching-info {
+      flex: 1;
+    }
+    .coaching-info h4 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .coaching-info .provider-tag {
+      font-family: var(--font-condensed);
+      font-weight: 500;
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .coaching-price {
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+      margin-right: 20px;
+      white-space: nowrap;
+    }
+    .btn-book-sm {
+      background: transparent;
+      border: 1px solid var(--border-gold);
+      color: var(--text-primary);
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-book-sm:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    /* ── SPECIAL PRICING ── */
+    .discount-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      padding: 48px 44px;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .discount-card h3 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      letter-spacing: 3px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .discount-card .discount-sub {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 32px;
+    }
+    .discount-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+      text-align: left;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .discount-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    .discount-list li .icon {
+      color: var(--amber);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .discount-verified {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ── FOOTER CTA ── */
+    .footer-cta {
+      text-align: center;
+      padding: 100px 24px 120px;
+      position: relative;
+    }
+    .footer-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 60% at 50% 60%, rgba(240,165,0,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .footer-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      letter-spacing: 6px;
+      color: var(--text-primary);
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .btn-cta-large {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 18px 52px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .btn-cta-large:hover {
+      background: var(--gold-hover);
+      transform: translateY(-3px);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 480px; }
+      .nav-links { display: none; }
+      nav { padding: 12px 18px; }
+      .page-header { padding: 80px 18px 40px; }
+      .section { padding: 60px 0; }
+      .coaching-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .coaching-price { margin-right: 0; }
+      .discount-card { padding: 36px 24px; }
+    }
+    @media (max-width: 600px) {
+      .lang-toggle { display: none; }
+      .nav-login { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
+  <nav>
+    <div class="nav-left">
+      <button class="nav-back" onclick="if(window.history.length>1)history.back();else window.location.href='dashboard.html';" aria-label="Go back">&#8592;</button>
+      <a href="index.html" class="logo">FORGEIQ</a>
+    </div>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="workout-log.html">Train</a>
+      <a href="progress.html">Progress</a>
+      <a href="debora.html">Debora</a>
+      <a href="resources.html">Resources</a>
+      <a href="book.html">Book</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button class="lang-btn active">EN</button>
+        <button class="lang-btn">ES</button>
+        <button class="lang-btn">PT</button>
+      </div>
+      <a href="login.html" class="nav-login">Log In</a>
+      <a href="signup.html" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════ PAGE HEADER ═══════════════════════ -->
+  <header class="page-header">
+    <h1>INVEST IN YOURSELF.</h1>
+    <p>Less than one session with a trainer. Cancel anytime. No excuses.</p>
+  </header>
+
+  <!-- ═══════════════════════ APP SUBSCRIPTION TIERS ═══════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="pricing-grid">
+
+        <!-- FORGE -->
+        <div class="pricing-card">
+          <div class="plan-name">FORGE</div>
+          <div class="price-display">
+            <div class="price-monthly">
+              <span class="price-amount">$14.99</span>
+              <span class="price-period">/month</span>
+            </div>
+            <div class="price-annual">
+              <span class="price-amount">$9.99</span>
+              <span class="price-period">/month billed annually</span>
+            </div>
+          </div>
+          <div class="toggle-wrap">
+            <span class="toggle-label active-label" data-type="monthly">Monthly</span>
+            <div class="toggle-track" data-card="forge" onclick="toggleBilling(this)">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-label" data-type="annual">Annual</span>
+            <span class="save-badge">Save 33%</span>
+          </div>
+          <ul class="features-list">
+            <li><span class="check">&#10003;</span> AI-personalized workouts</li>
+            <li><span class="check">&#10003;</span> Daily readiness check-in</li>
+            <li><span class="check">&#10003;</span> 3-language support EN/ES/PT</li>
+            <li><span class="check">&#10003;</span> Streak and progress tracking</li>
+            <li><span class="check">&#10003;</span> 21-day challenge access</li>
+            <li><span class="check">&#10003;</span> AI coach chat</li>
+          </ul>
+          <a href="signup.html" class="btn-gold">Get Started</a>
+        </div>
+
+        <!-- FORGE+ -->
+        <div class="pricing-card highlighted">
+          <div class="plan-name">FORGE+</div>
+          <div class="price-display">
+            <div class="price-monthly">
+              <span class="price-amount">$24.99</span>
+              <span class="price-period">/month</span>
+            </div>
+            <div class="price-annual">
+              <span class="price-amount">$14.99</span>
+              <span class="price-period">/month billed annually</span>
+            </div>
+          </div>
+          <div class="toggle-wrap">
+            <span class="toggle-label active-label" data-type="monthly">Monthly</span>
+            <div class="toggle-track" data-card="forgeplus" onclick="toggleBilling(this)">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-label" data-type="annual">Annual</span>
+            <span class="save-badge">Save 40%</span>
+          </div>
+          <div class="features-label">Everything in Forge, plus:</div>
+          <ul class="features-list">
+            <li><span class="check">&#10003;</span> Full nutrition tracker with macro and micro targets</li>
+            <li><span class="check">&#10003;</span> Supplement recommendations (evidence-tiered)</li>
+            <li><span class="check">&#10003;</span> Full assessment chart (11 sections)</li>
+            <li><span class="check">&#10003;</span> PDF download for workouts and progress</li>
+            <li><span class="check">&#10003;</span> GLP-1 coaching mode</li>
+            <li><span class="check">&#10003;</span> Injury-adaptive AI</li>
+            <li><span class="check">&#10003;</span> Veteran coaching track</li>
+            <li><span class="check">&#10003;</span> Couples challenge mode</li>
+            <li><span class="check">&#10003;</span> Priority AI responses</li>
+          </ul>
+          <a href="signup.html" class="btn-gold">Get Started</a>
+        </div>
+
+      </div>
+      <p class="stripe-note">App subscriptions powered by Stripe.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════ DIRECT COACHING ═══════════════════════ -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <h2 class="section-heading">DIRECT COACHING</h2>
+      <p class="section-subtext">Real humans. Real accountability. Book directly with Doc or Debora.</p>
+
+      <div class="coaching-grid">
+
+        <div class="coaching-row">
+          <div class="coaching-info">
+            <h4>1-ON-1 STRENGTH COACHING</h4>
+            <span class="provider-tag">Dr. Michael Lovato</span>
+          </div>
+          <span class="coaching-price">$179/mo</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+        <div class="coaching-row">
+          <div class="coaching-info">
+            <h4>CUSTOM PROGRAM DESIGN</h4>
+            <span class="provider-tag">Dr. Michael Lovato</span>
+          </div>
+          <span class="coaching-price">$149/mo</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+        <div class="coaching-row">
+          <div class="coaching-info">
+            <h4>NUTRITION COACHING (NASM CNC)</h4>
+            <span class="provider-tag">Dr. Michael Lovato</span>
+          </div>
+          <span class="coaching-price">$99/mo</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+        <div class="coaching-row">
+          <div class="coaching-info">
+            <h4>FREE 20-MIN DISCOVERY CALL</h4>
+            <span class="provider-tag">Dr. Michael Lovato</span>
+          </div>
+          <span class="coaching-price" style="color: var(--green);">Free</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+        <div class="coaching-row">
+          <div class="coaching-info">
+            <h4>POST-TRANSFORMATION SKIN CONSULTATION</h4>
+            <span class="provider-tag">Debora Lovato</span>
+          </div>
+          <span class="coaching-price">$149</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+        <div class="coaching-row">
+          <div class="coaching-info">
+            <h4>GLP-1 SKIN AND WELLNESS CONSULT</h4>
+            <span class="provider-tag">Debora Lovato</span>
+          </div>
+          <span class="coaching-price">$99</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+        <div class="coaching-row">
+          <div class="coaching-info">
+            <h4>COUPLES WELLNESS CONSULTATION</h4>
+            <span class="provider-tag">Debora Lovato</span>
+          </div>
+          <span class="coaching-price">$179</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+        <div class="coaching-row">
+          <div class="coaching-info">
+            <h4>ONGOING SKIN COACHING</h4>
+            <span class="provider-tag">Debora Lovato</span>
+          </div>
+          <span class="coaching-price">$79/mo</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+        <div class="coaching-row" style="border-color: var(--border-gold);">
+          <div class="coaching-info">
+            <h4 style="color: var(--gold);">DOC + DEBORA FULL TRANSFORMATION PACKAGE</h4>
+            <span class="provider-tag">Dr. Michael Lovato + Debora Lovato</span>
+          </div>
+          <span class="coaching-price">$299/mo</span>
+          <a href="book.html" class="btn-book-sm">Book</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════ SPECIAL PRICING ═══════════════════════ -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="discount-card">
+        <h3>SERVICE DISCOUNT — 15% OFF</h3>
+        <p class="discount-sub">For those who have already given enough.</p>
+        <ul class="discount-list">
+          <li><span class="icon">&#9733;</span> Veterans</li>
+          <li><span class="icon">&#9733;</span> Active duty military</li>
+          <li><span class="icon">&#9733;</span> Police</li>
+          <li><span class="icon">&#9733;</span> Fire</li>
+          <li><span class="icon">&#9733;</span> EMS and paramedics</li>
+          <li><span class="icon">&#9733;</span> Nurses and healthcare workers</li>
+          <li><span class="icon">&#9733;</span> Educators (K-12 and higher education)</li>
+          <li><span class="icon">&#9733;</span> First responders</li>
+          <li><span class="icon">&#9733;</span> Cancer survivors and patients in active treatment</li>
+        </ul>
+        <p class="discount-verified">Verified at checkout.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ FOOTER CTA ═══════════════════════ -->
+  <section class="footer-cta">
+    <h2>MAKE THE DECISION.</h2>
+    <button class="btn-cta-large" onclick="window.location.href='signup.html'">I WILL NOT QUIT</button>
+  </section>
+
+  <!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
+  <script>
+    /* ── Monthly / Annual Toggle ── */
+    function toggleBilling(track) {
+      var card = track.closest('.pricing-card');
+      var isOn = track.classList.toggle('on');
+      var labels = card.querySelectorAll('.toggle-label');
+
+      /* Update label styles */
+      for (var i = 0; i < labels.length; i++) {
+        labels[i].classList.remove('active-label');
+      }
+      if (isOn) {
+        labels[1].classList.add('active-label');
+      } else {
+        labels[0].classList.add('active-label');
+      }
+
+      /* Toggle price display */
+      var monthlyEl = card.querySelector('.price-monthly');
+      var annualEl = card.querySelector('.price-annual');
+      var saveBadge = card.querySelector('.save-badge');
+
+      if (isOn) {
+        monthlyEl.style.display = 'none';
+        annualEl.style.display = 'block';
+        if (saveBadge) saveBadge.style.display = 'inline-block';
+      } else {
+        monthlyEl.style.display = 'block';
+        annualEl.style.display = 'none';
+        if (saveBadge) saveBadge.style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>
