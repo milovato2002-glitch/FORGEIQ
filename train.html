@@ -387,8 +387,15 @@
     }
     .ai-workout-card .workout-text {
       font-size: 0.88rem; color: #e8edf5;
-      line-height: 1.8; white-space: pre-wrap;
+      line-height: 1.8;
     }
+    .wo-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 1.25rem; font-size: 0.83rem; }
+    .wo-table th { background: #142444; color: #8fa3c0; font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(240,165,0,0.2); }
+    .wo-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #8fa3c0; }
+    .wo-table td:first-child { color: #e8edf5; font-weight: 500; }
+    .wo-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .wo-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; color: #f0a500; margin: 1.25rem 0 0.5rem; border-bottom: 1px solid rgba(240,165,0,0.2); padding-bottom: 4px; }
+    .wo-text { font-size: 0.83rem; color: #8fa3c0; margin-bottom: 0.4rem; }
     .ai-workout-actions {
       display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;
     }
@@ -2133,44 +2140,103 @@
     $("#workout-loading").style.display = "block";
     $("#workout-result").style.display = "none";
 
-    var profileStr = "";
-    if(profile.name) profileStr += "Name: " + profile.name + ". ";
-    if(profile.age) profileStr += "Age: " + profile.age + ". ";
-    if(profile.weight) profileStr += "Weight: " + profile.weight + " lbs. ";
-    if(profile.experience) profileStr += "Experience: " + profile.experience + ". ";
-    if(profile.glp1) profileStr += "On GLP-1 medication. ";
-    if(profile.injuries) profileStr += "Injuries/limitations: " + profile.injuries + ". ";
+    var lang = localStorage.getItem("forgeiq_language") || "en";
+    var duration = profile.sessionDuration || profile.duration || "45 min";
+    var experience = profile.experienceLevel || profile.experience || "Intermediate";
+    var equipment = profile.trainingLocation || profile.equipment || "Full Gym";
 
-    var prompt = "Build me a " + selectedType + " workout targeting " + selectedMuscle + " with " + selectedFocus + " focus.";
-    if(profileStr) prompt += " My profile: " + profileStr;
-    prompt += " Output a structured workout with: Warm-Up (2-3 exercises), Main (5-7 exercises with sets x reps, weight guidance, coaching cue), Cool-Down (2-3 exercises). For each exercise include the exercise name, sets, reps, rest period, and a coaching cue. Be specific and detailed.";
+    var prompt = "Build me a " + selectedType + " workout targeting " + selectedMuscle + " with " + selectedFocus + " focus.\n\n";
+    prompt += "Output ONLY in this structured format with no preamble:\n\n";
+    prompt += selectedMuscle.toUpperCase() + " — " + selectedFocus.toUpperCase() + "\n";
+    prompt += selectedType + " | " + duration + " | " + experience + " | " + equipment + "\n\n";
+    prompt += "WARM UP (5 min)\n";
+    prompt += "| Exercise | Sets | Duration | Notes |\n";
+    prompt += "(3 warm-up exercises)\n\n";
+    prompt += "MAIN WORKOUT\n";
+    prompt += "| # | Exercise | Sets | Reps | Rest | Coaching Cue |\n";
+    prompt += "(5-7 main exercises with specific sets, reps, rest periods, and coaching cues max 8 words each)\n\n";
+    prompt += "COOL DOWN (5 min)\n";
+    prompt += "| Exercise | Duration | Notes |\n";
+    prompt += "(3 cool-down stretches)\n\n";
+    prompt += "Ready to log this session? Hit START WORKOUT to track your sets.";
 
     fetch("/.netlify/functions/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        messages: [
-          { role: "system", content: "You are FORGEIQ workout builder created by Dr. Michael P. Lovato, EdD (NASM CPT/CNC/CES/PES) and Debora Lovato (NASM CNC/CES/PES). Create structured, evidence-based workouts. Format clearly with Warm-Up, Main, and Cool-Down sections. Number each exercise. Include sets x reps, rest periods, and coaching cues for every exercise." },
-          { role: "user", content: prompt }
-        ]
+        message: prompt,
+        history: [],
+        profile: profile,
+        language: lang
       })
     })
-    .then(function(r){ return r.json(); })
+    .then(function(r){
+      if(!r.ok) throw new Error("API returned " + r.status);
+      return r.json();
+    })
     .then(function(data){
-      var text = data.reply || data.content || "Workout generation failed. Please try again.";
-      $("#workout-text").textContent = text;
+      if(!data.reply) throw new Error("No reply in response");
+      var text = data.reply;
+      $("#workout-text").innerHTML = renderWorkoutText(text);
       $("#workout-loading").style.display = "none";
       $("#workout-result").style.display = "block";
-
-      // Parse workout into structured data for the active workout screen
       parseWorkoutText(text);
     })
-    .catch(function(){
-      $("#workout-text").textContent = "Could not reach the AI. Please check your connection and try again.";
+    .catch(function(err){
+      console.error("Workout generation error:", err);
+      var retryBtn = document.createElement("button");
+      retryBtn.className = "btn-outline btn-sm";
+      retryBtn.textContent = "Retry";
+      retryBtn.addEventListener("click", function(){ generateWorkout(); });
+      $("#workout-text").innerHTML = '<p style="color:#e63946;margin-bottom:12px;">Workout generation failed: ' + err.message + '</p>';
+      $("#workout-text").appendChild(retryBtn);
       $("#workout-loading").style.display = "none";
       $("#workout-result").style.display = "block";
       currentWorkoutData = buildFallbackWorkout();
     });
+  }
+
+  /* ── RENDER WORKOUT TEXT TO HTML TABLES ── */
+  function renderWorkoutText(text){
+    var lines = text.split("\n");
+    var html = "";
+    var inTable = false;
+    var tableRows = [];
+    for(var i = 0; i < lines.length; i++){
+      var line = lines[i].trim();
+      if(!line){
+        if(inTable && tableRows.length > 0){ html += buildWoTable(tableRows); tableRows = []; inTable = false; }
+        continue;
+      }
+      if(line.charAt(0) === "|"){
+        inTable = true;
+        if(line.indexOf("---") === -1){
+          tableRows.push(line.split("|").filter(function(c){ return c.trim(); }).map(function(c){ return c.trim(); }));
+        }
+      } else {
+        if(inTable && tableRows.length > 0){ html += buildWoTable(tableRows); tableRows = []; inTable = false; }
+        if(line.match(/^[A-Z\s\/—\-\(\)0-9]+$/) && line.length < 80){
+          html += '<div class="wo-section-title">' + line + '</div>';
+        } else {
+          html += '<p class="wo-text">' + line + '</p>';
+        }
+      }
+    }
+    if(inTable && tableRows.length > 0) html += buildWoTable(tableRows);
+    return html;
+  }
+  function buildWoTable(rows){
+    if(rows.length === 0) return "";
+    var html = '<table class="wo-table"><thead><tr>';
+    rows[0].forEach(function(h){ html += "<th>" + h + "</th>"; });
+    html += "</tr></thead><tbody>";
+    for(var i = 1; i < rows.length; i++){
+      html += "<tr>";
+      rows[i].forEach(function(c){ html += "<td>" + c + "</td>"; });
+      html += "</tr>";
+    }
+    html += "</tbody></table>";
+    return html;
   }
 
   function parseWorkoutText(text){
@@ -2569,16 +2635,16 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        messages: [
-          { role: "system", content: "You are FORGEIQ Coach. The user is currently doing: " + exName + ". Give brief, actionable coaching advice. Keep it under 3 sentences." },
-          { role: "user", content: q }
-        ]
+        message: "I am currently doing: " + exName + ". " + q + " Give brief, actionable coaching advice in 3 sentences max.",
+        history: [],
+        profile: profile,
+        language: localStorage.getItem("forgeiq_language") || "en"
       })
     })
     .then(function(r){ return r.json(); })
     .then(function(data){
       var last = body.lastElementChild;
-      if(last) last.textContent = data.reply || data.content || "Focus on controlled movement and proper breathing.";
+      if(last) last.textContent = data.reply || "Focus on controlled movement and proper breathing.";
     })
     .catch(function(){
       var last = body.lastElementChild;
@@ -3086,42 +3152,61 @@
     var text = $("#ai-meal-input").value.trim();
     if(!text) return;
     var btn = $("#ai-meal-submit");
+    var lang = localStorage.getItem("forgeiq_language") || "en";
     btn.textContent = "ANALYZING...";
     btn.disabled = true;
+
+    var mealPrompt = 'Analyze this meal and return ONLY a JSON object with these exact keys: {"name":"meal name","calories":number,"protein":number,"carbs":number,"fat":number,"fiber":number}. All numeric values must be integers. No explanation, no markdown, no code blocks. Just the raw JSON object.\n\nMeal: "' + text + '"';
+
     fetch("/.netlify/functions/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        messages: [
-          { role: "system", content: "You are a nutrition analyzer. The user describes a meal. Estimate total macros. Return ONLY a JSON object: {name, calories, protein, carbs, fat}. No other text." },
-          { role: "user", content: text }
-        ]
+        message: mealPrompt,
+        history: [],
+        profile: profile,
+        language: lang
       })
     })
-    .then(function(r){ return r.json(); })
+    .then(function(r){
+      if(!r.ok) throw new Error("API returned " + r.status);
+      return r.json();
+    })
     .then(function(data){
       btn.textContent = "ANALYZE AND LOG";
       btn.disabled = false;
-      var resp = data.reply || data.content || "{}";
-      var match = resp.match(/\{[\s\S]*\}/);
+      var resp = data.reply || "";
+      // Extract JSON from response (handle code blocks, text around JSON, etc.)
+      var jsonStr = resp.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+      var match = jsonStr.match(/\{[\s\S]*\}/);
       if(match){
         try {
           var meal = JSON.parse(match[0]);
+          meal.calories = parseInt(meal.calories) || 0;
+          meal.protein = parseInt(meal.protein) || 0;
+          meal.carbs = parseInt(meal.carbs) || 0;
+          meal.fat = parseInt(meal.fat) || 0;
+          meal.fiber = parseInt(meal.fiber) || 0;
           meal.time = new Date().toLocaleTimeString();
           todayData.meals.push(meal);
           saveToday();
           updateMacros();
-          $("#ai-meal-result").textContent = "Logged: " + (meal.name || text) + " \u2014 " + meal.calories + " cal, P:" + meal.protein + "g, C:" + meal.carbs + "g, F:" + meal.fat + "g";
+          $("#ai-meal-result").innerHTML = '<span style="color:#2dc653;">\u2713 Logged:</span> ' + (meal.name || text) + " \u2014 " + meal.calories + " cal, P:" + meal.protein + "g, C:" + meal.carbs + "g, F:" + meal.fat + "g";
           $("#ai-meal-input").value = "";
         } catch(e){
-          $("#ai-meal-result").textContent = "Could not parse the response. Try again.";
+          console.error("Meal parse error:", e, "Raw response:", resp);
+          $("#ai-meal-result").innerHTML = '<span style="color:#e63946;">Could not parse response.</span> Raw: ' + resp.substring(0, 200);
         }
+      } else {
+        console.error("No JSON found in response:", resp);
+        $("#ai-meal-result").innerHTML = '<span style="color:#e63946;">No nutrition data found.</span> Raw: ' + resp.substring(0, 200);
       }
     })
-    .catch(function(){
+    .catch(function(err){
       btn.textContent = "ANALYZE AND LOG";
       btn.disabled = false;
-      $("#ai-meal-result").textContent = "Could not reach the AI. Please try again.";
+      console.error("Meal analysis error:", err);
+      $("#ai-meal-result").innerHTML = '<span style="color:#e63946;">Could not reach the AI:</span> ' + err.message;
     });
   });
 
@@ -3368,21 +3453,23 @@
   }
 
   function sendChatMessage(text){
-    var systemMsg = {
-      role: "system",
-      content: "You are FORGEIQ Coach, an AI fitness and nutrition coach built by Dr. Michael P. Lovato, EdD (NASM CNC/CES/PES) and Debora Lovato (NASM CNC/CES/PES, Licensed Esthetician). Be motivational, evidence-based, and concise. Always recommend consulting a physician for medical decisions. " + buildContext()
-    };
     chatHistory.push({ role: "user", content: text });
-    var msgs = [systemMsg].concat(chatHistory.slice(-10));
+    // Send only user/assistant messages as history (no system role)
+    var historyToSend = chatHistory.filter(function(m){ return m.role === "user" || m.role === "assistant"; }).slice(-10);
 
     fetch("/.netlify/functions/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: msgs })
+      body: JSON.stringify({
+        message: text,
+        history: historyToSend.slice(0, -1),
+        profile: profile,
+        language: localStorage.getItem("forgeiq_language") || "en"
+      })
     })
     .then(function(r){ return r.json(); })
     .then(function(data){
-      var reply = data.reply || data.content || "I am here for you. Could you rephrase that?";
+      var reply = data.reply || "I am here for you. Could you rephrase that?";
       chatHistory.push({ role: "assistant", content: reply });
       addChatMsg("assistant", reply);
     })
