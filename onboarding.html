@@ -678,6 +678,93 @@ h4,h5,.category-header{font-family:'Barlow Condensed',sans-serif;font-weight:600
     </div>
   </div>
 
+  <!-- COMPOUND LIFT BENCHMARKS (Priority 9) -->
+  <div class="form-group" style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.07);">
+    <label class="group-label" style="color:#f0a500;">Strength Benchmarks — Optional but powerful</label>
+    <p style="font-size:0.78rem;color:#8fa3c0;margin-bottom:16px;">These help your AI coach calibrate intensity. Skip any you have not tested.</p>
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">Bench Press — How much can you lift?</label>
+    <div class="radio-row" data-field="benchPress" data-type="single">
+      <div class="tile" data-value="none" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I do not bench yet</div>
+      <div class="tile" data-value="below_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Less than bodyweight</div>
+      <div class="tile" data-value="1x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>My bodyweight (1x BW)</div>
+      <div class="tile" data-value="1.25x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.25x bodyweight</div>
+      <div class="tile" data-value="1.5x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.5x bodyweight</div>
+      <div class="tile" data-value="2x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2x bodyweight or more</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">Back Squat — How much can you lift?</label>
+    <div class="radio-row" data-field="backSquat" data-type="single">
+      <div class="tile" data-value="none" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I do not barbell squat yet</div>
+      <div class="tile" data-value="below_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Less than bodyweight</div>
+      <div class="tile" data-value="1x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>My bodyweight (1x BW)</div>
+      <div class="tile" data-value="1.25x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.25x bodyweight</div>
+      <div class="tile" data-value="1.5x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.5x bodyweight</div>
+      <div class="tile" data-value="2x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2x bodyweight or more</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">Deadlift — How much can you pull?</label>
+    <div class="radio-row" data-field="deadlift" data-type="single">
+      <div class="tile" data-value="none" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I do not deadlift yet</div>
+      <div class="tile" data-value="below_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Less than bodyweight</div>
+      <div class="tile" data-value="1x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>My bodyweight (1x BW)</div>
+      <div class="tile" data-value="1.5x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.5x bodyweight</div>
+      <div class="tile" data-value="2x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2x bodyweight</div>
+      <div class="tile" data-value="2.5x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2.5x bodyweight or more</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">Pull Ups — Unassisted reps</label>
+    <div class="radio-row" data-field="pullUps" data-type="single">
+      <div class="tile" data-value="0" onclick="selectRadioTile(this)"><span class="radio-icon"></span>None yet</div>
+      <div class="tile" data-value="1-3" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1-3 reps</div>
+      <div class="tile" data-value="4-9" onclick="selectRadioTile(this)"><span class="radio-icon"></span>4-9 reps</div>
+      <div class="tile" data-value="10-15" onclick="selectRadioTile(this)"><span class="radio-icon"></span>10-15 reps</div>
+      <div class="tile" data-value="15+" onclick="selectRadioTile(this)"><span class="radio-icon"></span>15+ reps</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">Dead Hang — How long?</label>
+    <div class="radio-row" data-field="deadHang" data-type="single">
+      <div class="tile" data-value="under15s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Under 15 seconds</div>
+      <div class="tile" data-value="15-30s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>15-30 seconds</div>
+      <div class="tile" data-value="30-60s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>30-60 seconds</div>
+      <div class="tile" data-value="60-90s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>60-90 seconds</div>
+      <div class="tile" data-value="90s+" onclick="selectRadioTile(this)"><span class="radio-icon"></span>90+ seconds</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">Push Up Max — Max reps one set</label>
+    <div class="radio-row" data-field="pushUpMax" data-type="single">
+      <div class="tile" data-value="under5" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Under 5</div>
+      <div class="tile" data-value="5-10" onclick="selectRadioTile(this)"><span class="radio-icon"></span>5-10</div>
+      <div class="tile" data-value="10-20" onclick="selectRadioTile(this)"><span class="radio-icon"></span>10-20</div>
+      <div class="tile" data-value="20-30" onclick="selectRadioTile(this)"><span class="radio-icon"></span>20-30</div>
+      <div class="tile" data-value="30-50" onclick="selectRadioTile(this)"><span class="radio-icon"></span>30-50</div>
+      <div class="tile" data-value="50+" onclick="selectRadioTile(this)"><span class="radio-icon"></span>50+</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="group-label">Plank Hold — How long?</label>
+    <div class="radio-row" data-field="plankHold" data-type="single">
+      <div class="tile" data-value="under30s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Under 30 seconds</div>
+      <div class="tile" data-value="30-60s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>30-60 seconds</div>
+      <div class="tile" data-value="60-90s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>60-90 seconds</div>
+      <div class="tile" data-value="90s-2m" onclick="selectRadioTile(this)"><span class="radio-icon"></span>90 seconds-2 min</div>
+      <div class="tile" data-value="2m+" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2 min+</div>
+    </div>
+  </div>
+
   <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
 </div>
 
@@ -1014,6 +1101,18 @@ function completeOnboarding() {
   if (!profile.goalWeight) profile.goalWeight = document.getElementById('goalWeight').value;
   if (!profile.currentBF) profile.currentBF = document.getElementById('currentBF').value;
   if (!profile.goalBF) profile.goalBF = document.getElementById('goalBF').value;
+
+  // Group compound lift benchmarks
+  profile.benchmarks = {
+    benchPress: profile.benchPress || '',
+    backSquat: profile.backSquat || '',
+    deadlift: profile.deadlift || '',
+    pullUps: profile.pullUps || '',
+    deadHang: profile.deadHang || '',
+    pushUpMax: profile.pushUpMax || '',
+    plankHold: profile.plankHold || '',
+    biggestWeakness: profile.weakness || ''
+  };
 
   try {
     localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
