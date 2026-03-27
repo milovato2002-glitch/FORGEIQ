@@ -274,27 +274,32 @@
     try { profile = JSON.parse(localStorage.getItem('forgeiq_profile')); } catch (e) { /* ignore */ }
     var lang = localStorage.getItem('forgeiq_lang') || 'en';
 
+    var langLabel = lang === 'es' ? 'Respond ONLY in Spanish.' : lang === 'pt' ? 'Respond ONLY in Portuguese.' : 'Respond in English.';
+    var sysPrompt = 'You are FORGEIQ Coach, an AI fitness coach built by Dr. Michael P. Lovato, EdD and Debora Lovato. ' + langLabel + ' Be direct, knowledgeable, concise.';
+
+    // Build messages from chat history (user/assistant only, already includes current message)
+    var msgs = chatHistory.filter(function(m){ return m.role === 'user' || m.role === 'assistant'; }).slice(-10);
+
     fetch('/.netlify/functions/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: text,
-        history: chatHistory,
-        profile: profile,
-        language: lang
+        model: 'claude-sonnet-4-6-20250514',
+        max_tokens: 2000,
+        system: sysPrompt,
+        messages: msgs
       })
     })
     .then(function (res) { return res.json(); })
     .then(function (data) {
       removeTyping();
-      var reply = (data && data.reply) ? data.reply : 'Sorry, something went wrong. Please try again.';
+      var reply = (data.content && data.content[0]) ? data.content[0].text : 'Sorry, something went wrong. Please try again.';
       addMessage(body, 'assistant', reply);
       chatHistory.push({ role: 'assistant', content: reply });
     })
     .catch(function () {
       removeTyping();
-      var errorMsg = 'Connection error. Please check your network and try again.';
-      addMessage(body, 'assistant', errorMsg);
+      addMessage(body, 'assistant', 'Connection error. Please check your network and try again.');
     });
   }
 

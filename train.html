@@ -396,6 +396,20 @@
     .wo-table tr:hover td { background: rgba(255,255,255,0.02); }
     .wo-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; color: #f0a500; margin: 1.25rem 0 0.5rem; border-bottom: 1px solid rgba(240,165,0,0.2); padding-bottom: 4px; }
     .wo-text { font-size: 0.83rem; color: #8fa3c0; margin-bottom: 0.4rem; }
+    .workout-resources { margin-top: 1.5rem; padding: 1.25rem; background: #0e1e36; border: 1px solid rgba(240,165,0,0.15); border-radius: 10px; }
+    .resources-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #f0a500; margin-bottom: 4px; }
+    .resources-subtitle { font-size: 0.78rem; color: #8fa3c0; margin-bottom: 1rem; }
+    .trainer-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+    .trainer-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #142444; border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; text-decoration: none; transition: all 0.15s; }
+    .trainer-card:hover { border-color: #f0a500; background: rgba(240,165,0,0.08); }
+    .trainer-avatar { width: 36px; height: 36px; border-radius: 50%; background: #f0a500; color: #0a1628; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .trainer-name { font-size: 0.83rem; font-weight: 600; color: #e8edf5; }
+    .trainer-focus { font-size: 0.72rem; color: #8fa3c0; margin-top: 2px; }
+    .trainer-cta { font-size: 0.68rem; color: #f0a500; margin-top: 4px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.06em; }
+    .resource-sites { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
+    .resource-sites-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: #4a6080; width: 100%; margin-bottom: 4px; }
+    .resource-site-link { font-size: 0.75rem; color: #2dd4bf; text-decoration: none; padding: 3px 10px; border: 1px solid rgba(45,212,191,0.3); border-radius: 20px; }
+    .resource-site-link:hover { background: rgba(45,212,191,0.1); }
     .ai-workout-actions {
       display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;
     }
@@ -1991,6 +2005,141 @@
   var selectedFocus = "";
   var currentWorkoutData = null; // parsed exercises for active workout
 
+  var WORKOUT_RESOURCES = {
+    bodybuilding: {
+      trainers: [
+        { name: 'Jeff Nippard', url: 'https://www.youtube.com/@JeffNippard', focus: 'Evidence-based hypertrophy' },
+        { name: 'Dr. Mike Israetel', url: 'https://www.youtube.com/@RenaissancePeriodization', focus: 'Volume and periodization' },
+        { name: 'Layne Norton', url: 'https://www.youtube.com/@BioLayne', focus: 'Science-based muscle and fat loss' },
+        { name: 'Stephanie Buttermore', url: 'https://www.youtube.com/@StephanieButtermorePlus', focus: 'Body recomposition' },
+        { name: 'Ben Pakulski', url: 'https://www.youtube.com/results?search_query=ben+pakulski', focus: 'Mind-muscle connection' }
+      ],
+      sites: ['renaissanceperiodization.com', 'biolayne.com']
+    },
+    powerlifting: {
+      trainers: [
+        { name: 'Alan Thrall', url: 'https://www.youtube.com/@AlanThrall', focus: 'Powerlifting technique' },
+        { name: 'Greg Nuckols', url: 'https://www.youtube.com/results?search_query=greg+nuckols', focus: 'Research-based strength' },
+        { name: 'Meg Squats', url: 'https://www.youtube.com/@MegSquats', focus: 'Women in powerlifting' },
+        { name: 'Stefi Cohen', url: 'https://www.youtube.com/results?search_query=stefi+cohen', focus: 'World record powerlifter' },
+        { name: 'Mark Bell', url: 'https://www.youtube.com/results?search_query=mark+bell+powerlifting', focus: 'Powerlifting culture' }
+      ],
+      sites: ['strongerbyscience.com', 'barbend.com']
+    },
+    olympic: {
+      trainers: [
+        { name: 'Clarence Kennedy', url: 'https://www.youtube.com/@ClarenceKennedy', focus: 'Olympic lifting technique' },
+        { name: 'Travis Mash', url: 'https://www.youtube.com/@MashElitePerformance', focus: 'Olympic weightlifting coaching' },
+        { name: 'Mattie Rogers', url: 'https://www.youtube.com/@MattieRogers', focus: 'Olympic lifting for women' }
+      ],
+      sites: ['teamusa.org/USA-Weightlifting', 'masheliteperformance.com']
+    },
+    strength: {
+      trainers: [
+        { name: 'Mark Rippetoe', url: 'https://www.youtube.com/@StartingStrength', focus: 'Foundational strength' },
+        { name: 'Dr. Gabrielle Lyon', url: 'https://www.youtube.com/@drgabriellelyon', focus: 'Muscle-centric medicine' },
+        { name: 'Dan John', url: 'https://www.youtube.com/results?search_query=dan+john+strength', focus: 'Simple effective strength' },
+        { name: 'Pavel Tsatsouline', url: 'https://www.youtube.com/@StrongFirst', focus: 'Kettlebell and strength' }
+      ],
+      sites: ['startingstrength.com', 'strongfirst.com']
+    },
+    hiit: {
+      trainers: [
+        { name: 'Joe Wicks', url: 'https://www.youtube.com/@TheBodyCoach', focus: 'HIIT for all levels' },
+        { name: 'Kayla Itsines', url: 'https://www.youtube.com/@KaylaItsines', focus: 'BBG HIIT training' },
+        { name: 'Heather Robertson', url: 'https://www.youtube.com/@heatherrobertson', focus: 'Full HIIT workouts' },
+        { name: 'Thomas DeLauer', url: 'https://www.youtube.com/@ThomasDeLauerOfficial', focus: 'HIIT and fat loss science' }
+      ],
+      sites: ['sweat.com']
+    },
+    crossfit: {
+      trainers: [
+        { name: 'Andrew Hiller', url: 'https://www.youtube.com/@AndrewHiller', focus: 'CrossFit analysis' },
+        { name: 'Ben Bergeron', url: 'https://www.youtube.com/@CompTrain', focus: 'Elite CrossFit programming' },
+        { name: 'Rich Froning', url: 'https://www.youtube.com/results?search_query=rich+froning', focus: '4x CF Games champion' }
+      ],
+      sites: ['crossfit.com', 'comptrain.co']
+    },
+    deka: {
+      trainers: [
+        { name: 'Hunter McIntyre', url: 'https://www.youtube.com/results?search_query=hunter+mcintyre+deka', focus: 'DEKA FIT champion' },
+        { name: 'DEKA FIT Official', url: 'https://www.youtube.com/@dekafit', focus: 'Official training content' }
+      ],
+      sites: ['dekafit.com']
+    },
+    kettlebell: {
+      trainers: [
+        { name: 'Pavel Tsatsouline', url: 'https://www.youtube.com/@StrongFirst', focus: 'Kettlebell master' },
+        { name: 'Pat Flynn', url: 'https://www.youtube.com/results?search_query=pat+flynn+kettlebell', focus: 'Minimalist kettlebell' }
+      ],
+      sites: ['strongfirst.com']
+    },
+    corrective: {
+      trainers: [
+        { name: 'Eric Cressey', url: 'https://www.youtube.com/results?search_query=eric+cressey+corrective', focus: 'Shoulder and hip corrective' },
+        { name: 'Kelly Starrett', url: 'https://www.youtube.com/results?search_query=kelly+starrett+mobility', focus: 'Mobility and movement' }
+      ],
+      sites: ['cressey.com', 'thereadystate.com']
+    },
+    mobility: {
+      trainers: [
+        { name: 'Kelly Starrett', url: 'https://www.youtube.com/results?search_query=kelly+starrett+mobility', focus: 'Mobility and movement prep' },
+        { name: 'Tom Merrick', url: 'https://www.youtube.com/results?search_query=tom+merrick+mobility', focus: 'Flexibility flows' }
+      ],
+      sites: ['thereadystate.com']
+    },
+    glp1_adaptive: {
+      trainers: [
+        { name: 'Dr. Gabrielle Lyon', url: 'https://www.youtube.com/@drgabriellelyon', focus: 'Muscle-centric medicine' },
+        { name: 'Jeff Nippard', url: 'https://www.youtube.com/@JeffNippard', focus: 'Muscle preservation on deficit' }
+      ],
+      sites: ['forgeiq.netlify.app/resources']
+    }
+  };
+
+  function getResourceKey(type) {
+    var t = (type || "").toUpperCase();
+    if (t.indexOf("BODYBUILDING") > -1 || t.indexOf("HYPERTROPHY") > -1) return "bodybuilding";
+    if (t.indexOf("POWERLIFTING") > -1) return "powerlifting";
+    if (t.indexOf("OLYMPIC") > -1) return "olympic";
+    if (t.indexOf("HIIT") > -1) return "hiit";
+    if (t.indexOf("CROSSFIT") > -1 || t.indexOf("GPP") > -1) return "crossfit";
+    if (t.indexOf("DEKA") > -1 || t.indexOf("OBSTACLE") > -1) return "deka";
+    if (t.indexOf("KETTLEBELL") > -1) return "kettlebell";
+    if (t.indexOf("CORRECTIVE") > -1 || t.indexOf("REHAB") > -1) return "corrective";
+    if (t.indexOf("MOBILITY") > -1 || t.indexOf("FLEXIBILITY") > -1) return "mobility";
+    if (t.indexOf("GLP") > -1 || t.indexOf("ADAPTIVE") > -1) return "glp1_adaptive";
+    if (t.indexOf("STRENGTH") > -1) return "strength";
+    return "strength";
+  }
+
+  function renderWorkoutResources(type) {
+    var key = getResourceKey(type);
+    var res = WORKOUT_RESOURCES[key] || WORKOUT_RESOURCES.strength;
+    var html = '<div class="workout-resources">';
+    html += '<div class="resources-title">LEARN FROM THE BEST — ' + (type || 'TRAINING').toUpperCase() + ' RESOURCES</div>';
+    html += '<div class="resources-subtitle">Top coaches and channels for this training style</div>';
+    html += '<div class="trainer-cards">';
+    res.trainers.forEach(function(tr) {
+      html += '<a href="' + tr.url + '" target="_blank" rel="noopener" class="trainer-card">';
+      html += '<div class="trainer-avatar">' + tr.name.charAt(0) + '</div>';
+      html += '<div><div class="trainer-name">' + tr.name + '</div>';
+      html += '<div class="trainer-focus">' + tr.focus + '</div>';
+      html += '<div class="trainer-cta">\u25B6 Watch on YouTube \u2192</div></div>';
+      html += '</a>';
+    });
+    html += '</div>';
+    if (res.sites && res.sites.length) {
+      html += '<div class="resource-sites"><div class="resource-sites-label">REFERENCE SITES</div>';
+      res.sites.forEach(function(s) {
+        html += '<a href="https://' + s + '" target="_blank" class="resource-site-link">' + s + ' \u2192</a>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   /* ── WORKOUT TYPES DATA ── */
   var workoutTypes = [
     { name: "BODYBUILDING / HYPERTROPHY", icon: "&#9889;", desc: "Muscle size, symmetry, aesthetics. High volume, moderate weight. OPT Phase 3. Reps 8-15. Rest 60-90s.", difficulty: "intermediate" },
@@ -2160,24 +2309,28 @@
     prompt += "(3 cool-down stretches)\n\n";
     prompt += "Ready to log this session? Hit START WORKOUT to track your sets.";
 
+    var langLabel = lang === "es" ? "Respond ONLY in Spanish." : lang === "pt" ? "Respond ONLY in Portuguese." : "Respond in English.";
+    var sysPrompt = "You are FORGEIQ Coach, built by Dr. Michael P. Lovato, EdD (NASM CNC/CES/PES, Army Combat Engineer) and Debora Lovato (NASM CNC/CES/PES, Licensed Esthetician). " + langLabel + " When generating workouts, output ONLY the structured table format. No preamble. No markdown outside the tables. Output immediately.";
+
     fetch("/.netlify/functions/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: prompt,
-        history: [],
-        profile: profile,
-        language: lang
+        model: "claude-sonnet-4-6-20250514",
+        max_tokens: 2000,
+        system: sysPrompt,
+        messages: [{ role: "user", content: prompt }]
       })
     })
     .then(function(r){
-      if(!r.ok) throw new Error("API returned " + r.status);
+      if(!r.ok) return r.json().then(function(e){ throw new Error(e.error || "API error " + r.status); });
       return r.json();
     })
     .then(function(data){
-      if(!data.reply) throw new Error("No reply in response");
-      var text = data.reply;
+      var text = (data.content && data.content[0] && data.content[0].text) || "";
+      if(!text) throw new Error("Empty response from AI");
       $("#workout-text").innerHTML = renderWorkoutText(text);
+      $("#workout-text").innerHTML += renderWorkoutResources(selectedType);
       $("#workout-loading").style.display = "none";
       $("#workout-result").style.display = "block";
       parseWorkoutText(text);
@@ -2635,16 +2788,17 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: "I am currently doing: " + exName + ". " + q + " Give brief, actionable coaching advice in 3 sentences max.",
-        history: [],
-        profile: profile,
-        language: localStorage.getItem("forgeiq_language") || "en"
+        model: "claude-sonnet-4-6-20250514",
+        max_tokens: 500,
+        system: "You are FORGEIQ Coach. Give brief, actionable coaching advice in 3 sentences max. Be direct.",
+        messages: [{ role: "user", content: "I am currently doing: " + exName + ". " + q }]
       })
     })
     .then(function(r){ return r.json(); })
     .then(function(data){
       var last = body.lastElementChild;
-      if(last) last.textContent = data.reply || "Focus on controlled movement and proper breathing.";
+      var reply = (data.content && data.content[0]) ? data.content[0].text : "Focus on controlled movement and proper breathing.";
+      if(last) last.textContent = reply;
     })
     .catch(function(){
       var last = body.lastElementChild;
@@ -3091,15 +3245,15 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [
-            { role: "system", content: "You are a nutrition database. Return a JSON array of 5 food items matching the query. Each item: {name, calories, protein, carbs, fat} per 100g serving. Return ONLY the JSON array, no other text." },
-            { role: "user", content: "Search: " + q }
-          ]
+          model: "claude-sonnet-4-6-20250514",
+          max_tokens: 500,
+          system: "You are a nutrition database. Return a JSON array of 5 food items matching the query. Each item: {name, calories, protein, carbs, fat} per 100g serving. Return ONLY the JSON array, no other text.",
+          messages: [{ role: "user", content: "Search: " + q }]
         })
       })
       .then(function(r){ return r.json(); })
       .then(function(data){
-        var text = data.reply || data.content || "[]";
+        var text = (data.content && data.content[0]) ? data.content[0].text : "[]";
         var match = text.match(/\[[\s\S]*\]/);
         if(!match) return;
         try {
@@ -3162,20 +3316,20 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: mealPrompt,
-        history: [],
-        profile: profile,
-        language: lang
+        model: "claude-sonnet-4-6-20250514",
+        max_tokens: 300,
+        system: "You are a nutrition database. Respond with ONLY a raw JSON object. No markdown. No code blocks. No explanation. Just the JSON.",
+        messages: [{ role: "user", content: mealPrompt }]
       })
     })
     .then(function(r){
-      if(!r.ok) throw new Error("API returned " + r.status);
+      if(!r.ok) return r.json().then(function(e){ throw new Error(e.error || "API error " + r.status); });
       return r.json();
     })
     .then(function(data){
       btn.textContent = "ANALYZE AND LOG";
       btn.disabled = false;
-      var resp = data.reply || "";
+      var resp = (data.content && data.content[0]) ? data.content[0].text : "";
       // Extract JSON from response (handle code blocks, text around JSON, etc.)
       var jsonStr = resp.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
       var match = jsonStr.match(/\{[\s\S]*\}/);
@@ -3454,22 +3608,26 @@
 
   function sendChatMessage(text){
     chatHistory.push({ role: "user", content: text });
-    // Send only user/assistant messages as history (no system role)
-    var historyToSend = chatHistory.filter(function(m){ return m.role === "user" || m.role === "assistant"; }).slice(-10);
+    var lang = localStorage.getItem("forgeiq_language") || "en";
+    var langLabel = lang === "es" ? "Respond ONLY in Spanish." : lang === "pt" ? "Respond ONLY in Portuguese." : "Respond in English.";
+    var sysPrompt = "You are FORGEIQ Coach, an AI fitness and nutrition coach built by Dr. Michael P. Lovato, EdD (NASM CNC/CES/PES, Army Combat Engineer) and Debora Lovato (NASM CNC/CES/PES, Licensed Esthetician). " + langLabel + " Be motivational, evidence-based, and concise. " + buildContext();
+
+    // Build messages array from chat history (user/assistant only, last 10)
+    var msgs = chatHistory.filter(function(m){ return m.role === "user" || m.role === "assistant"; }).slice(-10);
 
     fetch("/.netlify/functions/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: text,
-        history: historyToSend.slice(0, -1),
-        profile: profile,
-        language: localStorage.getItem("forgeiq_language") || "en"
+        model: "claude-sonnet-4-6-20250514",
+        max_tokens: 2000,
+        system: sysPrompt,
+        messages: msgs
       })
     })
     .then(function(r){ return r.json(); })
     .then(function(data){
-      var reply = data.reply || "I am here for you. Could you rephrase that?";
+      var reply = (data.content && data.content[0]) ? data.content[0].text : "I am here for you. Could you rephrase that?";
       chatHistory.push({ role: "assistant", content: reply });
       addChatMsg("assistant", reply);
     })
