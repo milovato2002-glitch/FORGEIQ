@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Coach with Doc | Dr. Michael P. Lovato, EdD</title>
+  <meta name="description" content="1-on-1 strength coaching with Dr. Michael P. Lovato, EdD. NASM CNC/CES/PES, Army Combat Engineer, GLP-1 specialist. 98 lbs lost. Still going." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:#0a1628;color:#e8edf5;font-family:'Barlow',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;}
+    a{color:inherit;text-decoration:none;}
+
+    nav{position:sticky;top:0;z-index:100;padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:#0e1e36;border-bottom:1px solid rgba(255,255,255,0.07);height:60px;}
+    .nav-left{display:flex;align-items:center;gap:16px;}
+    .back-btn{background:none;border:none;color:#8fa3c0;font-size:1.2rem;cursor:pointer;padding:4px 8px;}
+    .back-btn:hover{color:#f0a500;}
+    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:3px;color:#e8edf5;}
+    .nav-logo span{color:#f0a500;}
+    .nav-center{display:flex;align-items:center;}
+    .nav-link{color:#8fa3c0;font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 16px;border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Barlow Condensed',sans-serif;}
+    .nav-link:hover{color:#e8edf5;}
+    .nav-link.active{color:#f0a500;border-bottom-color:#f0a500;}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+
+    .page{max-width:1000px;margin:0 auto;padding:0 24px;}
+    .section{padding:48px 0;}
+
+    /* HERO */
+    .hero{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;padding:60px 0 40px;}
+    .hero-avatar{width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,#2a1f0a,#1a3a2a);border:3px solid #f0a500;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:4rem;color:#f0a500;box-shadow:0 0 40px rgba(240,165,0,0.08);flex-shrink:0;}
+    .hero-loc{font-size:0.78rem;color:#4a6080;margin-top:8px;text-align:center;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;}
+    .hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,3.6rem);letter-spacing:3px;color:#f0a500;line-height:1;}
+    .hero-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#8fa3c0;margin:6px 0 20px;}
+    .hero-statement{font-size:0.95rem;color:#8fa3c0;line-height:1.85;margin-bottom:14px;}
+    .hero-statement em{font-style:normal;color:#e8edf5;font-weight:500;}
+    .cred-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+    .cred-badge{padding:4px 10px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;background:rgba(240,165,0,0.12);border:1px solid rgba(240,165,0,0.4);color:#f0a500;white-space:nowrap;}
+    .cred-military{background:rgba(45,198,83,0.1);border:1px solid rgba(45,198,83,0.35);color:#2dc653;}
+
+    .btn-gold{display:inline-block;background:#f0a500;color:#0a1628;padding:14px 32px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.92rem;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;border:none;cursor:pointer;}
+    .btn-gold:hover{background:#ffb820;transform:translateY(-1px);}
+    .btn-outline{display:inline-block;background:transparent;color:#e8edf5;padding:14px 32px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.92rem;letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(240,165,0,0.3);transition:all 0.2s;cursor:pointer;}
+    .btn-outline:hover{border-color:#f0a500;color:#f0a500;}
+    .btn-sm{padding:10px 24px;font-size:0.82rem;}
+
+    .sec-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:2px;color:#e8edf5;text-align:center;margin-bottom:8px;}
+    .sec-sub{text-align:center;color:#8fa3c0;font-size:1rem;margin-bottom:40px;}
+
+    /* DIFFERENTIATOR CARDS */
+    .diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .diff-card{background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;}
+    .diff-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;color:#f0a500;margin-bottom:10px;}
+    .diff-card p{font-size:0.88rem;color:#8fa3c0;line-height:1.7;}
+
+    /* SERVICE CARDS */
+    .svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+    .svc-card{background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;display:flex;flex-direction:column;transition:border-color 0.2s;}
+    .svc-card:hover{border-color:rgba(240,165,0,0.3);}
+    .svc-card.featured{border-color:#f0a500;background:linear-gradient(135deg,#142444,rgba(240,165,0,0.06));}
+    .svc-name{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;color:#e8edf5;margin-bottom:4px;}
+    .svc-price{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#f0a500;letter-spacing:1px;margin-bottom:10px;}
+    .svc-list{list-style:none;padding:0;margin-bottom:14px;flex:1;}
+    .svc-list li{padding:4px 0;font-size:0.82rem;color:#8fa3c0;display:flex;align-items:flex-start;gap:8px;}
+    .svc-list li::before{content:'\2713';color:#2dc653;font-weight:700;flex-shrink:0;}
+    .svc-who{font-size:0.78rem;color:#4a6080;font-style:italic;margin-bottom:14px;}
+
+    /* STEPS */
+    .steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .step-card{background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:24px;text-align:center;}
+    .step-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#f0a500;margin-bottom:6px;}
+    .step-title{font-family:'Barlow Condensed',sans-serif;font-size:0.92rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#e8edf5;margin-bottom:6px;}
+    .step-desc{font-size:0.82rem;color:#8fa3c0;line-height:1.5;}
+
+    /* PAYMENT */
+    .pay-card{background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;}
+    .pay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0;}
+    .pay-item{background:#0a1628;border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:10px 14px;display:flex;gap:10px;align-items:center;}
+    .pay-label{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8fa3c0;width:65px;flex-shrink:0;}
+    .pay-value{font-size:0.85rem;color:#e8edf5;word-break:break-all;}
+
+    /* DISCOUNT */
+    .discount{background:rgba(45,212,191,0.06);border:1px solid rgba(45,212,191,0.2);border-radius:10px;padding:28px;text-align:center;}
+    .discount h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:#2dd4bf;margin-bottom:8px;}
+    .discount p{font-size:0.88rem;color:#8fa3c0;line-height:1.6;}
+    .discount em{font-style:italic;color:#2dd4bf;display:block;margin-top:10px;font-size:1rem;}
+
+    /* COMBINED */
+    .combined{background:linear-gradient(135deg,#142444,rgba(240,165,0,0.06));border:2px solid #f0a500;border-radius:10px;padding:40px;text-align:center;}
+    .combined h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;margin-bottom:6px;}
+    .combined .price{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:#f0a500;margin-bottom:14px;}
+
+    .footer{text-align:center;padding:32px 24px;border-top:1px solid rgba(255,255,255,0.07);}
+    .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:#f0a500;margin-bottom:4px;}
+    .footer span{font-size:0.72rem;color:#4a6080;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;}
+    .disclaimer{text-align:center;color:#4a6080;font-size:0.75rem;max-width:600px;margin:0 auto;padding:16px 24px 40px;line-height:1.7;}
+
+    @media(max-width:768px){
+      .hero{grid-template-columns:1fr;text-align:center;gap:24px;}
+      .hero-avatar{margin:0 auto;}
+      .diff-grid,.svc-grid,.steps-row,.pay-grid{grid-template-columns:1fr;}
+      .nav-center{display:none;}
+      .cred-badges{justify-content:center;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="history.back()">&larr;</button>
+    <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
+  </div>
+  <div class="nav-center">
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/train.html" class="nav-link">Train</a>
+    <a href="/progress.html" class="nav-link">Progress</a>
+    <a href="/coaching.html" class="nav-link active">Doc</a>
+    <a href="/debora.html" class="nav-link">Debora</a>
+    <a href="/resources.html" class="nav-link">Resources</a>
+    <a href="/book.html" class="nav-link">Book</a>
+  </div>
+  <div class="nav-right">
+    <a href="/login.html" style="color:#8fa3c0;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;">Log In</a>
+    <a href="/signup.html" style="background:#f0a500;color:#0a1628;padding:7px 18px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Get Started</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div>
+    <div class="hero-avatar">ML</div>
+    <div class="hero-loc">Dr. Michael P. Lovato, EdD</div>
+  </div>
+  <div>
+    <div class="hero-name">DR. MICHAEL P. LOVATO, EdD</div>
+    <div class="hero-title">Strength Coach &middot; GLP-1 Specialist &middot; Veteran &middot; 98 lbs Lost &middot; Still Going</div>
+    <p class="hero-statement">I built FORGEIQ because I could not find a coach who understood my reality. I was 290 lbs, coming off addiction, dealing with PTSD, managing multiple injuries, and trying to figure out how to train again. I had to become <em>the coach I needed.</em> Now I want to be that coach for you.</p>
+    <p class="hero-statement">I am not a transformation story. I am a <em>training story.</em> I still train every day through a torn shoulder, knee surgery, arthritis, and plantar fasciitis. I know what it means to show up when everything hurts. That is the coach you get.</p>
+    <div class="cred-badges">
+      <span class="cred-badge">EdD — GCU</span>
+      <span class="cred-badge">NASM CNC</span>
+      <span class="cred-badge">NASM CES</span>
+      <span class="cred-badge">NASM PES</span>
+      <span class="cred-badge">NCSC S&amp;C</span>
+      <span class="cred-badge">EPI Phase 2</span>
+      <span class="cred-badge">ACE IFT</span>
+      <span class="cred-badge">MyFIIT</span>
+      <span class="cred-badge">GLP-1 Programming — Pete McCall</span>
+      <span class="cred-badge">Anti-Obesity Medications</span>
+      <span class="cred-badge">Nutritional Coaching — Melissa Layne</span>
+      <span class="cred-badge">Building Bigger Muscles — Dr. Mang</span>
+      <span class="cred-badge">Kettlebells</span>
+      <span class="cred-badge">Tactical Training L1</span>
+      <span class="cred-badge">Corrective Exercise</span>
+      <span class="cred-badge">Shoulder Pain — Chuck Wolf</span>
+      <span class="cred-badge">Flexibility Highways</span>
+      <span class="cred-badge">OA Breathing Instructor</span>
+      <span class="cred-badge">AI in Fitness</span>
+      <span class="cred-badge">30+ AI Certifications</span>
+      <span class="cred-badge cred-military">U.S. Army Combat Engineer</span>
+      <span class="cred-badge cred-military">100% Service Connected</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WHAT MAKES DOC DIFFERENT ═══ -->
+<div class="section" style="padding-top:0;">
+  <h2 class="sec-heading">WHAT MAKES DOC DIFFERENT</h2>
+  <div class="diff-grid">
+    <div class="diff-card">
+      <h3>I HAVE BEEN WHERE YOU ARE</h3>
+      <p>Not 10 years ago. Right now. I train through injuries every day. My programming is not theoretical — it is earned.</p>
+    </div>
+    <div class="diff-card">
+      <h3>I SPEAK YOUR LANGUAGE</h3>
+      <p>Whether you are a veteran, a GLP-1 user, a 50-year-old who thinks their best years are behind them, or someone who has tried everything and quit — I built programs for exactly that person.</p>
+    </div>
+    <div class="diff-card">
+      <h3>THE SCIENCE IS NON-NEGOTIABLE</h3>
+      <p>EdD. NASM. NCSC. ACE. 30+ AI certifications. I do not guess. I program based on NASM OPT methodology, evidence-based nutrition, and AI-assisted analysis of your actual data.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COACHING SERVICES ═══ -->
+<div class="section" style="padding-top:0;">
+  <h2 class="sec-heading">COACHING SERVICES</h2>
+  <div class="svc-grid">
+
+    <div class="svc-card">
+      <div class="svc-name">1-ON-1 STRENGTH COACHING</div>
+      <div class="svc-price">$179/mo</div>
+      <ul class="svc-list">
+        <li>2 Zoom or video sessions per month</li>
+        <li>Unlimited text and voice messaging</li>
+        <li>Custom weekly programming (NASM OPT)</li>
+        <li>Form review via video submission</li>
+        <li>Nutrition guidance (NASM CNC)</li>
+        <li>GLP-1 protocol if applicable</li>
+        <li>AI coach trained on your sessions</li>
+      </ul>
+      <div class="svc-who">For anyone ready to stop guessing and start training with a system.</div>
+      <a href="https://calendly.com/milovato2002" target="_blank" rel="noopener" class="btn-gold btn-sm">Book Free Discovery Call First</a>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-name">CUSTOM PROGRAM DESIGN</div>
+      <div class="svc-price">$149</div>
+      <ul class="svc-list">
+        <li>Complete 4-12 week personalized program</li>
+        <li>Progressive overload built in</li>
+        <li>Video coaching cues for key lifts</li>
+        <li>Nutrition targets and meal timing</li>
+        <li>PDF and FORGEIQ app delivery</li>
+        <li>2 email check-ins during the program</li>
+      </ul>
+      <div class="svc-who">For self-motivated athletes who want elite programming without weekly check-ins.</div>
+      <a href="https://calendly.com/milovato2002" target="_blank" rel="noopener" class="btn-gold btn-sm">Order Your Program</a>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-name">GLP-1 COACHING PACKAGE</div>
+      <div class="svc-price">$199/mo</div>
+      <ul class="svc-list">
+        <li>Everything in 1-on-1 coaching</li>
+        <li>GLP-1 muscle preservation protocol</li>
+        <li>Injection day training modifications</li>
+        <li>Protein and supplement timing for your medication</li>
+        <li>Coordination with Debora for skin support</li>
+        <li>Monthly progress assessment</li>
+      </ul>
+      <div class="svc-who">For GLP-1 users who need a coach who actually understands their situation.</div>
+      <a href="https://calendly.com/milovato2002" target="_blank" rel="noopener" class="btn-gold btn-sm">Book GLP-1 Coaching</a>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-name">VETERAN COACHING PACKAGE</div>
+      <div class="svc-price">$149/mo</div>
+      <ul class="svc-list">
+        <li>Everything in 1-on-1 coaching</li>
+        <li>Mission-oriented programming framework</li>
+        <li>PTSD and mental health aware approach</li>
+        <li>Injury-adaptive programming</li>
+        <li>Veteran community accountability</li>
+        <li>15% discount already applied</li>
+      </ul>
+      <div class="svc-who">For veterans and first responders who need a coach who has been there.</div>
+      <a href="https://calendly.com/milovato2002" target="_blank" rel="noopener" class="btn-gold btn-sm">Book Veteran Coaching</a>
+    </div>
+
+  </div>
+
+  <!-- FREE DISCOVERY CALL -->
+  <div style="margin-top:24px;background:linear-gradient(135deg,#142444,rgba(45,198,83,0.06));border:2px solid #2dc653;border-radius:10px;padding:32px;text-align:center;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:#2dc653;margin-bottom:6px;">FREE 20-MINUTE DISCOVERY CALL</div>
+    <p style="font-size:0.92rem;color:#8fa3c0;margin-bottom:16px;">20 minutes with Doc. No pitch. No pressure. Honest conversation about where you are and whether coaching is the right move.</p>
+    <a href="https://calendly.com/milovato2002" target="_blank" rel="noopener" class="btn-gold" style="font-size:1rem;padding:16px 40px;">BOOK YOUR FREE CALL</a>
+  </div>
+</div>
+
+<!-- ═══ HOW COACHING WORKS ═══ -->
+<div class="section" style="padding-top:0;">
+  <h2 class="sec-heading">HOW COACHING WORKS</h2>
+  <div class="steps-row">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">Book Your Free Call</div>
+      <div class="step-desc">20 minutes with Doc to understand your goals, your history, and whether coaching is the right move.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">Profile Review</div>
+      <div class="step-desc">Doc reviews your FORGEIQ profile, onboarding data, and benchmarks before the call — he already knows your story.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">Your First Session</div>
+      <div class="step-desc">Built around everything you told us. No generic plans. No wasted time. Your transformation starts here.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAYMENT ═══ -->
+<div class="section" style="padding-top:0;">
+  <div class="pay-card">
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;text-align:center;margin-bottom:4px;">PAYMENT OPTIONS</h3>
+    <p style="text-align:center;font-size:0.82rem;color:#8fa3c0;margin-bottom:12px;">Send payment after booking confirmation. All sessions are prepaid.</p>
+    <div class="pay-grid">
+      <div class="pay-item"><div class="pay-label">Venmo</div><div class="pay-value">@DrLovato-FORGEIQ</div></div>
+      <div class="pay-item"><div class="pay-label">CashApp</div><div class="pay-value">$ForgeIQCoaching</div></div>
+      <div class="pay-item"><div class="pay-label">Zelle</div><div class="pay-value">coaching@forgeiq.com</div></div>
+      <div class="pay-item"><div class="pay-label">PayPal</div><div class="pay-value">paypal.me/forgeiqcoaching</div></div>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="btn-gold btn-sm" onclick="alert('Payment notification sent. Doc will confirm within 24 hours. Thank you.')">I Have Sent Payment — Start My Coaching</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DISCOUNT ═══ -->
+<div class="section" style="padding-top:0;">
+  <div class="discount">
+    <h3>15% OFF FOR THOSE WHO SERVE</h3>
+    <p>Veterans &middot; Active Duty &middot; Police &middot; Fire &middot; EMS &middot; Nurses &middot; Healthcare Workers &middot; Educators &middot; Cancer Survivors</p>
+    <em>"Because some people have already given enough."</em>
+    <p style="font-size:0.75rem;color:#4a6080;margin-top:10px;">Mention your service when booking. No proof required — we trust you.</p>
+  </div>
+</div>
+
+<!-- ═══ COMBINED PACKAGE ═══ -->
+<div class="section" style="padding-top:0;">
+  <div class="combined">
+    <h2>TRAIN WITH DOC. TRANSFORM WITH DEBORA.</h2>
+    <p style="color:#8fa3c0;margin-bottom:10px;">The complete FORGEIQ coaching experience — strength, nutrition, skin, and confidence.</p>
+    <div class="price">$299/mo</div>
+    <p style="font-size:0.85rem;color:#8fa3c0;margin-bottom:20px;">Everything in 1-on-1 Strength Coaching + Debora's Ongoing Skin Coaching &middot; Priority scheduling &middot; Monthly progress review &middot; Partner discount available</p>
+    <a href="https://calendly.com/milovato2002" target="_blank" rel="noopener" class="btn-gold" style="font-size:1rem;padding:16px 40px;">BOOK THE COMPLETE PACKAGE</a>
+  </div>
+</div>
+
+</div><!-- /.page -->
+
+<p class="disclaimer">FORGEIQ does not provide medical advice, diagnosis, or treatment. All coaching services are for informational and educational purposes only. Consult a licensed healthcare provider before making changes to your health regimen.</p>
+
+<div class="footer">
+  <div class="footer-logo">FORGEIQ</div>
+  <span>Powered by FORGEIQ &middot; Adaptive Intelligence Learning Group LLC</span>
+</div>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/i18n.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/forge-ai-button.js"></script>
+</body>
+</html>
