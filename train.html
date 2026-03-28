@@ -535,6 +535,19 @@
     .wp-summary span { white-space:nowrap; }
     .wp-auto-btn { margin-left:auto; background:rgba(240,165,0,0.12); border:1px solid rgba(240,165,0,0.3); color:#f0a500; padding:6px 14px; border-radius:6px; font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.15s; }
     .wp-auto-btn:hover { background:rgba(240,165,0,0.2); }
+    /* ── VIEW TOGGLE ── */
+    .view-toggle-btn { padding:8px 16px; border-radius:6px; border:1px solid rgba(255,255,255,0.15); background:transparent; color:#8fa3c0; font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:1px; cursor:pointer; transition:all 0.15s; text-transform:uppercase; }
+    .view-toggle-btn.active { background:#f0a500; border-color:#f0a500; color:#0a1628; }
+    .pls-btn { flex:1; min-width:70px; padding:12px 8px; background:#142444; border:2px solid rgba(255,255,255,0.1); border-radius:10px; cursor:pointer; text-align:center; transition:all 0.15s; }
+    .pls-btn:hover { border-color:#f0a500; background:rgba(240,165,0,0.1); }
+    /* ── REST TIMER BANNER ── */
+    #rest-timer-banner { display:none; position:fixed; bottom:0; left:0; right:0; z-index:200; background:#0e1e36; border-top:2px solid #f0a500; padding:16px 24px; align-items:center; justify-content:space-between; gap:16px; }
+    .rest-countdown { font-family:'Bebas Neue',sans-serif; font-size:2rem; color:#f0a500; letter-spacing:1px; }
+    .rest-progress-bar { flex:1; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; }
+    .rest-progress { height:100%; background:#f0a500; border-radius:3px; transition:width 1s linear; }
+    .rest-skip { background:none; border:1px solid rgba(255,255,255,0.15); color:#8fa3c0; padding:6px 14px; border-radius:6px; font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; font-weight:700; cursor:pointer; text-transform:uppercase; letter-spacing:1px; }
+    .rest-skip:hover { border-color:#f0a500; color:#f0a500; }
+
     /* ── EXERCISE PREVIEW LIST ── */
     .preview-ex-row { display:flex; align-items:center; gap:14px; padding:14px 16px; background:#0e1e36; border:1px solid rgba(255,255,255,0.07); border-radius:10px; margin-bottom:8px; cursor:pointer; transition:border-color 0.15s; }
     .preview-ex-row:hover { border-color:rgba(240,165,0,0.3); }
@@ -1405,16 +1418,53 @@
       <div class="loading-text">Building your workout...</div>
     </div>
     <div id="workout-result" style="display:none;">
-      <div class="ai-workout-card">
-        <div class="workout-text" id="workout-text"></div>
+      <!-- Quick View / Detail View Toggle -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;justify-content:center;">
+        <button class="view-toggle-btn active" id="btn-quick-view" onclick="setWorkoutView('quick')">&#9889; QUICK VIEW</button>
+        <button class="view-toggle-btn" id="btn-detail-view" onclick="setWorkoutView('detail')">&#128203; DETAIL VIEW</button>
       </div>
-      <div style="text-align:center;">
+      <!-- Detail View (original) -->
+      <div id="detail-view-container">
+        <div class="ai-workout-card">
+          <div class="workout-text" id="workout-text"></div>
+        </div>
+      </div>
+      <!-- Quick View -->
+      <div id="quick-view-container" style="display:none;"></div>
+      <div style="text-align:center;margin-top:16px;">
         <button class="btn-gold-lg" id="btn-start-workout">START WORKOUT</button>
       </div>
       <div class="ai-workout-actions">
         <button class="btn-outline" id="btn-edit-workout">Edit Workout</button>
         <button class="btn-outline" id="btn-save-library">Save to Library</button>
         <button class="btn-outline" id="btn-generate-another">Generate Another</button>
+      </div>
+    </div>
+
+    <!-- Program Length Selector -->
+    <div id="program-length-selector" style="display:none;">
+      <div style="background:#0e1e36;border:1px solid rgba(240,165,0,0.3);border-radius:12px;padding:20px;margin:16px 0;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.06em;color:#f0a500;margin-bottom:4px;">HOW LONG IS YOUR PROGRAM?</div>
+        <div style="font-size:0.8rem;color:#8fa3c0;margin-bottom:16px;">Your FORGE AI coach will build a complete progressive plan for every day.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="pls-options">
+          <button class="pls-btn" onclick="selectProgramLength(1)"><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#f0a500;line-height:1;">1</span><span style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.14em;color:#8fa3c0;text-transform:uppercase;">DAY</span></button>
+          <button class="pls-btn" onclick="selectProgramLength(7)"><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#f0a500;line-height:1;">7</span><span style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.14em;color:#8fa3c0;text-transform:uppercase;">DAYS</span></button>
+          <button class="pls-btn" onclick="selectProgramLength(14)"><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#f0a500;line-height:1;">14</span><span style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.14em;color:#8fa3c0;text-transform:uppercase;">DAYS</span></button>
+          <button class="pls-btn" style="border-color:#f0a500;position:relative;" onclick="selectProgramLength(21)"><span style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#f0a500;color:#0a1628;font-family:'Barlow Condensed',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:0.1em;padding:2px 8px;border-radius:10px;white-space:nowrap;">MOST POPULAR</span><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#f0a500;line-height:1;">21</span><span style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.14em;color:#8fa3c0;text-transform:uppercase;">DAYS</span></button>
+          <button class="pls-btn" onclick="selectProgramLength(30)"><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#f0a500;line-height:1;">30</span><span style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.14em;color:#8fa3c0;text-transform:uppercase;">DAYS</span></button>
+        </div>
+        <div id="dpw-selector" style="display:none;margin-top:16px;">
+          <div style="font-size:0.8rem;color:#8fa3c0;margin-bottom:8px;">HOW MANY DAYS PER WEEK CAN YOU TRAIN?</div>
+          <div style="display:flex;gap:8px;">
+            <button class="pls-btn" onclick="selectDaysPerWeek(3)"><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#f0a500;">3</span></button>
+            <button class="pls-btn" onclick="selectDaysPerWeek(4)"><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#f0a500;">4</span></button>
+            <button class="pls-btn" onclick="selectDaysPerWeek(5)"><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#f0a500;">5</span></button>
+            <button class="pls-btn" onclick="selectDaysPerWeek(6)"><span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#f0a500;">6</span></button>
+          </div>
+        </div>
+        <div id="build-program-btn" style="display:none;margin-top:16px;text-align:center;">
+          <button class="btn-gold-lg" onclick="buildMultiDayProgram()">BUILD MY PROGRAM</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1862,6 +1912,14 @@
 </div>
 
 </div><!-- /.page -->
+
+<!-- ════════════════════ REST TIMER BANNER ════════════════════ -->
+<div id="rest-timer-banner">
+  <span class="rest-countdown" id="rest-countdown">1:30</span>
+  <div class="rest-progress-bar"><div class="rest-progress" id="rest-progress" style="width:0%"></div></div>
+  <button class="rest-skip" onclick="skipRest()">Skip</button>
+  <button class="rest-skip" onclick="addRestTime(30)">+30s</button>
+</div>
 
 <!-- ════════════════════ EXERCISE LIST PREVIEW ════════════════════ -->
 <div class="workout-overlay" id="exercise-preview-overlay" style="display:none;">
@@ -2400,7 +2458,7 @@
     prompt += "Ready to log this session? Hit START WORKOUT to track your sets.";
 
     var langLabel = lang === "es" ? "Respond ONLY in Spanish." : lang === "pt" ? "Respond ONLY in Portuguese." : "Respond in English.";
-    var sysPrompt = "You are FORGEIQ Coach, built by Dr. Michael P. Lovato, EdD (NASM CNC/CES/PES, Army Combat Engineer) and Debora Lovato (NASM CNC/CES/PES, Licensed Esthetician). " + langLabel + " When generating workouts, output ONLY the structured table format. No preamble. No markdown outside the tables. Output immediately.";
+    var sysPrompt = "You are FORGE AI Coach, built by Dr. Michael P. Lovato, EdD (NASM CNC/CES/PES, NCSC, EPI Phase 2, ACE IFT, GLP-1 Programming Certified, Anti-Obesity Medications Specialist, Army Combat Engineer) and Debora Lovato (NASM CNC/CES/PES, Licensed Esthetician, GLP-1 Skin Specialist). " + langLabel + " When generating workouts, output ONLY the structured table format. No preamble. No markdown outside the tables. Output immediately. CRITICAL: You must provide REAL specific exercise names. NEVER use generic placeholders like Primary Compound Movement, Secondary Compound Movement, Isolation Movement A, Isolation Movement B, or Finisher. Always use actual exercise names such as Barbell Bent-Over Row, Seated Cable Row, Single Arm Dumbbell Row, Face Pull, Lat Pulldown, Pull-Up, Barbell Bench Press, Incline Dumbbell Press, Cable Fly, Barbell Back Squat, Romanian Deadlift, Leg Press. Every exercise must have a specific real name.";
 
     fetch("/.netlify/functions/chat", {
       method: "POST",
@@ -2536,11 +2594,11 @@
       exercises: [
         { name: "Dynamic Warm-Up", phase: "warm-up", cue: "Arm circles, leg swings, hip openers. Full range of motion.", sets: 2, defaultReps: 15, defaultWeight: 0 },
         { name: "Band Pull-Aparts", phase: "warm-up", cue: "Activate rear delts and upper back. Light resistance.", sets: 2, defaultReps: 15, defaultWeight: 0 },
-        { name: "Primary Compound Movement", phase: "main", cue: "Focus on proper bracing and controlled tempo.", sets: 4, defaultReps: 8, defaultWeight: 135 },
-        { name: "Secondary Compound Movement", phase: "main", cue: "Maintain tension throughout the full range of motion.", sets: 3, defaultReps: 10, defaultWeight: 95 },
-        { name: "Isolation Movement A", phase: "main", cue: "Squeeze at peak contraction. Slow eccentric.", sets: 3, defaultReps: 12, defaultWeight: 40 },
-        { name: "Isolation Movement B", phase: "main", cue: "Mind-muscle connection. Control the weight.", sets: 3, defaultReps: 12, defaultWeight: 30 },
-        { name: "Finisher", phase: "main", cue: "Push through the burn. You have more than you think.", sets: 3, defaultReps: 15, defaultWeight: 25 },
+        { name: "Barbell Back Squat", phase: "main", cue: "Break at hips first. Chest up. Drive through heels.", sets: 4, defaultReps: 8, defaultWeight: 135, category: "legs" },
+        { name: "Barbell Bench Press", phase: "main", cue: "Retract scapula. Touch chest. Full lockout.", sets: 3, defaultReps: 10, defaultWeight: 95, category: "push" },
+        { name: "Barbell Bent-Over Row", phase: "main", cue: "Hinge at hips. Pull to lower chest. Squeeze back.", sets: 3, defaultReps: 12, defaultWeight: 95, category: "pull" },
+        { name: "Dumbbell Lateral Raise", phase: "main", cue: "Slight bend in elbows. Control the descent.", sets: 3, defaultReps: 12, defaultWeight: 20, category: "push" },
+        { name: "Cable Face Pull", phase: "main", cue: "Pull to forehead. External rotate at end. Slow return.", sets: 3, defaultReps: 15, defaultWeight: 25, category: "pull" },
         { name: "Stretching and Foam Roll", phase: "cool-down", cue: "Hold each stretch 30 seconds. Breathe deeply.", sets: 1, defaultReps: 1, defaultWeight: 0 }
       ]
     };
@@ -2753,6 +2811,10 @@
         row.classList.add("set-done");
 
         updateLiveVolume();
+
+        // Start rest timer (90s default)
+        var restSec = parseInt(currentWorkoutData.exercises[idx]?.rest) || 90;
+        if (typeof startRestTimer === "function") startRestTimer(restSec);
 
         // Determine next set preview text
         var nextSetNum = si + 2;
@@ -3708,6 +3770,140 @@
   };
 
   renderWeekPlanner();
+
+  /* ── QUICK VIEW / DETAIL VIEW TOGGLE ── */
+  window.setWorkoutView = function(view) {
+    localStorage.setItem("forgeiq_workout_view", view);
+    var qv = $("#quick-view-container");
+    var dv = $("#detail-view-container");
+    var bq = $("#btn-quick-view");
+    var bd = $("#btn-detail-view");
+    if (view === "quick") {
+      if (qv) qv.style.display = "block";
+      if (dv) dv.style.display = "none";
+      if (bq) bq.classList.add("active");
+      if (bd) bd.classList.remove("active");
+      renderQuickView();
+    } else {
+      if (qv) qv.style.display = "none";
+      if (dv) dv.style.display = "block";
+      if (bd) bd.classList.add("active");
+      if (bq) bq.classList.remove("active");
+    }
+  };
+
+  function renderQuickView() {
+    var qv = $("#quick-view-container");
+    if (!qv || !currentWorkoutData || !currentWorkoutData.exercises) return;
+    var exs = currentWorkoutData.exercises;
+    var html = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6rem;letter-spacing:1px;color:#e8edf5;margin-bottom:4px;">' + (currentWorkoutData.name || "Workout") + '</div>';
+    html += '<div style="font-size:0.78rem;color:#8fa3c0;margin-bottom:16px;">' + exs.length + ' exercises</div>';
+    html += '<div style="background:rgba(240,165,0,0.08);border-radius:6px;height:6px;margin-bottom:16px;overflow:hidden;"><div id="qv-progress" style="height:100%;background:#f0a500;width:0%;transition:width 0.3s;border-radius:6px;"></div></div>';
+    exs.forEach(function(ex, i) {
+      var icon = (ex.category === "push" ? "\uD83D\uDCAA" : ex.category === "pull" ? "\uD83D\uDD03" : ex.category === "legs" ? "\uD83E\uDDB5" : ex.category === "core" ? "\u2B55" : "\u2696\uFE0F");
+      var color = (ex.category === "push" ? "#60a5fa" : ex.category === "pull" ? "#2dc653" : ex.category === "legs" ? "#f4a261" : ex.category === "core" ? "#e63946" : "#f0a500");
+      html += '<div class="preview-ex-row" id="qv-row-' + i + '">' +
+        '<div style="width:48px;height:48px;border-radius:8px;background:' + color + '20;border:2px solid ' + color + '40;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">' + icon + '</div>' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.92rem;font-weight:700;color:#e8edf5;letter-spacing:0.5px;text-transform:uppercase;">' + ex.name + '</div>' +
+          '<div style="font-size:0.72rem;color:#8fa3c0;margin-top:2px;">' + (ex.sets || 3) + ' \u00d7 ' + (ex.defaultReps || ex.reps || "8") + ' reps \u00b7 \u23F1 ' + (ex.rest || "90s") + '</div>' +
+        '</div>' +
+        '<div style="cursor:pointer;width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;color:#4a6080;transition:all 0.15s;flex-shrink:0;" onclick="toggleQVCheck(' + i + ')" id="qv-check-' + i + '">\u25CB</div>' +
+      '</div>';
+    });
+    qv.innerHTML = html;
+  }
+
+  window.toggleQVCheck = function(idx) {
+    var el = $("#qv-check-" + idx);
+    var row = $("#qv-row-" + idx);
+    if (!el) return;
+    var done = el.dataset.done === "1";
+    el.dataset.done = done ? "0" : "1";
+    el.innerHTML = done ? "\u25CB" : "\u2713";
+    el.style.background = done ? "transparent" : "rgba(45,198,83,0.15)";
+    el.style.borderColor = done ? "rgba(255,255,255,0.15)" : "#2dc653";
+    el.style.color = done ? "#4a6080" : "#2dc653";
+    if (row) row.style.borderLeft = done ? "" : "3px solid #2dc653";
+    var total = currentWorkoutData.exercises.length;
+    var doneCount = 0;
+    for (var i = 0; i < total; i++) { var c = $("#qv-check-" + i); if (c && c.dataset.done === "1") doneCount++; }
+    var prog = $("#qv-progress");
+    if (prog) prog.style.width = Math.round((doneCount / total) * 100) + "%";
+  };
+
+  /* ── PROGRAM LENGTH SELECTOR ── */
+  var selectedProgramLength = 1;
+  var selectedDPW = 4;
+  window.selectProgramLength = function(days) {
+    selectedProgramLength = days;
+    if (days > 1) { $("#dpw-selector").style.display = "block"; } else { $("#dpw-selector").style.display = "none"; $("#build-program-btn").style.display = "block"; }
+  };
+  window.selectDaysPerWeek = function(d) {
+    selectedDPW = d;
+    $("#build-program-btn").style.display = "block";
+  };
+
+  window.buildMultiDayProgram = function() {
+    var splits = {
+      3: ["Full Body A","Rest","Full Body B","Rest","Full Body C","Rest","Rest"],
+      4: ["Push","Pull","Rest","Legs","Rest","Upper Body","Rest"],
+      5: ["Chest/Tris","Back/Bis","Legs","Shoulders/Core","Arms","Rest","Rest"],
+      6: ["Chest","Back","Legs","Shoulders","Arms","Full Body","Rest"]
+    };
+    var split = splits[selectedDPW] || splits[4];
+    var weeks = Math.ceil(selectedProgramLength / 7);
+    var prompt = "Generate a complete " + selectedProgramLength + "-day strength training program.\nDays per week: " + selectedDPW + "\nSplit: " + split.join(" / ") + "\nWeeks: " + weeks + "\n\nCRITICAL: Use REAL exercise names only. Never use generic placeholders.\nWeek 1: Base volume. Week 2: +10%.";
+    if (weeks >= 3) prompt += " Week 3: +20%.";
+    if (weeks >= 4) prompt += " Week 4: DELOAD 60%.";
+    prompt += "\n\nFormat: DAY [X] -- [SPLIT]\n1. [Exercise] -- [sets] x [reps] -- Rest: [time]s";
+
+    $("#program-length-selector").style.display = "none";
+    showStep("d");
+    $("#workout-loading").style.display = "block";
+    $("#workout-result").style.display = "none";
+
+    fetch("/.netlify/functions/chat", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 4000,
+        system: "You are FORGE AI Coach. Generate complete multi-day training programs with REAL exercise names. No preamble. Structured format only.",
+        messages: [{ role: "user", content: prompt }]
+      })
+    }).then(function(r) { return r.json(); }).then(function(data) {
+      var text = (data.content && data.content[0]) ? data.content[0].text : "";
+      if (!text) throw new Error("Empty response");
+      $("#workout-text").innerHTML = renderWorkoutText(text);
+      $("#workout-text").innerHTML += renderWorkoutResources(selectedType || "STRENGTH TRAINING");
+      $("#workout-loading").style.display = "none";
+      $("#workout-result").style.display = "block";
+      ls("forgeiq_active_program", { id: Date.now(), totalDays: selectedProgramLength, daysPerWeek: selectedDPW, startDate: new Date().toISOString(), currentDay: 1, weeklySplit: split, rawText: text });
+    }).catch(function(err) {
+      $("#workout-text").innerHTML = '<p style="color:#e63946;">Program generation failed: ' + err.message + '</p>';
+      $("#workout-loading").style.display = "none";
+      $("#workout-result").style.display = "block";
+    });
+  };
+
+  /* ── REST TIMER ── */
+  var restTimerInterval = null;
+  window.startRestTimer = function(seconds) {
+    var banner = $("#rest-timer-banner");
+    if (!banner) return;
+    banner.style.display = "flex";
+    var remaining = seconds;
+    clearInterval(restTimerInterval);
+    restTimerInterval = setInterval(function() {
+      remaining--;
+      $("#rest-countdown").textContent = Math.floor(remaining / 60) + ":" + String(remaining % 60).padStart(2, "0");
+      $("#rest-progress").style.width = ((seconds - remaining) / seconds * 100) + "%";
+      if (remaining <= 0) { clearInterval(restTimerInterval); banner.style.display = "none"; }
+    }, 1000);
+  };
+  window.skipRest = function() { clearInterval(restTimerInterval); var b = $("#rest-timer-banner"); if (b) b.style.display = "none"; };
+  window.addRestTime = function(s) { var t = ($("#rest-countdown") || {}).textContent || "0:00"; var p = t.split(":"); startRestTimer(parseInt(p[0]) * 60 + parseInt(p[1]) + s); };
+
+  /* Default view preference */
+  var savedView = localStorage.getItem("forgeiq_workout_view") || "detail";
 
   /* ── MICRO TRACKER ── */
   var micros = [
