@@ -226,9 +226,10 @@
     var greetings = {
       'dashboard': 'Good ' + tod + '. I have your workout ready and I can see your recent activity. What do you need?',
       'train': 'Your coach is ready. Ask me about today\'s workout, your nutrition targets, or your supplement stack.',
-      'progress': 'I can analyze your progress data. Ask me about your trends, what\'s working, or what to adjust.',
+      'progress': 'I can analyze your progress data. Ask me about your trends, what is working, or what to adjust.',
       'resources': 'I can explain any research here in plain language. Ask me about any GLP medication, peptide, or supplement.',
-      'debora': 'Debora\'s specialty is post-transformation support. I can help you understand what coaching area fits your situation.',
+      'debora': 'You are on Debora\'s page. She specializes in GLP-1 skin changes, post-weight-loss confidence, and couples wellness. I can help you figure out which of her protocols is right for you.',
+      'coaching': 'You are on Doc\'s coaching page. I can help you understand which coaching package fits your goals, or you can book a free 20-minute discovery call directly.',
       'book': 'Ready to book with Doc or Debora? I can help you pick the right session based on your goals.'
     };
 
@@ -296,6 +297,16 @@
       var reply = (data.content && data.content[0]) ? data.content[0].text : 'Sorry, something went wrong. Please try again.';
       addMessage(body, 'assistant', reply);
       chatHistory.push({ role: 'assistant', content: reply });
+
+      // Smart trigger: detect pain/injury mentions in user message
+      var lastUserMsg = (chatHistory.filter(function(m){return m.role==='user';}).slice(-1)[0] || {}).content || '';
+      var painWords = ['pain','hurt','injury','sore','torn','surgery','ache','strain','sprain'];
+      var mentionsPain = painWords.some(function(w){return lastUserMsg.toLowerCase().indexOf(w)>=0;});
+      if (mentionsPain) {
+        setTimeout(function(){
+          addMessage(body, 'assistant', 'Before we adjust your program \u2014 Doc is a NASM CES corrective exercise specialist who completed Chuck Wolf\'s Shoulder Pain certification. If this needs professional eyes: <a href="https://calendly.com/milovato2002" target="_blank" style="color:#f0a500;text-decoration:underline;">Book a free 20-min call with Doc \u2192</a>');
+        }, 1500);
+      }
     })
     .catch(function () {
       removeTyping();
@@ -329,6 +340,26 @@
         var greeting = getGreeting();
         addMessage(body, 'assistant', greeting);
         chatHistory.push({ role: 'assistant', content: greeting });
+
+        // Smart coaching triggers
+        try {
+          var prof = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}');
+          var created = prof.createdAt || prof.completedAt || '';
+          var daysSinceJoin = created ? Math.floor((Date.now() - new Date(created).getTime()) / 86400000) : 0;
+          var meds = (prof.medications || []).join(' ').toLowerCase();
+          var hasGLP = meds.indexOf('glp') >= 0 || meds.indexOf('ozempic') >= 0 || meds.indexOf('wegovy') >= 0 || meds.indexOf('mounjaro') >= 0 || meds.indexOf('semaglutide') >= 0 || meds.indexOf('tirzepatide') >= 0;
+
+          if (daysSinceJoin >= 14) {
+            setTimeout(function() {
+              addMessage(body, 'assistant', 'You have been training consistently for ' + daysSinceJoin + ' days. Have you considered working directly with Doc? He reviews your FORGEIQ data before every session \u2014 he already knows your program. <a href="/coaching.html" style="color:#f0a500;text-decoration:underline;">Learn about 1-on-1 coaching \u2192</a>');
+            }, 3000);
+          }
+          if (hasGLP && daysSinceJoin >= 30) {
+            setTimeout(function() {
+              addMessage(body, 'assistant', 'You are 30+ days into your GLP-1 journey. Debora specializes in exactly what you are going through right now \u2014 skin, confidence, and the things nobody warned you about. <a href="/debora.html" style="color:#f0a500;text-decoration:underline;">Connect with Debora \u2192</a>');
+            }, 5000);
+          }
+        } catch(e) { /* silent */ }
       }
 
       textarea.focus();
