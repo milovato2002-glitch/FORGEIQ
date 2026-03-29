@@ -2765,6 +2765,7 @@
         '<div class="exercise-actions">' +
           '<button class="btn-outline btn-sm" id="btn-swap-exercise">Swap Exercise</button>' +
           '<button class="btn-teal btn-sm" id="btn-ask-coach-ex">Ask Coach</button>' +
+          '<button class="btn-outline btn-sm" id="btn-watch-demo" style="border-color:rgba(255,0,0,0.3);color:#ff4444;">&#9654; Watch Demo</button>' +
         '</div>' +
       '</div>';
 
@@ -2852,6 +2853,9 @@
         currentWorkoutData.exercises[idx].cue = "Swapped. Focus on form and controlled movement.";
         renderExercise(idx);
       }
+      if(e.target.id === "btn-watch-demo"){
+        openDemoSheet(ex.name, ex.cue);
+      }
       if(e.target.id === "btn-ask-coach-ex"){
         $("#coach-mini").classList.add("active");
         $("#coach-mini-body").innerHTML = '<p style="color:#4a6080;">Ask about form, alternatives, or modifications for ' + ex.name + '.</p>';
@@ -2879,13 +2883,16 @@
       var cat = (ex.category || "default").toLowerCase();
       var icon = catIcons[cat] || catIcons["default"];
       var color = catColors[cat] || catColors["default"];
-      return '<div class="preview-ex-row" onclick="document.getElementById(\'exercise-preview-overlay\').style.display=\'none\';startWorkoutAt(' + i + ');">' +
-        '<div class="preview-ex-icon" style="background:' + color + '20;border:2px solid ' + color + '40">' + icon + '</div>' +
-        '<div class="preview-ex-info">' +
+      return '<div class="preview-ex-row" style="flex-wrap:wrap;">' +
+        '<div class="preview-ex-icon" style="background:' + color + '20;border:2px solid ' + color + '40;cursor:pointer;" onclick="document.getElementById(\'exercise-preview-overlay\').style.display=\'none\';startWorkoutAt(' + i + ');">' + icon + '</div>' +
+        '<div class="preview-ex-info" style="cursor:pointer;" onclick="document.getElementById(\'exercise-preview-overlay\').style.display=\'none\';startWorkoutAt(' + i + ');">' +
           '<div class="preview-ex-name">' + ex.name + '</div>' +
           '<div class="preview-ex-meta">' + ex.sets + ' sets \u00d7 ' + (ex.defaultReps || ex.reps || "?") + ' reps \u00b7 Rest: ' + (ex.rest || "60s") + '</div>' +
         '</div>' +
-        '<div class="preview-ex-arrow">\u203A</div>' +
+        '<div style="display:flex;gap:6px;align-items:center;">' +
+          '<button style="background:rgba(255,0,0,0.1);border:1px solid rgba(255,0,0,0.3);color:#ff4444;padding:4px 10px;border-radius:6px;font-size:0.7rem;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;" onclick="event.stopPropagation();openDemoSheet(\'' + ex.name.replace(/'/g,"\\'") + '\',\'' + (ex.cue || '').replace(/'/g,"\\'") + '\');">&#9654; Demo</button>' +
+          '<div class="preview-ex-arrow" style="cursor:pointer;" onclick="document.getElementById(\'exercise-preview-overlay\').style.display=\'none\';startWorkoutAt(' + i + ');">\u203A</div>' +
+        '</div>' +
       '</div>';
     }).join("");
     $("#preview-title").textContent = currentWorkoutData.name || "Workout Plan";
@@ -4196,6 +4203,92 @@
 
 })();
 </script>
+<!-- ═══ WATCH DEMO SHEET ═══ -->
+<div id="demo-overlay" onclick="closeDemoSheet()" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9997;display:none;"></div>
+<div id="demo-sheet" style="position:fixed;bottom:0;left:0;right:0;height:70vh;background:#0e1e36;border-radius:20px 20px 0 0;z-index:9998;transform:translateY(100%);transition:transform 0.3s;display:flex;flex-direction:column;">
+  <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;">
+    <div id="demo-sheet-title" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#e8edf5;letter-spacing:0.05em;"></div>
+    <button onclick="closeDemoSheet()" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:32px;height:32px;color:#e8edf5;font-size:18px;cursor:pointer;">&#10005;</button>
+  </div>
+  <div id="demo-sheet-content" style="flex:1;padding:16px;overflow-y:auto;"></div>
+</div>
+
+<script>
+function openDemoSheet(exerciseName, cue) {
+  var sheet = document.getElementById('demo-sheet');
+  var overlay = document.getElementById('demo-overlay');
+  var title = document.getElementById('demo-sheet-title');
+  var content = document.getElementById('demo-sheet-content');
+  title.textContent = exerciseName;
+  content.innerHTML =
+    '<div style="background:#142444;border-radius:10px;padding:16px;margin-bottom:12px;">' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#f0a500;margin-bottom:8px;">WATCH DEMONSTRATION</div>' +
+      '<p style="font-size:13px;color:#8fa3c0;margin-bottom:12px;">Tap below to watch a form demonstration on YouTube.</p>' +
+      '<a href="https://www.youtube.com/results?search_query=' + encodeURIComponent(exerciseName + ' proper form tutorial') + '" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;background:#ff0000;border-radius:8px;padding:12px 16px;text-decoration:none;">' +
+        '<span style="font-size:20px;">&#9654;</span>' +
+        '<div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.06em;color:white;">WATCH ON YOUTUBE</div>' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.7);">' + exerciseName + ' — Proper Form</div></div>' +
+      '</a>' +
+    '</div>' +
+    '<div style="background:#142444;border-radius:10px;padding:16px;">' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#f0a500;margin-bottom:8px;">COACHING CUE</div>' +
+      '<div style="font-size:14px;color:#e8edf5;line-height:1.6;">' + (cue || 'Focus on controlled movement and full range of motion.') + '</div>' +
+    '</div>' +
+    '<div style="background:#142444;border-radius:10px;padding:16px;margin-top:12px;">' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#f0a500;margin-bottom:8px;">MUSCLES TARGETED</div>' +
+      '<div id="demo-muscles" style="display:flex;gap:6px;flex-wrap:wrap;"></div>' +
+    '</div>';
+  // Show muscle badges
+  var muscles = getMusclesForExercise(exerciseName);
+  var mEl = document.getElementById('demo-muscles');
+  if (mEl) {
+    var all = (muscles.primary || []).concat(muscles.secondary || []);
+    mEl.innerHTML = all.map(function(m) {
+      var isPrimary = (muscles.primary || []).indexOf(m) >= 0;
+      return '<span style="padding:4px 10px;border-radius:12px;font-size:0.72rem;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;letter-spacing:0.05em;' +
+        (isPrimary ? 'background:rgba(240,165,0,0.15);border:1px solid rgba(240,165,0,0.4);color:#f0a500;' : 'background:rgba(244,162,97,0.1);border:1px solid rgba(244,162,97,0.3);color:#f4a261;') +
+        '">' + m.replace(/-/g,' ') + '</span>';
+    }).join('');
+  }
+  overlay.style.display = 'block';
+  setTimeout(function() { sheet.style.transform = 'translateY(0)'; }, 10);
+}
+function closeDemoSheet() {
+  document.getElementById('demo-sheet').style.transform = 'translateY(100%)';
+  document.getElementById('demo-overlay').style.display = 'none';
+}
+
+// Exercise to muscle mapping
+var exerciseMuscleMap = {
+  'bench press':{primary:['chest'],secondary:['front-delts','triceps']},
+  'incline':{primary:['chest'],secondary:['front-delts','triceps']},
+  'bent-over row':{primary:['lats','rhomboids'],secondary:['biceps','rear-delts','lower-back']},
+  'lat pulldown':{primary:['lats'],secondary:['biceps','rear-delts']},
+  'pull-up':{primary:['lats'],secondary:['biceps','rear-delts','rhomboids']},
+  'squat':{primary:['quads','glutes'],secondary:['hamstrings','lower-back']},
+  'romanian deadlift':{primary:['hamstrings','glutes'],secondary:['lower-back']},
+  'deadlift':{primary:['lower-back','glutes','hamstrings'],secondary:['traps','quads']},
+  'overhead press':{primary:['front-delts'],secondary:['triceps','traps']},
+  'shoulder press':{primary:['front-delts'],secondary:['triceps','traps']},
+  'face pull':{primary:['rear-delts','rhomboids'],secondary:['traps']},
+  'curl':{primary:['biceps'],secondary:['forearms']},
+  'tricep':{primary:['triceps'],secondary:['forearms']},
+  'plank':{primary:['abs'],secondary:['obliques','lower-back']},
+  'leg press':{primary:['quads'],secondary:['glutes','hamstrings']},
+  'calf raise':{primary:['calves'],secondary:[]},
+  'cable fly':{primary:['chest'],secondary:['front-delts']},
+  'hip thrust':{primary:['glutes'],secondary:['hamstrings']},
+  'lunge':{primary:['quads','glutes'],secondary:['hamstrings','calves']},
+  'lateral raise':{primary:['front-delts'],secondary:['traps']},
+  'row':{primary:['lats'],secondary:['biceps','rear-delts']}
+};
+function getMusclesForExercise(name) {
+  var n = name.toLowerCase();
+  for (var key in exerciseMuscleMap) { if (n.indexOf(key) >= 0) return exerciseMuscleMap[key]; }
+  return {primary:[],secondary:[]};
+}
+</script>
+
 <script src="js/supabase-config.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/app.js"></script>

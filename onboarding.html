@@ -4,1131 +4,385 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FORGEIQ — Onboarding</title>
-<link rel="stylesheet" href="css/forgeiq.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Barlow',sans-serif;
-  background:#0a1628;
-  color:#e8edf5;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-h1,h2,h3,.step-heading{font-family:'Bebas Neue',sans-serif;letter-spacing:0.04em}
-h4,h5,.category-header{font-family:'Barlow Condensed',sans-serif;font-weight:600;text-transform:uppercase}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#0a1628;color:#e8edf5;font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
 
-/* ── Progress Bar ── */
-.progress-wrapper{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  background:#0e1e36;border-bottom:1px solid rgba(255,255,255,0.07);
-  padding:12px 24px;
-  display:flex;align-items:center;gap:16px;
-}
-.progress-label{
-  font-family:'Barlow Condensed',sans-serif;font-weight:600;
-  color:#8fa3c0;font-size:14px;white-space:nowrap;min-width:90px;
-}
-.progress-track{
-  flex:1;height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;
-}
-.progress-fill{
-  height:100%;width:10%;background:#f0a500;border-radius:3px;
-  transition:width 0.4s ease;
-}
-.progress-nav{display:flex;gap:10px;margin-left:auto}
-.progress-nav button{
-  font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;
-  padding:6px 16px;border-radius:6px;border:none;cursor:pointer;
-  transition:all 0.2s ease;
-}
-.btn-back{background:transparent;color:#8fa3c0;border:1px solid rgba(255,255,255,0.07)!important}
-.btn-back:hover{color:#e8edf5;border-color:rgba(240,165,0,0.18)!important}
-.btn-skip{background:transparent;color:#4a6080}
-.btn-skip:hover{color:#8fa3c0}
+.onboarding-orb{position:fixed;top:-80px;left:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(240,165,0,0.2) 0%,rgba(45,212,191,0.1) 50%,transparent 70%);animation:orbPulse 4s ease-in-out infinite;pointer-events:none;z-index:0;}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:0.5;}50%{transform:scale(1.3);opacity:1;}}
+.ob-header{padding:16px 20px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1;}
+.ob-wordmark{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.2em;color:rgba(255,255,255,0.3);}
+.ob-progress-bar{width:100%;max-width:400px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;}
+.ob-progress-fill{height:100%;background:#f0a500;border-radius:2px;transition:width 0.5s;width:0%;}
 
-/* ── Container ── */
-.onboarding-container{
-  max-width:720px;margin:0 auto;padding:80px 20px 40px;
-  min-height:100vh;
-}
+/* Messages */
+.ob-messages{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:16px;position:relative;z-index:1;}
+.msg-ai{display:flex;align-items:flex-start;gap:10px;animation:fadeUp 0.3s ease;}
+.msg-ai-bubble{background:#142444;border-left:3px solid #f0a500;border-radius:4px 12px 12px 4px;padding:14px 16px;max-width:85%;color:#e8edf5;font-size:16px;line-height:1.5;}
+.msg-user{display:flex;justify-content:flex-end;animation:fadeUp 0.3s ease;}
+.msg-user-bubble{background:#f0a500;border-radius:12px 4px 4px 12px;padding:12px 16px;max-width:75%;color:#0a1628;font-size:16px;font-weight:600;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── Steps ── */
-.step{
-  display:none;opacity:0;
-  transition:opacity 0.35s ease;
-}
-.step.active{display:block;opacity:1}
+/* Quick replies */
+.ob-qr{padding:8px 16px 12px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;z-index:1;}
+.ob-qr::-webkit-scrollbar{display:none;}
+.qr-pill{flex-shrink:0;padding:10px 18px;border-radius:24px;border:1px solid rgba(240,165,0,0.5);background:rgba(240,165,0,0.08);color:#f0a500;font-size:14px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.qr-pill:hover,.qr-pill:active{background:#f0a500;color:#0a1628;}
 
-.step-heading{
-  font-size:clamp(28px,5vw,42px);color:#f0a500;margin-bottom:8px;line-height:1.1;
-}
-.step-sub{color:#8fa3c0;font-size:15px;margin-bottom:28px;line-height:1.5}
+/* Input bar */
+.ob-input-bar{padding:12px 16px;display:flex;gap:8px;align-items:center;border-top:1px solid rgba(255,255,255,0.08);background:#0a1628;z-index:1;}
+#ob-input{flex:1;height:44px;background:#142444;border:1px solid rgba(255,255,255,0.15);border-radius:22px;padding:0 16px;color:#e8edf5;font-size:16px;outline:none;font-family:'Barlow',sans-serif;}
+#ob-input:focus{border-color:#f0a500;}
+#ob-send{width:44px;height:44px;border-radius:50%;background:#f0a500;border:none;color:#0a1628;font-size:18px;cursor:pointer;}
+#ob-mic{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#8fa3c0;font-size:18px;cursor:pointer;}
 
-/* ── Tiles (checkbox + radio) ── */
-.tile-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;
-  margin-bottom:24px;
-}
-.tile{
-  position:relative;cursor:pointer;
-  background:#142444;border:1px solid rgba(255,255,255,0.07);
-  border-radius:10px;padding:14px 18px;
-  font-family:'Barlow',sans-serif;font-size:15px;font-weight:400;
-  color:#e8edf5;transition:all 0.2s ease;
-  display:flex;align-items:center;gap:12px;
-  user-select:none;
-}
-.tile:hover{border-color:rgba(240,165,0,0.18);background:#1a2e52}
-.tile.selected{
-  border-color:#f0a500;background:rgba(240,165,0,0.12);color:#f0a500;
-}
-.tile .check-icon{
-  width:20px;height:20px;border-radius:5px;flex-shrink:0;
-  border:2px solid #4a6080;display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s ease;
-}
-.tile.selected .check-icon{border-color:#f0a500;background:#f0a500}
-.tile.selected .check-icon::after{
-  content:'';display:block;width:6px;height:10px;
-  border:solid #0a1628;border-width:0 2px 2px 0;
-  transform:rotate(45deg);margin-top:-2px;
-}
-.tile .radio-icon{
-  width:20px;height:20px;border-radius:50%;flex-shrink:0;
-  border:2px solid #4a6080;display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s ease;
-}
-.tile.selected .radio-icon{border-color:#f0a500}
-.tile.selected .radio-icon::after{
-  content:'';display:block;width:10px;height:10px;
-  border-radius:50%;background:#f0a500;
-}
-
-/* ── Category Headers ── */
-.category-header{
-  font-size:13px;color:#f0a500;letter-spacing:0.1em;
-  margin:28px 0 12px;padding-bottom:6px;
-  border-bottom:1px solid rgba(240,165,0,0.18);
-}
-.category-header:first-child{margin-top:0}
-
-/* ── Form Groups ── */
-.form-group{margin-bottom:28px}
-.form-group label.group-label{
-  display:block;font-family:'Barlow Condensed',sans-serif;
-  font-weight:600;font-size:16px;color:#e8edf5;margin-bottom:10px;
-}
-.form-group .radio-row{display:flex;flex-wrap:wrap;gap:10px}
-.form-group .radio-row .tile{padding:10px 16px;font-size:14px}
-
-/* ── Number Inputs ── */
-.number-input-group{
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;
-}
-.number-field{display:flex;flex-direction:column;gap:6px}
-.number-field label{
-  font-family:'Barlow Condensed',sans-serif;font-weight:500;
-  font-size:14px;color:#8fa3c0;
-}
-.number-field input[type="number"]{
-  background:#142444;border:1px solid rgba(255,255,255,0.07);
-  border-radius:8px;padding:12px 16px;color:#e8edf5;
-  font-family:'Barlow',sans-serif;font-size:16px;
-  outline:none;transition:border-color 0.2s;
-  -moz-appearance:textfield;
-}
-.number-field input[type="number"]::-webkit-inner-spin-button,
-.number-field input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none}
-.number-field input[type="number"]:focus{border-color:rgba(240,165,0,0.5)}
-
-/* ── Next Button ── */
-.btn-next{
-  display:block;width:100%;margin-top:32px;
-  padding:16px;border:none;border-radius:10px;
-  background:#f0a500;color:#0a1628;
-  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;
-  cursor:pointer;transition:background 0.2s;
-}
-.btn-next:hover{background:#ffb820}
-.btn-next:disabled{background:#4a6080;cursor:not-allowed}
-
-/* ── Disclaimer ── */
-.disclaimer{
-  margin-top:16px;padding:14px 18px;border-radius:8px;
-  background:rgba(240,165,0,0.06);border:1px solid rgba(240,165,0,0.18);
-  font-size:13px;color:#8fa3c0;line-height:1.5;
-}
-
-/* ── Strength Nudge Modal ── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;z-index:200;
-  background:rgba(10,22,40,0.88);
-  align-items:center;justify-content:center;padding:20px;
-}
-.modal-overlay.show{display:flex}
-.modal-box{
-  background:#0e1e36;border:1px solid rgba(240,165,0,0.18);
-  border-radius:14px;padding:36px 32px;max-width:560px;width:100%;
-  text-align:center;
-}
-.modal-box h2{font-family:'Bebas Neue',sans-serif;color:#f0a500;font-size:28px;margin-bottom:14px}
-.modal-box p{color:#8fa3c0;font-size:15px;line-height:1.6;margin-bottom:24px}
-.modal-buttons{display:flex;flex-direction:column;gap:12px}
-.modal-buttons button{
-  padding:14px;border:none;border-radius:10px;cursor:pointer;
-  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.04em;
-  transition:all 0.2s;
-}
-.modal-btn-primary{background:#f0a500;color:#0a1628}
-.modal-btn-primary:hover{background:#ffb820}
-.modal-btn-secondary{background:transparent;color:#8fa3c0;border:1px solid rgba(255,255,255,0.07)!important}
-.modal-btn-secondary:hover{color:#e8edf5;border-color:rgba(240,165,0,0.18)!important}
-
-/* ── Plan Reveal (Step 10) ── */
-.plan-summary{
-  background:#0e1e36;border:1px solid rgba(240,165,0,0.18);
-  border-radius:12px;padding:24px;margin-bottom:24px;
-}
-.plan-summary .flags{
-  display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;
-}
-.plan-summary .flag-tag{
-  background:rgba(240,165,0,0.12);color:#f0a500;
-  padding:4px 12px;border-radius:20px;font-size:13px;
-  font-family:'Barlow Condensed',sans-serif;font-weight:500;
-}
-.week-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;
-  margin:24px 0;
-}
-.day-card{
-  background:#142444;border:1px solid rgba(255,255,255,0.07);
-  border-radius:10px;padding:16px;text-align:center;
-}
-.day-card .day-name{
-  font-family:'Bebas Neue',sans-serif;font-size:18px;color:#f0a500;margin-bottom:6px;
-}
-.day-card .day-workout{font-size:13px;color:#8fa3c0;line-height:1.4}
-
-.btn-start{
-  display:block;width:100%;padding:18px;border:none;border-radius:12px;
-  background:#f0a500;color:#0a1628;
-  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.06em;
-  cursor:pointer;transition:background 0.2s;
-}
-.btn-start:hover{background:#ffb820}
-
-/* ── Responsive ── */
-@media(max-width:600px){
-  .tile-grid{grid-template-columns:1fr}
-  .number-input-group{grid-template-columns:1fr}
-  .week-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
-  .progress-wrapper{padding:10px 14px;gap:10px}
-  .modal-box{padding:24px 18px}
-}
+/* Phase 2 checklist */
+.cl-pill{padding:10px 16px;border-radius:24px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#8fa3c0;font-size:13px;cursor:pointer;transition:all 0.15s;font-family:'Barlow',sans-serif;}
+.cl-pill:hover{border-color:rgba(240,165,0,0.4);color:#e8edf5;}
+.cl-pill.selected{background:rgba(240,165,0,0.15);border-color:#f0a500;color:#f0a500;font-weight:600;}
+.cl-pill-num{width:52px;height:52px;border-radius:50%;padding:0;display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;}
+.cl-section{margin-bottom:20px;}
+.cl-label{font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a6080;margin-bottom:8px;}
 </style>
 </head>
 <body>
 
-<!-- ════════════════════ PROGRESS BAR ════════════════════ -->
-<div class="progress-wrapper">
-  <span class="progress-label" id="progressLabel">Step 1 of 10</span>
-  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="progress-nav">
-    <button class="btn-back" id="btnBack" onclick="prevStep()" data-i18n="btn_back">Back</button>
-    <button class="btn-skip" id="btnSkip" onclick="skipStep()" style="display:none">Skip</button>
-  </div>
-</div>
-
-<div class="onboarding-container">
-
-<!-- ════════════════════ STEP 1 — PRIMARY GOAL ════════════════════ -->
-<div class="step active" id="step1">
-  <h1 class="step-heading" data-i18n="onboard_step1_title">WHAT IS YOUR PRIMARY GOAL?</h1>
-  <p class="step-sub" data-i18n="onboard_step1_sub">Select all that apply.</p>
-  <div class="tile-grid" data-field="primaryGoals" data-type="multi">
-    <div class="tile" data-value="Lose Weight" onclick="toggleTile(this)"><span class="check-icon"></span>Lose Weight</div>
-    <div class="tile" data-value="Build Muscle and Strength" onclick="toggleTile(this)"><span class="check-icon"></span>Build Muscle and Strength</div>
-    <div class="tile" data-value="Body Recomposition" onclick="toggleTile(this)"><span class="check-icon"></span>Body Recomposition</div>
-    <div class="tile" data-value="Improve My Health" onclick="toggleTile(this)"><span class="check-icon"></span>Improve My Health (blood pressure, blood sugar, cholesterol)</div>
-    <div class="tile" data-value="Train Around an Injury" onclick="toggleTile(this)"><span class="check-icon"></span>Train Around an Injury</div>
-    <div class="tile" data-value="Athletic Performance" onclick="toggleTile(this)"><span class="check-icon"></span>Athletic Performance</div>
-    <div class="tile" data-value="Build the Habit" onclick="toggleTile(this)"><span class="check-icon"></span>Build the Habit</div>
-    <div class="tile" data-value="50+ Strong" onclick="toggleTile(this)"><span class="check-icon"></span>50+ Strong</div>
-    <div class="tile" data-value="Train Together" onclick="toggleTile(this)"><span class="check-icon"></span>Train Together (couples)</div>
-    <div class="tile" data-value="Mental Health and Recovery" onclick="toggleTile(this)"><span class="check-icon"></span>Mental Health and Recovery</div>
-  </div>
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 2 — BARRIERS ════════════════════ -->
-<div class="step" id="step2">
-  <h1 class="step-heading" data-i18n="onboard_step2_title">WHAT HAS PREVENTED YOU FROM TAKING THE STEP?</h1>
-  <p class="step-sub" data-i18n="onboard_step2_sub">Select all that apply.</p>
-  <div class="tile-grid" data-field="barriers" data-type="multi">
-    <div class="tile" data-value="I don't know where to start" onclick="toggleTile(this)"><span class="check-icon"></span>I don't know where to start</div>
-    <div class="tile" data-value="I've tried before and quit" onclick="toggleTile(this)"><span class="check-icon"></span>I've tried before and quit</div>
-    <div class="tile" data-value="I don't have time" onclick="toggleTile(this)"><span class="check-icon"></span>I don't have time</div>
-    <div class="tile" data-value="I've been injured or managing a health condition" onclick="toggleTile(this)"><span class="check-icon"></span>I've been injured or managing a health condition</div>
-    <div class="tile" data-value="I don't believe it will actually work for me" onclick="toggleTile(this)"><span class="check-icon"></span>I don't believe it will actually work for me</div>
-    <div class="tile" data-value="I can't afford a personal trainer" onclick="toggleTile(this)"><span class="check-icon"></span>I can't afford a personal trainer</div>
-    <div class="tile" data-value="I don't have anyone to do it with" onclick="toggleTile(this)"><span class="check-icon"></span>I don't have anyone to do it with</div>
-    <div class="tile" data-value="My mental health makes it hard to stay consistent" onclick="toggleTile(this)"><span class="check-icon"></span>My mental health makes it hard to stay consistent</div>
-    <div class="tile" data-value="Nothing — I'm ready right now" onclick="toggleTile(this)"><span class="check-icon"></span>Nothing — I'm ready right now</div>
-  </div>
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 3 — EXPERIENCE LEVEL ════════════════════ -->
-<div class="step" id="step3">
-  <h1 class="step-heading" data-i18n="onboard_step3_title">YOUR EXPERIENCE LEVEL</h1>
-  <p class="step-sub" data-i18n="onboard_step3_sub">Select the one that best describes you.</p>
-  <div class="tile-grid" data-field="experienceLevel" data-type="single">
-    <div class="tile" data-value="Complete beginner" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Complete beginner — never trained consistently</div>
-    <div class="tile" data-value="Some experience" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Some experience — on and off</div>
-    <div class="tile" data-value="Consistent 1+ years" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Consistent for 1+ years</div>
-    <div class="tile" data-value="Advanced" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Advanced — serious training history</div>
-  </div>
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 4 — HEALTH CONDITIONS ════════════════════ -->
-<div class="step" id="step4">
-  <h1 class="step-heading" data-i18n="onboard_step4_title">ANY OF THESE APPLY TO YOU?</h1>
-  <p class="step-sub" data-i18n="onboard_step4_sub">Your AI coach uses this to protect you and build around your reality — not a generic plan. Select none if nothing applies.</p>
-
-  <div data-field="healthConditions" data-type="multi">
-    <div class="category-header">HEALTH CONDITIONS</div>
-    <div class="tile-grid">
-      <div class="tile" data-value="GLP-1 or weight loss medication" onclick="toggleTile(this)"><span class="check-icon"></span>I am on a GLP-1 or weight loss medication (Ozempic, Wegovy, Mounjaro, Zepbound)</div>
-      <div class="tile" data-value="Cardiovascular condition" onclick="toggleTile(this)"><span class="check-icon"></span>I have a cardiovascular condition (high blood pressure, heart disease)</div>
-      <div class="tile" data-value="Diabetes or blood sugar concerns" onclick="toggleTile(this)"><span class="check-icon"></span>I have diabetes or blood sugar concerns</div>
-      <div class="tile" data-value="Diagnosed with obesity" onclick="toggleTile(this)"><span class="check-icon"></span>I have been diagnosed with obesity</div>
-      <div class="tile" data-value="Respiratory condition" onclick="toggleTile(this)"><span class="check-icon"></span>I have a respiratory condition (asthma, COPD)</div>
-      <div class="tile" data-value="Osteoporosis or bone density concerns" onclick="toggleTile(this)"><span class="check-icon"></span>I have osteoporosis or bone density concerns</div>
-      <div class="tile" data-value="Thyroid or hormonal condition" onclick="toggleTile(this)"><span class="check-icon"></span>I have a thyroid or hormonal condition (hypothyroid, PCOS, menopause)</div>
-    </div>
-
-    <div class="category-header">PHYSICAL CONDITIONS</div>
-    <div class="tile-grid">
-      <div class="tile" data-value="Training with an injury" onclick="toggleTile(this)"><span class="check-icon"></span>I am training with an injury</div>
-      <div class="tile" data-value="Surgery or joint replacement" onclick="toggleTile(this)"><span class="check-icon"></span>I have had surgery or a joint replacement</div>
-      <div class="tile" data-value="Chronic pain" onclick="toggleTile(this)"><span class="check-icon"></span>I have chronic pain (fibromyalgia, arthritis, back pain)</div>
-      <div class="tile" data-value="Limited mobility" onclick="toggleTile(this)"><span class="check-icon"></span>I have limited mobility</div>
-    </div>
-
-    <div class="category-header">MENTAL HEALTH AND LIFE</div>
-    <div class="tile-grid">
-      <div class="tile" data-value="Mental health condition" onclick="toggleTile(this)"><span class="check-icon"></span>I am managing a mental health condition (PTSD, anxiety, depression)</div>
-      <div class="tile" data-value="Recovery from addiction" onclick="toggleTile(this)"><span class="check-icon"></span>I am in recovery from addiction</div>
-      <div class="tile" data-value="Sleep or chronic fatigue" onclick="toggleTile(this)"><span class="check-icon"></span>I struggle with sleep or chronic fatigue</div>
-      <div class="tile" data-value="Pregnant or postpartum" onclick="toggleTile(this)"><span class="check-icon"></span>I am pregnant or postpartum</div>
-    </div>
-
-    <div class="category-header">IDENTITY AND LIFE STAGE</div>
-    <div class="tile-grid">
-      <div class="tile" data-value="Veteran, first responder, or in service" onclick="toggleTile(this)"><span class="check-icon"></span>I am a veteran, first responder, or in service</div>
-      <div class="tile" data-value="50 or older" onclick="toggleTile(this)"><span class="check-icon"></span>I am 50 or older</div>
-      <div class="tile" data-value="Training with a partner or spouse" onclick="toggleTile(this)"><span class="check-icon"></span>I am training with a partner or spouse</div>
-      <div class="tile" data-value="Significant weight loss" onclick="toggleTile(this)"><span class="check-icon"></span>I have experienced significant weight loss (skin changes, rebuilding)</div>
-    </div>
-
-    <div class="category-header">OTHER</div>
-    <div class="tile-grid">
-      <div class="tile" data-value="Something else" onclick="toggleTile(this)"><span class="check-icon"></span>Something else applies — tell your coach in chat</div>
-    </div>
-  </div>
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 4B — MEDICATIONS ════════════════════ -->
-<div class="step" id="step4b">
-  <h1 class="step-heading" data-i18n="onboard_step4b_title">ARE YOU CURRENTLY TAKING ANY MEDICATIONS?</h1>
-  <p class="step-sub" data-i18n="onboard_step4b_sub">Select all that apply.</p>
-  <div class="tile-grid" data-field="medications" data-type="multi">
-    <div class="tile" data-value="GLP-1 medication" onclick="toggleTile(this)"><span class="check-icon"></span>GLP-1 medication (Ozempic, Wegovy, Mounjaro, Zepbound, Rybelsus)</div>
-    <div class="tile" data-value="Other weight loss medication" onclick="toggleTile(this)"><span class="check-icon"></span>Other weight loss medication</div>
-    <div class="tile" data-value="Peptides" onclick="toggleTile(this)"><span class="check-icon"></span>Peptides (BPC-157, TB-500, or similar)</div>
-    <div class="tile" data-value="Blood pressure medication" onclick="toggleTile(this)"><span class="check-icon"></span>Blood pressure medication</div>
-    <div class="tile" data-value="Blood thinners" onclick="toggleTile(this)"><span class="check-icon"></span>Blood thinners</div>
-    <div class="tile" data-value="Thyroid medication" onclick="toggleTile(this)"><span class="check-icon"></span>Thyroid medication</div>
-    <div class="tile" data-value="Mental health medication" onclick="toggleTile(this)"><span class="check-icon"></span>Mental health medication (antidepressants, mood stabilizers)</div>
-    <div class="tile" data-value="Insulin or diabetes medication" onclick="toggleTile(this)"><span class="check-icon"></span>Insulin or diabetes medication</div>
-    <div class="tile" data-value="Hormone therapy" onclick="toggleTile(this)"><span class="check-icon"></span>Hormone therapy (HRT, testosterone)</div>
-    <div class="tile" data-value="None of the above" onclick="toggleTile(this)"><span class="check-icon"></span>None of the above</div>
-    <div class="tile" data-value="Something else — tell your coach" onclick="toggleTile(this)"><span class="check-icon"></span>Something else — tell your coach</div>
-  </div>
-  <div class="disclaimer">FORGEIQ uses this to personalize your programming. This is not medical advice. Always consult your physician before changing medications or supplements.</div>
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 4C — SUPPLEMENTS ════════════════════ -->
-<div class="step" id="step4c">
-  <h1 class="step-heading" data-i18n="onboard_step4c_title">ARE YOU CURRENTLY TAKING ANY SUPPLEMENTS?</h1>
-  <p class="step-sub" data-i18n="onboard_step4c_sub">Your coach uses this to avoid redundant recommendations and identify real gaps.</p>
-
-  <div class="tile-grid" data-field="currentSupplements" data-type="multi">
-    <div class="tile" data-value="Protein powder (whey, plant-based, casein)" onclick="toggleTile(this)"><span class="check-icon"></span>Protein powder (whey, plant-based, casein)</div>
-    <div class="tile" data-value="Creatine monohydrate" onclick="toggleTile(this)"><span class="check-icon"></span>Creatine monohydrate</div>
-    <div class="tile" data-value="Pre-workout" onclick="toggleTile(this)"><span class="check-icon"></span>Pre-workout</div>
-    <div class="tile" data-value="BCAAs" onclick="toggleTile(this)"><span class="check-icon"></span>BCAAs</div>
-    <div class="tile" data-value="Multivitamin" onclick="toggleTile(this)"><span class="check-icon"></span>Multivitamin</div>
-    <div class="tile" data-value="Vitamin D" onclick="toggleTile(this)"><span class="check-icon"></span>Vitamin D</div>
-    <div class="tile" data-value="Magnesium" onclick="toggleTile(this)"><span class="check-icon"></span>Magnesium</div>
-    <div class="tile" data-value="Omega-3 fish oil" onclick="toggleTile(this)"><span class="check-icon"></span>Omega-3 fish oil</div>
-    <div class="tile" data-value="Collagen peptides" onclick="toggleTile(this)"><span class="check-icon"></span>Collagen peptides</div>
-    <div class="tile" data-value="Probiotics" onclick="toggleTile(this)"><span class="check-icon"></span>Probiotics</div>
-    <div class="tile" data-value="Greens powder" onclick="toggleTile(this)"><span class="check-icon"></span>Greens powder</div>
-    <div class="tile" data-value="Ashwagandha or adaptogen" onclick="toggleTile(this)"><span class="check-icon"></span>Ashwagandha or adaptogen</div>
-    <div class="tile" data-value="Zinc" onclick="toggleTile(this)"><span class="check-icon"></span>Zinc</div>
-    <div class="tile" data-value="B-Complex or B12" onclick="toggleTile(this)"><span class="check-icon"></span>B-Complex or B12</div>
-    <div class="tile" data-value="Fiber supplement" onclick="toggleTile(this)"><span class="check-icon"></span>Fiber supplement</div>
-    <div class="tile" data-value="Electrolytes" onclick="toggleTile(this)"><span class="check-icon"></span>Electrolytes</div>
-    <div class="tile" data-value="Fat burner or thermogenic" onclick="toggleTile(this)"><span class="check-icon"></span>Fat burner or thermogenic</div>
-    <div class="tile" data-value="Testosterone booster (OTC)" onclick="toggleTile(this)"><span class="check-icon"></span>Testosterone booster (OTC)</div>
-    <div class="tile" data-value="None — I don't take supplements" onclick="toggleTile(this)"><span class="check-icon"></span>None — I don't take supplements</div>
-    <div class="tile" data-value="Other" onclick="toggleSupplementOther(this)"><span class="check-icon"></span>Other</div>
-  </div>
-  <div id="supplementOtherWrap" style="display:none;margin-bottom:24px">
-    <input type="text" id="supplementOtherText" placeholder="What other supplements do you take?" style="width:100%;background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:12px 16px;color:#e8edf5;font-family:'Barlow',sans-serif;font-size:15px;outline:none">
+<div id="onboarding-screen" style="position:fixed;inset:0;background:#0a1628;display:flex;flex-direction:column;z-index:9999;overflow:hidden;">
+  <div class="onboarding-orb"></div>
+  <div class="ob-header">
+    <div class="ob-wordmark">FORGEIQ</div>
+    <div class="ob-progress-bar"><div class="ob-progress-fill" id="ob-progress"></div></div>
   </div>
 
-  <div class="form-group">
-    <label class="group-label">What is your monthly supplement budget?</label>
-    <div class="radio-row" data-field="supplementBudget" data-type="single">
-      <div class="tile" data-value="I prefer not to spend on supplements" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I prefer not to spend on supplements</div>
-      <div class="tile" data-value="Under $50/month" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Under $50/month</div>
-      <div class="tile" data-value="$50-100/month" onclick="selectRadioTile(this)"><span class="radio-icon"></span>$50-100/month</div>
-      <div class="tile" data-value="$100-200/month" onclick="selectRadioTile(this)"><span class="radio-icon"></span>$100-200/month</div>
-      <div class="tile" data-value="I invest heavily in supplementation" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I invest heavily in supplementation</div>
+  <!-- PHASE 1: AI CONVERSATION -->
+  <div id="phase1-wrap" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+    <div class="ob-messages" id="ob-messages"></div>
+    <div class="ob-qr" id="ob-qr"></div>
+    <div class="ob-input-bar">
+      <input type="text" id="ob-input" placeholder="Type your response..." autocomplete="off">
+      <button id="ob-mic" onclick="startVoice()">&#127908;</button>
+      <button id="ob-send" onclick="sendP1()">&#10148;</button>
     </div>
   </div>
 
-  <div class="form-group">
-    <label class="group-label">What is your approach to supplements?</label>
-    <div class="radio-row" data-field="supplementPhilosophy" data-type="single">
-      <div class="tile" data-value="Only what has strong research behind it" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Only what has strong research behind it</div>
-      <div class="tile" data-value="Open to most things if there's some evidence" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Open to most things if there's some evidence</div>
-      <div class="tile" data-value="I follow what my coach recommends" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I follow what my coach recommends</div>
-      <div class="tile" data-value="I like to experiment and track results" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I like to experiment and track results</div>
-    </div>
-  </div>
+  <!-- PHASE 2: SMART CHECKLIST -->
+  <div id="phase2-wrap" style="flex:1;display:none;flex-direction:column;overflow:hidden;"></div>
 
-  <div class="disclaimer">FORGEIQ uses this to personalize your programming. This is not medical advice. Always consult your physician before changing medications or supplements.</div>
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 5 — EATING HABITS ════════════════════ -->
-<div class="step" id="step5">
-  <h1 class="step-heading" data-i18n="onboard_step5_title">LET'S TALK ABOUT FOOD</h1>
-  <p class="step-sub" data-i18n="onboard_step5_sub">Help your coach understand how you eat today.</p>
-
-  <div class="form-group">
-    <label class="group-label">What best describes your eating habits?</label>
-    <div class="radio-row" data-field="eatingHabits" data-type="single">
-      <div class="tile" data-value="I eat pretty well" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I eat pretty well</div>
-      <div class="tile" data-value="I eat inconsistently" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I eat inconsistently</div>
-      <div class="tile" data-value="I have no idea" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I have no idea</div>
-      <div class="tile" data-value="I follow a specific diet" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I follow a specific diet</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Do you follow a specific diet?</label>
-    <div class="radio-row" data-field="specificDiet" data-type="single">
-      <div class="tile" data-value="None" onclick="selectRadioTile(this)"><span class="radio-icon"></span>None</div>
-      <div class="tile" data-value="High protein" onclick="selectRadioTile(this)"><span class="radio-icon"></span>High protein</div>
-      <div class="tile" data-value="Keto" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Keto</div>
-      <div class="tile" data-value="Vegan" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Vegan</div>
-      <div class="tile" data-value="Vegetarian" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Vegetarian</div>
-      <div class="tile" data-value="Intermittent fasting" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Intermittent fasting</div>
-      <div class="tile" data-value="Mediterranean" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Mediterranean</div>
-      <div class="tile" data-value="Other" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Other</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">How many meals per day?</label>
-    <div class="radio-row" data-field="mealsPerDay" data-type="single">
-      <div class="tile" data-value="1-2" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1-2</div>
-      <div class="tile" data-value="3" onclick="selectRadioTile(this)"><span class="radio-icon"></span>3</div>
-      <div class="tile" data-value="4-5" onclick="selectRadioTile(this)"><span class="radio-icon"></span>4-5</div>
-      <div class="tile" data-value="I graze" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I graze</div>
-      <div class="tile" data-value="It varies" onclick="selectRadioTile(this)"><span class="radio-icon"></span>It varies</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Do you track calories or macros?</label>
-    <div class="radio-row" data-field="trackCalories" data-type="single">
-      <div class="tile" data-value="Yes consistently" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Yes consistently</div>
-      <div class="tile" data-value="Sometimes" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Sometimes</div>
-      <div class="tile" data-value="No" onclick="selectRadioTile(this)"><span class="radio-icon"></span>No</div>
-      <div class="tile" data-value="I used to" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I used to</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">How much water daily?</label>
-    <div class="radio-row" data-field="waterIntake" data-type="single">
-      <div class="tile" data-value="Under 4 cups" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Under 4 cups</div>
-      <div class="tile" data-value="4-6 cups" onclick="selectRadioTile(this)"><span class="radio-icon"></span>4-6 cups</div>
-      <div class="tile" data-value="6-8 cups" onclick="selectRadioTile(this)"><span class="radio-icon"></span>6-8 cups</div>
-      <div class="tile" data-value="8+ cups" onclick="selectRadioTile(this)"><span class="radio-icon"></span>8+ cups</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Food allergies?</label>
-    <div class="tile-grid" data-field="foodAllergies" data-type="multi">
-      <div class="tile" data-value="Gluten" onclick="toggleTile(this)"><span class="check-icon"></span>Gluten</div>
-      <div class="tile" data-value="Dairy" onclick="toggleTile(this)"><span class="check-icon"></span>Dairy</div>
-      <div class="tile" data-value="Nuts" onclick="toggleTile(this)"><span class="check-icon"></span>Nuts</div>
-      <div class="tile" data-value="Shellfish" onclick="toggleTile(this)"><span class="check-icon"></span>Shellfish</div>
-      <div class="tile" data-value="Soy" onclick="toggleTile(this)"><span class="check-icon"></span>Soy</div>
-      <div class="tile" data-value="None" onclick="toggleTile(this)"><span class="check-icon"></span>None</div>
-    </div>
-  </div>
-
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 6 — NUTRITION GOALS ════════════════════ -->
-<div class="step" id="step6">
-  <h1 class="step-heading" data-i18n="onboard_step6_title">WHAT ARE YOUR NUTRITION GOALS?</h1>
-  <p class="step-sub" data-i18n="onboard_step6_sub">Select all that apply.</p>
-  <div class="tile-grid" data-field="nutritionGoals" data-type="multi">
-    <div class="tile" data-value="Increase protein intake" onclick="toggleTile(this)"><span class="check-icon"></span>Increase protein intake</div>
-    <div class="tile" data-value="Eat in a caloric deficit" onclick="toggleTile(this)"><span class="check-icon"></span>Eat in a caloric deficit</div>
-    <div class="tile" data-value="Maintain current weight" onclick="toggleTile(this)"><span class="check-icon"></span>Maintain current weight</div>
-    <div class="tile" data-value="Eat in a caloric surplus" onclick="toggleTile(this)"><span class="check-icon"></span>Eat in a caloric surplus</div>
-    <div class="tile" data-value="Improve my relationship with food" onclick="toggleTile(this)"><span class="check-icon"></span>Improve my relationship with food</div>
-    <div class="tile" data-value="Support my medication" onclick="toggleTile(this)"><span class="check-icon"></span>Support my medication</div>
-    <div class="tile" data-value="I don't know — coach decides" onclick="toggleTile(this)"><span class="check-icon"></span>I don't know — coach decides</div>
-  </div>
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 7 — BODY AND MEASUREMENT GOALS ════════════════════ -->
-<div class="step" id="step7">
-  <h1 class="step-heading" data-i18n="onboard_step7_title">YOUR BODY GOALS</h1>
-  <p class="step-sub" data-i18n="onboard_step7_sub">Give your coach a starting point. Skip anything you are not sure about.</p>
-
-  <div class="number-input-group">
-    <div class="number-field">
-      <label>Current weight (lbs)</label>
-      <input type="number" id="currentWeight" placeholder="e.g. 185" min="50" max="700">
-    </div>
-    <div class="number-field">
-      <label>Goal weight (lbs)</label>
-      <input type="number" id="goalWeight" placeholder="e.g. 170" min="50" max="700">
-    </div>
-  </div>
-  <div class="number-input-group">
-    <div class="number-field">
-      <label>Current body fat % (optional)</label>
-      <input type="number" id="currentBF" placeholder="e.g. 25" min="1" max="70">
-    </div>
-    <div class="number-field">
-      <label>Goal body fat % (optional)</label>
-      <input type="number" id="goalBF" placeholder="e.g. 18" min="1" max="70">
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Timeline</label>
-    <div class="radio-row" data-field="timeline" data-type="single">
-      <div class="tile" data-value="4 weeks" onclick="selectRadioTile(this)"><span class="radio-icon"></span>4 weeks</div>
-      <div class="tile" data-value="8 weeks" onclick="selectRadioTile(this)"><span class="radio-icon"></span>8 weeks</div>
-      <div class="tile" data-value="12 weeks" onclick="selectRadioTile(this)"><span class="radio-icon"></span>12 weeks</div>
-      <div class="tile" data-value="6 months" onclick="selectRadioTile(this)"><span class="radio-icon"></span>6 months</div>
-      <div class="tile" data-value="No deadline" onclick="selectRadioTile(this)"><span class="radio-icon"></span>No deadline</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Primary focus</label>
-    <div class="radio-row" data-field="primaryFocus" data-type="single">
-      <div class="tile" data-value="Weight" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Weight</div>
-      <div class="tile" data-value="Body fat" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Body fat</div>
-      <div class="tile" data-value="Strength numbers" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Strength numbers</div>
-      <div class="tile" data-value="How I feel" onclick="selectRadioTile(this)"><span class="radio-icon"></span>How I feel</div>
-      <div class="tile" data-value="How I look" onclick="selectRadioTile(this)"><span class="radio-icon"></span>How I look</div>
-    </div>
-  </div>
-
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 8 — TRAINING STYLE ════════════════════ -->
-<div class="step" id="step8">
-  <h1 class="step-heading" data-i18n="onboard_step8_title">HOW DO YOU WANT TO TRAIN?</h1>
-  <p class="step-sub" data-i18n="onboard_step8_sub">Select all training styles that interest you.</p>
-
-  <div class="tile-grid" data-field="trainingStyles" data-type="multi">
-    <div class="tile" data-value="Strength Training" onclick="toggleTile(this)"><span class="check-icon"></span>Strength Training</div>
-    <div class="tile" data-value="HIIT" onclick="toggleTile(this)"><span class="check-icon"></span>HIIT</div>
-    <div class="tile" data-value="Functional Fitness" onclick="toggleTile(this)"><span class="check-icon"></span>Functional Fitness</div>
-    <div class="tile" data-value="Kettlebell Training" onclick="toggleTile(this)"><span class="check-icon"></span>Kettlebell Training</div>
-    <div class="tile" data-value="Cardio and Conditioning" onclick="toggleTile(this)"><span class="check-icon"></span>Cardio and Conditioning</div>
-    <div class="tile" data-value="Mobility and Flexibility" onclick="toggleTile(this)"><span class="check-icon"></span>Mobility and Flexibility</div>
-    <div class="tile" data-value="Athletic and Sport Performance" onclick="toggleTile(this)"><span class="check-icon"></span>Athletic and Sport Performance</div>
-    <div class="tile" data-value="Bodybuilding and Hypertrophy" onclick="toggleTile(this)"><span class="check-icon"></span>Bodybuilding and Hypertrophy</div>
-    <div class="tile" data-value="Body Recomposition" onclick="toggleTile(this)"><span class="check-icon"></span>Body Recomposition</div>
-    <div class="tile" data-value="Corrective and Rehab-Based" onclick="toggleTile(this)"><span class="check-icon"></span>Corrective and Rehab-Based</div>
-    <div class="tile" data-value="CrossFit and GPP" onclick="toggleTile(this)"><span class="check-icon"></span>CrossFit and GPP</div>
-    <div class="tile" data-value="DEKA FIT and Obstacle Training" onclick="toggleTile(this)"><span class="check-icon"></span>DEKA FIT and Obstacle Training</div>
-    <div class="tile" data-value="I don't know — coach decides" onclick="toggleTile(this)"><span class="check-icon"></span>I don't know — coach decides</div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Where do you train?</label>
-    <div class="radio-row" data-field="trainingLocation" data-type="single">
-      <div class="tile" data-value="Commercial gym" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Commercial gym</div>
-      <div class="tile" data-value="Home gym with weights" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Home gym with weights</div>
-      <div class="tile" data-value="Home bodyweight only" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Home bodyweight only</div>
-      <div class="tile" data-value="Both" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Both</div>
-      <div class="tile" data-value="Varies" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Varies</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Days per week?</label>
-    <div class="radio-row" data-field="daysPerWeek" data-type="single">
-      <div class="tile" data-value="2" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2</div>
-      <div class="tile" data-value="3" onclick="selectRadioTile(this)"><span class="radio-icon"></span>3</div>
-      <div class="tile" data-value="4" onclick="selectRadioTile(this)"><span class="radio-icon"></span>4</div>
-      <div class="tile" data-value="5" onclick="selectRadioTile(this)"><span class="radio-icon"></span>5</div>
-      <div class="tile" data-value="6" onclick="selectRadioTile(this)"><span class="radio-icon"></span>6</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Session duration?</label>
-    <div class="radio-row" data-field="sessionDuration" data-type="single">
-      <div class="tile" data-value="20 min" onclick="selectRadioTile(this)"><span class="radio-icon"></span>20 min</div>
-      <div class="tile" data-value="30 min" onclick="selectRadioTile(this)"><span class="radio-icon"></span>30 min</div>
-      <div class="tile" data-value="45 min" onclick="selectRadioTile(this)"><span class="radio-icon"></span>45 min</div>
-      <div class="tile" data-value="60 min" onclick="selectRadioTile(this)"><span class="radio-icon"></span>60 min</div>
-      <div class="tile" data-value="90+ min" onclick="selectRadioTile(this)"><span class="radio-icon"></span>90+ min</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Time of day?</label>
-    <div class="radio-row" data-field="timeOfDay" data-type="single">
-      <div class="tile" data-value="Early morning" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Early morning</div>
-      <div class="tile" data-value="Mid-morning" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Mid-morning</div>
-      <div class="tile" data-value="Afternoon" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Afternoon</div>
-      <div class="tile" data-value="Evening" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Evening</div>
-      <div class="tile" data-value="Late night" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Late night</div>
-      <div class="tile" data-value="Varies" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Varies</div>
-    </div>
-  </div>
-
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 9 — STRENGTH BENCHMARKS ════════════════════ -->
-<div class="step" id="step9">
-  <h1 class="step-heading" data-i18n="onboard_step9_title">A FEW QUICK QUESTIONS</h1>
-  <p class="step-sub" data-i18n="onboard_step9_sub">This helps your coach scale everything to your current level.</p>
-
-  <div class="form-group">
-    <label class="group-label">Can you do a push up?</label>
-    <div class="radio-row" data-field="pushUp" data-type="single">
-      <div class="tile" data-value="Yes" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Yes</div>
-      <div class="tile" data-value="Modified only" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Modified only</div>
-      <div class="tile" data-value="Not yet" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Not yet</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Can you do a bodyweight squat without pain?</label>
-    <div class="radio-row" data-field="squat" data-type="single">
-      <div class="tile" data-value="Yes" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Yes</div>
-      <div class="tile" data-value="With modification" onclick="selectRadioTile(this)"><span class="radio-icon"></span>With modification</div>
-      <div class="tile" data-value="No" onclick="selectRadioTile(this)"><span class="radio-icon"></span>No</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Have you lifted weights before?</label>
-    <div class="radio-row" data-field="liftingExperience" data-type="single">
-      <div class="tile" data-value="Never" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Never</div>
-      <div class="tile" data-value="Some experience" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Some experience</div>
-      <div class="tile" data-value="Consistent 1+ years" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Consistent 1+ years</div>
-      <div class="tile" data-value="Advanced" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Advanced</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Biggest physical weakness?</label>
-    <div class="radio-row" data-field="weakness" data-type="single">
-      <div class="tile" data-value="Upper body" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Upper body</div>
-      <div class="tile" data-value="Lower body" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Lower body</div>
-      <div class="tile" data-value="Core" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Core</div>
-      <div class="tile" data-value="Cardio" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Cardio</div>
-      <div class="tile" data-value="Flexibility" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Flexibility</div>
-      <div class="tile" data-value="All of it" onclick="selectRadioTile(this)"><span class="radio-icon"></span>All of it</div>
-    </div>
-  </div>
-
-  <!-- COMPOUND LIFT BENCHMARKS (Priority 9) -->
-  <div class="form-group" style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.07);">
-    <label class="group-label" style="color:#f0a500;">Strength Benchmarks — Optional but powerful</label>
-    <p style="font-size:0.78rem;color:#8fa3c0;margin-bottom:16px;">These help your AI coach calibrate intensity. Skip any you have not tested.</p>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Bench Press — How much can you lift?</label>
-    <div class="radio-row" data-field="benchPress" data-type="single">
-      <div class="tile" data-value="none" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I do not bench yet</div>
-      <div class="tile" data-value="below_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Less than bodyweight</div>
-      <div class="tile" data-value="1x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>My bodyweight (1x BW)</div>
-      <div class="tile" data-value="1.25x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.25x bodyweight</div>
-      <div class="tile" data-value="1.5x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.5x bodyweight</div>
-      <div class="tile" data-value="2x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2x bodyweight or more</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Back Squat — How much can you lift?</label>
-    <div class="radio-row" data-field="backSquat" data-type="single">
-      <div class="tile" data-value="none" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I do not barbell squat yet</div>
-      <div class="tile" data-value="below_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Less than bodyweight</div>
-      <div class="tile" data-value="1x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>My bodyweight (1x BW)</div>
-      <div class="tile" data-value="1.25x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.25x bodyweight</div>
-      <div class="tile" data-value="1.5x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.5x bodyweight</div>
-      <div class="tile" data-value="2x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2x bodyweight or more</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Deadlift — How much can you pull?</label>
-    <div class="radio-row" data-field="deadlift" data-type="single">
-      <div class="tile" data-value="none" onclick="selectRadioTile(this)"><span class="radio-icon"></span>I do not deadlift yet</div>
-      <div class="tile" data-value="below_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Less than bodyweight</div>
-      <div class="tile" data-value="1x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>My bodyweight (1x BW)</div>
-      <div class="tile" data-value="1.5x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1.5x bodyweight</div>
-      <div class="tile" data-value="2x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2x bodyweight</div>
-      <div class="tile" data-value="2.5x_bw" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2.5x bodyweight or more</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Pull Ups — Unassisted reps</label>
-    <div class="radio-row" data-field="pullUps" data-type="single">
-      <div class="tile" data-value="0" onclick="selectRadioTile(this)"><span class="radio-icon"></span>None yet</div>
-      <div class="tile" data-value="1-3" onclick="selectRadioTile(this)"><span class="radio-icon"></span>1-3 reps</div>
-      <div class="tile" data-value="4-9" onclick="selectRadioTile(this)"><span class="radio-icon"></span>4-9 reps</div>
-      <div class="tile" data-value="10-15" onclick="selectRadioTile(this)"><span class="radio-icon"></span>10-15 reps</div>
-      <div class="tile" data-value="15+" onclick="selectRadioTile(this)"><span class="radio-icon"></span>15+ reps</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Dead Hang — How long?</label>
-    <div class="radio-row" data-field="deadHang" data-type="single">
-      <div class="tile" data-value="under15s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Under 15 seconds</div>
-      <div class="tile" data-value="15-30s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>15-30 seconds</div>
-      <div class="tile" data-value="30-60s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>30-60 seconds</div>
-      <div class="tile" data-value="60-90s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>60-90 seconds</div>
-      <div class="tile" data-value="90s+" onclick="selectRadioTile(this)"><span class="radio-icon"></span>90+ seconds</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Push Up Max — Max reps one set</label>
-    <div class="radio-row" data-field="pushUpMax" data-type="single">
-      <div class="tile" data-value="under5" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Under 5</div>
-      <div class="tile" data-value="5-10" onclick="selectRadioTile(this)"><span class="radio-icon"></span>5-10</div>
-      <div class="tile" data-value="10-20" onclick="selectRadioTile(this)"><span class="radio-icon"></span>10-20</div>
-      <div class="tile" data-value="20-30" onclick="selectRadioTile(this)"><span class="radio-icon"></span>20-30</div>
-      <div class="tile" data-value="30-50" onclick="selectRadioTile(this)"><span class="radio-icon"></span>30-50</div>
-      <div class="tile" data-value="50+" onclick="selectRadioTile(this)"><span class="radio-icon"></span>50+</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="group-label">Plank Hold — How long?</label>
-    <div class="radio-row" data-field="plankHold" data-type="single">
-      <div class="tile" data-value="under30s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>Under 30 seconds</div>
-      <div class="tile" data-value="30-60s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>30-60 seconds</div>
-      <div class="tile" data-value="60-90s" onclick="selectRadioTile(this)"><span class="radio-icon"></span>60-90 seconds</div>
-      <div class="tile" data-value="90s-2m" onclick="selectRadioTile(this)"><span class="radio-icon"></span>90 seconds-2 min</div>
-      <div class="tile" data-value="2m+" onclick="selectRadioTile(this)"><span class="radio-icon"></span>2 min+</div>
-    </div>
-  </div>
-
-  <button class="btn-next" onclick="nextStep()" data-i18n="btn_next">NEXT</button>
-</div>
-
-<!-- ════════════════════ STEP 10 — PLAN REVEAL ════════════════════ -->
-<div class="step" id="step10">
-  <h1 class="step-heading" data-i18n="onboard_step10_title">YOUR PLAN IS READY.</h1>
-  <p class="step-sub" id="planSubtext" data-i18n="onboard_step10_sub">Based on your goals, your history, and everything you just told us — your first 7 days are ready.</p>
-
-  <div class="plan-summary" id="planSummary">
-    <p style="color:#8fa3c0;font-size:14px;line-height:1.6" id="planConditions"></p>
-    <div class="flags" id="planFlags"></div>
-  </div>
-
-  <div class="week-grid" id="weekGrid">
-    <div class="day-card"><div class="day-name">MON</div><div class="day-workout" id="dayMon">Rest</div></div>
-    <div class="day-card"><div class="day-name">TUE</div><div class="day-workout" id="dayTue">Rest</div></div>
-    <div class="day-card"><div class="day-name">WED</div><div class="day-workout" id="dayWed">Rest</div></div>
-    <div class="day-card"><div class="day-name">THU</div><div class="day-workout" id="dayThu">Rest</div></div>
-    <div class="day-card"><div class="day-name">FRI</div><div class="day-workout" id="dayFri">Rest</div></div>
-    <div class="day-card"><div class="day-name">SAT</div><div class="day-workout" id="daySat">Rest</div></div>
-    <div class="day-card"><div class="day-name">SUN</div><div class="day-workout" id="daySun">Rest</div></div>
-  </div>
-
-  <button class="btn-start" onclick="completeOnboarding()" data-i18n="btn_start">I WILL NOT QUIT — START NOW</button>
-</div>
-
-</div><!-- /onboarding-container -->
-
-<!-- ════════════════════ STRENGTH TRAINING NUDGE MODAL ════════════════════ -->
-<div class="modal-overlay" id="strengthNudge">
-  <div class="modal-box">
-    <h2>YOUR COACH RECOMMENDS STRENGTH TRAINING</h2>
-    <p>Research published in Frontiers in Endocrinology (2026) shows that up to 25% of weight lost without resistance training comes from muscle — not fat. More muscle means better results and weight you actually keep off. Your coach will always include strength work, scaled to your level.</p>
-    <div class="modal-buttons">
-      <button class="modal-btn-primary" onclick="addStrengthTraining()">Got it — add strength training</button>
-      <button class="modal-btn-secondary" onclick="dismissStrengthNudge()">I will discuss with my coach</button>
-    </div>
-  </div>
+  <!-- PHASE 3: PLAN REVEAL -->
+  <div id="phase3-wrap" style="flex:1;display:none;flex-direction:column;overflow:hidden;"></div>
 </div>
 
 <script>
-/* ══════════════════════════════════════════════════════════
-   FORGEIQ ONBOARDING — 12-STEP FLOW (10 user-facing)
-   ══════════════════════════════════════════════════════════ */
+(function(){
+"use strict";
 
-var STEPS = ['step1','step2','step3','step4','step4b','step4c','step5','step6','step7','step8','step9','step10'];
-var STEP_DISPLAY_NUM = [1,2,3,4,4,4,5,6,7,8,9,10];
-var TOTAL_DISPLAY_STEPS = 10;
-var currentIndex = 0;
+var P1_SYS = 'You are FORGE AI, the coach inside FORGEIQ built by Dr. Michael P. Lovato EdD (NASM CNC/CES/PES, NCSC, GLP-1 specialist, Army Combat Engineer veteran). Conduct a warm coaching intake conversation. Have exactly 3 exchanges. Ask about: 1. What brought them here / their main goal. 2. One specific follow-up based on their answer. 3. Their biggest challenge or what has held them back. After the user third message, write a natural transition sentence then output: PHASE1_COMPLETE:{"summary":"2-3 sentence summary of what you learned"} Rules: Max 3 sentences per message. React genuinely. One question per message. Be direct and warm. After each message add: QUICKREPLIES:["option1","option2","option3","option4"]';
 
-var profile = {
-  primaryGoals: [],
-  barriers: [],
-  experienceLevel: '',
-  healthConditions: [],
-  medications: [],
-  eatingHabits: '',
-  specificDiet: '',
-  mealsPerDay: '',
-  trackCalories: '',
-  waterIntake: '',
-  foodAllergies: [],
-  supplements: {
-    currentSupplements: [],
-    otherSupplement: '',
-    budget: '',
-    philosophy: ''
-  },
-  nutritionGoals: [],
-  currentWeight: '',
-  goalWeight: '',
-  currentBF: '',
-  goalBF: '',
-  timeline: '',
-  primaryFocus: '',
-  trainingStyles: [],
-  trainingLocation: '',
-  daysPerWeek: '',
-  sessionDuration: '',
-  timeOfDay: '',
-  pushUp: '',
-  squat: '',
-  liftingExperience: '',
-  weakness: '',
-  completedAt: ''
-};
+var p1History = [];
+var p1Count = 0;
+var p1Summary = '';
 
-/* ── Tile Interaction ── */
-function toggleTile(tile) {
-  tile.classList.toggle('selected');
+function checkProfile() {
+  try {
+    var p = JSON.parse(localStorage.getItem('forgeiq_profile') || localStorage.getItem('forgeiq_profile_v1') || '{}');
+    if (p.onboardingComplete) { document.getElementById('onboarding-screen').style.display = 'none'; return true; }
+  } catch(e) {}
+  return false;
 }
 
-function selectRadioTile(tile) {
-  var parent = tile.closest('[data-field]') || tile.closest('.radio-row') || tile.closest('.tile-grid');
-  if (parent) {
-    parent.querySelectorAll('.tile').forEach(function(t) {
-      t.classList.remove('selected');
-    });
-  }
-  tile.classList.add('selected');
-}
-
-/* ── Supplement Other Toggle ── */
-function toggleSupplementOther(tile) {
-  toggleTile(tile);
-  var wrap = document.getElementById('supplementOtherWrap');
-  if (tile.classList.contains('selected')) {
-    wrap.style.display = 'block';
-    document.getElementById('supplementOtherText').focus();
-  } else {
-    wrap.style.display = 'none';
-    document.getElementById('supplementOtherText').value = '';
-  }
-}
-
-/* ── Collect Data from Current Step ── */
-function collectStepData() {
-  var stepEl = document.getElementById(STEPS[currentIndex]);
-  if (!stepEl) return;
-
-  // Multi-select fields
-  stepEl.querySelectorAll('[data-field][data-type="multi"]').forEach(function(grid) {
-    var field = grid.getAttribute('data-field');
-    var vals = [];
-    grid.querySelectorAll('.tile.selected').forEach(function(t) {
-      vals.push(t.getAttribute('data-value'));
-    });
-    profile[field] = vals;
-  });
-
-  // Single-select fields
-  stepEl.querySelectorAll('[data-field][data-type="single"]').forEach(function(group) {
-    var field = group.getAttribute('data-field');
-    var sel = group.querySelector('.tile.selected');
-    profile[field] = sel ? sel.getAttribute('data-value') : '';
-  });
-
-  // Number inputs (step 7)
-  if (STEPS[currentIndex] === 'step7') {
-    profile.currentWeight = document.getElementById('currentWeight').value;
-    profile.goalWeight = document.getElementById('goalWeight').value;
-    profile.currentBF = document.getElementById('currentBF').value;
-    profile.goalBF = document.getElementById('goalBF').value;
-  }
-
-  // Supplement step (step 4c)
-  if (STEPS[currentIndex] === 'step4c') {
-    var suppVals = [];
-    stepEl.querySelectorAll('[data-field="currentSupplements"] .tile.selected').forEach(function(t) {
-      suppVals.push(t.getAttribute('data-value'));
-    });
-    var budgetEl = stepEl.querySelector('[data-field="supplementBudget"] .tile.selected');
-    var philEl = stepEl.querySelector('[data-field="supplementPhilosophy"] .tile.selected');
-    profile.supplements = {
-      currentSupplements: suppVals,
-      otherSupplement: document.getElementById('supplementOtherText').value || '',
-      budget: budgetEl ? budgetEl.getAttribute('data-value') : '',
-      philosophy: philEl ? philEl.getAttribute('data-value') : ''
-    };
-  }
-}
-
-/* ── Navigation ── */
-function showStep(index) {
-  STEPS.forEach(function(id) {
-    var el = document.getElementById(id);
-    el.classList.remove('active');
-  });
-
-  var target = document.getElementById(STEPS[index]);
+function init() {
+  if (checkProfile()) return;
   setTimeout(function() {
-    target.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, 50);
-
-  currentIndex = index;
-  updateProgress();
-  updateNavButtons();
-
-  if (STEPS[index] === 'step10') {
-    buildPlanReveal();
-  }
+    addAI("Hey — I am your FORGE AI coach, built on the expertise of Dr. Michael Lovato. Before I build your plan, I want to understand what actually brought you here. What is going on?",
+      ["I want to lose weight","I want to build muscle","I am on GLP-1 medication","I need to get my health back"]);
+    p1History.push({role:'assistant', content:"Hey — I am your FORGE AI coach, built on the expertise of Dr. Michael Lovato. Before I build your plan, I want to understand what actually brought you here. What is going on?"});
+  }, 600);
 }
 
-function updateProgress() {
-  var displayNum = STEP_DISPLAY_NUM[currentIndex];
-  var pct = (displayNum / TOTAL_DISPLAY_STEPS) * 100;
-  document.getElementById('progressLabel').textContent = 'Step ' + displayNum + ' of ' + TOTAL_DISPLAY_STEPS;
-  document.getElementById('progressFill').style.width = pct + '%';
+function addAI(text, qr) {
+  var m = document.getElementById('ob-messages');
+  var d = document.createElement('div'); d.className = 'msg-ai';
+  d.innerHTML = '<div class="msg-ai-bubble">' + text.replace(/\n/g,'<br>') + '</div>';
+  m.appendChild(d); m.scrollTop = m.scrollHeight;
+  if (qr && qr.length) renderQR(qr);
+  setProg(Math.min(30, p1Count * 10));
 }
 
-function updateNavButtons() {
-  document.getElementById('btnBack').style.display = currentIndex === 0 ? 'none' : 'inline-block';
-
-  var skippable = ['step4', 'step4b', 'step4c', 'step5', 'step7'];
-  document.getElementById('btnSkip').style.display = skippable.indexOf(STEPS[currentIndex]) !== -1 ? 'inline-block' : 'none';
+function addUser(text) {
+  var m = document.getElementById('ob-messages');
+  var d = document.createElement('div'); d.className = 'msg-user';
+  d.innerHTML = '<div class="msg-user-bubble">' + text + '</div>';
+  m.appendChild(d); m.scrollTop = m.scrollHeight;
+  document.getElementById('ob-qr').innerHTML = '';
 }
 
-function nextStep() {
-  collectStepData();
+function renderQR(opts) {
+  var c = document.getElementById('ob-qr');
+  c.innerHTML = opts.map(function(o) {
+    return '<button class="qr-pill" onclick="sendP1(\'' + o.replace(/'/g,"\\'") + '\')">' + o + '</button>';
+  }).join('');
+}
 
-  // Strength training nudge check after step 8
-  if (STEPS[currentIndex] === 'step8') {
-    var styles = profile.trainingStyles || [];
-    if (styles.indexOf('Strength Training') === -1) {
-      document.getElementById('strengthNudge').classList.add('show');
+function showTyping() {
+  var m = document.getElementById('ob-messages');
+  var d = document.createElement('div'); d.className = 'msg-ai'; d.id = 'typing-ind';
+  d.innerHTML = '<div class="msg-ai-bubble" style="color:#4a6080;font-style:italic;">Coach is thinking...</div>';
+  m.appendChild(d); m.scrollTop = m.scrollHeight;
+}
+function removeTyping() { var e = document.getElementById('typing-ind'); if(e) e.remove(); }
+
+window.sendP1 = function(text) {
+  var inp = document.getElementById('ob-input');
+  var msg = text || (inp ? inp.value.trim() : '');
+  if (!msg) return;
+  if (inp) inp.value = '';
+  addUser(msg);
+  p1History.push({role:'user', content:msg});
+  p1Count++;
+  showTyping();
+
+  fetch('/.netlify/functions/chat', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:400, system:P1_SYS, messages:p1History})
+  })
+  .then(function(r) { if (!r.ok) throw new Error('API ' + r.status); return r.json(); })
+  .then(function(data) {
+    if (!data.content || !data.content[0]) throw new Error('No content');
+    var aiText = data.content[0].text;
+    removeTyping();
+
+    var qr = [];
+    var qrMatch = aiText.match(/QUICKREPLIES:\[([^\]]+)\]/);
+    if (qrMatch) { try { qr = JSON.parse('[' + qrMatch[1] + ']'); } catch(e){} aiText = aiText.replace(/QUICKREPLIES:\[[^\]]+\]/,'').trim(); }
+
+    var cMatch = aiText.match(/PHASE1_COMPLETE:(\{[^}]+\})/);
+    if (cMatch) {
+      try { p1Summary = JSON.parse(cMatch[1]).summary || ''; } catch(e){}
+      aiText = aiText.replace(/PHASE1_COMPLETE:[^\n]*/,'').trim();
+      p1History.push({role:'assistant', content:aiText});
+      addAI(aiText, []);
+      setTimeout(function() { goPhase2(); }, 1500);
       return;
     }
-  }
 
-  if (currentIndex < STEPS.length - 1) {
-    showStep(currentIndex + 1);
-  }
+    p1History.push({role:'assistant', content:aiText});
+    addAI(aiText, qr);
+    if (p1Count >= 3) setTimeout(function() { goPhase2(); }, 2000);
+  })
+  .catch(function(err) {
+    removeTyping();
+    console.error('Phase 1 error:', err);
+    addAI("I got enough to build your plan. Let us get the details right.", []);
+    setTimeout(function() { goPhase2(); }, 1500);
+  });
+};
+
+function goPhase2() {
+  var p1 = document.getElementById('phase1-wrap');
+  p1.style.transition = 'opacity 0.4s'; p1.style.opacity = '0';
+  setTimeout(function() {
+    p1.style.display = 'none';
+    buildPhase2();
+    var p2 = document.getElementById('phase2-wrap');
+    p2.style.display = 'flex'; p2.style.opacity = '0'; p2.style.transition = 'opacity 0.4s';
+    setTimeout(function() { p2.style.opacity = '1'; }, 50);
+  }, 400);
+  setProg(33);
 }
 
-function prevStep() {
-  if (currentIndex > 0) {
-    showStep(currentIndex - 1);
-  }
-}
+// Voice
+window.startVoice = function() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) { alert('Voice not supported in this browser.'); return; }
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var rec = new SR(); rec.lang = 'en-US';
+  rec.onresult = function(e) { var t = e.results[0][0].transcript; document.getElementById('ob-input').value = t; sendP1(t); };
+  var mic = document.getElementById('ob-mic');
+  mic.style.background = 'rgba(230,57,70,0.3)'; mic.style.borderColor = '#e63946';
+  rec.onend = function() { mic.style.background=''; mic.style.borderColor=''; };
+  rec.start();
+};
 
-function skipStep() {
-  collectStepData();
-  if (currentIndex < STEPS.length - 1) {
-    showStep(currentIndex + 1);
-  }
-}
+// Phase 2
+function buildPhase2() {
+  var wrap = document.getElementById('phase2-wrap');
+  wrap.innerHTML =
+    '<div style="padding:20px 16px 8px;position:relative;z-index:1;">' +
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.4rem;letter-spacing:0.06em;color:#f0a500;">QUICK DETAILS</div>' +
+      '<div style="font-size:0.8rem;color:#8fa3c0;margin-top:2px;">Tap your answers — almost done.</div>' +
+    '</div>' +
+    '<div id="cl-body" style="flex:1;overflow-y:auto;padding:0 16px 120px;position:relative;z-index:1;">' + buildCLHTML() + '</div>' +
+    '<div style="position:fixed;bottom:0;left:0;right:0;padding:16px;background:#0a1628;border-top:1px solid rgba(255,255,255,0.08);z-index:10;">' +
+      '<div id="cl-prog-text" style="font-size:0.75rem;color:#8fa3c0;text-align:center;margin-bottom:8px;">Complete all required sections</div>' +
+      '<button id="build-plan-btn" onclick="goPhase3()" disabled style="width:100%;padding:16px;background:#4a6080;border:none;border-radius:10px;color:#0a1628;font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;letter-spacing:0.08em;cursor:not-allowed;transition:all 0.3s;">BUILD MY PLAN &#8594;</button>' +
+    '</div>';
 
-/* ── Strength Nudge Modal ── */
-function addStrengthTraining() {
-  if (profile.trainingStyles.indexOf('Strength Training') === -1) {
-    profile.trainingStyles.push('Strength Training');
-  }
-  var grid = document.querySelector('#step8 [data-field="trainingStyles"]');
-  if (grid) {
-    grid.querySelectorAll('.tile').forEach(function(t) {
-      if (t.getAttribute('data-value') === 'Strength Training') {
-        t.classList.add('selected');
+  document.querySelectorAll('.cl-pill').forEach(function(p) {
+    p.addEventListener('click', function() {
+      var sec = this.dataset.section;
+      var multi = this.dataset.multi === 'true';
+      if (!multi) document.querySelectorAll('[data-section="'+sec+'"]').forEach(function(x) { x.classList.remove('selected'); });
+      this.classList.toggle('selected');
+      if (sec === 'health') {
+        var glp = document.querySelector('[data-section="health"][data-val="glp1"]');
+        var medSec = document.getElementById('med-section');
+        if (glp && medSec) medSec.style.display = glp.classList.contains('selected') ? 'block' : 'none';
       }
+      checkCL();
     });
-  }
-  document.getElementById('strengthNudge').classList.remove('show');
-  showStep(currentIndex + 1);
-}
-
-function dismissStrengthNudge() {
-  document.getElementById('strengthNudge').classList.remove('show');
-  showStep(currentIndex + 1);
-}
-
-/* ── Build Plan Reveal (Step 10) ── */
-function buildPlanReveal() {
-  var conditions = profile.healthConditions || [];
-  var meds = profile.medications || [];
-  var supps = (profile.supplements && profile.supplements.currentSupplements) || [];
-  var suppFiltered = supps.filter(function(s) { return s !== 'None — I don\'t take supplements' && s !== 'Other'; });
-  var allFlags = conditions.concat(meds.filter(function(m) { return m !== 'None of the above'; })).concat(suppFiltered);
-
-  var condText = document.getElementById('planConditions');
-  var flagsEl = document.getElementById('planFlags');
-  var subtext = document.getElementById('planSubtext');
-
-  if (allFlags.length > 0) {
-    subtext.textContent = 'Based on your goals, your history, and everything you just told us — your first 7 days are ready. Your coach has already adjusted for your flagged conditions.';
-    condText.textContent = 'Your coach has accounted for the following:';
-    flagsEl.innerHTML = '';
-    allFlags.forEach(function(f) {
-      var tag = document.createElement('span');
-      tag.className = 'flag-tag';
-      tag.textContent = f;
-      flagsEl.appendChild(tag);
-    });
-  } else {
-    subtext.textContent = 'Based on your goals, your history, and everything you just told us — your first 7 days are ready.';
-    condText.textContent = 'No specific health flags detected. Your coach will build a standard program based on your goals.';
-    flagsEl.innerHTML = '';
-  }
-
-  // Build 7-day schedule
-  var styles = profile.trainingStyles || [];
-  var days = parseInt(profile.daysPerWeek) || 3;
-  var duration = profile.sessionDuration || '45 min';
-
-  var dayIds = ['dayMon','dayTue','dayWed','dayThu','dayFri','daySat','daySun'];
-  var workoutDays = [];
-
-  if (days === 2) workoutDays = [0,3];
-  else if (days === 3) workoutDays = [0,2,4];
-  else if (days === 4) workoutDays = [0,1,3,4];
-  else if (days === 5) workoutDays = [0,1,2,3,4];
-  else if (days === 6) workoutDays = [0,1,2,3,4,5];
-  else workoutDays = [0,2,4];
-
-  var hasStrength = styles.indexOf('Strength Training') !== -1;
-  var hasHIIT = styles.indexOf('HIIT') !== -1;
-  var hasCardio = styles.indexOf('Cardio and Conditioning') !== -1;
-  var hasMobility = styles.indexOf('Mobility and Flexibility') !== -1;
-  var hasFunctional = styles.indexOf('Functional Fitness') !== -1;
-  var hasKettlebell = styles.indexOf('Kettlebell Training') !== -1;
-  var hasBodybuilding = styles.indexOf('Bodybuilding and Hypertrophy') !== -1;
-
-  var workoutTypes = [];
-  if (hasStrength) workoutTypes.push('Strength');
-  if (hasBodybuilding) workoutTypes.push('Hypertrophy');
-  if (hasHIIT) workoutTypes.push('HIIT');
-  if (hasCardio) workoutTypes.push('Conditioning');
-  if (hasFunctional) workoutTypes.push('Functional');
-  if (hasKettlebell) workoutTypes.push('Kettlebell');
-  if (hasMobility) workoutTypes.push('Mobility');
-
-  if (workoutTypes.length === 0) {
-    workoutTypes = ['Full Body','Conditioning','Mobility'];
-  }
-
-  dayIds.forEach(function(id, i) {
-    var el = document.getElementById(id);
-    if (workoutDays.indexOf(i) !== -1) {
-      var wIdx = workoutDays.indexOf(i) % workoutTypes.length;
-      el.textContent = workoutTypes[wIdx] + ' | ' + duration;
-      el.parentElement.style.borderColor = 'rgba(240,165,0,0.18)';
-    } else {
-      el.textContent = 'Rest / Recovery';
-      el.parentElement.style.borderColor = 'rgba(255,255,255,0.07)';
-    }
   });
 }
 
-/* ── Complete Onboarding ── */
-function completeOnboarding() {
-  collectStepData();
-  profile.completedAt = new Date().toISOString();
+function buildCLHTML() {
+  var sections = [
+    {id:'experience',label:'YOUR EXPERIENCE LEVEL',req:true,multi:false,pills:[
+      {v:'beginner',l:'Just starting'},{v:'under1',l:'Under 1 year'},{v:'1to3',l:'1-3 years'},{v:'3plus',l:'3+ years'},{v:'returning',l:'Coming back'}]},
+    {id:'location',label:'WHERE DO YOU TRAIN?',req:true,multi:false,pills:[
+      {v:'commercial',l:'Commercial gym'},{v:'small',l:'Small gym'},{v:'home',l:'Home gym'},{v:'none',l:'No equipment'}]},
+    {id:'days',label:'DAYS PER WEEK',req:true,multi:false,num:true,pills:[
+      {v:'2',l:'2'},{v:'3',l:'3'},{v:'4',l:'4'},{v:'5',l:'5'},{v:'6',l:'6'}]},
+    {id:'duration',label:'TIME PER SESSION',req:true,multi:false,pills:[
+      {v:'20',l:'20-30 min'},{v:'30',l:'30-45 min'},{v:'45',l:'45-60 min'},{v:'60',l:'60-90 min'}]},
+    {id:'health',label:'ANY OF THESE APPLY?',req:false,multi:true,pills:[
+      {v:'glp1',l:'GLP-1 medication'},{v:'injury',l:'Managing an injury'},{v:'surgery',l:'Post-surgery'},{v:'heart',l:'Heart condition'},{v:'diabetes',l:'Diabetes'},{v:'pain',l:'Chronic pain'},{v:'none',l:'None of these'}]},
+    {id:'supplements',label:'CURRENT SUPPLEMENTS',req:false,multi:true,pills:[
+      {v:'protein',l:'Protein powder'},{v:'creatine',l:'Creatine'},{v:'preworkout',l:'Pre-workout'},{v:'vitamins',l:'Vitamins'},{v:'omega3',l:'Omega-3'},{v:'collagen',l:'Collagen'},{v:'none',l:'Nothing yet'}]},
+    {id:'nutrition',label:'HOW DO YOU EAT?',req:false,multi:false,pills:[
+      {v:'track',l:'I track macros'},{v:'healthy',l:'I try to eat healthy'},{v:'whatever',l:'I eat whatever'},{v:'noidea',l:'No idea — help me'}]}
+  ];
 
-  if (!profile.currentWeight) profile.currentWeight = document.getElementById('currentWeight').value;
-  if (!profile.goalWeight) profile.goalWeight = document.getElementById('goalWeight').value;
-  if (!profile.currentBF) profile.currentBF = document.getElementById('currentBF').value;
-  if (!profile.goalBF) profile.goalBF = document.getElementById('goalBF').value;
+  var html = sections.map(function(s) {
+    return '<div class="cl-section"><div class="cl-label">' + s.label + (s.req ? ' <span style="color:#f0a500">*</span>' : '') + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+      s.pills.map(function(p) { return '<button class="cl-pill' + (s.num ? ' cl-pill-num' : '') + '" data-section="' + s.id + '" data-val="' + p.v + '" data-multi="' + s.multi + '">' + p.l + '</button>'; }).join('') +
+      '</div></div>';
+  }).join('');
 
-  // Group compound lift benchmarks
-  profile.benchmarks = {
-    benchPress: profile.benchPress || '',
-    backSquat: profile.backSquat || '',
-    deadlift: profile.deadlift || '',
-    pullUps: profile.pullUps || '',
-    deadHang: profile.deadHang || '',
-    pushUpMax: profile.pushUpMax || '',
-    plankHold: profile.plankHold || '',
-    biggestWeakness: profile.weakness || ''
-  };
+  html += '<div id="med-section" style="display:none;" class="cl-section"><div class="cl-label">WHICH MEDICATION?</div><div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+    ['Ozempic','Wegovy','Mounjaro','Zepbound','Rybelsus','Other GLP-1'].map(function(m) { return '<button class="cl-pill" data-section="medication" data-val="' + m.toLowerCase() + '" data-multi="false">' + m + '</button>'; }).join('') + '</div></div>';
 
-  try {
-    localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
-  } catch (e) {
-    console.error('Failed to save profile:', e);
-  }
+  html += '<div class="cl-section"><div class="cl-label">QUICK STRENGTH CHECK</div>' +
+    '<div style="margin-bottom:10px;"><div style="font-size:0.75rem;color:#8fa3c0;margin-bottom:6px;">Push-ups</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+    ['None yet','Modified only','Full range','20+ reps'].map(function(v) { return '<button class="cl-pill" data-section="pushup" data-val="' + v + '" data-multi="false">' + v + '</button>'; }).join('') + '</div></div>' +
+    '<div style="margin-bottom:10px;"><div style="font-size:0.75rem;color:#8fa3c0;margin-bottom:6px;">Pull-ups (unassisted)</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+    ['None yet','1-3 reps','4-9 reps','10+ reps'].map(function(v) { return '<button class="cl-pill" data-section="pullup" data-val="' + v + '" data-multi="false">' + v + '</button>'; }).join('') + '</div></div>' +
+    '<div><div style="font-size:0.75rem;color:#8fa3c0;margin-bottom:6px;">Bench press vs bodyweight</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+    ['Have not benched','Under bodyweight','At bodyweight','Over 1.25x BW'].map(function(v) { return '<button class="cl-pill" data-section="bench" data-val="' + v + '" data-multi="false">' + v + '</button>'; }).join('') + '</div></div></div>';
 
-  window.location.href = 'dashboard.html';
+  return html;
 }
 
-/* ── Init ── */
-updateProgress();
-updateNavButtons();
+function checkCL() {
+  var required = ['experience','location','days','duration'];
+  var done = required.filter(function(id) { return document.querySelector('[data-section="'+id+'"].selected'); }).length;
+  var allDone = done === required.length;
+  var btn = document.getElementById('build-plan-btn');
+  var txt = document.getElementById('cl-prog-text');
+  if (txt) txt.textContent = done + ' of 4 required sections complete';
+  if (btn) { btn.disabled = !allDone; btn.style.background = allDone ? '#f0a500' : '#4a6080'; btn.style.cursor = allDone ? 'pointer' : 'not-allowed'; }
+}
+
+function getCL(section) { var el = document.querySelector('[data-section="'+section+'"].selected'); return el ? el.dataset.val : ''; }
+function getCLMulti(section) { return Array.from(document.querySelectorAll('[data-section="'+section+'"].selected')).map(function(e) { return e.dataset.val; }); }
+
+window.goPhase3 = function() {
+  var exp = getCL('experience');
+  var optPhase = {beginner:1,under1:1,returning:1,'1to3':2,'3plus':3}[exp] || 1;
+  var profileData = {
+    experience: exp, location: getCL('location'), daysPerWeek: parseInt(getCL('days')) || 4,
+    duration: getCL('duration'), conditions: getCLMulti('health'), medications: getCLMulti('medication'),
+    supplements: getCLMulti('supplements'), nutrition: getCL('nutrition'),
+    benchmarks: { pushUp: getCL('pushup'), pullUp: getCL('pullup'), benchPress: getCL('bench') },
+    optPhase: optPhase, phase1Summary: p1Summary, onboardingComplete: true, completedAt: new Date().toISOString()
+  };
+
+  // Save to both profile keys for compatibility
+  localStorage.setItem('forgeiq_profile', JSON.stringify(profileData));
+  localStorage.setItem('forgeiq_profile_v1', JSON.stringify(profileData));
+
+  var p2 = document.getElementById('phase2-wrap');
+  p2.style.transition = 'opacity 0.4s'; p2.style.opacity = '0';
+  setTimeout(function() {
+    p2.style.display = 'none';
+    buildPhase3(profileData);
+    var p3 = document.getElementById('phase3-wrap');
+    p3.style.display = 'flex'; p3.style.opacity = '0'; p3.style.transition = 'opacity 0.4s';
+    setTimeout(function() { p3.style.opacity = '1'; }, 50);
+  }, 400);
+  setProg(90);
+};
+
+// Phase 3
+function buildPhase3(data) {
+  var phaseNames = {1:'Stabilization Endurance',2:'Strength Endurance',3:'Muscular Development'};
+  var splits = {2:'Full Body 2x',3:'Full Body 3x/week',4:'Push / Pull / Legs',5:'5-Day Split',6:'PPL Split'};
+  var split = splits[data.daysPerWeek] || 'Custom Split';
+  var phase = data.optPhase || 1;
+  var glp1 = (data.medications || []).some(function(m) { return ['ozempic','wegovy','mounjaro','zepbound','rybelsus'].indexOf(m) >= 0; });
+  var hasInjury = (data.conditions || []).indexOf('injury') >= 0;
+  var home = data.location === 'home' || data.location === 'none';
+  var exercises = home
+    ? [{i:'&#128170;',n:'Push-Up Variations',d:'3 x 12-15'},{i:'&#127947;',n:'DB Romanian DL',d:'3 x 10'},{i:'&#11093;',n:'Plank Series',d:'3 x 45s'}]
+    : [{i:'&#127947;',n:'Barbell Squat',d:'4 x 8'},{i:'&#128170;',n:'Bench Press',d:'4 x 8'},{i:'&#128281;',n:'Bent-Over Row',d:'4 x 8'}];
+
+  var wrap = document.getElementById('phase3-wrap');
+  wrap.style.padding = '24px 20px';
+  wrap.style.overflowY = 'auto';
+  wrap.style.position = 'relative';
+  wrap.style.zIndex = '1';
+
+  wrap.innerHTML =
+    '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6rem;letter-spacing:0.06em;color:#e8edf5;margin-bottom:4px;">YOUR TRAINING PLAN IS READY.</div>' +
+
+    '<div style="background:#142444;border:1px solid rgba(240,165,0,0.2);border-radius:12px;padding:20px;margin:16px 0;">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">' +
+        '<div style="width:28px;height:28px;border-radius:50%;background:#f0a500;display:flex;align-items:center;justify-content:center;color:#0a1628;font-size:14px;">&#10003;</div>' +
+        '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;color:#f0a500;font-size:1rem;letter-spacing:0.05em;">OPT PHASE ' + phase + ' — ' + (phaseNames[phase] || 'Stabilization') + '</div>' +
+      '</div>' +
+      '<div style="font-size:14px;color:#8fa3c0;line-height:1.6;margin-bottom:12px;">Based on everything you shared, your AI coach has calibrated a ' + data.daysPerWeek + '-day training program at Phase ' + phase + '. Your first week focuses on movement quality and building the habit.</div>' +
+      '<div style="display:flex;flex-direction:column;gap:6px;">' +
+        '<div style="font-size:13px;color:#e8edf5;">&#8226; Train ' + data.daysPerWeek + ' times a week &middot; ' + split + '</div>' +
+        '<div style="font-size:13px;color:#e8edf5;">&#8226; Sessions: ' + (data.duration || '45') + ' minutes</div>' +
+        '<div style="font-size:13px;color:#e8edf5;">&#8226; Location: ' + (data.location || 'Full gym') + '</div>' +
+        (glp1 ? '<div style="font-size:13px;color:#60a5fa;">&#8226; &#128138; GLP-1 muscle preservation protocol active</div>' : '') +
+        (hasInjury ? '<div style="font-size:13px;color:#f4a261;">&#8226; &#9888;&#65039; Injury-adaptive programming enabled</div>' : '') +
+      '</div>' +
+    '</div>' +
+
+    '<div style="margin-bottom:20px;">' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a6080;margin-bottom:10px;">EXERCISE SNEAK PEEK</div>' +
+      '<div style="display:flex;gap:10px;">' +
+        exercises.map(function(ex) {
+          return '<div style="flex:1;background:#142444;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);">' +
+            '<div style="height:80px;background:#0e1e36;display:flex;align-items:center;justify-content:center;font-size:2rem;">' + ex.i + '</div>' +
+            '<div style="padding:6px 8px;"><div style="font-size:11px;font-weight:600;color:#e8edf5;">' + ex.n + '</div><div style="font-size:10px;color:#8fa3c0;margin-top:2px;">' + ex.d + '</div></div></div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+
+    '<button onclick="finishOnboarding()" style="width:100%;padding:18px;background:#f0a500;border:none;border-radius:10px;color:#0a1628;font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;letter-spacing:0.08em;cursor:pointer;">I WILL NOT QUIT — START NOW</button>' +
+    '<div style="text-align:center;font-size:11px;color:#4a6080;margin-top:8px;">No contracts. Cancel anytime. Your coach is ready.</div>';
+
+  setProg(100);
+}
+
+window.finishOnboarding = function() {
+  document.getElementById('onboarding-screen').style.display = 'none';
+  window.location.href = '/dashboard';
+};
+
+function setProg(pct) { var el = document.getElementById('ob-progress'); if (el) el.style.width = pct + '%'; }
+
+document.addEventListener('DOMContentLoaded', function() {
+  init();
+  var inp = document.getElementById('ob-input');
+  if (inp) inp.addEventListener('keydown', function(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendP1();} });
+});
+
+})();
 </script>
-<script src="/js/supabase-config.js"></script>
-<script src="/js/i18n.js"></script>
-<script src="/js/forge-ai-button.js"></script>
 </body>
 </html>
