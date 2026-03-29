@@ -21,7 +21,7 @@ exports.handler = async function(event, context) {
     });
     const text = await r.text();
     let data;
-    try { data = JSON.parse(text); } catch(e) { return { statusCode: 500, headers, body: JSON.stringify({ error: 'API parse fail', raw: text.slice(0,200) }) }; }
+    try { data = JSON.parse(text); } catch(e) { return { statusCode: 500, headers, body: JSON.stringify({ error: 'Parse fail', raw: text.slice(0,200) }) }; }
     return { statusCode: r.status, headers, body: JSON.stringify(data) };
   } catch(err) { return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) }; }
 };
