@@ -87,14 +87,20 @@ var p1Count = 0;
 var p1Summary = '';
 
 function checkProfile() {
-  try {
-    var p = JSON.parse(localStorage.getItem('forgeiq_profile') || localStorage.getItem('forgeiq_profile_v1') || '{}');
-    if (p.onboardingComplete) { document.getElementById('onboarding-screen').style.display = 'none'; return true; }
-  } catch(e) {}
+  var p = {};
+  try { p = JSON.parse(localStorage.getItem('forgeiq_profile') || localStorage.getItem('forgeiq_profile_v1') || '{}'); } catch(e) { p = {}; }
+  if (p && p.onboardingComplete) {
+    window.location.href = '/dashboard';
+    return true;
+  }
   return false;
 }
 
 function init() {
+  // Safety: ensure onboarding screen is visible
+  var screen = document.getElementById('onboarding-screen');
+  if (screen) screen.style.display = 'flex';
+
   if (checkProfile()) return;
   setTimeout(function() {
     addAI("Hey — I am your FORGE AI coach, built on the expertise of Dr. Michael Lovato. Before I build your plan, I want to understand what actually brought you here. What is going on?",
@@ -105,6 +111,7 @@ function init() {
 
 function addAI(text, qr) {
   var m = document.getElementById('ob-messages');
+  if (!m) return;
   var d = document.createElement('div'); d.className = 'msg-ai';
   d.innerHTML = '<div class="msg-ai-bubble">' + text.replace(/\n/g,'<br>') + '</div>';
   m.appendChild(d); m.scrollTop = m.scrollHeight;
@@ -114,14 +121,17 @@ function addAI(text, qr) {
 
 function addUser(text) {
   var m = document.getElementById('ob-messages');
+  if (!m) return;
   var d = document.createElement('div'); d.className = 'msg-user';
   d.innerHTML = '<div class="msg-user-bubble">' + text + '</div>';
   m.appendChild(d); m.scrollTop = m.scrollHeight;
-  document.getElementById('ob-qr').innerHTML = '';
+  var qr = document.getElementById('ob-qr');
+  if (qr) qr.innerHTML = '';
 }
 
 function renderQR(opts) {
   var c = document.getElementById('ob-qr');
+  if (!c) return;
   c.innerHTML = opts.map(function(o) {
     return '<button class="qr-pill" onclick="sendP1(\'' + o.replace(/'/g,"\\'") + '\')">' + o + '</button>';
   }).join('');
@@ -129,6 +139,7 @@ function renderQR(opts) {
 
 function showTyping() {
   var m = document.getElementById('ob-messages');
+  if (!m) return;
   var d = document.createElement('div'); d.className = 'msg-ai'; d.id = 'typing-ind';
   d.innerHTML = '<div class="msg-ai-bubble" style="color:#4a6080;font-style:italic;">Coach is thinking...</div>';
   m.appendChild(d); m.scrollTop = m.scrollHeight;
@@ -376,11 +387,24 @@ window.finishOnboarding = function() {
 
 function setProg(pct) { var el = document.getElementById('ob-progress'); if (el) el.style.width = pct + '%'; }
 
-document.addEventListener('DOMContentLoaded', function() {
-  init();
-  var inp = document.getElementById('ob-input');
-  if (inp) inp.addEventListener('keydown', function(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendP1();} });
-});
+function safeInit() {
+  try {
+    init();
+    var inp = document.getElementById('ob-input');
+    if (inp) inp.addEventListener('keydown', function(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendP1();} });
+  } catch(err) {
+    console.error('Onboarding init error:', err);
+    document.body.style.cssText = 'background:#0a1628;color:#e8edf5;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center;';
+    document.body.innerHTML = '<div style="font-size:2rem;font-weight:900;color:#f0a500;margin-bottom:16px;">FORGEIQ</div><div style="font-size:1.1rem;margin-bottom:32px;">Let\'s build your plan.</div><button onclick="window.location.href=\'/dashboard\'" style="padding:16px 32px;background:#f0a500;border:none;border-radius:10px;color:#0a1628;font-size:1rem;font-weight:700;cursor:pointer;">Get Started &rarr;</button>';
+  }
+}
+
+// Handle both cases: DOM already ready, or still loading
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', safeInit);
+} else {
+  safeInit();
+}
 
 })();
 </script>
