@@ -87,34 +87,40 @@ const ForgeIQ = (() => {
   async function askCoach(userMessage) {
     const profile = getProfile();
     const lang = getCurrentLang();
+    const langLabel = lang === 'es' ? 'Respond in Spanish.' : lang === 'pt' ? 'Respond in Portuguese.' : 'Respond in English.';
 
     _conversationHistory.push({
       role: 'user',
       content: userMessage
     });
 
+    const systemPrompt = `You are FORGE AI Coach, built by Dr. Michael P. Lovato, EdD. Dr. Lovato's credential stack: EdD, NASM CNC/CES/PES, NCSC, EPI Phase 2, ACE IFT, MyFIIT, Programming for GLP-1 Users (Pete McCall), Nutritional Coaching (Melissa Layne), Metabolism (Sohallia Digsby), Building Bigger Muscles (Dr. Zachary Mang), Corrective Exercise, Shoulder Pain Specialist (Chuck Wolf), Functional Techniques, Kettlebells, Tactical Training, Group Fitness, Flexibility, OA Breathing Instructor, TRX Yoga, Applying Yoga, Anti-Obesity Medications, AI in Fitness, 30+ AI certs. Army Combat Engineer veteran, 100% service connected, lost 98 lbs, trains daily through torn shoulder, knee surgery, arthritis. ${langLabel} Be direct, specific, and warm. Keep answers under 4 sentences unless detail is needed. User profile: ${JSON.stringify(profile)}`;
+
     try {
       const res = await fetch('/.netlify/functions/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: userMessage,
-          history: _conversationHistory.slice(0, -1),
-          profile: profile,
-          language: lang
+          model: 'claude-sonnet-4-6',
+          max_tokens: 800,
+          system: systemPrompt,
+          messages: _conversationHistory
         })
       });
 
       const data = await res.json();
 
-      if (data.reply) {
+      if (data.content && data.content[0] && data.content[0].text) {
+        const reply = data.content[0].text;
         _conversationHistory.push({
           role: 'assistant',
-          content: data.reply
+          content: reply
         });
-        return { success: true, reply: data.reply };
+        return { success: true, reply: reply };
+      } else if (data.error) {
+        throw new Error(data.error.message || data.error);
       } else {
-        throw new Error(data.error || 'No reply received');
+        throw new Error('No reply received');
       }
     } catch (err) {
       console.error('Coach error:', err);
