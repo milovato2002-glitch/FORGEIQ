@@ -1313,6 +1313,27 @@
   <div class="wp-summary" id="wp-summary"></div>
   <div class="week-planner" id="week-planner"></div>
 
+  <!-- BEGINNER BUILDER (AI Conversational) -->
+  <div class="step-panel" id="step-beginner" style="display:none;">
+    <div class="section-title">Build Your <em>Workout</em></div>
+    <div style="background:#142444;border:1px solid rgba(240,165,0,0.18);border-radius:12px;padding:20px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(240,165,0,0.12);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">&#9889;</div>
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;color:#f0a500;font-size:0.82rem;letter-spacing:1px;">AI WORKOUT BUILDER</div>
+          <div style="font-size:0.72rem;color:#8fa3c0;">Tell your coach what you want to train today.</div>
+        </div>
+      </div>
+      <div id="beginner-chat-messages" style="max-height:280px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;"></div>
+      <div id="beginner-quickreplies" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;"></div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="beginner-input" placeholder="e.g. I want to work chest today..." style="flex:1;height:40px;background:#0e1e36;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:0 14px;color:#e8edf5;font-size:14px;outline:none;">
+        <button id="beginner-send" style="background:#f0a500;border:none;border-radius:8px;padding:0 18px;color:#0a1628;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:1px;cursor:pointer;">SEND</button>
+      </div>
+    </div>
+    <button class="btn-outline" onclick="switchToAdvancedBuilder()" style="width:100%;margin-top:8px;">Switch to Advanced Builder &rarr;</button>
+  </div>
+
   <!-- STEP A: SELECT WORKOUT TYPE -->
   <div class="step-panel active" id="step-a">
     <div class="section-title">Select Workout <em>Type</em></div>
@@ -2358,6 +2379,141 @@
   }
   renderWorkoutTypes();
 
+  /* ── EXPERIENCE-BASED ROUTING ── */
+  (function() {
+    var p = {};
+    try { p = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || localStorage.getItem('forgeiq_profile') || '{}'); } catch(e){}
+    var exp = p.experience || 'beginner';
+    var isAdvanced = ['1to3','3plus'].indexOf(exp) >= 0;
+
+    if (!isAdvanced) {
+      // Show beginner builder, hide step-a
+      var stepA = document.getElementById('step-a');
+      var stepB = document.getElementById('step-beginner');
+      if (stepA && stepB) {
+        stepA.classList.remove('active');
+        stepB.style.display = 'block';
+        stepB.classList.add('active');
+        initBeginnerBuilder();
+      }
+    }
+  })();
+
+  var BUILDER_SYSTEM = 'You are FORGE AI, built on NASM OPT methodology by Dr. Michael P. Lovato EdD. Help this user build a workout through a 3-question conversation.\n\nAsk exactly 3 questions in order:\n1. What muscle group or body part do you want to work today?\n2. How much time do you have?\n3. Any equipment limitations today or are you at your usual spot?\n\nAfter their 3rd answer, respond with: "Here is your [muscle group] workout. [1 motivating sentence]." Then output: BUILD_READY:{"muscleGroup":"[group]","duration":"[minutes]","equipment":"[equipment]","focus":"beginner"}\n\nAfter each message add: QUICKREPLIES:["option1","option2","option3","option4"]\nKeep messages to 2 sentences maximum.';
+
+  var beginnerHistory = [];
+  var beginnerExchanges = 0;
+
+  function initBeginnerBuilder() {
+    var msgs = document.getElementById('beginner-chat-messages');
+    if (!msgs) return;
+    var opening = "What do you want to train today? I'll build your workout in under a minute.";
+    beginnerHistory = [{role:'assistant', content:opening}];
+    msgs.innerHTML = '<div style="background:#142444;border-left:3px solid #f0a500;border-radius:4px 10px 10px 4px;padding:10px 14px;max-width:85%;color:#e8edf5;font-size:14px;line-height:1.5;">' + opening + '</div>';
+    var qr = document.getElementById('beginner-quickreplies');
+    if (qr) qr.innerHTML = ['Chest','Back','Legs','Shoulders','Arms','Full Body'].map(function(o) {
+      return '<button class="qr-pill" style="padding:8px 14px;font-size:12px;" onclick="sendBeginnerMsg(\'' + o + '\')">' + o + '</button>';
+    }).join('');
+
+    var inp = document.getElementById('beginner-input');
+    var btn = document.getElementById('beginner-send');
+    if (btn) btn.addEventListener('click', function() { sendBeginnerMsg(); });
+    if (inp) inp.addEventListener('keydown', function(e) { if(e.key==='Enter'){e.preventDefault();sendBeginnerMsg();} });
+  }
+
+  window.sendBeginnerMsg = function(text) {
+    var inp = document.getElementById('beginner-input');
+    var msg = text || (inp ? inp.value.trim() : '');
+    if (!msg) return;
+    if (inp) inp.value = '';
+    var msgs = document.getElementById('beginner-chat-messages');
+    if (!msgs) return;
+
+    // Add user message
+    msgs.innerHTML += '<div style="display:flex;justify-content:flex-end;"><div style="background:#f0a500;border-radius:10px 4px 4px 10px;padding:8px 14px;max-width:75%;color:#0a1628;font-size:14px;font-weight:600;">' + msg + '</div></div>';
+    msgs.scrollTop = msgs.scrollHeight;
+    document.getElementById('beginner-quickreplies').innerHTML = '';
+    beginnerHistory.push({role:'user', content:msg});
+    beginnerExchanges++;
+
+    // Add typing indicator
+    msgs.innerHTML += '<div id="beginner-typing" style="color:#4a6080;font-style:italic;font-size:13px;padding:4px 0;">Coach is thinking...</div>';
+    msgs.scrollTop = msgs.scrollHeight;
+
+    fetch('/.netlify/functions/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:300, system:BUILDER_SYSTEM, messages:beginnerHistory })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var typing = document.getElementById('beginner-typing');
+      if (typing) typing.remove();
+      if (!data.content || !data.content[0]) throw new Error('No content');
+      var aiText = data.content[0].text;
+
+      var qr = [];
+      var qrMatch = aiText.match(/QUICKREPLIES:\[([^\]]+)\]/);
+      if (qrMatch) { try { qr = JSON.parse('[' + qrMatch[1] + ']'); } catch(e){} aiText = aiText.replace(/QUICKREPLIES:\[[^\]]+\]/,'').trim(); }
+
+      var buildMatch = aiText.match(/BUILD_READY:(\{[^}]+\})/);
+      if (buildMatch) {
+        aiText = aiText.replace(/BUILD_READY:[^\n]*/,'').trim();
+        beginnerHistory.push({role:'assistant', content:aiText});
+        if (aiText) {
+          msgs.innerHTML += '<div style="background:#142444;border-left:3px solid #f0a500;border-radius:4px 10px 10px 4px;padding:10px 14px;max-width:85%;color:#e8edf5;font-size:14px;line-height:1.5;">' + aiText + '</div>';
+        }
+        try {
+          var bd = JSON.parse(buildMatch[1]);
+          // Route to workout generation using the builder data
+          selectedMuscle = bd.muscleGroup || 'Full Body';
+          selectedType = 'STRENGTH TRAINING';
+          selectedFocus = 'BEGINNER STRENGTH';
+          showStep('d');
+          generateWorkout();
+        } catch(e) { console.error('Build parse error:', e); }
+        return;
+      }
+
+      beginnerHistory.push({role:'assistant', content:aiText});
+      msgs.innerHTML += '<div style="background:#142444;border-left:3px solid #f0a500;border-radius:4px 10px 10px 4px;padding:10px 14px;max-width:85%;color:#e8edf5;font-size:14px;line-height:1.5;">' + aiText + '</div>';
+      msgs.scrollTop = msgs.scrollHeight;
+
+      if (qr.length) {
+        var qrEl = document.getElementById('beginner-quickreplies');
+        if (qrEl) qrEl.innerHTML = qr.map(function(o) {
+          return '<button class="qr-pill" style="padding:8px 14px;font-size:12px;" onclick="sendBeginnerMsg(\'' + o.replace(/'/g,"\\'") + '\')">' + o + '</button>';
+        }).join('');
+      }
+
+      if (beginnerExchanges >= 3) {
+        setTimeout(function() {
+          selectedMuscle = 'Full Body';
+          selectedType = 'STRENGTH TRAINING';
+          selectedFocus = 'BEGINNER STRENGTH';
+          showStep('d');
+          generateWorkout();
+        }, 2000);
+      }
+    })
+    .catch(function(err) {
+      var typing = document.getElementById('beginner-typing');
+      if (typing) typing.remove();
+      console.error('Beginner builder error:', err);
+      selectedMuscle = 'Full Body';
+      selectedType = 'STRENGTH TRAINING';
+      selectedFocus = 'BEGINNER STRENGTH';
+      showStep('d');
+      generateWorkout();
+    });
+  };
+
+  window.switchToAdvancedBuilder = function() {
+    var stepA = document.getElementById('step-a');
+    var stepB = document.getElementById('step-beginner');
+    if (stepB) { stepB.classList.remove('active'); stepB.style.display = 'none'; }
+    if (stepA) stepA.classList.add('active');
+  };
+
   /* ── RENDER STEP B: MUSCLE GROUPS ── */
   function renderMuscleGroups(){
     var grid = $("#mg-grid");
@@ -2459,7 +2615,7 @@
     prompt += "Ready to log this session? Hit START WORKOUT to track your sets.";
 
     var langLabel = lang === "es" ? "Respond ONLY in Spanish." : lang === "pt" ? "Respond ONLY in Portuguese." : "Respond in English.";
-    var sysPrompt = "You are FORGE AI Coach, built by Dr. Michael P. Lovato, EdD (NASM CNC/CES/PES, NCSC, EPI Phase 2, ACE IFT, GLP-1 Programming Certified, Anti-Obesity Medications Specialist, Army Combat Engineer) and Debora Lovato (NASM CNC/CES/PES, Licensed Esthetician, GLP-1 Skin Specialist). " + langLabel + " When generating workouts, output ONLY the structured table format. No preamble. No markdown outside the tables. Output immediately. CRITICAL: You must provide REAL specific exercise names. NEVER use generic placeholders like Primary Compound Movement, Secondary Compound Movement, Isolation Movement A, Isolation Movement B, or Finisher. Always use actual exercise names such as Barbell Bent-Over Row, Seated Cable Row, Single Arm Dumbbell Row, Face Pull, Lat Pulldown, Pull-Up, Barbell Bench Press, Incline Dumbbell Press, Cable Fly, Barbell Back Squat, Romanian Deadlift, Leg Press. Every exercise must have a specific real name.";
+    var sysPrompt = "You are FORGE AI Coach, built by Dr. Michael P. Lovato, EdD (NASM CNC/CES/PES, NCSC, EPI Phase 2, ACE IFT, MyFIIT, Programming for GLP-1 Users (Pete McCall), Nutritional Coaching (Melissa Layne), Metabolism (Sohallia Digsby), Building Bigger Muscles (Dr. Zachary Mang), Corrective Exercise, Shoulder Pain Specialist (Chuck Wolf), Functional Techniques, Kettlebells, Tactical Training, Group Fitness, Flexibility, OA Breathing Instructor, TRX Yoga, Applying Yoga, Anti-Obesity Medications, AI in Fitness, 30+ AI certs. Army Combat Engineer veteran, 100% service connected, lost 98 lbs, trains daily through torn shoulder, knee surgery, arthritis). " + langLabel + " When generating workouts, output ONLY the structured table format. No preamble. No markdown outside the tables. Output immediately. CRITICAL: You must provide REAL specific exercise names. NEVER use generic placeholders like Primary Compound Movement, Secondary Compound Movement, Isolation Movement A, Isolation Movement B, or Finisher. Always use actual exercise names such as Barbell Bent-Over Row, Seated Cable Row, Single Arm Dumbbell Row, Face Pull, Lat Pulldown, Pull-Up, Barbell Bench Press, Incline Dumbbell Press, Cable Fly, Barbell Back Squat, Romanian Deadlift, Leg Press. Every exercise must have a specific real name.";
 
     fetch("/.netlify/functions/chat", {
       method: "POST",
@@ -3525,42 +3681,42 @@
   });
 
   /* AI Natural Language */
-  /* ── AI MEAL ANALYSIS (PRIORITY 2 FIX) ── */
+  /* ── AI MEAL ANALYSIS (DEFINITIVE FIX) ── */
   function analyzeMealWithAI(description, mealType) {
     var resultEl = $("#meal-log-result");
     var btnEl = $("#meal-analyze-btn");
-    if (resultEl) resultEl.innerHTML = '<span style="color:#f0a500">Analyzing your meal...</span>';
+    if (resultEl) resultEl.innerHTML = '<span style="color:#f0a500">Analyzing...</span>';
     if (btnEl) { btnEl.disabled = true; btnEl.textContent = "Analyzing..."; }
     fetch("/.netlify/functions/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: 300,
-        system: "You are a nutrition calculator. Respond with ONLY a JSON object. No other text whatsoever. No markdown. No code blocks. No explanation. Just raw JSON.",
-        messages: [{ role: "user", content: 'Nutrition for: "' + description + '". Return ONLY: {"name":"meal name","calories":0,"protein":0,"carbs":0,"fat":0,"fiber":0}' }]
+        max_tokens: 200,
+        system: 'Return ONLY raw JSON. No markdown. No explanation. Format: {"name":"meal name","calories":0,"protein":0,"carbs":0,"fat":0,"fiber":0}',
+        messages: [{ role: "user", content: 'Nutrition for: "' + description + '". Return ONLY the JSON object.' }]
       })
     })
     .then(function(r) {
-      if (!r.ok) return r.text().then(function(t) { throw new Error("HTTP " + r.status + ": " + t.slice(0,150)); });
+      if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     })
     .then(function(data) {
-      if (!data.content || !data.content[0] || !data.content[0].text) throw new Error("No content: " + JSON.stringify(data).slice(0,200));
+      if (!data.content || !data.content[0] || !data.content[0].text) throw new Error("No content");
       var text = data.content[0].text.trim().replace(/```json/gi,"").replace(/```/g,"").trim();
       var match = text.match(/\{[\s\S]*\}/);
-      if (!match) throw new Error("No JSON in: " + text);
+      if (!match) throw new Error("No JSON found");
       var n = JSON.parse(match[0]);
       var entry = {
+        id: Date.now(), date: new Date().toISOString(), mealType: mealType || "meal",
         name: n.name || description,
-        calories: parseInt(n.calories) || 0,
-        protein: parseInt(n.protein) || 0,
-        carbs: parseInt(n.carbs) || 0,
-        fat: parseInt(n.fat) || 0,
-        fiber: parseInt(n.fiber) || 0,
-        mealType: mealType || "meal",
+        calories: parseInt(n.calories) || 0, protein: parseInt(n.protein) || 0,
+        carbs: parseInt(n.carbs) || 0, fat: parseInt(n.fat) || 0, fiber: parseInt(n.fiber) || 0,
         time: new Date().toLocaleTimeString()
       };
+      var log = JSON.parse(localStorage.getItem("forgeiq_food_log") || "[]");
+      log.unshift(entry);
+      localStorage.setItem("forgeiq_food_log", JSON.stringify(log.slice(0, 500)));
       todayData.meals.push(entry);
       saveToday();
       updateMacros();
@@ -4289,6 +4445,7 @@ function getMusclesForExercise(name) {
 }
 </script>
 
+<script src="js/muscleDiagram.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/app.js"></script>

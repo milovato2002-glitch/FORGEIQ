@@ -7,212 +7,460 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #0a1628; color: #e8edf5; font-family: 'Barlow', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-.orb { position: fixed; top: -80px; left: -80px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(240,165,0,0.2) 0%, rgba(45,212,191,0.08) 50%, transparent 70%); animation: pulse 4s ease-in-out infinite; pointer-events: none; }
-@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.5;} 50%{transform:scale(1.3);opacity:1;} }
-.header { padding: 16px 20px 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.logo { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.3); }
-.progress-bar { width: 100%; max-width: 400px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; }
-.progress-fill { height: 100%; width: 5%; background: #f0a500; border-radius: 2px; transition: width 0.5s; }
-.messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
-.msg-ai { animation: fadeUp 0.3s ease; }
-.msg-ai-bubble { background: #142444; border-left: 3px solid #f0a500; border-radius: 4px 12px 12px 4px; padding: 14px 16px; max-width: 88%; font-size: 16px; line-height: 1.5; color: #e8edf5; display: inline-block; }
-.msg-user { display: flex; justify-content: flex-end; animation: fadeUp 0.3s ease; }
-.msg-user-bubble { background: #f0a500; border-radius: 12px 4px 4px 12px; padding: 12px 16px; max-width: 78%; font-size: 15px; font-weight: 600; color: #0a1628; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
-.quick-replies { padding: 8px 16px 10px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
-.quick-replies::-webkit-scrollbar { display: none; }
-.qr-btn { flex-shrink: 0; padding: 10px 18px; border-radius: 24px; border: 1px solid rgba(240,165,0,0.5); background: rgba(240,165,0,0.08); color: #f0a500; font-size: 14px; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
-.qr-btn:hover, .qr-btn:active { background: #f0a500; color: #0a1628; }
-.input-bar { padding: 12px 16px; display: flex; gap: 8px; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); }
-#user-input { flex: 1; height: 44px; background: #142444; border: 1px solid rgba(255,255,255,0.15); border-radius: 22px; padding: 0 16px; color: #e8edf5; font-size: 16px; outline: none; }
-#user-input:focus { border-color: #f0a500; }
-#send-btn { width: 44px; height: 44px; border-radius: 50%; background: #f0a500; border: none; color: #0a1628; font-size: 18px; cursor: pointer; }
-.typing { color: #4a6080; font-style: italic; font-size: 14px; padding: 8px 0; }
+body { background: #0a1628; color: #e8edf5; font-family: 'Barlow', sans-serif; height: 100vh; overflow: hidden; }
+
+.onboarding-orb{position:fixed;top:-80px;left:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(240,165,0,0.2) 0%,rgba(45,212,191,0.1) 50%,transparent 70%);animation:orbPulse 4s ease-in-out infinite;pointer-events:none;z-index:0;}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:0.5;}50%{transform:scale(1.3);opacity:1;}}
+.onboarding-header{padding:16px 20px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1;}
+.onboarding-wordmark{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.2em;color:rgba(255,255,255,0.3);}
+.onboarding-progress-bar{width:100%;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;}
+.onboarding-progress-fill{height:100%;background:#f0a500;border-radius:2px;transition:width 0.5s;width:0%;}
+.ob-messages{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:16px;position:relative;z-index:1;}
+.msg-ai{display:flex;align-items:flex-start;gap:10px;animation:fadeInUp 0.3s ease;}
+.msg-ai-bubble{background:#142444;border-left:3px solid #f0a500;border-radius:4px 12px 12px 4px;padding:14px 16px;max-width:85%;color:#e8edf5;font-size:16px;line-height:1.5;}
+.msg-user{display:flex;justify-content:flex-end;animation:fadeInUp 0.3s ease;}
+.msg-user-bubble{background:#f0a500;border-radius:12px 4px 4px 12px;padding:12px 16px;max-width:75%;color:#0a1628;font-size:16px;font-weight:600;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.ob-quickreplies{padding:8px 16px 12px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;z-index:1;}
+.ob-quickreplies::-webkit-scrollbar{display:none;}
+.qr-pill{flex-shrink:0;padding:10px 18px;border-radius:24px;border:1px solid rgba(240,165,0,0.5);background:rgba(240,165,0,0.08);color:#f0a500;font-size:14px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.qr-pill:hover,.qr-pill:active{background:#f0a500;color:#0a1628;}
+.ob-input-bar{padding:12px 16px;display:flex;gap:8px;align-items:center;border-top:1px solid rgba(255,255,255,0.08);background:#0a1628;z-index:1;}
+#ob-input{flex:1;height:44px;background:#142444;border:1px solid rgba(255,255,255,0.15);border-radius:22px;padding:0 16px;color:#e8edf5;font-size:16px;outline:none;}
+#ob-input:focus{border-color:#f0a500;}
+#ob-send{width:44px;height:44px;border-radius:50%;background:#f0a500;border:none;color:#0a1628;font-size:18px;cursor:pointer;}
+#ob-mic{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#8fa3c0;font-size:18px;cursor:pointer;}
+
+/* Checklist pills */
+.cl-pill{padding:10px 16px;border-radius:24px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#8fa3c0;font-size:13px;cursor:pointer;transition:all 0.15s;}
+.cl-pill:hover{border-color:rgba(240,165,0,0.4);color:#e8edf5;}
+.cl-pill.selected{background:rgba(240,165,0,0.15);border-color:#f0a500;color:#f0a500;font-weight:600;}
+.cl-pill-num{width:52px;height:52px;border-radius:50%;padding:0;display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;}
 </style>
 </head>
 <body>
 
 <script>
-// Skip onboarding immediately if already completed — before DOM renders
 try {
   var _p = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || localStorage.getItem('forgeiq_profile') || '{}');
   if (_p && _p.onboardingComplete) { window.location.replace('/dashboard'); }
 } catch(e) {}
 </script>
 
-<div class="orb"></div>
-<div class="header">
-  <div class="logo">FORGEIQ</div>
-  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-</div>
-<div class="messages" id="messages"></div>
-<div class="quick-replies" id="quick-replies"></div>
-<div class="input-bar">
-  <input type="text" id="user-input" placeholder="Type your response..." autocomplete="off">
-  <button id="send-btn" onclick="sendMessage()">&#10148;</button>
+<div id="onboarding-screen" style="position:fixed;inset:0;background:#0a1628;display:flex;flex-direction:column;z-index:9999;overflow:hidden;">
+  <div class="onboarding-orb"></div>
+  <div class="onboarding-header">
+    <div class="onboarding-wordmark">FORGEIQ</div>
+    <div class="onboarding-progress-bar"><div class="onboarding-progress-fill" id="ob-progress"></div></div>
+  </div>
+  <div id="phase1-wrap" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+    <div class="ob-messages" id="ob-messages"></div>
+    <div class="ob-quickreplies" id="ob-quickreplies"></div>
+    <div class="ob-input-bar">
+      <input type="text" id="ob-input" placeholder="Type your response..." autocomplete="off">
+      <button id="ob-mic" onclick="startVoiceInput()">&#127908;</button>
+      <button id="ob-send" onclick="sendPhase1()">&#10148;</button>
+    </div>
+  </div>
+  <div id="phase2-wrap" style="flex:1;display:none;flex-direction:column;overflow:hidden;">
+  </div>
+  <div id="phase3-wrap" style="flex:1;display:none;flex-direction:column;overflow:hidden;">
+  </div>
 </div>
 
 <script>
 (function() {
 "use strict";
 
-var SYSTEM = 'You are FORGE AI, a personal fitness coach built by Dr. Michael P. Lovato EdD (NASM CNC/CES/PES, NCSC, GLP-1 specialist, Army Combat Engineer veteran). Conduct a friendly onboarding conversation to build the user\'s profile. Collect: primary goal, training experience, where they train, health conditions or medications (especially GLP-1), days per week available, session length preference, and basic strength level. Ask 1-2 things per message. Keep messages under 3 sentences. Be warm and specific — react to what they say. After each message add QUICKREPLIES:["option1","option2","option3"]. After 6-8 exchanges when you have enough info, output PROFILE_COMPLETE:{"goals":[],"experience":"","location":"","equipment":"","conditions":[],"medications":[],"daysPerWeek":4,"duration":"45 min","benchmarks":{},"optPhase":1} with real values filled in.';
+var PHASE1_SYSTEM = 'You are FORGE AI, the coach inside FORGEIQ built by Dr. Michael P. Lovato EdD (NASM CNC/CES/PES, NCSC, GLP-1 specialist, Army Combat Engineer veteran). Conduct a warm coaching intake conversation.\n\nHave exactly 3 exchanges. Ask about:\n1. What brought them here / their main goal\n2. One specific follow-up based on their answer\n3. Their biggest challenge or what has held them back\n\nAfter the user\'s 3rd message, write a natural transition sentence then output: PHASE1_COMPLETE:{"summary":"[2-3 sentence summary of what you learned]"}\n\nRules: Max 3 sentences per message. React genuinely. One question per message. Be direct and warm.\nAfter each message add: QUICKREPLIES:["option1","option2","option3","option4"]';
 
-var history = [];
-var exchanges = 0;
+var phase1History = [];
+var phase1Exchanges = 0;
+var phase1Summary = '';
 
-function addAI(text, qr) {
-  var m = document.getElementById('messages');
+function setProgress(pct) {
+  var el = document.getElementById('ob-progress');
+  if (el) el.style.width = pct + '%';
+}
+
+function addAIMsg(text, qr) {
+  var m = document.getElementById('ob-messages');
   if (!m) return;
   var d = document.createElement('div');
   d.className = 'msg-ai';
   d.innerHTML = '<div class="msg-ai-bubble">' + text.replace(/\n/g,'<br>') + '</div>';
   m.appendChild(d);
   m.scrollTop = m.scrollHeight;
-  if (qr && qr.length) {
-    var c = document.getElementById('quick-replies');
-    if (c) c.innerHTML = qr.map(function(o) { return '<button class="qr-btn" onclick="sendMessage(\'' + o.replace(/'/g,"\\'") + '\')">' + o + '</button>'; }).join('');
-  }
-  var prog = document.getElementById('progress');
-  if (prog) prog.style.width = Math.min(90, exchanges * 12) + '%';
+  if (qr && qr.length) renderQR(qr);
+  setProgress(Math.min(30, phase1Exchanges * 8));
 }
 
-function addUser(text) {
-  var m = document.getElementById('messages');
+function addUserMsg(text) {
+  var m = document.getElementById('ob-messages');
   if (!m) return;
   var d = document.createElement('div');
   d.className = 'msg-user';
   d.innerHTML = '<div class="msg-user-bubble">' + text + '</div>';
   m.appendChild(d);
   m.scrollTop = m.scrollHeight;
-  var c = document.getElementById('quick-replies');
-  if (c) c.innerHTML = '';
+  document.getElementById('ob-quickreplies').innerHTML = '';
 }
 
-function showTyping() {
-  var m = document.getElementById('messages');
+function renderQR(opts) {
+  var c = document.getElementById('ob-quickreplies');
+  if (!c) return;
+  c.innerHTML = opts.map(function(o) { return '<button class="qr-pill" onclick="sendPhase1(\'' + o.replace(/'/g,"\\'") + '\')">' + o + '</button>'; }).join('');
+}
+
+function showTypingIndicator() {
+  var m = document.getElementById('ob-messages');
   if (!m) return;
   var d = document.createElement('div');
-  d.className = 'msg-ai'; d.id = 'typing';
-  d.innerHTML = '<div class="typing">Coach is thinking...</div>';
+  d.className = 'msg-ai'; d.id = 'typing-ind';
+  d.innerHTML = '<div class="msg-ai-bubble" style="color:#4a6080;font-style:italic;">Coach is thinking...</div>';
   m.appendChild(d); m.scrollTop = m.scrollHeight;
 }
 
-function removeTyping() { var e = document.getElementById('typing'); if(e) e.remove(); }
+function removeTyping() { var e = document.getElementById('typing-ind'); if(e) e.remove(); }
 
-window.sendMessage = function(text) {
-  var inp = document.getElementById('user-input');
+window.sendPhase1 = function(text) {
+  var inp = document.getElementById('ob-input');
   var msg = text || (inp ? inp.value.trim() : '');
   if (!msg) return;
   if (inp) inp.value = '';
-  addUser(msg);
-  history.push({role:'user', content:msg});
-  exchanges++;
-  showTyping();
+  addUserMsg(msg);
+  phase1History.push({role:'user', content:msg});
+  phase1Exchanges++;
+  showTypingIndicator();
 
   fetch('/.netlify/functions/chat', {
     method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:500, system:SYSTEM, messages:history})
+    body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:400, system:PHASE1_SYSTEM, messages:phase1History })
   })
   .then(function(r) { if (!r.ok) throw new Error('API ' + r.status); return r.json(); })
   .then(function(data) {
-    if (!data.content || !data.content[0] || !data.content[0].text) throw new Error('No content');
+    if (!data.content || !data.content[0]) throw new Error('No content');
     var aiText = data.content[0].text;
     removeTyping();
 
-    // Extract quick replies
     var qr = [];
     var qrMatch = aiText.match(/QUICKREPLIES:\[([^\]]+)\]/);
-    if (qrMatch) {
-      try { qr = JSON.parse('[' + qrMatch[1] + ']'); } catch(e) {}
-      aiText = aiText.replace(/QUICKREPLIES:\[[^\]]+\]/, '').trim();
+    if (qrMatch) { try { qr = JSON.parse('[' + qrMatch[1] + ']'); } catch(e){} aiText = aiText.replace(/QUICKREPLIES:\[[^\]]+\]/,'').trim(); }
+
+    var completeMatch = aiText.match(/PHASE1_COMPLETE:(\{[^}]+\})/);
+    if (completeMatch) {
+      try { var obj = JSON.parse(completeMatch[1]); phase1Summary = obj.summary || ''; } catch(e){}
+      aiText = aiText.replace(/PHASE1_COMPLETE:[^\n]*/,'').trim();
+      phase1History.push({role:'assistant', content:aiText});
+      if (aiText) addAIMsg(aiText, []);
+      setTimeout(function() { transitionToPhase2(); }, 1500);
+      return;
     }
 
-    // Check for profile completion
-    var profileMatch = aiText.match(/PROFILE_COMPLETE:(\{[\s\S]*\})/);
-    if (profileMatch) {
-      try {
-        var profile = JSON.parse(profileMatch[1]);
-        profile.onboardingComplete = true;
-        profile.completedAt = new Date().toISOString();
-        localStorage.setItem('forgeiq_profile_v1', JSON.stringify(profile));
-        localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
-        aiText = aiText.replace(/PROFILE_COMPLETE:[\s\S]*/, '').trim();
-        history.push({role:'assistant', content:aiText});
-        if (aiText) addAI(aiText, []);
-        var prog = document.getElementById('progress');
-        if (prog) prog.style.width = '100%';
-        setTimeout(function() { showPlanReveal(profile); }, 1500);
-        return;
-      } catch(e) { console.error('Profile parse error:', e); }
-    }
+    phase1History.push({role:'assistant', content:aiText});
+    addAIMsg(aiText, qr);
 
-    history.push({role:'assistant', content:aiText});
-    addAI(aiText, qr);
-
-    // Safety net: if 10+ exchanges and AI never sent PROFILE_COMPLETE, force finish
-    if (exchanges >= 10) {
-      setTimeout(function() {
-        var fallbackProfile = { goals:['general fitness'], experience:'beginner', location:'commercial', equipment:'full gym', conditions:[], medications:[], daysPerWeek:4, duration:'45 min', benchmarks:{}, optPhase:1, onboardingComplete:true, completedAt:new Date().toISOString() };
-        localStorage.setItem('forgeiq_profile_v1', JSON.stringify(fallbackProfile));
-        localStorage.setItem('forgeiq_profile', JSON.stringify(fallbackProfile));
-        showPlanReveal(fallbackProfile);
-      }, 2000);
-    }
+    if (phase1Exchanges >= 3) setTimeout(function() { transitionToPhase2(); }, 2000);
   })
   .catch(function(err) {
     removeTyping();
-    console.error('Chat error:', err);
-    addAI("I had a connection issue. Let me try again — what is your main fitness goal?", ["Lose weight","Build muscle","Get healthier","I'm on GLP-1"]);
+    console.error('Phase 1 error:', err);
+    transitionToPhase2();
   });
 };
 
-function showPlanReveal(profile) {
-  var phaseNames = {1:'Stabilization',2:'Strength Endurance',3:'Hypertrophy',4:'Maximal Strength',5:'Power'};
-  var phase = profile.optPhase || 1;
-  var glp1 = (profile.medications || []).length > 0;
-  var m = document.getElementById('messages');
-  if (!m) return;
-  var d = document.createElement('div');
-  d.className = 'msg-ai';
-  d.innerHTML = '<div class="msg-ai-bubble" style="border-color:#2dc653;max-width:95%;width:95%;">' +
-    '<div style="font-family:Bebas Neue,sans-serif;font-size:1.3rem;color:#2dc653;letter-spacing:0.05em;">YOUR PLAN IS READY</div>' +
-    '<div style="color:#f0a500;font-weight:700;margin:6px 0;">Phase ' + phase + ' — ' + (phaseNames[phase]||'Stabilization') + '</div>' +
-    '<div style="color:#8fa3c0;font-size:13px;margin-bottom:12px;">' + (profile.daysPerWeek||4) + ' days/week &middot; ' + (profile.duration||'45 min') + ' sessions</div>' +
-    (glp1 ? '<div style="color:#60a5fa;font-size:12px;margin-bottom:8px;">&#128138; GLP-1 protocol active</div>' : '') +
-    '<button onclick="startApp()" style="width:100%;padding:14px;background:#f0a500;border:none;border-radius:8px;color:#0a1628;font-family:Bebas Neue,sans-serif;font-size:1.1rem;letter-spacing:0.06em;cursor:pointer;margin-top:4px;">I WILL NOT QUIT — START NOW</button>' +
-    '</div>';
-  m.appendChild(d);
-  m.scrollTop = m.scrollHeight;
-  var c = document.getElementById('quick-replies');
-  if (c) c.innerHTML = '';
-  var bar = document.querySelector('.input-bar');
-  if (bar) bar.style.display = 'none';
+function transitionToPhase2() {
+  var p1 = document.getElementById('phase1-wrap');
+  p1.style.transition = 'opacity 0.4s'; p1.style.opacity = '0';
+  setTimeout(function() {
+    p1.style.display = 'none';
+    buildPhase2();
+    var p2 = document.getElementById('phase2-wrap');
+    p2.style.display = 'flex'; p2.style.opacity = '0'; p2.style.transition = 'opacity 0.4s';
+    setTimeout(function() { p2.style.opacity = '1'; }, 50);
+  }, 400);
+  setProgress(33);
 }
 
-window.startApp = function() {
+// Voice input
+window.startVoiceInput = function() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var rec = new SR();
+  var lang = localStorage.getItem('forgeiq_language');
+  rec.lang = lang === 'es' ? 'es-ES' : lang === 'pt' ? 'pt-BR' : 'en-US';
+  rec.onresult = function(e) { var t = e.results[0][0].transcript; document.getElementById('ob-input').value = t; sendPhase1(t); };
+  var mic = document.getElementById('ob-mic');
+  mic.style.background = 'rgba(230,57,70,0.3)'; mic.style.borderColor = '#e63946';
+  rec.onend = function() { mic.style.background=''; mic.style.borderColor=''; };
+  rec.start();
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 2: SMART CHECKLIST
+   ═══════════════════════════════════════════════════════════════ */
+function buildPhase2() {
+  var wrap = document.getElementById('phase2-wrap');
+  wrap.innerHTML =
+    '<div style="padding:20px 16px 8px;position:relative;z-index:1;">' +
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.4rem;letter-spacing:0.06em;color:#f0a500;">QUICK DETAILS</div>' +
+      '<div style="font-size:0.8rem;color:#8fa3c0;margin-top:2px;">Tap your answers — almost done.</div>' +
+    '</div>' +
+    '<div id="checklist-body" style="flex:1;overflow-y:auto;padding:0 16px 120px;position:relative;z-index:1;">' +
+      buildChecklistHTML() +
+    '</div>' +
+    '<div style="position:fixed;bottom:0;left:0;right:0;padding:16px;background:#0a1628;border-top:1px solid rgba(255,255,255,0.08);z-index:10;">' +
+      '<div id="checklist-progress-text" style="font-size:0.75rem;color:#8fa3c0;text-align:center;margin-bottom:8px;">Complete all required sections to continue</div>' +
+      '<button id="build-plan-btn" onclick="transitionToPhase3()" disabled style="width:100%;padding:16px;background:#4a6080;border:none;border-radius:10px;color:#0a1628;font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;letter-spacing:0.08em;cursor:not-allowed;transition:all 0.3s;">BUILD MY PLAN &rarr;</button>' +
+    '</div>';
+
+  wrap.querySelectorAll('.cl-pill').forEach(function(p) {
+    p.addEventListener('click', function() {
+      var section = this.dataset.section;
+      var multi = this.dataset.multi === 'true';
+      if (!multi) {
+        wrap.querySelectorAll('[data-section="'+section+'"]').forEach(function(x) { x.classList.remove('selected'); });
+      }
+      this.classList.toggle('selected');
+      if (section === 'health') {
+        var glpEl = wrap.querySelector('[data-section="health"][data-val="glp1"]');
+        var glpSelected = glpEl && glpEl.classList.contains('selected');
+        var medSec = document.getElementById('med-section');
+        if (medSec) medSec.style.display = glpSelected ? 'block' : 'none';
+      }
+      checkChecklistComplete();
+    });
+  });
+}
+
+function buildChecklistHTML() {
+  var sections = [
+    { id:'experience', label:'YOUR EXPERIENCE LEVEL', required:true, multi:false, pills:[
+      {val:'beginner',label:'Just starting'},{val:'under1',label:'Under 1 year'},
+      {val:'1to3',label:'1-3 years'},{val:'3plus',label:'3+ years'},{val:'returning',label:'Coming back'}
+    ]},
+    { id:'location', label:'WHERE DO YOU TRAIN?', required:true, multi:false, pills:[
+      {val:'commercial',label:'Commercial gym'},{val:'small',label:'Small gym'},
+      {val:'home',label:'Home gym'},{val:'none',label:'No equipment'}
+    ]},
+    { id:'days', label:'DAYS PER WEEK', required:true, multi:false, number:true, pills:[
+      {val:'2',label:'2'},{val:'3',label:'3'},{val:'4',label:'4'},{val:'5',label:'5'},{val:'6',label:'6'}
+    ]},
+    { id:'duration', label:'TIME PER SESSION', required:true, multi:false, pills:[
+      {val:'20',label:'20-30 min'},{val:'30',label:'30-45 min'},{val:'45',label:'45-60 min'},{val:'60',label:'60-90 min'}
+    ]},
+    { id:'health', label:'ANY OF THESE APPLY? (select all)', required:false, multi:true, pills:[
+      {val:'glp1',label:'GLP-1 medication'},{val:'injury',label:'Managing an injury'},
+      {val:'surgery',label:'Post-surgery'},{val:'heart',label:'Heart condition'},
+      {val:'diabetes',label:'Diabetes'},{val:'pain',label:'Chronic pain'},{val:'none',label:'None of these'}
+    ]},
+    { id:'supplements', label:'CURRENT SUPPLEMENTS', required:false, multi:true, pills:[
+      {val:'protein',label:'Protein powder'},{val:'creatine',label:'Creatine'},
+      {val:'preworkout',label:'Pre-workout'},{val:'vitamins',label:'Vitamins'},
+      {val:'omega3',label:'Omega-3'},{val:'collagen',label:'Collagen'},{val:'none',label:'Nothing yet'}
+    ]},
+    { id:'nutrition', label:'HOW DO YOU EAT?', required:false, multi:false, pills:[
+      {val:'track',label:'I track macros'},{val:'healthy',label:'I try to eat healthy'},
+      {val:'whatever',label:'I eat whatever'},{val:'noidea',label:'No idea — help me'}
+    ]}
+  ];
+
+  var html = sections.map(function(s) {
+    return '<div class="cl-section" id="section-' + s.id + '" style="margin-bottom:20px;">' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a6080;margin-bottom:8px;">' + s.label + (s.required ? ' <span style="color:#f0a500">*</span>' : '') + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+        s.pills.map(function(p) {
+          return '<button class="cl-pill' + (s.number ? ' cl-pill-num' : '') + '" data-section="' + s.id + '" data-val="' + p.val + '" data-multi="' + s.multi + '">' + p.label + '</button>';
+        }).join('') +
+      '</div></div>';
+  }).join('');
+
+  html += '<div id="med-section" style="display:none;margin-bottom:20px;">' +
+    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a6080;margin-bottom:8px;">WHICH MEDICATION?</div>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+    ['Ozempic','Wegovy','Mounjaro','Zepbound','Rybelsus','Other GLP-1'].map(function(m) {
+      return '<button class="cl-pill" data-section="medication" data-val="' + m.toLowerCase() + '" data-multi="false">' + m + '</button>';
+    }).join('') + '</div></div>';
+
+  html += '<div style="margin-bottom:20px;">' +
+    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a6080;margin-bottom:12px;">QUICK STRENGTH CHECK</div>' +
+    '<div style="margin-bottom:10px;">' +
+      '<div style="font-size:0.75rem;color:#8fa3c0;margin-bottom:6px;">Push-ups</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+      ['None yet','Modified only','Full range','20+ reps'].map(function(v) {
+        return '<button class="cl-pill" data-section="pushup" data-val="' + v + '" data-multi="false">' + v + '</button>';
+      }).join('') + '</div></div>' +
+    '<div style="margin-bottom:10px;">' +
+      '<div style="font-size:0.75rem;color:#8fa3c0;margin-bottom:6px;">Pull-ups (unassisted)</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+      ['None yet','1-3 reps','4-9 reps','10+ reps'].map(function(v) {
+        return '<button class="cl-pill" data-section="pullup" data-val="' + v + '" data-multi="false">' + v + '</button>';
+      }).join('') + '</div></div>' +
+    '<div>' +
+      '<div style="font-size:0.75rem;color:#8fa3c0;margin-bottom:6px;">Bench press vs bodyweight</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+      ["Haven't benched","Under bodyweight","At bodyweight","Over 1.25x BW"].map(function(v) {
+        return '<button class="cl-pill" data-section="bench" data-val="' + v + '" data-multi="false">' + v + '</button>';
+      }).join('') + '</div></div></div>';
+
+  return html;
+}
+
+function checkChecklistComplete() {
+  var required = ['experience','location','days','duration'];
+  var done = required.filter(function(id) { return document.querySelector('[data-section="'+id+'"].selected'); }).length;
+  var allDone = done === required.length;
+  var btn = document.getElementById('build-plan-btn');
+  var txt = document.getElementById('checklist-progress-text');
+  if (txt) txt.textContent = done + ' of 4 required sections complete';
+  if (btn) {
+    btn.disabled = !allDone;
+    btn.style.background = allDone ? '#f0a500' : '#4a6080';
+    btn.style.cursor = allDone ? 'pointer' : 'not-allowed';
+  }
+}
+
+function collectChecklistData() {
+  function get(section) {
+    var el = document.querySelector('[data-section="'+section+'"].selected');
+    return el ? el.dataset.val : '';
+  }
+  function getMulti(section) {
+    return Array.from(document.querySelectorAll('[data-section="'+section+'"].selected')).map(function(e) { return e.dataset.val; });
+  }
+  var exp = get('experience');
+  var optPhase = {beginner:1,under1:1,returning:1,'1to3':2,'3plus':3}[exp] || 2;
+  return {
+    experience: exp, location: get('location'), daysPerWeek: parseInt(get('days')) || 4,
+    duration: get('duration'), conditions: getMulti('health'), medications: getMulti('medication'),
+    supplements: getMulti('supplements'), nutrition: get('nutrition'),
+    benchmarks: { pushUp: get('pushup'), pullUp: get('pullup'), benchPress: get('bench') },
+    optPhase: optPhase, onboardingComplete: true
+  };
+}
+
+window.transitionToPhase3 = function() {
+  var checklistData = collectChecklistData();
+  var profileData = {};
+  for (var k in checklistData) profileData[k] = checklistData[k];
+  profileData.phase1Summary = phase1Summary;
+  localStorage.setItem('forgeiq_profile_v1', JSON.stringify(profileData));
+  localStorage.setItem('forgeiq_profile', JSON.stringify(profileData));
+  var p2 = document.getElementById('phase2-wrap');
+  p2.style.transition = 'opacity 0.4s'; p2.style.opacity = '0';
+  setTimeout(function() {
+    p2.style.display = 'none';
+    buildPhase3(checklistData);
+    var p3 = document.getElementById('phase3-wrap');
+    p3.style.display = 'flex'; p3.style.opacity = '0'; p3.style.transition = 'opacity 0.4s';
+    setTimeout(function() { p3.style.opacity = '1'; }, 50);
+  }, 400);
+  setProgress(90);
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 3: AI PLAN REVEAL
+   ═══════════════════════════════════════════════════════════════ */
+function buildPhase3(data) {
+  var phaseNames = {1:'Stabilization Endurance',2:'Strength Endurance',3:'Muscular Development',4:'Maximal Strength',5:'Power'};
+  var wrap = document.getElementById('phase3-wrap');
+  wrap.style.flexDirection = 'column';
+  wrap.style.padding = '24px 20px';
+  wrap.style.overflowY = 'auto';
+  wrap.style.position = 'relative';
+  wrap.style.zIndex = '1';
+
+  wrap.innerHTML = '<div style="flex:1;display:flex;align-items:center;justify-content:center;"><div style="color:#8fa3c0;font-style:italic;">Building your plan...</div></div>';
+
+  var prompt = 'User completed onboarding. Summary from conversation: ' + (phase1Summary || 'User wants to improve fitness.') +
+    '\n\nSelections: Experience: ' + data.experience + ', Location: ' + data.location + ', Days/week: ' + data.daysPerWeek + ', Duration: ' + data.duration + 'min, Health flags: ' + (data.conditions.join(', ')||'none') + ', Medications: ' + (data.medications.join(', ')||'none') + ', Supplements: ' + (data.supplements.join(', ')||'none') + ', Nutrition: ' + data.nutrition + ', Push-ups: ' + data.benchmarks.pushUp + ', Pull-ups: ' + data.benchmarks.pullUp + ', Bench: ' + data.benchmarks.benchPress +
+    '\n\nWrite a personalized 3-sentence plan summary. Reference specific things they mentioned. Be direct and motivating like Dr. Lovato — a combat veteran who lost 98 lbs and trains through injuries every day. End with one powerful sentence about what they are about to start.';
+
+  fetch('/.netlify/functions/chat', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:200, system:'You are FORGE AI. Give a personalized 3-sentence plan summary. Be warm, specific, and direct. No generic statements.', messages:[{role:'user',content:prompt}] })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    var aiText = (d.content && d.content[0] && d.content[0].text) ? d.content[0].text : "Your plan is built. Let's get to work.";
+    renderPlanReveal(data, aiText, phaseNames);
+  })
+  .catch(function() {
+    renderPlanReveal(data, "Your plan is built around your goals and reality. Let's get to work.", phaseNames);
+  });
+  setProgress(100);
+}
+
+function renderPlanReveal(data, aiText, phaseNames) {
+  var glp1 = (data.medications || []).some(function(m) { return ['ozempic','wegovy','mounjaro','zepbound','rybelsus'].indexOf(m) !== -1; });
+  var splits = {3:'Full Body \u00b7 3x/week',4:'Push / Pull / Legs',5:'5-Day Upper-Lower Split',6:'6-Day PPL Split'};
+  var split = splits[data.daysPerWeek] || 'Custom Split';
+  var phase = data.optPhase || 1;
+  var home = data.location === 'home' || data.location === 'none';
+  var sneakExercises = home ? [
+    {icon:'\uD83D\uDCAA',name:'Push-Up Variations',detail:'3 \u00d7 12-15'},{icon:'\uD83C\uDFCB\uFE0F',name:'DB Romanian DL',detail:'3 \u00d7 10'},{icon:'\u2B55',name:'Plank Series',detail:'3 \u00d7 45s'}
+  ] : [
+    {icon:'\uD83C\uDFCB\uFE0F',name:'Barbell Squat',detail:'4 \u00d7 8'},{icon:'\uD83D\uDCAA',name:'Bench Press',detail:'4 \u00d7 8'},{icon:'\uD83D\uDD19',name:'Bent-Over Row',detail:'4 \u00d7 8'}
+  ];
+
+  document.getElementById('phase3-wrap').innerHTML =
+    '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6rem;letter-spacing:0.06em;color:#e8edf5;margin-bottom:4px;">YOUR TRAINING PLAN IS READY.</div>' +
+    '<div style="background:#142444;border:1px solid rgba(240,165,0,0.2);border-radius:12px;padding:20px;margin:16px 0;">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">' +
+        '<div style="width:28px;height:28px;border-radius:50%;background:#f0a500;display:flex;align-items:center;justify-content:center;color:#0a1628;font-size:14px;">\u2713</div>' +
+        '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;color:#f0a500;font-size:1rem;letter-spacing:0.05em;">OPT PHASE ' + phase + ' \u2014 ' + (phaseNames[phase]||'Stabilization') + '</div>' +
+      '</div>' +
+      '<div style="font-size:14px;color:#8fa3c0;line-height:1.6;margin-bottom:12px;">' + aiText + '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:6px;">' +
+        '<div style="font-size:13px;color:#e8edf5;">\u2022 Train ' + data.daysPerWeek + ' times a week \u00b7 ' + split + '</div>' +
+        '<div style="font-size:13px;color:#e8edf5;">\u2022 Sessions: ' + (data.duration ? data.duration + ' minutes' : '45-60 minutes') + '</div>' +
+        '<div style="font-size:13px;color:#e8edf5;">\u2022 Location: ' + (data.location || 'Full gym') + '</div>' +
+        (glp1 ? '<div style="font-size:13px;color:#60a5fa;">\u2022 \uD83D\uDC8A GLP-1 muscle preservation protocol active</div>' : '') +
+        (data.conditions && data.conditions.indexOf('injury') !== -1 ? '<div style="font-size:13px;color:#f4a261;">\u2022 \u26A0\uFE0F Injury-adaptive programming enabled</div>' : '') +
+      '</div>' +
+    '</div>' +
+    '<div style="margin-bottom:20px;">' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4a6080;margin-bottom:10px;">EXERCISE SNEAK PEEK</div>' +
+      '<div style="display:flex;gap:10px;">' +
+        sneakExercises.map(function(ex) {
+          return '<div style="flex:1;background:#142444;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);">' +
+            '<div style="height:80px;background:#0e1e36;display:flex;align-items:center;justify-content:center;font-size:2rem;">' + ex.icon + '</div>' +
+            '<div style="padding:6px 8px;">' +
+              '<div style="font-size:11px;font-weight:600;color:#e8edf5;">' + ex.name + '</div>' +
+              '<div style="font-size:10px;color:#8fa3c0;margin-top:2px;">' + ex.detail + '</div>' +
+            '</div></div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+    '<button onclick="completeOnboarding()" style="width:100%;padding:18px;background:#f0a500;border:none;border-radius:10px;color:#0a1628;font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;letter-spacing:0.08em;cursor:pointer;">I WILL NOT QUIT \u2014 START NOW</button>' +
+    '<div style="text-align:center;font-size:11px;color:#4a6080;margin-top:8px;">No contracts. Cancel anytime. Your coach is ready.</div>';
+}
+
+window.completeOnboarding = function() {
+  var profile = {};
+  try { profile = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || '{}'); } catch(e) {}
+  profile.onboardingComplete = true;
+  profile.completedAt = new Date().toISOString();
+  localStorage.setItem('forgeiq_profile_v1', JSON.stringify(profile));
+  localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
+  document.getElementById('onboarding-screen').style.display = 'none';
   window.location.href = '/dashboard';
 };
 
 // Boot
 function boot() {
   try {
-    var inp = document.getElementById('user-input');
-    if (inp) inp.addEventListener('keydown', function(e) { if(e.key==='Enter') sendMessage(); });
+    var inp = document.getElementById('ob-input');
+    if (inp) inp.addEventListener('keydown', function(e) { if(e.key==='Enter' && !e.shiftKey){e.preventDefault();sendPhase1();} });
 
     setTimeout(function() {
-      var opening = "Hey — I'm your FORGE AI coach, built on the expertise of Dr. Michael Lovato. Before I build your plan, I want to understand what actually brought you here. What's going on?";
-      addAI(opening, ["I want to lose weight","I want to build muscle","I'm on GLP-1 medication","I need to get healthier"]);
-      history.push({role:'assistant', content:opening});
-    }, 600);
+      var opening = "Hey \u2014 I'm your FORGE AI coach, built on the expertise of Dr. Michael Lovato. Before I build your plan, I want to understand what actually brought you here. What's going on?";
+      addAIMsg(opening, ["I want to lose weight","I want to build muscle","I'm on GLP-1 medication","I need to get my health back"]);
+      phase1History.push({role:'assistant', content:opening});
+    }, 800);
   } catch(err) {
     console.error('Onboarding boot error:', err);
-    document.body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center;background:#0a1628;color:#e8edf5;font-family:sans-serif;">' +
-      '<div style="font-size:2rem;font-weight:900;color:#f0a500;margin-bottom:16px;">FORGEIQ</div>' +
-      '<div style="font-size:1.1rem;margin-bottom:32px;">Let\'s build your plan.</div>' +
-      '<button onclick="window.location.href=\'/dashboard\'" style="padding:16px 32px;background:#f0a500;border:none;border-radius:10px;color:#0a1628;font-size:1rem;font-weight:700;cursor:pointer;">Get Started &rarr;</button>' +
-      '</div>';
+    transitionToPhase2();
   }
 }
 
