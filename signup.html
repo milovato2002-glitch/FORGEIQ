@@ -496,10 +496,17 @@
   
   
   <script>
-    // Redirect if already logged in
-    if (typeof SupabaseClient !== 'undefined' && SupabaseClient.isLoggedIn()) {
-      window.location.href = '/dashboard.html';
+    // Safe i18n helper — works even if ForgeIQ hasn't loaded yet
+    function _t(key) {
+      return (typeof ForgeIQ !== 'undefined' && ForgeIQ.t) ? ForgeIQ.t(key) : key.split('.').pop().replace(/_/g, ' ');
     }
+
+    // Redirect if already logged in
+    try {
+      if (typeof SupabaseClient !== 'undefined' && SupabaseClient.isLoggedIn()) {
+        window.location.href = '/dashboard.html';
+      }
+    } catch(e) { console.error('Auth check error:', e); }
 
     function checkStrength(val) {
       const bar = document.getElementById('strengthBar');
@@ -542,24 +549,25 @@
 
       // Clear
       ['nameError', 'emailError', 'passwordError'].forEach(id => {
-        document.getElementById(id).classList.remove('show');
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('show');
       });
       globalErr.classList.remove('show');
 
       // Validate
       let valid = true;
       if (!name || name.length < 2) {
-        document.getElementById('nameError').textContent = ForgeIQ.t('errors.required');
+        document.getElementById('nameError').textContent = _t('errors.required');
         document.getElementById('nameError').classList.add('show');
         valid = false;
       }
       if (!email || !email.includes('@')) {
-        document.getElementById('emailError').textContent = ForgeIQ.t('errors.invalid_email');
+        document.getElementById('emailError').textContent = _t('errors.invalid_email');
         document.getElementById('emailError').classList.add('show');
         valid = false;
       }
       if (!pass || pass.length < 8) {
-        document.getElementById('passwordError').textContent = ForgeIQ.t('errors.password_short');
+        document.getElementById('passwordError').textContent = _t('errors.password_short');
         document.getElementById('passwordError').classList.add('show');
         valid = false;
       }
@@ -569,21 +577,23 @@
       btn.disabled = true;
 
       try {
+        if (typeof SupabaseClient === 'undefined') throw new Error('Auth not loaded');
+        const lang = (typeof ForgeIQ !== 'undefined' && ForgeIQ.getCurrentLang) ? ForgeIQ.getCurrentLang() : 'en';
         const result = await SupabaseClient.signUp(email, pass, {
           full_name: name,
-          lang: ForgeIQ.getCurrentLang()
+          lang: lang
         });
         if (result.user || result.id) {
           // Auto sign in after signup
           await SupabaseClient.signIn(email, pass);
           window.location.href = '/onboarding.html';
         } else {
-          const msg = result.msg || result.error_description || ForgeIQ.t('errors.generic');
+          const msg = result.msg || result.error_description || _t('errors.generic');
           globalErr.textContent = msg;
           globalErr.classList.add('show');
         }
       } catch (e) {
-        globalErr.textContent = ForgeIQ.t('errors.generic');
+        globalErr.textContent = _t('errors.generic');
         globalErr.classList.add('show');
       } finally {
         btn.classList.remove('loading');
@@ -596,6 +606,7 @@
     });
 
     async function switchLang(lang) {
+      if (typeof ForgeIQ === 'undefined') return;
       await ForgeIQ.loadLanguage(lang);
       document.querySelectorAll('.lang-btn').forEach(b => {
         b.classList.toggle('active', b.textContent.trim() === lang.toUpperCase());
