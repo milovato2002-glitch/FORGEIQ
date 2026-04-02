@@ -8,7 +8,7 @@
   /* ------------------------------------------------------------------ */
   /*  PART 1 — AUTH GUARD                                               */
   /* ------------------------------------------------------------------ */
-  var PUBLIC_PATHS = ['/', '/index.html', '/login.html', '/signup.html', '/pricing.html', '/onboarding.html'];
+  var PUBLIC_PATHS = ['/', '/index.html', '/login.html', '/signup.html', '/pricing.html', '/onboarding.html', '/debora.html', '/coaching.html', '/book.html', '/glp-hub.html', '/peptide-library.html', '/resources.html'];
 
   function currentPath() {
     return window.location.pathname.replace(/\/$/, '') || '/';

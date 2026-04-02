@@ -528,12 +528,12 @@
       // Validate
       let valid = true;
       if (!email || !email.includes('@')) {
-        document.getElementById('emailError').textContent = _t('errors.invalid_email');
+        document.getElementById('emailError').textContent = 'Please enter a valid email';
         document.getElementById('emailError').classList.add('show');
         valid = false;
       }
       if (!pass || pass.length < 8) {
-        document.getElementById('passwordError').textContent = _t('errors.password_short');
+        document.getElementById('passwordError').textContent = 'Password must be at least 8 characters';
         document.getElementById('passwordError').classList.add('show');
         valid = false;
       }
@@ -544,25 +544,53 @@
       btn.disabled = true;
 
       try {
-        if (typeof SupabaseClient === 'undefined') throw new Error('Auth not loaded');
-        const result = await SupabaseClient.signIn(email, pass);
-        if (result.access_token) {
-          const profile = await SupabaseClient.getProfile();
-          if (!profile || !profile.onboarding_complete) {
-            window.location.href = '/onboarding.html';
+        if (typeof SupabaseClient !== 'undefined') {
+          const result = await SupabaseClient.signIn(email, pass);
+          if (result.access_token) {
+            // Check if onboarding complete via localStorage
+            const localProfile = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || localStorage.getItem('forgeiq_profile') || '{}');
+            if (localProfile.onboardingComplete) {
+              window.location.href = '/dashboard.html';
+            } else {
+              window.location.href = '/onboarding.html';
+            }
+            return;
+          }
+          // If Supabase failed, show error but also offer guest re-entry
+          if (result.error_description) {
+            globalErr.innerHTML = result.error_description + '<br><a href="#" onclick="guestLogin(\'' + email.replace(/'/g, '') + '\')" style="color:var(--gold);font-size:0.75rem;">Continue as guest instead &rarr;</a>';
+            globalErr.classList.add('show');
           } else {
-            window.location.href = '/dashboard.html';
+            globalErr.innerHTML = 'Login failed. Check your email and password.<br><a href="#" onclick="guestLogin(\'' + email.replace(/'/g, '') + '\')" style="color:var(--gold);font-size:0.75rem;">Continue as guest instead &rarr;</a>';
+            globalErr.classList.add('show');
           }
         } else {
-          globalErr.textContent = _t('errors.login_failed');
-          globalErr.classList.add('show');
+          // No Supabase — guest login
+          guestLogin(email);
         }
       } catch (e) {
-        globalErr.textContent = _t('errors.generic');
+        console.error('Login error:', e);
+        globalErr.innerHTML = 'Connection issue.<br><a href="#" onclick="guestLogin(\'' + email.replace(/'/g, '') + '\')" style="color:var(--gold);font-size:0.75rem;">Continue as guest instead &rarr;</a>';
         globalErr.classList.add('show');
       } finally {
         btn.classList.remove('loading');
         btn.disabled = false;
+      }
+    }
+
+    function guestLogin(email) {
+      const guestToken = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      localStorage.setItem('forgeiq_token', guestToken);
+      localStorage.setItem('forgeiq_user', JSON.stringify({
+        id: guestToken,
+        email: email || 'guest@forgeiq.com',
+        isGuest: true
+      }));
+      const localProfile = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || localStorage.getItem('forgeiq_profile') || '{}');
+      if (localProfile.onboardingComplete) {
+        window.location.href = '/dashboard.html';
+      } else {
+        window.location.href = '/onboarding.html';
       }
     }
 
