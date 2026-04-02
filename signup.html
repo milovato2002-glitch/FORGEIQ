@@ -482,12 +482,14 @@
           <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
         </div>
 
-        <button class="btn-submit" id="signupBtn" onclick="handleSignup()">
-          <span data-i18n="auth.signup_btn">Create Account</span>
+        <div id="signupError" style="color:#e63946;font-size:14px;margin:8px 0;padding:10px;background:rgba(230,57,70,0.1);border-radius:6px;display:none;"></div>
+
+        <button class="btn-submit" id="signupBtn" type="button">
+          <span id="signupBtnText">Create Free Account</span>
           <div class="spinner"></div>
         </button>
 
-        <button style="width:100%;background:transparent;border:1px solid var(--border);border-radius:6px;padding:12px;color:var(--text-dim);font-family:var(--font-body);font-size:0.82rem;cursor:pointer;margin-top:12px;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'" onclick="createGuestAccount('Guest','guest@forgeiq.com');window.location.href='/onboarding.html';">
+        <button id="guestBtn" type="button" style="width:100%;background:transparent;border:1px solid var(--border);border-radius:6px;padding:12px;color:var(--text-dim);font-family:var(--font-body);font-size:0.82rem;cursor:pointer;margin-top:12px;transition:all 0.2s;">
           Skip for now — Try as Guest
         </button>
 
@@ -504,182 +506,240 @@
   
   
   <script>
-    // Safe i18n helper — works even if ForgeIQ hasn't loaded yet
-    function _t(key) {
-      return (typeof ForgeIQ !== 'undefined' && ForgeIQ.t) ? ForgeIQ.t(key) : key.split('.').pop().replace(/_/g, ' ');
-    }
+    /* ══════════════════════════════════════════════════════════
+       FORGEIQ SIGNUP — BULLETPROOF VERSION
+       Always routes user to onboarding. Never gets stuck.
+       ══════════════════════════════════════════════════════════ */
 
     // Redirect if already logged in
-    try {
-      if (typeof SupabaseClient !== 'undefined' && SupabaseClient.isLoggedIn()) {
-        window.location.href = '/dashboard.html';
-      }
-    } catch(e) { console.error('Auth check error:', e); }
+    (function() {
+      try {
+        var token = localStorage.getItem('forgeiq_token');
+        if (token) { window.location.href = '/dashboard.html'; return; }
+      } catch(e) {}
+    })();
 
+    // Password strength meter
     function checkStrength(val) {
-      const bar = document.getElementById('strengthBar');
-      const label = document.getElementById('strengthLabel');
-      let score = 0;
+      var bar = document.getElementById('strengthBar');
+      var label = document.getElementById('strengthLabel');
+      if (!bar || !label) return;
+      var score = 0;
       if (val.length >= 8)  score++;
       if (val.length >= 12) score++;
       if (/[A-Z]/.test(val)) score++;
       if (/[0-9]/.test(val)) score++;
       if (/[^A-Za-z0-9]/.test(val)) score++;
-
-      const pct = (score / 5) * 100;
-      bar.style.width = pct + '%';
-
-      if (score <= 1) {
-        bar.style.background = '#e74c3c';
-        label.textContent = val.length > 0 ? 'Weak' : '';
-        label.style.color = '#e74c3c';
-      } else if (score <= 2) {
-        bar.style.background = '#e74c3c';
-        label.textContent = 'Fair';
-        label.style.color = '#e74c3c';
-      } else if (score <= 3) {
-        bar.style.background = '#f39c12';
-        label.textContent = 'Good';
-        label.style.color = '#f39c12';
-      } else {
-        bar.style.background = '#27ae60';
-        label.textContent = 'Strong';
-        label.style.color = '#27ae60';
-      }
+      bar.style.width = (score / 5 * 100) + '%';
+      if (score <= 1)      { bar.style.background = '#e74c3c'; label.textContent = val.length > 0 ? 'Weak' : ''; label.style.color = '#e74c3c'; }
+      else if (score <= 2) { bar.style.background = '#e74c3c'; label.textContent = 'Fair'; label.style.color = '#e74c3c'; }
+      else if (score <= 3) { bar.style.background = '#f39c12'; label.textContent = 'Good'; label.style.color = '#f39c12'; }
+      else                 { bar.style.background = '#27ae60'; label.textContent = 'Strong'; label.style.color = '#27ae60'; }
     }
 
-    async function handleSignup() {
-      const btn = document.getElementById('signupBtn');
-      const name = document.getElementById('fullName').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const pass = document.getElementById('password').value;
-      const globalErr = document.getElementById('globalError');
+    // Fetch with timeout — critical for Supabase which may hang on paused projects
+    function fetchWithTimeout(url, options, timeoutMs) {
+      return Promise.race([
+        fetch(url, options),
+        new Promise(function(_, reject) {
+          setTimeout(function() { reject(new Error('Request timed out')); }, timeoutMs || 8000);
+        })
+      ]);
+    }
 
-      // Clear
-      ['nameError', 'emailError', 'passwordError'].forEach(id => {
-        const el = document.getElementById(id);
+    // Show visible error
+    function showSignupError(msg) {
+      var el = document.getElementById('signupError');
+      if (el) { el.textContent = msg; el.style.display = 'block'; }
+    }
+
+    // Create guest account — always works, no network needed
+    function createGuestAccount(name, email) {
+      var guestToken = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      localStorage.setItem('forgeiq_token', guestToken);
+      localStorage.setItem('forgeiq_auth_method', 'guest');
+      localStorage.setItem('forgeiq_user', JSON.stringify({
+        id: guestToken,
+        email: email || '',
+        full_name: name || 'Coach',
+        isGuest: true
+      }));
+      // Clear old profile so onboarding runs fresh
+      localStorage.removeItem('forgeiq_profile_v1');
+      localStorage.removeItem('forgeiq_profile');
+      var profile = {
+        full_name: name || 'Coach',
+        email: email || '',
+        isGuest: true,
+        signupDate: new Date().toISOString()
+      };
+      localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
+    }
+
+    // Navigate to onboarding (with fallback check)
+    function goToOnboarding() {
+      window.location.href = '/onboarding.html';
+    }
+
+    // Main signup handler
+    function handleSignup() {
+      var btn = document.getElementById('signupBtn');
+      var btnText = document.getElementById('signupBtnText');
+      var name = (document.getElementById('fullName') || {}).value || '';
+      var email = (document.getElementById('email') || {}).value || '';
+      var password = (document.getElementById('password') || {}).value || '';
+
+      name = name.trim();
+      email = email.trim();
+
+      // Hide previous errors
+      var errEl = document.getElementById('signupError');
+      if (errEl) errEl.style.display = 'none';
+      ['nameError', 'emailError', 'passwordError'].forEach(function(id) {
+        var el = document.getElementById(id);
         if (el) el.classList.remove('show');
       });
-      globalErr.classList.remove('show');
+      var ge = document.getElementById('globalError');
+      if (ge) ge.classList.remove('show');
 
       // Validate
-      let valid = true;
+      var valid = true;
       if (!name || name.length < 2) {
-        document.getElementById('nameError').textContent = 'Please enter your name';
-        document.getElementById('nameError').classList.add('show');
+        var ne = document.getElementById('nameError');
+        if (ne) { ne.textContent = 'Please enter your name'; ne.classList.add('show'); }
         valid = false;
       }
-      if (!email || !email.includes('@')) {
-        document.getElementById('emailError').textContent = 'Please enter a valid email';
-        document.getElementById('emailError').classList.add('show');
+      if (!email || email.indexOf('@') === -1) {
+        var ee = document.getElementById('emailError');
+        if (ee) { ee.textContent = 'Please enter a valid email'; ee.classList.add('show'); }
         valid = false;
       }
-      if (!pass || pass.length < 8) {
-        document.getElementById('passwordError').textContent = 'Password must be at least 8 characters';
-        document.getElementById('passwordError').classList.add('show');
+      if (!password || password.length < 6) {
+        var pe = document.getElementById('passwordError');
+        if (pe) { pe.textContent = 'Password must be at least 6 characters'; pe.classList.add('show'); }
         valid = false;
       }
       if (!valid) return;
 
-      btn.classList.add('loading');
-      btn.disabled = true;
+      // Show loading state
+      if (btn) { btn.classList.add('loading'); btn.disabled = true; }
+      if (btnText) btnText.textContent = 'Creating account...';
 
-      try {
-        // Try Supabase signup first
-        if (typeof SupabaseClient !== 'undefined') {
-          const lang = (typeof ForgeIQ !== 'undefined' && ForgeIQ.getCurrentLang) ? ForgeIQ.getCurrentLang() : 'en';
-          const result = await SupabaseClient.signUp(email, pass, {
-            full_name: name,
-            lang: lang
-          });
+      // Set a hard safety timeout — if ANYTHING takes more than 10 seconds, go guest
+      var safetyTimer = setTimeout(function() {
+        console.log('Safety timeout — going to guest mode');
+        createGuestAccount(name, email);
+        goToOnboarding();
+      }, 10000);
 
+      // Try Supabase with 6-second timeout, fall back to guest
+      var supabaseWorked = false;
+
+      (function trySupabase() {
+        if (typeof SupabaseClient === 'undefined' || typeof FORGEIQ_CONFIG === 'undefined') {
+          // No Supabase available — go guest immediately
+          clearTimeout(safetyTimer);
+          createGuestAccount(name, email);
+          goToOnboarding();
+          return;
+        }
+
+        var url = FORGEIQ_CONFIG.supabaseUrl + '/auth/v1/signup';
+        fetchWithTimeout(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': FORGEIQ_CONFIG.supabaseKey
+          },
+          body: JSON.stringify({ email: email, password: password, data: { full_name: name } })
+        }, 6000)
+        .then(function(res) { return res.json(); })
+        .then(function(result) {
+          console.log('Supabase signup result:', result);
+
+          // Case 1: Got access token directly (auto-confirm enabled)
           if (result.access_token) {
-            // Signed up and auto-logged in
             localStorage.setItem('forgeiq_token', result.access_token);
-            localStorage.setItem('forgeiq_user', JSON.stringify(result.user || {}));
-            createLocalProfile(name, email);
-            window.location.href = '/onboarding.html';
+            localStorage.setItem('forgeiq_auth_method', 'supabase');
+            localStorage.setItem('forgeiq_user', JSON.stringify(result.user || { email: email }));
+            var p = { full_name: name, email: email, signupDate: new Date().toISOString() };
+            localStorage.setItem('forgeiq_profile', JSON.stringify(p));
+            supabaseWorked = true;
+            clearTimeout(safetyTimer);
+            goToOnboarding();
             return;
           }
 
-          if (result.user || result.id) {
-            // Signup succeeded but may need email confirmation — try sign in
-            try {
-              const signInResult = await SupabaseClient.signIn(email, pass);
+          // Case 2: User created but needs email confirmation
+          if (result.id || (result.user && result.user.id)) {
+            // Try signing in immediately (works if confirm disabled)
+            return fetchWithTimeout(FORGEIQ_CONFIG.supabaseUrl + '/auth/v1/token?grant_type=password', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'apikey': FORGEIQ_CONFIG.supabaseKey },
+              body: JSON.stringify({ email: email, password: password })
+            }, 4000)
+            .then(function(r) { return r.json(); })
+            .then(function(signInResult) {
               if (signInResult.access_token) {
-                createLocalProfile(name, email);
-                window.location.href = '/onboarding.html';
-                return;
+                localStorage.setItem('forgeiq_token', signInResult.access_token);
+                localStorage.setItem('forgeiq_auth_method', 'supabase');
+                localStorage.setItem('forgeiq_user', JSON.stringify(signInResult.user || { email: email }));
+                var p = { full_name: name, email: email, signupDate: new Date().toISOString() };
+                localStorage.setItem('forgeiq_profile', JSON.stringify(p));
+                supabaseWorked = true;
+                clearTimeout(safetyTimer);
+                goToOnboarding();
+              } else {
+                throw new Error('Sign in after signup failed');
               }
-            } catch(e) { /* Fall through to guest mode */ }
+            });
           }
 
-          // If Supabase returned an error about existing user, try login
-          if (result.error_description && result.error_description.toLowerCase().includes('already')) {
-            try {
-              const signInResult = await SupabaseClient.signIn(email, pass);
-              if (signInResult.access_token) {
-                createLocalProfile(name, email);
-                window.location.href = '/onboarding.html';
-                return;
-              }
-            } catch(e) { /* Fall through to guest mode */ }
+          // Case 3: Error from Supabase (user exists, etc) — go guest
+          throw new Error(result.error_description || result.msg || result.error || 'Signup failed');
+        })
+        .catch(function(err) {
+          console.error('Supabase signup error:', err.message);
+          if (!supabaseWorked) {
+            clearTimeout(safetyTimer);
+            createGuestAccount(name, email);
+            goToOnboarding();
           }
-        }
+        });
+      })();
+    }
 
-        // Fallback: Guest mode — no Supabase needed
-        console.log('Using guest mode signup');
-        createGuestAccount(name, email);
-        window.location.href = '/onboarding.html';
-
-      } catch (e) {
-        console.error('Signup error:', e);
-        // Even on error, allow guest access
-        createGuestAccount(name, email);
-        window.location.href = '/onboarding.html';
-      } finally {
-        btn.classList.remove('loading');
-        btn.disabled = false;
+    // Wire up buttons after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      // Signup button
+      var signupBtn = document.getElementById('signupBtn');
+      if (signupBtn) {
+        signupBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          handleSignup();
+        });
       }
-    }
 
-    function createLocalProfile(name, email) {
-      const profile = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}');
-      profile.full_name = name;
-      profile.email = email;
-      profile.signupDate = new Date().toISOString();
-      localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
-    }
+      // Guest button
+      var guestBtn = document.getElementById('guestBtn');
+      if (guestBtn) {
+        guestBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          createGuestAccount('Coach', '');
+          goToOnboarding();
+        });
+        guestBtn.addEventListener('mouseover', function() { this.style.borderColor = '#c9a84c'; this.style.color = '#c9a84c'; });
+        guestBtn.addEventListener('mouseout', function() { this.style.borderColor = ''; this.style.color = ''; });
+      }
 
-    function createGuestAccount(name, email) {
-      // Create a guest token so auth guard doesn't block
-      const guestToken = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-      localStorage.setItem('forgeiq_token', guestToken);
-      localStorage.setItem('forgeiq_user', JSON.stringify({
-        id: guestToken,
-        email: email,
-        full_name: name,
-        isGuest: true
-      }));
-      const profile = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}');
-      profile.full_name = name;
-      profile.email = email;
-      profile.isGuest = true;
-      profile.signupDate = new Date().toISOString();
-      localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
-    }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') handleSignup();
-    });
-
-    async function switchLang(lang) {
-      if (typeof ForgeIQ === 'undefined') return;
-      await ForgeIQ.loadLanguage(lang);
-      document.querySelectorAll('.lang-btn').forEach(b => {
-        b.classList.toggle('active', b.textContent.trim() === lang.toUpperCase());
+      // Enter key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleSignup();
+        }
       });
-    }
+    });
   </script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 <script src="/js/supabase-config.js"></script>
