@@ -8,7 +8,7 @@ exports.handler = async function(event, context) {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return { statusCode: 500, headers, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not configured' }) };
+  if (!apiKey) return { statusCode: 500, headers, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not set' }) };
   let body;
   try { body = JSON.parse(event.body || '{}'); } catch(e) { return { statusCode: 400, headers, body: JSON.stringify({ error: 'Bad JSON' }) }; }
   const payload = { model: body.model || 'claude-sonnet-4-6', max_tokens: body.max_tokens || 2000, messages: body.messages || [] };
@@ -21,7 +21,7 @@ exports.handler = async function(event, context) {
     });
     const text = await r.text();
     let data;
-    try { data = JSON.parse(text); } catch(e) { return { statusCode: 500, headers, body: JSON.stringify({ error: 'Parse fail', raw: text.slice(0,200) }) }; }
+    try { data = JSON.parse(text); } catch(e) { return { statusCode: 500, headers, body: JSON.stringify({ error: 'Parse fail', raw: text.slice(0,300) }) }; }
     return { statusCode: r.status, headers, body: JSON.stringify(data) };
   } catch(err) { return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) }; }
 };
