@@ -437,10 +437,17 @@ function generatePlan(){
       messages: [{role:"user", content: prompt}]
     })
   })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
+  .then(function(r){ return r.text(); })
+  .then(function(raw){
+    // Detect HTML error page
+    if(!raw || raw.trim().charAt(0) === '<' || raw.trim().substring(0,2) === '<!'){
+      throw new Error("Server returned an error page. Check your Netlify function and API key.");
+    }
+    var data;
+    try { data = JSON.parse(raw); } catch(e){ throw new Error("Invalid response from server."); }
+    if(data.error) throw new Error(data.error.message || data.error);
     var text = (data.content && data.content[0]) ? data.content[0].text : "";
-    if(!text) throw new Error("Empty response");
+    if(!text) throw new Error("Empty response from AI.");
 
     var plan = parsePlan(text);
     savePlan(plan, text);
@@ -451,10 +458,10 @@ function generatePlan(){
     goStepInternal(4);
   })
   .catch(function(err){
-    console.error("Plan generation failed:", err);
+    console.error("Plan generation error:", err);
     $("#loading-overlay").classList.remove("active");
     goStepInternal(2);
-    addChatMsg("Plan generation failed: " + err.message + ". Please try again.", "ai");
+    addChatMsg("Could not generate your plan right now. Please try again in a moment.", "ai");
   });
 }
 
