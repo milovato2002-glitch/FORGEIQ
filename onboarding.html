@@ -1182,71 +1182,68 @@ function renderStep11(c){
   });
 }
 
-function getLocalPlanSummary(){
-  var goal = (profile.goals || [])[0] || "your goals";
-  var exp = profile.experience || "intermediate";
-  var injuries = profile.injuries;
-  var mode = profile.nutritionMode || "build";
+// Local fallback — never fails, always personal
+function getLocalPlanSummary(p){
+  var goal = (p.goals||[])[0] || 'your goals';
+  var exp = p.experience || 'intermediate';
+  var injuries = p.injuries;
+  var mode = p.nutritionMode || 'build';
 
   if(injuries && injuries.length > 10){
-    return "Your program is built around your injuries — every exercise protects you while pushing you forward.";
+    return 'Your program is built around your injuries — every exercise protects you while pushing you forward toward ' + goal + '.';
   }
-  if(exp === "3plus"){
-    return "Advanced athlete programming — periodized, progressive, and calibrated to your " + mode + " phase targets.";
+  if(exp === '3plus' || exp === 'advanced'){
+    return 'Advanced athlete programming — periodized, progressive, and calibrated to your ' + mode + ' phase targets.';
   }
-  if(goal === "lose_fat"){
-    return "Your " + mode + " protocol prioritizes muscle preservation while creating the deficit needed for fat loss.";
+  if(goal.indexOf('lose') > -1 || goal.indexOf('weight') > -1){
+    return 'Your ' + mode + ' protocol prioritizes muscle preservation while creating the deficit needed for fat loss.';
   }
-  return "Your personalized plan is built on NASM OPT methodology and calibrated to your exact profile.";
+  return 'Your personalized plan is built on NASM OPT methodology and calibrated to your exact profile.';
+}
+
+async function generatePlanSummary(p){
+  try {
+    var r = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 150,
+        system: 'You are FORGE AI. Write one specific coaching sentence (max 25 words) for this athlete based on their exact profile. No JSON. No formatting. Plain text only.',
+        messages: [{
+          role: 'user',
+          content: 'Profile: goal=' + (p.goals||[]).join(',') + ' experience=' + (p.experience||'') + ' injuries=' + (p.injuries||'none') + ' nutritionMode=' + (p.nutritionMode||'build') + ' supplements=' + (p.supplements||[]).join(',')
+        }]
+      })
+    });
+
+    // Always read as text first
+    var text = await r.text();
+
+    // If it returned HTML (error page) use fallback
+    if(!text || text.trim().charAt(0) === '<' || text.trim().substring(0,2) === '<!'){
+      return getLocalPlanSummary(p);
+    }
+
+    var data;
+    try { data = JSON.parse(text); }
+    catch(e){ return text.slice(0, 200); }
+
+    return data.content && data.content[0] && data.content[0].text ? data.content[0].text : getLocalPlanSummary(p);
+
+  } catch(err){
+    console.error('Plan generation error:', err);
+    return getLocalPlanSummary(p);
+  }
 }
 
 function generateCoachNote(){
   var noteEl = document.getElementById("coach-note");
   if(!noteEl) return;
-
-  var timer = setTimeout(function(){
-    noteEl.textContent = '"' + getLocalPlanSummary() + '"';
-  }, 6000);
-
-  try {
-    fetch("/.netlify/functions/chat", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 150,
-        system: "You are FORGE AI. Write one specific coaching sentence (max 25 words) for this athlete based on their exact profile. No JSON. No formatting. Plain text only.",
-        messages: [{role:"user", content: "Profile: goal=" + (profile.goals || []).join(",") + " experience=" + (profile.experience || "") + " injuries=" + (profile.injuries || "none") + " nutritionMode=" + (profile.nutritionMode || "build") + " supplements=" + ((profile.supplements || []).slice(0,3).join(","))}]
-      })
-    })
-    .then(function(r){ return r.text(); })
-    .then(function(text){
-      clearTimeout(timer);
-      if(!text || text.trim().charAt(0) === "<" || text.trim().substring(0,2) === "<!"){
-        noteEl.textContent = '"' + getLocalPlanSummary() + '"';
-        return;
-      }
-      var parsed;
-      try { parsed = JSON.parse(text); }
-      catch(e){
-        if(text.length > 5 && text.length < 200){
-          noteEl.textContent = '"' + text.trim() + '"';
-        } else {
-          noteEl.textContent = '"' + getLocalPlanSummary() + '"';
-        }
-        return;
-      }
-      var reply = parsed && parsed.content && parsed.content[0] ? parsed.content[0].text : null;
-      noteEl.textContent = '"' + (reply || getLocalPlanSummary()) + '"';
-    })
-    .catch(function(){
-      clearTimeout(timer);
-      noteEl.textContent = '"' + getLocalPlanSummary() + '"';
-    });
-  } catch(e){
-    clearTimeout(timer);
-    noteEl.textContent = '"' + getLocalPlanSummary() + '"';
-  }
+  noteEl.textContent = '"' + getLocalPlanSummary(profile) + '"';
+  generatePlanSummary(profile).then(function(text){
+    noteEl.textContent = '"' + text + '"';
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════
