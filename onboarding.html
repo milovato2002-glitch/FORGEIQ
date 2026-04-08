@@ -7,234 +7,66 @@
 <script>window.__FORGEIQ_PUBLIC_PAGE__ = true;</script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #0a1628;
-  --card: #142444;
-  --gold: #f0a500;
-  --gold-hover: #ffb820;
-  --gold-dim: rgba(240,165,0,0.12);
-  --t1: #e8edf5;
-  --t2: #8fa3c0;
-  --t3: #4a6080;
-  --border: rgba(255,255,255,0.07);
-  --border-gold: rgba(240,165,0,0.18);
-  --fd: 'Bebas Neue', sans-serif;
-  --fc: 'Barlow Condensed', sans-serif;
-  --fb: 'Barlow', sans-serif;
-}
-body {
-  background: var(--bg);
-  color: var(--t1);
-  font-family: var(--fb);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-x: hidden;
-}
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#0a1628;--card:#142444;--gold:#f0a500;--gold-hover:#ffb820;--gold-dim:rgba(240,165,0,0.12);--t1:#e8edf5;--t2:#8fa3c0;--t3:#4a6080;--border:rgba(255,255,255,0.07);--border-gold:rgba(240,165,0,0.18);--fd:'Bebas Neue',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;--green:#2dc653;--teal:#2dd4bf;}
+body{background:var(--bg);color:var(--t1);font-family:var(--fb);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;}
 
-/* PROGRESS BAR */
-.progress-wrap {
-  width: 100%;
-  max-width: 600px;
-  padding: 32px 24px 0;
-}
-.progress-steps {
-  display: flex;
-  gap: 8px;
-}
-.progress-step {
-  flex: 1;
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(255,255,255,0.08);
-  transition: background 0.4s;
-}
-.progress-step.active {
-  background: var(--gold);
-}
-.progress-label {
-  text-align: center;
-  margin-top: 12px;
-  font-family: var(--fc);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--t3);
-}
+.progress-wrap{width:100%;max-width:600px;padding:32px 24px 0;}
+.progress-steps{display:flex;gap:4px;}
+.progress-step{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.08);transition:background 0.4s;}
+.progress-step.active{background:var(--gold);}
+.progress-label{text-align:center;margin-top:10px;font-family:var(--fc);font-size:0.72rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--t3);}
 
-/* STEP CONTAINER */
-.step-container {
-  width: 100%;
-  max-width: 600px;
-  padding: 40px 24px;
-  display: none;
-  flex-direction: column;
-  animation: fadeIn 0.3s ease;
-}
-.step-container.active {
-  display: flex;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.step-headline {
-  font-family: var(--fd);
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
-  letter-spacing: 2px;
-  color: var(--t1);
-  text-align: center;
-  margin-bottom: 32px;
-}
+.step-box{width:100%;max-width:600px;padding:32px 24px;display:none;flex-direction:column;animation:fadeIn 0.35s ease;}
+.step-box.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 
-/* TAP CARDS */
-.tap-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 32px;
-}
-.tap-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px 24px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 1rem;
-  color: var(--t1);
-  font-weight: 400;
-  line-height: 1.5;
-  user-select: none;
-}
-.tap-card:hover {
-  border-color: var(--border-gold);
-}
-.tap-card.selected {
-  border-color: var(--gold);
-  background: rgba(240,165,0,0.06);
-}
-.tap-card .card-title {
-  font-family: var(--fc);
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.5px;
-}
-.tap-card .card-sub {
-  font-size: 0.85rem;
-  color: var(--t2);
-  margin-top: 4px;
-}
+.step-headline{font-family:var(--fd);font-size:clamp(1.5rem,4vw,2rem);letter-spacing:2px;color:var(--t1);text-align:center;margin-bottom:8px;}
+.step-context{text-align:center;font-size:0.88rem;color:var(--t2);margin-bottom:28px;line-height:1.5;}
 
-/* BUTTONS */
-.step-nav {
-  display: flex;
-  gap: 12px;
-  margin-top: auto;
-}
-.btn-continue {
-  flex: 1;
-  background: var(--gold);
-  color: var(--bg);
-  border: none;
-  border-radius: 6px;
-  padding: 14px;
-  font-family: var(--fc);
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-continue:hover:not(:disabled) {
-  background: var(--gold-hover);
-  transform: translateY(-1px);
-}
-.btn-continue:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.btn-back {
-  background: transparent;
-  color: var(--t2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 14px 24px;
-  font-family: var(--fc);
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-back:hover {
-  border-color: var(--t2);
-  color: var(--t1);
-}
+.tap-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.tap-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 22px;cursor:pointer;transition:all 0.2s;user-select:none;}
+.tap-card:hover{border-color:var(--border-gold);}
+.tap-card.selected{border-color:var(--gold);background:rgba(240,165,0,0.06);}
+.tap-card .card-title{font-family:var(--fc);font-weight:700;font-size:1.02rem;letter-spacing:0.5px;color:var(--t1);}
+.tap-card .card-sub{font-size:0.82rem;color:var(--t2);margin-top:3px;}
 
-/* LOADING SCREEN */
-.loading-screen {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 9999;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 24px;
-}
-.loading-screen.active {
-  display: flex;
-}
-.loading-logo {
-  font-family: var(--fd);
-  font-size: 2.8rem;
-  letter-spacing: 6px;
-  color: var(--gold);
-  margin-bottom: 32px;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-}
-.loading-text {
-  font-family: var(--fd);
-  font-size: 1.4rem;
-  letter-spacing: 2px;
-  color: var(--t1);
-  margin-bottom: 12px;
-}
-.loading-sub {
-  font-size: 0.95rem;
-  color: var(--t2);
-  max-width: 400px;
-  line-height: 1.6;
-}
+.text-input-area{margin-bottom:24px;}
+.text-input-area label{display:block;font-family:var(--fc);font-size:0.78rem;font-weight:600;letter-spacing:1px;color:var(--t2);text-transform:uppercase;margin-bottom:8px;}
+.text-input-area input,.text-input-area textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;color:var(--t1);font-family:var(--fb);font-size:0.95rem;outline:none;transition:border-color 0.2s;}
+.text-input-area input:focus,.text-input-area textarea:focus{border-color:var(--gold);}
+.text-input-area textarea{min-height:80px;resize:vertical;}
 
-/* WORDMARK */
-.ob-wordmark {
-  font-family: var(--fd);
-  font-size: 1rem;
-  letter-spacing: 4px;
-  color: rgba(255,255,255,0.2);
-  text-align: center;
-  padding-top: 32px;
-}
+.step-nav{display:flex;gap:12px;margin-top:auto;}
+.btn-continue{flex:1;background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:14px;font-family:var(--fc);font-weight:700;font-size:0.95rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-continue:hover:not(:disabled){background:var(--gold-hover);transform:translateY(-1px);}
+.btn-continue:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-back{background:transparent;color:var(--t2);border:1px solid var(--border);border-radius:6px;padding:14px 24px;font-family:var(--fc);font-weight:600;font-size:0.95rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-back:hover{border-color:var(--t2);color:var(--t1);}
+
+/* PLAN REVEAL */
+.plan-reveal{background:var(--card);border:1px solid var(--border-gold);border-radius:12px;padding:28px 24px;margin-bottom:24px;}
+.pr-section{margin-bottom:20px;}
+.pr-section:last-child{margin-bottom:0;}
+.pr-label{font-family:var(--fc);font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.pr-row{display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--t2);padding:4px 0;}
+.pr-row strong{color:var(--t1);}
+.pr-highlight{background:rgba(240,165,0,0.06);border:1px solid var(--border-gold);border-radius:8px;padding:12px 16px;margin-top:12px;font-size:0.85rem;color:var(--gold);text-align:center;}
+
+/* LOADING */
+.loading-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:9999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+.loading-screen.active{display:flex;}
+.loading-logo{font-family:var(--fd);font-size:2.8rem;letter-spacing:6px;color:var(--gold);margin-bottom:32px;animation:pulse 1.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:0.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
+.loading-text{font-family:var(--fd);font-size:1.4rem;letter-spacing:2px;color:var(--t1);margin-bottom:12px;}
+.loading-sub{font-size:0.95rem;color:var(--t2);max-width:400px;line-height:1.6;}
+
+.ob-wordmark{font-family:var(--fd);font-size:1rem;letter-spacing:4px;color:rgba(255,255,255,0.2);text-align:center;padding-top:32px;}
 </style>
 </head>
 <body>
 
 <script>
-// Redirect ONLY if onboarding is genuinely complete
-// Check both profile keys — whichever has onboardingComplete wins
 try {
   var _p1 = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || '{}');
   var _p2 = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}');
@@ -245,109 +77,11 @@ try {
 </script>
 
 <div class="ob-wordmark">FORGEIQ</div>
-
-<!-- PROGRESS BAR -->
 <div class="progress-wrap">
-  <div class="progress-steps">
-    <div class="progress-step active" id="prog-1"></div>
-    <div class="progress-step" id="prog-2"></div>
-    <div class="progress-step" id="prog-3"></div>
-    <div class="progress-step" id="prog-4"></div>
-  </div>
-  <div class="progress-label" id="step-label">STEP 1 OF 4</div>
+  <div class="progress-steps" id="prog-bar"></div>
+  <div class="progress-label" id="prog-label"></div>
 </div>
-
-<!-- STEP 1: GOAL -->
-<div class="step-container active" id="step-1">
-  <h1 class="step-headline">WHAT ARE YOU HERE TO DO?</h1>
-  <div class="tap-cards" data-mode="single">
-    <div class="tap-card" data-value="lose_weight">
-      <div class="card-title">Lose weight &amp; burn fat</div>
-    </div>
-    <div class="tap-card" data-value="build_strength">
-      <div class="card-title">Build strength &amp; muscle</div>
-    </div>
-    <div class="tap-card" data-value="recover">
-      <div class="card-title">Recover &amp; rebuild after injury or surgery</div>
-    </div>
-    <div class="tap-card" data-value="general">
-      <div class="card-title">General fitness &amp; feel better</div>
-    </div>
-  </div>
-  <div class="step-nav">
-    <button class="btn-continue" id="btn-1" disabled onclick="goToStep(2)">CONTINUE</button>
-  </div>
-</div>
-
-<!-- STEP 2: HEALTH CONTEXT -->
-<div class="step-container" id="step-2">
-  <h1 class="step-headline">ANYTHING DR. LOVATO AI SHOULD KNOW?</h1>
-  <div class="tap-cards" data-mode="multi">
-    <div class="tap-card" data-value="glp1">
-      <div class="card-title">I'm on GLP-1 medication</div>
-      <div class="card-sub">Ozempic, Wegovy, Mounjaro, etc.</div>
-    </div>
-    <div class="tap-card" data-value="surgery">
-      <div class="card-title">I've had surgery in the last 2 years</div>
-    </div>
-    <div class="tap-card" data-value="chronic_pain">
-      <div class="card-title">I have chronic pain or an injury</div>
-    </div>
-    <div class="tap-card" data-value="veteran">
-      <div class="card-title">I'm a veteran or first responder</div>
-    </div>
-    <div class="tap-card" data-value="none">
-      <div class="card-title">None of the above</div>
-    </div>
-  </div>
-  <div class="step-nav">
-    <button class="btn-back" onclick="goToStep(1)">BACK</button>
-    <button class="btn-continue" id="btn-2" disabled onclick="goToStep(3)">CONTINUE</button>
-  </div>
-</div>
-
-<!-- STEP 3: EXPERIENCE -->
-<div class="step-container" id="step-3">
-  <h1 class="step-headline">HOW LONG HAVE YOU BEEN TRAINING?</h1>
-  <div class="tap-cards" data-mode="single">
-    <div class="tap-card" data-value="beginner">
-      <div class="card-title">I'm just starting out</div>
-    </div>
-    <div class="tap-card" data-value="on_off">
-      <div class="card-title">I've trained on and off</div>
-    </div>
-    <div class="tap-card" data-value="consistent">
-      <div class="card-title">I train consistently</div>
-    </div>
-    <div class="tap-card" data-value="advanced">
-      <div class="card-title">I'm advanced / I coach others</div>
-    </div>
-  </div>
-  <div class="step-nav">
-    <button class="btn-back" onclick="goToStep(2)">BACK</button>
-    <button class="btn-continue" id="btn-3" disabled onclick="goToStep(4)">CONTINUE</button>
-  </div>
-</div>
-
-<!-- STEP 4: LANGUAGE -->
-<div class="step-container" id="step-4">
-  <h1 class="step-headline">YOUR LANGUAGE</h1>
-  <div class="tap-cards" data-mode="single">
-    <div class="tap-card" data-value="en">
-      <div class="card-title">English</div>
-    </div>
-    <div class="tap-card" data-value="es">
-      <div class="card-title">Espa&ntilde;ol</div>
-    </div>
-    <div class="tap-card" data-value="pt">
-      <div class="card-title">Portugu&ecirc;s</div>
-    </div>
-  </div>
-  <div class="step-nav">
-    <button class="btn-back" onclick="goToStep(3)">BACK</button>
-    <button class="btn-continue" id="btn-4" disabled onclick="finishOnboarding()">CONTINUE</button>
-  </div>
-</div>
+<div id="steps-container"></div>
 
 <!-- LOADING SCREEN -->
 <div class="loading-screen" id="loading-screen">
@@ -357,121 +91,461 @@ try {
 </div>
 
 <script>
-(function() {
-  "use strict";
+(function(){
+"use strict";
 
-  var currentStep = 1;
-  var selections = { goal: null, health: [], experience: null, language: null };
+/* ═══════════════════════════════════════
+   STEP DEFINITIONS
+   ═══════════════════════════════════════ */
+var STEPS = [
+  { id:"goal", headline:"WHAT ARE YOU HERE TO DO?", context:"", mode:"single",
+    options:[
+      {value:"lose_weight",title:"Lose weight & burn fat"},
+      {value:"build_strength",title:"Build strength & muscle"},
+      {value:"recover",title:"Recover & rebuild after injury or surgery"},
+      {value:"general",title:"General fitness & feel better"}
+    ]},
+  { id:"health", headline:"ANYTHING DR. LOVATO AI SHOULD KNOW?", context:"", mode:"multi",
+    options:[
+      {value:"glp1",title:"I'm on GLP-1 medication",sub:"Ozempic, Wegovy, Mounjaro, etc."},
+      {value:"surgery",title:"I've had surgery in the last 2 years"},
+      {value:"chronic_pain",title:"I have chronic pain or an injury"},
+      {value:"veteran",title:"I'm a veteran or first responder"},
+      {value:"none",title:"None of the above"}
+    ]},
+  { id:"injuries", headline:"DESCRIBE YOUR INJURY OR LIMITATION", context:"Take your time — this helps your coach program around it safely.", mode:"text",
+    placeholder:"e.g. torn rotator cuff right shoulder, knee surgery 6 months ago...",
+    showIf: function(a){ return a.health && (a.health.indexOf("chronic_pain")>-1 || a.health.indexOf("surgery")>-1); }
+  },
+  { id:"experience", headline:"HOW LONG HAVE YOU BEEN TRAINING?", context:"", mode:"single",
+    options:[
+      {value:"beginner",title:"I'm just starting out"},
+      {value:"on_off",title:"I've trained on and off"},
+      {value:"consistent",title:"I train consistently"},
+      {value:"advanced",title:"I'm advanced / I coach others"}
+    ]},
+  { id:"language", headline:"YOUR LANGUAGE", context:"", mode:"single",
+    options:[
+      {value:"en",title:"English"},
+      {value:"es",title:"Espa\u00f1ol"},
+      {value:"pt",title:"Portugu\u00eas"}
+    ]},
+  { id:"dietaryApproach", headline:"HOW DO YOU EAT RIGHT NOW?", context:"", mode:"single",
+    options:[
+      {value:"track_macros",title:"I track macros"},
+      {value:"healthy_no_track",title:"I eat healthy but don't track"},
+      {value:"eat_whatever",title:"I eat whatever"},
+      {value:"need_help",title:"No idea \u2014 need help"}
+    ]},
+  { id:"dietaryRestrictions", headline:"ANY DIETARY RESTRICTIONS?", context:"", mode:"single",
+    options:[
+      {value:"none",title:"None"},
+      {value:"no_dairy",title:"No dairy"},
+      {value:"no_gluten",title:"No gluten"},
+      {value:"vegetarian",title:"Vegetarian"},
+      {value:"vegan",title:"Vegan"},
+      {value:"halal_kosher",title:"Halal / Kosher"}
+    ]},
+  { id:"nutritionChallenge", headline:"BIGGEST NUTRITION CHALLENGE?", context:"", mode:"single",
+    options:[
+      {value:"not_enough_protein",title:"Not eating enough protein"},
+      {value:"junk_food",title:"Eating too much junk food"},
+      {value:"no_time",title:"No time to cook"},
+      {value:"dont_know",title:"Don't know what to eat"},
+      {value:"eat_more",title:"Eating enough to build muscle"}
+    ]},
+  { id:"supplements", headline:"TAKING ANY SUPPLEMENTS?", context:"", mode:"single",
+    options:[
+      {value:"protein_powder",title:"Protein powder"},
+      {value:"creatine",title:"Creatine"},
+      {value:"preworkout",title:"Pre-workout"},
+      {value:"vitamins",title:"Vitamins only"},
+      {value:"nothing",title:"Nothing yet"},
+      {value:"several",title:"Several \u2014 I'll list them"}
+    ]},
+  { id:"nutritionMode", headline:"WHAT'S YOUR NUTRITION GOAL?", context:"This sets your calorie and macro targets.", mode:"single",
+    options:[
+      {value:"build",title:"Build muscle \u2014 I need to eat more"},
+      {value:"cut",title:"Lose fat \u2014 caloric deficit"},
+      {value:"recomp",title:"Recomposition \u2014 lose fat and gain muscle"},
+      {value:"maintain",title:"Maintain \u2014 just stay consistent"}
+    ]},
+  { id:"reveal", headline:"YOUR FORGE PLAN IS READY", context:"", mode:"reveal" }
+];
 
-  // Tap card logic
-  document.querySelectorAll('.tap-cards').forEach(function(container) {
-    var mode = container.getAttribute('data-mode');
-    container.querySelectorAll('.tap-card').forEach(function(card) {
-      card.addEventListener('click', function() {
-        if (mode === 'single') {
-          container.querySelectorAll('.tap-card').forEach(function(c) { c.classList.remove('selected'); });
-          card.classList.add('selected');
+var answers = {};
+var currentIdx = 0;
+var totalVisible = 0;
+
+/* ═══════════════════════════════════════
+   CONTEXTUAL ACKNOWLEDGMENTS
+   ═══════════════════════════════════════ */
+var ACK = {
+  goal: {lose_weight:"Fat loss mode \u2014 got it.",build_strength:"Muscle gain \u2014 let's build.",recover:"Recovery focus \u2014 we'll be careful.",general:"General fitness \u2014 solid."},
+  health: function(vals){ if(!vals||!vals.length||vals[0]==="none") return ""; var parts=[]; if(vals.indexOf("glp1")>-1) parts.push("GLP-1 noted \u2014 protein-first at every meal."); if(vals.indexOf("surgery")>-1||vals.indexOf("chronic_pain")>-1) parts.push("I'll ask about that next."); if(vals.indexOf("veteran")>-1) parts.push("Thank you for your service."); return parts.join(" "); },
+  injuries: function(v){ return v ? "Noted. I'll program around that." : ""; },
+  experience: {beginner:"Starting from zero \u2014 we'll build the foundation right.",on_off:"On and off \u2014 time to lock in.",consistent:"Consistent \u2014 let's level up.",advanced:"Advanced \u2014 we'll push the ceiling."},
+  language: {en:"English it is.",es:"Espa\u00f1ol \u2014 perfecto.",pt:"Portugu\u00eas \u2014 vamos."},
+  dietaryApproach: {track_macros:"Good \u2014 you already track.",healthy_no_track:"Healthy but no tracking \u2014 we can add structure.",eat_whatever:"No judgment \u2014 let's build better habits.",need_help:"We'll figure it out together."},
+  dietaryRestrictions: {none:"No restrictions \u2014 maximum flexibility.",no_dairy:"No dairy \u2014 noted.",no_gluten:"Gluten-free \u2014 noted.",vegetarian:"Vegetarian \u2014 we'll hit protein targets with plant sources.",vegan:"Vegan \u2014 protein strategy is critical. I've got you.",halal_kosher:"Halal/Kosher \u2014 noted."},
+  nutritionChallenge: {not_enough_protein:"Protein is priority one. We'll fix that.",junk_food:"We'll crowd out the junk with better options.",no_time:"Quick meals \u2014 I've got recipes under 10 minutes.",dont_know:"I'll give you exact meals.",eat_more:"Building requires fuel. We'll dial it in."},
+  supplements: {protein_powder:"Good foundation.",creatine:"Smart choice.",preworkout:"Noted.",vitamins:"Vitamins are a start.",nothing:"No problem \u2014 we'll recommend what matters.",several:"We'll review your stack."},
+  nutritionMode: {build:"BUILD mode \u2014 slight surplus, max muscle.",cut:"CUT mode \u2014 deficit with muscle preservation.",recomp:"RECOMP \u2014 body recomposition.",maintain:"MAINTAIN \u2014 consistency is king."}
+};
+
+function getAck(stepId, val){
+  var a = ACK[stepId];
+  if(!a) return "";
+  if(typeof a === "function") return a(val);
+  if(typeof a === "object" && val) return a[val] || "";
+  return "";
+}
+
+/* ═══════════════════════════════════════
+   COMPUTE VISIBLE STEPS
+   ═══════════════════════════════════════ */
+function getVisibleSteps(){
+  var vis = [];
+  for(var i=0;i<STEPS.length;i++){
+    var s = STEPS[i];
+    if(s.showIf && !s.showIf(answers)) continue;
+    vis.push(s);
+  }
+  return vis;
+}
+
+/* ═══════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════ */
+function render(){
+  var visible = getVisibleSteps();
+  totalVisible = visible.length;
+  var step = visible[currentIdx];
+  if(!step) return;
+
+  // Progress bar
+  var bar = document.getElementById("prog-bar");
+  bar.innerHTML = "";
+  for(var i=0;i<totalVisible;i++){
+    var d = document.createElement("div");
+    d.className = "progress-step" + (i <= currentIdx ? " active" : "");
+    bar.appendChild(d);
+  }
+  document.getElementById("prog-label").textContent = "STEP " + (currentIdx+1) + " OF " + totalVisible;
+
+  // Step content
+  var container = document.getElementById("steps-container");
+
+  // Get acknowledgment from previous step
+  var prevAck = "";
+  if(currentIdx > 0){
+    var prevStep = visible[currentIdx - 1];
+    if(prevStep){
+      var prevVal = answers[prevStep.id];
+      prevAck = getAck(prevStep.id, prevVal);
+    }
+  }
+
+  var contextText = prevAck || step.context || "";
+
+  if(step.mode === "reveal"){
+    container.innerHTML = renderReveal(contextText);
+    bindRevealButton();
+    return;
+  }
+
+  var html = '<div class="step-box active">';
+  html += '<h1 class="step-headline">' + esc(step.headline) + '</h1>';
+  if(contextText) html += '<div class="step-context">' + esc(contextText) + '</div>';
+
+  if(step.mode === "text"){
+    html += '<div class="text-input-area">';
+    html += '<textarea id="text-answer" placeholder="' + esc(step.placeholder || "") + '"></textarea>';
+    html += '</div>';
+  } else if(step.options){
+    html += '<div class="tap-cards" data-mode="' + step.mode + '">';
+    step.options.forEach(function(opt){
+      var sel = false;
+      if(step.mode === "single") sel = (answers[step.id] === opt.value);
+      else if(step.mode === "multi" && Array.isArray(answers[step.id])) sel = answers[step.id].indexOf(opt.value) > -1;
+      html += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + esc(opt.value) + '">';
+      html += '<div class="card-title">' + esc(opt.title) + '</div>';
+      if(opt.sub) html += '<div class="card-sub">' + esc(opt.sub) + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="step-nav">';
+  if(currentIdx > 0) html += '<button class="btn-back" id="ob-back">BACK</button>';
+  html += '<button class="btn-continue" id="ob-next" disabled>CONTINUE</button>';
+  html += '</div></div>';
+
+  container.innerHTML = html;
+  bindStep(step);
+}
+
+function esc(s){ return s ? String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ""; }
+
+/* ═══════════════════════════════════════
+   BIND STEP INTERACTIONS
+   ═══════════════════════════════════════ */
+function bindStep(step){
+  var nextBtn = document.getElementById("ob-next");
+  var backBtn = document.getElementById("ob-back");
+
+  if(backBtn){
+    backBtn.addEventListener("click", function(){ currentIdx--; render(); });
+  }
+
+  if(step.mode === "text"){
+    var ta = document.getElementById("text-answer");
+    if(answers[step.id]) ta.value = answers[step.id];
+    // Enable continue immediately for text (can be empty = skip)
+    nextBtn.disabled = false;
+    nextBtn.addEventListener("click", function(){
+      answers[step.id] = (ta.value || "").trim();
+      currentIdx++;
+      render();
+    });
+    return;
+  }
+
+  // Card selection
+  var cards = document.querySelectorAll(".tap-card");
+  cards.forEach(function(card){
+    card.addEventListener("click", function(){
+      var val = card.getAttribute("data-value");
+      if(step.mode === "single"){
+        cards.forEach(function(c){ c.classList.remove("selected"); });
+        card.classList.add("selected");
+        answers[step.id] = val;
+      } else {
+        // Multi
+        if(val === "none"){
+          cards.forEach(function(c){ c.classList.remove("selected"); });
+          card.classList.add("selected");
+          answers[step.id] = ["none"];
         } else {
-          // Multi-select: "None of the above" deselects others and vice versa
-          var val = card.getAttribute('data-value');
-          if (val === 'none') {
-            container.querySelectorAll('.tap-card').forEach(function(c) { c.classList.remove('selected'); });
-            card.classList.add('selected');
-          } else {
-            container.querySelector('[data-value="none"]').classList.remove('selected');
-            card.classList.toggle('selected');
-          }
+          var noneCard = document.querySelector('[data-value="none"]');
+          if(noneCard) noneCard.classList.remove("selected");
+          card.classList.toggle("selected");
+          var selected = [];
+          document.querySelectorAll(".tap-card.selected").forEach(function(c){ selected.push(c.getAttribute("data-value")); });
+          answers[step.id] = selected;
         }
-        updateButton();
-      });
+      }
+      // Enable continue
+      var hasSelection = document.querySelectorAll(".tap-card.selected").length > 0;
+      nextBtn.disabled = !hasSelection;
     });
   });
 
-  function updateButton() {
-    var step = document.getElementById('step-' + currentStep);
-    var btn = document.getElementById('btn-' + currentStep);
-    if (!step || !btn) return;
-    var hasSelection = step.querySelectorAll('.tap-card.selected').length > 0;
-    btn.disabled = !hasSelection;
+  // Check if already has answer
+  if(answers[step.id]){
+    var hasAny = step.mode === "multi" ? (answers[step.id].length > 0) : !!answers[step.id];
+    nextBtn.disabled = !hasAny;
   }
 
-  window.goToStep = function(num) {
-    // Save current step selection
-    saveCurrentStep();
+  nextBtn.addEventListener("click", function(){
+    currentIdx++;
+    render();
+  });
+}
 
-    // Update step visibility
-    document.querySelectorAll('.step-container').forEach(function(s) { s.classList.remove('active'); });
-    var target = document.getElementById('step-' + num);
-    if (target) target.classList.add('active');
+/* ═══════════════════════════════════════
+   PLAN REVEAL
+   ═══════════════════════════════════════ */
+function renderReveal(contextText){
+  var goalLabels = {lose_weight:"Fat Loss",build_strength:"Muscle & Strength",recover:"Recovery & Rebuild",general:"General Fitness"};
+  var goalLabel = goalLabels[answers.goal] || "Fitness";
 
-    // Update progress bar
-    for (var i = 1; i <= 4; i++) {
-      var prog = document.getElementById('prog-' + i);
-      if (prog) {
-        if (i <= num) prog.classList.add('active');
-        else prog.classList.remove('active');
-      }
-    }
+  var expLabels = {beginner:"Phase 1 \u2014 Stabilization",on_off:"Phase 2 \u2014 Strength Endurance",consistent:"Phase 3 \u2014 Muscular Development",advanced:"Phase 4 \u2014 Max Strength"};
+  var phaseLabel = expLabels[answers.experience] || "Phase 1";
 
-    // Update label
-    document.getElementById('step-label').textContent = 'STEP ' + num + ' OF 4';
+  var modeMap = {build:"BUILD",cut:"CUT",recomp:"RECOMP",maintain:"MAINTAIN"};
+  var modeLabel = modeMap[answers.nutritionMode] || "BUILD";
+  var modeColors = {BUILD:"#2dc653",CUT:"#f4a261",RECOMP:"#2dd4bf",MAINTAIN:"#8fa3c0"};
 
-    currentStep = num;
-    updateButton();
-  };
+  // Try to get bodyweight from existing profile
+  var existingProfile = {};
+  try { existingProfile = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){}
+  var bw = existingProfile.bodyweight || 0;
 
-  function saveCurrentStep() {
-    var step = document.getElementById('step-' + currentStep);
-    if (!step) return;
-    var selected = step.querySelectorAll('.tap-card.selected');
-    var values = [];
-    selected.forEach(function(c) { values.push(c.getAttribute('data-value')); });
-
-    if (currentStep === 1) selections.goal = values[0] || null;
-    else if (currentStep === 2) selections.health = values;
-    else if (currentStep === 3) selections.experience = values[0] || null;
-    else if (currentStep === 4) selections.language = values[0] || null;
+  var proteinPerLb = {build:1.2,cut:1.4,recomp:1.0,maintain:1.0};
+  var mult = proteinPerLb[answers.nutritionMode] || 1.0;
+  var proteinTarget = bw ? Math.round(bw * mult) : 0;
+  var maintenance = bw ? bw * 15 : 0;
+  var calTarget = 0;
+  if(bw){
+    if(answers.nutritionMode === "build") calTarget = maintenance + 250;
+    else if(answers.nutritionMode === "cut") calTarget = maintenance - 400;
+    else calTarget = maintenance;
   }
 
-  window.finishOnboarding = function() {
-    saveCurrentStep();
+  var html = '<div class="step-box active">';
+  html += '<h1 class="step-headline">YOUR FORGE PLAN IS READY</h1>';
+  if(contextText) html += '<div class="step-context">' + esc(contextText) + '</div>';
 
-    // Show loading screen
-    document.getElementById('loading-screen').classList.add('active');
+  html += '<div class="plan-reveal">';
 
-    // Save to profile — write to BOTH keys so login checks work from either
-    setTimeout(function() {
-      try {
-        var profileData = {
-          goal: selections.goal,
-          healthContext: selections.health,
-          experience: selections.experience,
-          language: selections.language,
-          onboardingComplete: true,
-          onboardingDate: new Date().toISOString()
-        };
+  // Training section
+  html += '<div class="pr-section"><div class="pr-label">TRAINING</div>';
+  html += '<div class="pr-row"><strong>' + esc(phaseLabel) + '</strong></div>';
+  html += '<div class="pr-row">Goal: <strong>' + esc(goalLabel) + '</strong></div>';
+  if(answers.injuries) html += '<div class="pr-row">Injuries noted: <strong>' + esc(answers.injuries) + '</strong></div>';
+  html += '</div>';
 
-        // Merge into forgeiq_profile
-        var p = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}');
-        for (var k in profileData) { p[k] = profileData[k]; }
-        localStorage.setItem('forgeiq_profile', JSON.stringify(p));
+  // Nutrition section
+  html += '<div class="pr-section"><div class="pr-label">NUTRITION</div>';
+  html += '<div class="pr-row">Mode: <strong style="color:' + (modeColors[modeLabel]||"#f0a500") + '">' + modeLabel + '</strong></div>';
+  if(bw && proteinTarget){
+    html += '<div class="pr-row">Daily protein target: <strong>' + proteinTarget + 'g</strong></div>';
+    html += '<div class="pr-row">Daily calories: <strong>~' + Math.round(calTarget).toLocaleString() + '</strong></div>';
+  } else {
+    html += '<div class="pr-highlight">Set your bodyweight in Profile Settings to get exact targets</div>';
+  }
+  if(answers.dietaryRestrictions && answers.dietaryRestrictions !== "none") html += '<div class="pr-row">Restrictions: <strong>' + esc(answers.dietaryRestrictions.replace(/_/g," ")) + '</strong></div>';
+  html += '</div>';
 
-        // Merge into forgeiq_profile_v1
-        var p1 = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || '{}');
-        for (var k2 in profileData) { p1[k2] = profileData[k2]; }
-        localStorage.setItem('forgeiq_profile_v1', JSON.stringify(p1));
+  html += '</div>'; // end plan-reveal
 
-        // Set language preference
-        if (selections.language) {
-          localStorage.setItem('forgeiq_lang', selections.language);
+  html += '<div class="step-nav">';
+  html += '<button class="btn-continue" id="ob-finish" style="background:var(--gold);font-size:1rem;padding:18px;">I WILL NOT QUIT \u2014 START NOW</button>';
+  html += '</div></div>';
+
+  return html;
+}
+
+function bindRevealButton(){
+  var btn = document.getElementById("ob-finish");
+  if(!btn) return;
+  btn.addEventListener("click", function(){
+    btn.disabled = true;
+    btn.textContent = "BUILDING YOUR PROGRAM...";
+    document.getElementById("loading-screen").classList.add("active");
+
+    // Generate plan summary via API (with safe fallback)
+    generatePlanSummary().then(function(summary){
+      saveFullProfile(summary);
+      window.location.href = "/dashboard.html";
+    });
+  });
+}
+
+/* ═══════════════════════════════════════
+   PLAN GENERATION (safe)
+   ═══════════════════════════════════════ */
+function generatePlanSummary(){
+  return new Promise(function(resolve){
+    // Safety: always resolve within 8s
+    var timer = setTimeout(function(){ resolve("Your personalized plan is ready."); }, 8000);
+
+    try {
+      fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 300,
+          system: "You are FORGE AI. Write a 2-3 sentence motivational welcome message for a new user. Mention their goal and one specific thing you will help them with. Be direct and warm. Plain text only. No JSON. No HTML. No markdown.",
+          messages: [{role:"user", content: "New user profile: Goal=" + (answers.goal||"fitness") + ", Experience=" + (answers.experience||"beginner") + ", NutritionMode=" + (answers.nutritionMode||"build") + ", GLP1=" + (answers.health && answers.health.indexOf("glp1")>-1 ? "yes" : "no")}]
+        })
+      })
+      .then(function(r){ return r.text(); })
+      .then(function(text){
+        clearTimeout(timer);
+        // Guard against HTML responses
+        if(text.trim().charAt(0) === "<"){
+          resolve("Your personalized plan is ready. Let's get to work.");
+          return;
         }
-      } catch(e) {
-        console.error('Error saving profile:', e);
-      }
+        try {
+          var data = JSON.parse(text);
+          resolve(data.content && data.content[0] ? data.content[0].text : "Your plan is ready.");
+        } catch(e){
+          // Not JSON — use raw text if it looks like a real message
+          if(text.length > 10 && text.length < 1000) resolve(text);
+          else resolve("Your personalized plan is ready.");
+        }
+      })
+      .catch(function(){
+        clearTimeout(timer);
+        resolve("Your personalized plan is ready. Let's get to work.");
+      });
+    } catch(e){
+      clearTimeout(timer);
+      resolve("Your personalized plan is ready. Let's get to work.");
+    }
+  });
+}
 
-      window.location.href = '/dashboard.html';
-    }, 3500);
+/* ═══════════════════════════════════════
+   SAVE PROFILE
+   ═══════════════════════════════════════ */
+function saveFullProfile(summary){
+  // Map nutritionMode
+  var modeKey = answers.nutritionMode || "build";
+  if(modeKey === "maintain") modeKey = "recomp";
+
+  // Get existing profile data (email, etc.)
+  var existing = {};
+  try { existing = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){}
+  var existing1 = {};
+  try { existing1 = JSON.parse(localStorage.getItem("forgeiq_profile_v1") || "{}"); } catch(e){}
+
+  var bw = existing.bodyweight || existing1.bodyweight || 0;
+  var proteinPerLb = {build:1.2,cut:1.4,recomp:1.0};
+  var proteinTarget = bw ? Math.round(bw * (proteinPerLb[modeKey] || 1.0)) : 0;
+  var maintenance = bw ? bw * 15 : 0;
+  var calTarget = 0;
+  if(bw){
+    calTarget = modeKey === "build" ? maintenance + 250 : modeKey === "cut" ? maintenance - 400 : maintenance;
+  }
+
+  var profileData = {
+    goal: answers.goal,
+    healthContext: answers.health || [],
+    injuries: answers.injuries || "",
+    experience: answers.experience,
+    language: answers.language,
+    dietaryApproach: answers.dietaryApproach,
+    dietaryRestrictions: answers.dietaryRestrictions,
+    nutritionChallenge: answers.nutritionChallenge,
+    supplements: answers.supplements,
+    nutritionMode: modeKey,
+    proteinTarget: proteinTarget,
+    calorieTarget: calTarget,
+    planSummary: summary || "",
+    conversationSummary: Object.keys(answers).map(function(k){ return {question:k, answer:answers[k]}; }),
+    onboardingComplete: true,
+    onboardingDate: new Date().toISOString()
   };
+
+  // Merge into both profile keys
+  var k;
+  for(k in profileData){ existing[k] = profileData[k]; }
+  localStorage.setItem("forgeiq_profile", JSON.stringify(existing));
+
+  for(k in profileData){ existing1[k] = profileData[k]; }
+  localStorage.setItem("forgeiq_profile_v1", JSON.stringify(existing1));
+
+  // Set language
+  if(answers.language) localStorage.setItem("forgeiq_lang", answers.language);
+
+  // Set GLP-1 flag
+  if(answers.health && answers.health.indexOf("glp1") > -1){
+    existing.glp1 = true;
+    existing1.glp1 = true;
+    localStorage.setItem("forgeiq_profile", JSON.stringify(existing));
+    localStorage.setItem("forgeiq_profile_v1", JSON.stringify(existing1));
+  }
+}
+
+/* ═══════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════ */
+render();
 
 })();
 </script>
