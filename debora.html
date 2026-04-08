@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FORGEIQ — Debora Lovato | Nutrition, Wellness, Skin, Transformation</title>
-  <meta name="description" content="Debora Lovato — NASM CNC/CES/PES, Licensed Esthetician, GLP-1 Skin Specialist. Post-weight-loss skin, couples wellness, body confidence coaching." />
+  <title>FORGEIQ — Debora | Skin &amp; Wellness Coaching</title>
+  <meta name="description" content="Debora — Licensed Esthetician, Wellness Consultant, GLP-1 Skin Specialist. Skin transformation, body confidence, and wellness coaching." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/forgeiq.css" />
   <style>
-    :root{--bg:#0a1628;--bg2:#0e1e36;--card:#142444;--gold:#f0a500;--gold-h:#ffb820;--gold-d:rgba(240,165,0,0.12);--teal:#2dd4bf;--green:#2dc653;--red:#e63946;--t1:#e8edf5;--t2:#8fa3c0;--t3:#4a6080;--bg:rgba(240,165,0,0.18);--bs:rgba(255,255,255,0.07);--r:10px;--rs:6px;--fd:'Bebas Neue',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
     body{background:#0a1628;color:#e8edf5;font-family:'Barlow',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;}
     a{color:inherit;text-decoration:none;}
 
     /* NAV */
-    nav{position:sticky;top:0;z-index:100;padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:#0e1e36;border-bottom:1px solid rgba(255,255,255,0.07);height:60px;}
+    .top-nav{position:sticky;top:0;z-index:100;padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:#0e1e36;border-bottom:1px solid rgba(255,255,255,0.07);height:60px;}
     .nav-left{display:flex;align-items:center;gap:16px;}
     .back-btn{background:none;border:none;color:#8fa3c0;font-size:1.2rem;cursor:pointer;padding:4px 8px;transition:color 0.2s;}
     .back-btn:hover{color:#f0a500;}
@@ -28,25 +27,35 @@
     .nav-link:hover{color:#e8edf5;}
     .nav-link.active{color:#f0a500;border-bottom-color:#f0a500;}
     .nav-right{display:flex;align-items:center;gap:12px;}
+    .lang-toggle{display:flex;gap:0;border:1px solid rgba(255,255,255,0.07);border-radius:6px;overflow:hidden;}
+    .lang-btn{background:none;border:none;color:#4a6080;font-size:0.65rem;font-weight:600;padding:5px 10px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transition:all 0.2s;}
+    .lang-btn.active{background:rgba(240,165,0,0.12);color:#f0a500;}
+    .lang-btn:hover{color:#f0a500;}
+    .btn-login{background:none;border:1px solid rgba(240,165,0,0.18);color:#f0a500;font-size:0.72rem;font-weight:600;padding:7px 18px;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;}
+    .btn-login:hover{background:rgba(240,165,0,0.12);}
+    .btn-start{background:#f0a500;border:none;color:#0a1628;font-size:0.72rem;font-weight:700;padding:7px 18px;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;}
+    .btn-start:hover{background:#ffb820;}
+    .coaches-dropdown{position:relative;display:inline-block;}
+    .coaches-menu{display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;background:#0a1628;border:1px solid #f0a500;border-radius:6px;padding:8px 0;min-width:240px;z-index:200;}
+    .coaches-dropdown:hover .coaches-menu{display:block;}
+    .coaches-menu a{display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;}
+    .coaches-menu a:hover{color:#f0a500;}
 
+    /* PAGE */
     .page{max-width:1000px;margin:0 auto;padding:0 24px;}
     .section{padding:60px 0;}
 
     /* HERO */
-    .hero{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;padding:60px 0 40px;}
-    .hero-avatar{width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,#1a3a5c,#0e1e36);border:3px solid #f0a500;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:4rem;color:#f0a500;box-shadow:0 0 40px rgba(240,165,0,0.08);flex-shrink:0;}
-    .hero-location{font-size:0.78rem;color:#4a6080;margin-top:8px;text-align:center;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;}
-    .hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,3.6rem);letter-spacing:3px;color:#f0a500;line-height:1;}
-    .hero-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#8fa3c0;margin:6px 0 20px;}
-    .hero-quote{font-size:1.2rem;color:#2dd4bf;font-style:italic;line-height:1.8;margin-bottom:20px;}
-    .hero-bio{font-size:0.95rem;color:#8fa3c0;line-height:1.85;margin-bottom:20px;}
-    .cred-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
-    .cred-badge{padding:4px 10px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;background:rgba(240,165,0,0.12);border:1px solid rgba(240,165,0,0.4);color:#f0a500;white-space:nowrap;}
-    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+    .hero{display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:center;padding:60px 0 40px;}
+    .hero-photo{width:280px;height:280px;border-radius:50%;background:linear-gradient(135deg,#1a3a5c,#0e1e36);border:3px solid #f0a500;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;box-shadow:0 0 40px rgba(240,165,0,0.08);flex-shrink:0;}
+    .hero-photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+    .hero-photo .fallback{font-family:'Bebas Neue',sans-serif;font-size:5rem;color:#f0a500;letter-spacing:4px;}
+    .hero-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:3px;text-transform:uppercase;color:#f0a500;margin-bottom:8px;}
+    .hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,3.6rem);letter-spacing:3px;color:#e8edf5;line-height:1;margin-bottom:12px;}
+    .hero-creds{font-size:0.82rem;color:#4a6080;line-height:1.6;margin-bottom:20px;letter-spacing:0.5px;}
+    .hero-body{font-size:0.95rem;color:#8fa3c0;line-height:1.85;margin-bottom:24px;}
     .btn-gold{display:inline-block;background:#f0a500;color:#0a1628;padding:14px 32px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.92rem;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;border:none;cursor:pointer;}
     .btn-gold:hover{background:#ffb820;transform:translateY(-1px);}
-    .btn-outline{display:inline-block;background:transparent;color:#e8edf5;padding:14px 32px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.92rem;letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(240,165,0,0.3);transition:all 0.2s;cursor:pointer;}
-    .btn-outline:hover{border-color:#f0a500;color:#f0a500;}
 
     /* SECTION HEADINGS */
     .sec-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:2px;color:#e8edf5;text-align:center;margin-bottom:8px;}
@@ -56,241 +65,204 @@
     .persona-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
     .persona-card{background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;transition:border-color 0.2s;}
     .persona-card:hover{border-color:rgba(240,165,0,0.3);}
-    .persona-icon{font-size:2rem;margin-bottom:12px;}
-    .persona-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;color:#e8edf5;margin-bottom:8px;}
-    .persona-desc{font-size:0.88rem;color:#8fa3c0;line-height:1.7;margin-bottom:12px;font-style:italic;}
-    .persona-what{font-size:0.82rem;color:#8fa3c0;line-height:1.6;margin-bottom:14px;}
-    .persona-what strong{color:#e8edf5;}
-    .persona-cta{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#f0a500;transition:color 0.2s;}
-    .persona-cta:hover{color:#ffb820;}
+    .persona-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;color:#f0a500;margin-bottom:10px;}
+    .persona-desc{font-size:0.9rem;color:#8fa3c0;line-height:1.7;font-style:italic;}
 
-    /* PROTOCOL CARDS */
-    .protocol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-    .protocol-card{background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;display:flex;flex-direction:column;}
-    .protocol-card:hover{border-color:rgba(240,165,0,0.3);}
-    .protocol-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;color:#e8edf5;margin-bottom:6px;}
-    .protocol-desc{font-size:0.82rem;color:#8fa3c0;line-height:1.6;flex:1;margin-bottom:14px;}
-    .protocol-meta{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;color:#4a6080;letter-spacing:1px;margin-bottom:12px;}
-    .protocol-price{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#f0a500;letter-spacing:1px;margin-bottom:14px;}
-    .btn-sm{padding:10px 24px;font-size:0.82rem;}
-
-    /* TESTIMONIALS */
-    .testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-    .testimonial-card{background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:24px;position:relative;}
-    .testimonial-card::before{content:'\201C';font-family:'Bebas Neue',sans-serif;font-size:3rem;color:rgba(240,165,0,0.15);position:absolute;top:10px;left:16px;line-height:1;}
-    .testimonial-text{font-size:0.85rem;color:#8fa3c0;line-height:1.75;font-style:italic;padding-top:16px;margin-bottom:16px;}
-    .testimonial-author{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:1px;color:#f0a500;}
+    /* SERVICE CARDS */
+    .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .svc-card{background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;display:flex;flex-direction:column;transition:border-color 0.2s;}
+    .svc-card:hover{border-color:rgba(240,165,0,0.3);}
+    .svc-name{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;color:#e8edf5;margin-bottom:8px;}
+    .svc-desc{font-size:0.88rem;color:#8fa3c0;line-height:1.7;margin-bottom:18px;flex:1;}
+    .svc-cta{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;color:#f0a500;transition:color 0.2s;cursor:pointer;}
+    .svc-cta:hover{color:#ffb820;}
 
     /* NETWORK */
-    .network-card{background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;}
+    .network-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .network-card{background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;transition:border-color 0.2s;}
+    .network-card:hover{border-color:rgba(240,165,0,0.3);}
+    .network-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;color:#e8edf5;margin-bottom:8px;}
+    .network-meta{font-size:0.82rem;color:#4a6080;margin-bottom:4px;}
+    .network-meta span{color:#8fa3c0;}
+    .network-btn{display:inline-block;margin-top:14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;color:#f0a500;border:1px solid rgba(240,165,0,0.3);border-radius:6px;padding:8px 18px;transition:all 0.2s;}
+    .network-btn:hover{border-color:#f0a500;background:rgba(240,165,0,0.08);}
 
-    /* BOTTOM CTA */
-    .bottom-cta{background:linear-gradient(135deg,#142444,rgba(240,165,0,0.06));border:2px solid #f0a500;border-radius:10px;padding:48px 32px;text-align:center;margin-bottom:40px;}
-    .bottom-cta h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;color:#e8edf5;margin-bottom:8px;}
-    .bottom-cta p{color:#8fa3c0;margin-bottom:20px;}
-    .payment-handles{font-size:0.78rem;color:#4a6080;margin-top:16px;}
+    /* COMBINED */
+    .combined{background:linear-gradient(135deg,#142444,rgba(240,165,0,0.06));border:2px solid #f0a500;border-radius:10px;padding:48px 36px;text-align:center;margin-top:20px;}
+    .combined h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:2px;color:#e8edf5;margin-bottom:8px;}
+    .combined p{color:#8fa3c0;font-size:1rem;line-height:1.7;max-width:500px;margin:0 auto 24px;}
 
+    /* FOOTER */
     .footer{text-align:center;padding:32px 24px;border-top:1px solid rgba(255,255,255,0.07);}
     .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:#f0a500;margin-bottom:4px;}
     .footer span{font-size:0.72rem;color:#4a6080;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;}
-    .disclaimer{text-align:center;color:#4a6080;font-size:0.75rem;max-width:600px;margin:0 auto;padding:16px 24px 40px;line-height:1.7;}
 
     @media(max-width:768px){
       .hero{grid-template-columns:1fr;text-align:center;gap:24px;}
-      .hero-avatar{margin:0 auto;}
-      .hero-actions{justify-content:center;}
-      .persona-grid,.testimonial-grid{grid-template-columns:1fr;}
-      .protocol-grid{grid-template-columns:1fr;}
+      .hero-photo{margin:0 auto;width:200px;height:200px;}
+      .persona-grid{grid-template-columns:1fr;}
+      .svc-grid{grid-template-columns:1fr;}
+      .network-grid{grid-template-columns:1fr;}
       .nav-center{display:none;}
-      .cred-badges{justify-content:center;}
+    }
+    @media(max-width:480px){
+      .nav-right .lang-toggle{display:none;}
+      .nav-right .btn-login{display:none;}
     }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
+<nav class="top-nav">
   <div class="nav-left">
-    <button class="back-btn" onclick="history.back()">&larr;</button>
+    <button class="back-btn" onclick="if(window.history.length>1){history.back();}else{window.location.href='/';}" title="Go back">&larr;</button>
     <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
   </div>
   <div class="nav-center">
     <a href="/dashboard.html" class="nav-link">Dashboard</a>
     <a href="/train.html" class="nav-link">Train</a>
     <a href="/progress.html" class="nav-link">Progress</a>
-    <a href="/coaching.html" class="nav-link">Doc</a>
-    <a href="/debora.html" class="nav-link active">Debora</a>
+    <div class="coaches-dropdown">
+      <a href="#" class="nav-link active" onclick="event.preventDefault();this.parentElement.classList.toggle('open');">Coaches &#9662;</a>
+      <div class="coaches-menu">
+        <a href="/coaching.html">Doc &mdash; 1-on-1 Coaching</a>
+        <a href="/debora.html">Debora &mdash; Skin &amp; Wellness</a>
+      </div>
+    </div>
     <a href="/resources.html" class="nav-link">Resources</a>
     <a href="/book.html" class="nav-link">Book</a>
   </div>
   <div class="nav-right">
-    <a href="/login.html" style="color:#8fa3c0;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;">Log In</a>
-    <a href="/signup.html" style="background:#f0a500;color:#0a1628;padding:7px 18px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Get Started</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+      <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
+      <button class="lang-btn" data-lang="pt" onclick="setLanguage('pt')">PT</button>
+    </div>
+    <a href="/login.html" class="btn-login">Log In</a>
+    <a href="/signup.html" class="btn-start">Get Started</a>
   </div>
 </nav>
 
-<div class="page">
+<main class="page">
 
-<!-- ═══ SECTION 1: HERO ═══ -->
-<div class="hero">
-  <div>
-    <div class="hero-avatar">DL</div>
-    <div class="hero-location">Debora Lovato &middot; Springfield, Massachusetts</div>
-  </div>
-  <div>
-    <div class="hero-name">DEBORA LOVATO</div>
-    <div class="hero-title">Nutrition &middot; Wellness &middot; Skin &middot; Transformation</div>
-    <p class="hero-quote">"Your body is not broken. It just transformed. Now let us make sure the rest of you catches up."</p>
-    <p class="hero-bio">I became a wellness professional because I watched what transformation does to a person — not just their body, but their confidence, their relationships, and their skin. I have worked with clients who lost 80, 100, even 150 pounds and felt more self-conscious after than before — because nobody prepared them for what comes next. Post-weight-loss skin. GLP-1 side effects on your face. Feeling like a stranger in your own body. That is exactly where I come in. I am not here to sell you a product. I am here to help you finish what you started.</p>
-    <div class="cred-badges">
-      <span class="cred-badge">NASM CNC</span>
-      <span class="cred-badge">NASM CES</span>
-      <span class="cred-badge">NASM PES</span>
-      <span class="cred-badge">Licensed Esthetician</span>
-      <span class="cred-badge">Laser Certified</span>
-      <span class="cred-badge">Tattoo Removal</span>
-      <span class="cred-badge">GLP-1 Skin Specialist</span>
-      <span class="cred-badge">Massage</span>
-      <span class="cred-badge">Facials</span>
-      <span class="cred-badge">Nutritional Coaching</span>
-      <span class="cred-badge">Collagen &amp; Peptide Protocols</span>
-      <span class="cred-badge">Post-Weight-Loss Skin</span>
-      <span class="cred-badge">Couples Wellness</span>
+  <!-- SECTION 1: HERO -->
+  <div class="hero section">
+    <div class="hero-photo">
+      <img src="/images/debora-hero.jpg" alt="Debora" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="fallback" style="display:none;">D</div>
     </div>
-    <div class="hero-actions">
-      <a href="/book.html" class="btn-gold">Book a Session with Debora</a>
-      <button class="btn-outline" onclick="if(window.ForgeAI){ForgeAI.open();}else{window.location.href='/train.html';}">Ask FORGE AI About Debora</button>
+    <div>
+      <div class="hero-label">SKIN &amp; WELLNESS COACHING WITH</div>
+      <h1 class="hero-name">DEBORA</h1>
+      <div class="hero-creds">Licensed Esthetician &middot; Wellness Consultant &middot; Transformation Specialist</div>
+      <p class="hero-body">Most people pour everything into changing their body and forget their skin is part of the transformation. I work with people who are doing the hard work &mdash; losing weight, recovering, rebuilding &mdash; and I make sure their skin keeps up with everything else.<br/><br/>You're not just getting smaller or stronger. You're becoming someone new. Your skin should reflect that.</p>
+      <!-- Replace # with Debora's booking URL -->
+      <a href="#" class="btn-gold">BOOK A CONSULTATION</a>
     </div>
   </div>
-</div>
 
-<!-- ═══ SECTION 2: WHO I WORK WITH ═══ -->
-<div class="section">
-  <h2 class="sec-heading">WHO I WORK WITH</h2>
-  <p class="sec-sub">If any of these sound like you, you are in the right place.</p>
-  <div class="persona-grid">
-
-    <div class="persona-card">
-      <div class="persona-icon">&#128138;</div>
-      <div class="persona-title">THE GLP-1 TRANSFORMER</div>
-      <p class="persona-desc">You started Ozempic or Mounjaro. The weight is coming off. But your face looks different. Your skin is loose. Your hair is changing. You did not sign up for this part.</p>
-      <p class="persona-what"><strong>What Debora does:</strong> GLP-1 aesthetic side effects coaching, facial volume protocol, collagen timing, skin laxity management, referral to vetted laser and RF providers.</p>
-      <a href="/book.html" class="persona-cta">I am this person &rarr;</a>
-    </div>
-
-    <div class="persona-card">
-      <div class="persona-icon">&#10024;</div>
-      <div class="persona-title">THE POST-WEIGHT-LOSS CONFIDENT</div>
-      <p class="persona-desc">You lost the weight. You should feel amazing. But you are staring at loose skin and you do not know what to do next. The scale says victory but the mirror says something else.</p>
-      <p class="persona-what"><strong>What Debora does:</strong> Post-transformation skin protocol, body confidence coaching, topical peptide guidance, professional treatment planning.</p>
-      <a href="/book.html" class="persona-cta">I am this person &rarr;</a>
-    </div>
-
-    <div class="persona-card">
-      <div class="persona-icon">&#128107;</div>
-      <div class="persona-title">THE COUPLE TRANSFORMING TOGETHER</div>
-      <p class="persona-desc">You and your partner are both changing. Different paces. Different feelings about your bodies. Fitness is bringing you closer and also surfacing things you did not expect.</p>
-      <p class="persona-what"><strong>What Debora does:</strong> Couples wellness coaching, individual transformation support, communication around body change, shared accountability without comparison.</p>
-      <a href="/book.html" class="persona-cta">I am this person &rarr;</a>
-    </div>
-
-    <div class="persona-card">
-      <div class="persona-icon">&#128142;</div>
-      <div class="persona-title">THE WOMAN WHO WANTS MORE</div>
-      <p class="persona-desc">You are doing the workouts. You are watching your nutrition. But you want to understand your skin, your hormones, your supplements, and what your body specifically needs as a woman.</p>
-      <p class="persona-what"><strong>What Debora does:</strong> Women-specific supplement protocols, hormonal wellness coaching, skin health, menopause and perimenopause support, collagen and beauty nutrition.</p>
-      <a href="/book.html" class="persona-cta">I am this person &rarr;</a>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══ SECTION 3: PROTOCOLS ═══ -->
-<div class="section" style="padding-top:0;">
-  <h2 class="sec-heading">DEBORA'S PROTOCOLS</h2>
-  <p class="sec-sub">Evidence-informed approaches built from real client transformations.</p>
-  <div class="protocol-grid">
-
-    <div class="protocol-card">
-      <div class="protocol-name">THE GLP-1 SKIN PROTOCOL</div>
-      <div class="protocol-meta">90 days &middot; 2 check-ins/month</div>
-      <p class="protocol-desc">90-day post-GLP skin stabilization. Topical peptide routine, collagen + vitamin C timing, facial volume assessment, referral coordination for professional treatments. For anyone 60+ days into GLP-1 with visible skin changes.</p>
-      <div class="protocol-price">$99/mo</div>
-      <a href="/book.html" class="btn-gold btn-sm">Book This Protocol</a>
-    </div>
-
-    <div class="protocol-card">
-      <div class="protocol-name">POST-TRANSFORMATION CONFIDENCE</div>
-      <div class="protocol-meta">60 days &middot; Biweekly check-ins</div>
-      <p class="protocol-desc">Complete body confidence rebuild after major weight loss. Skin assessment, topical protocol, body confidence coaching, professional treatment planning, supplement optimization. For anyone who has lost 30+ lbs.</p>
-      <div class="protocol-price">$129/mo</div>
-      <a href="/book.html" class="btn-gold btn-sm">Book This Protocol</a>
-    </div>
-
-    <div class="protocol-card">
-      <div class="protocol-name">COUPLES TRANSFORMATION</div>
-      <div class="protocol-meta">Ongoing monthly</div>
-      <p class="protocol-desc">Parallel individual coaching with shared check-in. Separate nutrition plans, shared accountability framework, body confidence coaching for both partners, skin and wellness for both.</p>
-      <div class="protocol-price">$179/mo</div>
-      <a href="/book.html" class="btn-gold btn-sm">Book This Protocol</a>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══ SECTION 4: TESTIMONIALS ═══ -->
-<div class="section" style="padding-top:0;">
-  <h2 class="sec-heading">WHAT CLIENTS SAY</h2>
-  <div class="testimonial-grid">
-
-    <div class="testimonial-card">
-      <p class="testimonial-text">I lost 67 pounds on Wegovy and was devastated by how my skin looked. Debora created a protocol that changed everything — topical peptides, collagen timing, and she referred me to a laser specialist in her network. I finally feel like the weight loss was worth it.</p>
-      <div class="testimonial-author">— C.M., Massachusetts &middot; GLP-1 Client</div>
-    </div>
-
-    <div class="testimonial-card">
-      <p class="testimonial-text">My husband and I started FORGEIQ together. We needed different things. Debora worked with both of us separately but kept us moving toward the same goal. Our relationship is stronger than before we started.</p>
-      <div class="testimonial-author">— T. and R.L. &middot; Couples Client</div>
-    </div>
-
-    <div class="testimonial-card">
-      <p class="testimonial-text">I did not know anything about post-weight-loss skin care. Debora explained everything in a way that made sense. She never pushed products. She just taught me what my skin needed and connected me with the right people.</p>
-      <div class="testimonial-author">— A.P. &middot; Post-Transformation Client</div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══ SECTION 5: VETTED NETWORK ═══ -->
-<div class="section" style="padding-top:0;">
-  <h2 class="sec-heading">DEBORA'S VETTED NETWORK</h2>
-  <p class="sec-sub">Can not get to Springfield? Find a Debora-vetted esthetician near you.</p>
-  <div class="network-card">
-    <p style="font-size:0.88rem;color:#8fa3c0;line-height:1.7;margin-bottom:16px;">Every esthetician in this network has been personally reviewed by Debora and meets her standards for post-weight-loss and GLP-1 skin care. Network launching in New England first, expanding nationally.</p>
-    <p style="font-size:0.82rem;color:#4a6080;line-height:1.6;">Vetting requirements: Valid state esthetician license &middot; 2+ years experience &middot; Post-weight-loss or GLP-1 skin specialization &middot; Personal review by Debora &middot; Proof of liability insurance &middot; FORGEIQ scope-of-practice agreement</p>
-    <div style="margin-top:16px;">
-      <button class="btn-outline btn-sm" onclick="alert('Applications for the FORGEIQ Esthetician Network are opening soon.')">Apply to Join Network</button>
+  <!-- SECTION 2: WHO SHE WORKS WITH -->
+  <div class="section">
+    <h2 class="sec-heading">IS THIS FOR YOU?</h2>
+    <div style="height:20px;"></div>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-title">THE GLP-1 CLIENT</div>
+        <div class="persona-desc">Rapid weight loss changes your skin fast. Let's stay ahead of it together.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-title">THE TRANSFORMATION CLIENT</div>
+        <div class="persona-desc">Big changes on the inside deserve serious attention on the outside.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-title">THE STRESSED PROFESSIONAL</div>
+        <div class="persona-desc">Stress shows up on your skin before anywhere else. We fix that.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-title">THE SELF-CARE BEGINNER</div>
+        <div class="persona-desc">Never had a real skincare routine? Perfect. We start from scratch and build something that actually works.</div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ═══ SECTION 6: BOTTOM CTA ═══ -->
-<div class="bottom-cta">
-  <h2>READY TO FINISH YOUR TRANSFORMATION?</h2>
-  <p>Book a free 20-minute call with Debora. No pitch. No pressure. Just an honest conversation about where you are and what comes next.</p>
-  <a href="/book.html" class="btn-gold">Book a Free Call with Debora</a>
-  <div class="payment-handles">Venmo: @DrLovato-FORGEIQ &middot; CashApp: $ForgeIQCoaching &middot; Zelle: coaching@forgeiq.com</div>
-</div>
+  <!-- SECTION 3: SERVICES -->
+  <div class="section">
+    <h2 class="sec-heading">WORK WITH DEBORA</h2>
+    <p class="sec-sub">Real treatments. Real results. Reach out and she'll walk you through the right fit for you.</p>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-name">SKIN TRANSFORMATION CONSULT</div>
+        <div class="svc-desc">Your skin, your goals, your timeline. A full consultation to build your personal skin protocol.</div>
+        <!-- Replace # with Debora's booking URL -->
+        <a href="#" class="svc-cta">LET'S TALK &rarr;</a>
+      </div>
+      <div class="svc-card">
+        <div class="svc-name">GLP-1 SKIN PROTOCOL</div>
+        <div class="svc-desc">Designed specifically for clients on weight loss medication. Protects and restores as your body changes.</div>
+        <a href="#" class="svc-cta">LET'S TALK &rarr;</a>
+      </div>
+      <div class="svc-card">
+        <div class="svc-name">MONTHLY WELLNESS PACKAGE</div>
+        <div class="svc-desc">Ongoing skin and wellness support alongside your fitness journey.</div>
+        <a href="#" class="svc-cta">LET'S TALK &rarr;</a>
+      </div>
+    </div>
+  </div>
 
-</div><!-- /.page -->
+  <!-- SECTION 4: ESTHETICIAN NETWORK -->
+  <div class="section">
+    <h2 class="sec-heading">TRUSTED ESTHETICIAN NETWORK</h2>
+    <p class="sec-sub">Debora's personally vetted network of licensed estheticians &mdash; available in your area.</p>
+    <div class="network-grid">
+      <div class="network-card">
+        <div class="network-name">COMING SOON</div>
+        <div class="network-meta">Location: <span>[City, State]</span></div>
+        <div class="network-meta">Specialty: <span>[Specialty Area]</span></div>
+        <a href="#" class="network-btn">VIEW PROFILE</a>
+      </div>
+      <div class="network-card">
+        <div class="network-name">COMING SOON</div>
+        <div class="network-meta">Location: <span>[City, State]</span></div>
+        <div class="network-meta">Specialty: <span>[Specialty Area]</span></div>
+        <a href="#" class="network-btn">VIEW PROFILE</a>
+      </div>
+      <div class="network-card">
+        <div class="network-name">COMING SOON</div>
+        <div class="network-meta">Location: <span>[City, State]</span></div>
+        <div class="network-meta">Specialty: <span>[Specialty Area]</span></div>
+        <a href="#" class="network-btn">VIEW PROFILE</a>
+      </div>
+    </div>
+  </div>
 
-<p class="disclaimer">FORGEIQ does not provide medical advice, diagnosis, or treatment. All coaching services are for informational and educational purposes only. Consult a licensed healthcare provider before making changes to your health regimen.</p>
+  <!-- SECTION 5: COMBINED PACKAGE BANNER -->
+  <div class="section">
+    <div class="combined">
+      <h2>GET BOTH COACHES.</h2>
+      <p>Doc handles the body. Debora handles everything else. The complete transformation &mdash; one platform.</p>
+      <a href="/coaching.html" class="btn-gold">BUILD MY COMPLETE PLAN</a>
+    </div>
+  </div>
 
+</main>
+
+<!-- FOOTER -->
 <div class="footer">
   <div class="footer-logo">FORGEIQ</div>
-  <span>Powered by FORGEIQ &middot; Adaptive Intelligence Learning Group LLC</span>
+  <span>Dr. Michael P. Lovato, EdD &middot; Debora Lovato</span>
 </div>
 
+<script>
+// Coaches dropdown
+(function(){
+  var dd = document.querySelector('.coaches-dropdown');
+  if (!dd) return;
+  dd.addEventListener('mouseenter', function(){ this.querySelector('.coaches-menu').style.display='block'; });
+  dd.addEventListener('mouseleave', function(){ this.querySelector('.coaches-menu').style.display='none'; });
+})();
+</script>
+<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 <script src="/js/supabase-config.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>

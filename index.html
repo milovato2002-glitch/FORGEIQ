@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FORGEIQ — We Never Have to Quit</title>
-  <meta name="description" content="AI fitness coaching built by a couple who chose discipline over excuses. GLP-1 support, veteran coaching, injury-adaptive training. English, Spanish, Portuguese." />
+  <title>FORGEIQ — The First AI Fitness Coach Built By Someone Who Had To Fight For It</title>
+  <meta name="description" content="AI fitness coaching built by Dr. Lovato AI, powered by Anthropic. GLP-1 support, veteran coaching, injury-adaptive training. English, Spanish, Portuguese." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <script>window.__FORGEIQ_PUBLIC_PAGE__ = true;</script>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/forgeiq.css" />
@@ -139,13 +140,13 @@
       font-size: 1rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      border: 1px solid var(--border-gold);
+      border: 1px solid rgba(255,255,255,0.3);
       transition: border-color 0.2s, color 0.2s, transform 0.2s;
       cursor: pointer;
     }
     .btn-outline:hover {
-      border-color: var(--gold);
-      color: var(--gold);
+      border-color: #ffffff;
+      color: #ffffff;
       transform: translateY(-2px);
     }
 
@@ -190,6 +191,7 @@
     .nav-links {
       display: flex;
       gap: 28px;
+      align-items: center;
     }
     .nav-links a {
       color: var(--text-secondary);
@@ -254,6 +256,48 @@
       transform: translateY(-1px);
     }
 
+    /* ── COACHES DROPDOWN ── */
+    .coaches-dropdown {
+      position: relative;
+    }
+    .coaches-dropdown > a {
+      cursor: pointer;
+    }
+    .coaches-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 12px;
+      background: #0a1628;
+      border: 1px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 8px 0;
+      min-width: 240px;
+      z-index: 200;
+    }
+    .coaches-dropdown:hover .coaches-menu,
+    .coaches-dropdown.open .coaches-menu {
+      display: block;
+    }
+    .coaches-menu a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+    .coaches-menu a:hover {
+      color: var(--gold);
+    }
+    .coaches-menu a span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
     /* ── HERO ── */
     .hero {
       min-height: 92vh;
@@ -279,10 +323,19 @@
       z-index: 1;
       max-width: 820px;
     }
+    .hero-eyebrow {
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
     .hero-tagline {
       font-family: var(--font-display);
-      font-size: clamp(3rem, 8vw, 5rem);
-      letter-spacing: 5px;
+      font-size: clamp(2.8rem, 7vw, 4.8rem);
+      letter-spacing: 4px;
       line-height: 1.05;
       color: var(--text-primary);
       margin-bottom: 28px;
@@ -290,11 +343,11 @@
     .hero-sub {
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
       color: var(--text-secondary);
       line-height: 1.8;
       margin-bottom: 44px;
-      max-width: 700px;
+      max-width: 650px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -303,238 +356,283 @@
       gap: 18px;
       justify-content: center;
       flex-wrap: wrap;
-      margin-bottom: 60px;
+      margin-bottom: 48px;
+    }
+    .trust-micro {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .trust-micro .stars {
+      color: var(--gold);
+      letter-spacing: 2px;
     }
 
-    /* ── STAT STRIP ── */
-    .stat-strip {
+    /* ── FEATURE CARDS ── */
+    .features { background: var(--bg-secondary); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+
+    /* ── DOC ANCHOR CARD (full-width) ── */
+    .doc-anchor {
+      grid-column: 1 / -1;
+      background: var(--card-bg);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 0;
       overflow: hidden;
-      position: relative;
-      padding: 20px 0;
-      border-top: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle);
-      background: var(--bg-secondary);
+      transition: border-color 0.3s, transform 0.3s;
     }
-    .stat-strip-track {
+    .doc-anchor:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+    }
+    .doc-anchor-photo {
+      background: linear-gradient(135deg, #1a0e05, #0a1628);
       display: flex;
-      gap: 60px;
-      animation: scrollStats 18s linear infinite;
-      width: max-content;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      position: relative;
+      overflow: hidden;
     }
-    .stat-strip-track span {
+    .doc-anchor-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+    }
+    .doc-anchor-photo .fallback-initials {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      color: var(--gold);
+      letter-spacing: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .doc-anchor-content {
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .doc-anchor-label {
       font-family: var(--font-condensed);
-      font-weight: 600;
-      font-size: 1rem;
+      font-weight: 700;
+      font-size: 0.78rem;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--gold);
-      white-space: nowrap;
+      margin-bottom: 12px;
     }
-    .stat-strip-track .sep {
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-    @keyframes scrollStats {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* ── FEATURE CALLOUT STRIP ── */
-    .features { background: var(--bg-secondary); }
-
-    /* ── PHILOSOPHY ── */
-    .philosophy { background: var(--bg-primary); }
-    .philosophy .pillar-title {
+    .doc-anchor-content h3 {
       font-family: var(--font-display);
-      font-size: 1.4rem;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
       letter-spacing: 2px;
-      color: var(--gold);
+      color: var(--text-primary);
       margin-bottom: 16px;
     }
-    .philosophy .card p {
-      margin-bottom: 14px;
-    }
-    .philosophy-quote {
-      text-align: center;
-      font-style: italic;
-      color: var(--gold);
-      font-size: 1.15rem;
-      margin-top: 50px;
-      padding: 30px;
-      border: 1px solid var(--border-gold);
-      border-radius: var(--radius);
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* ── COACHING MODES ── */
-    .coaching-modes { background: var(--bg-secondary); }
-    .goal-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-      max-width: 900px;
-      margin: 0 auto 50px;
-    }
-    .checkbox-tile {
-      background: var(--card-bg);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius);
-      padding: 22px 24px;
-      cursor: pointer;
-      transition: border-color 0.3s, background 0.3s;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-    }
-    .checkbox-tile:hover {
-      border-color: var(--border-gold);
-    }
-    .checkbox-tile input[type="checkbox"] {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      min-width: 20px;
-      border: 2px solid var(--text-muted);
-      border-radius: 4px;
-      margin-top: 2px;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.2s;
-    }
-    .checkbox-tile input[type="checkbox"]:checked {
-      background: var(--gold);
-      border-color: var(--gold);
-    }
-    .checkbox-tile input[type="checkbox"]:checked::after {
-      content: '';
-      position: absolute;
-      top: 2px; left: 5px;
-      width: 5px; height: 10px;
-      border: solid var(--bg-primary);
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-    }
-    .checkbox-tile.checked {
-      border-color: var(--gold);
-      background: rgba(240,165,0,0.06);
-    }
-    .checkbox-tile .tile-info h4 {
-      font-family: var(--font-condensed);
-      font-weight: 700;
-      font-size: 1.05rem;
-      letter-spacing: 0.5px;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-    .checkbox-tile .tile-info p {
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      line-height: 1.6;
-    }
-
-    /* ── FOUNDERS ── */
-    .founders { background: var(--bg-primary); }
-    .founder-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius);
-      padding: 40px 34px;
-    }
-    .founder-card h3 {
-      font-family: var(--font-display);
-      font-size: 1.7rem;
-      letter-spacing: 2px;
-      color: var(--text-primary);
-      margin-bottom: 6px;
-    }
-    .founder-card .subtitle {
-      font-family: var(--font-condensed);
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--gold);
-      letter-spacing: 1px;
-      margin-bottom: 22px;
-    }
-    .founder-card .bio {
+    .doc-anchor-content p {
       color: var(--text-secondary);
       font-size: 0.95rem;
       line-height: 1.8;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
-    .founder-card .bio p {
-      margin-bottom: 14px;
-    }
-    .founder-card .quote {
-      font-style: italic;
+    .doc-anchor-cta {
+      display: inline-block;
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
       color: var(--gold);
-      font-size: 1rem;
-      margin-bottom: 20px;
-      padding-left: 16px;
-      border-left: 3px solid var(--border-gold);
+      transition: color 0.2s;
     }
-    .founder-card .credentials {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-subtle);
-    }
-    .credentials-section { margin-top: 1rem; padding-top: 16px; border-top: 1px solid var(--border-subtle); }
-    .cred-category-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #4a6080; margin: 0.75rem 0 0.4rem; }
-    .cred-badges { display: flex; flex-wrap: wrap; gap: 6px; }
-    .cred-badge { padding: 4px 10px; border-radius: 20px; font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; white-space: nowrap; }
-    .cred-gold { background: rgba(240,165,0,0.12); border: 1px solid rgba(240,165,0,0.4); color: #f0a500; }
-    .cred-military { background: rgba(45,198,83,0.1); border: 1px solid rgba(45,198,83,0.35); color: #2dc653;
-    }
+    .doc-anchor-cta:hover { color: var(--gold-hover); }
 
-    /* ── COUPLES ── */
-    .couples { background: var(--bg-secondary); }
-    .couples-body {
-      color: var(--text-secondary);
-      font-size: 1rem;
-      line-height: 1.85;
-      max-width: 800px;
-      margin: 0 auto 50px;
+    /* ── TRUST BAR ── */
+    .trust-bar {
       text-align: center;
+      padding: 40px 24px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
     }
-    .couples-body p { margin-bottom: 16px; }
+    .trust-bar .gold-dot {
+      color: var(--gold);
+      margin: 0 8px;
+    }
 
     /* ── TESTIMONIALS ── */
     .testimonials { background: var(--bg-primary); }
     .testimonial-card {
       background: var(--card-bg);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius);
-      padding: 34px 28px;
+      border-left: 3px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, transform 0.3s;
     }
-    .testimonial-card .label {
+    .testimonial-card:hover {
+      transform: translateY(-3px);
+    }
+    .testimonial-quote {
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      flex: 1;
+      margin-bottom: 24px;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .testimonial-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #1a0e05, #0a1628);
+      border: 2px solid var(--border-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .testimonial-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .testimonial-avatar .avatar-fallback {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+    .testimonial-name {
       font-family: var(--font-condensed);
       font-weight: 700;
-      font-size: 0.75rem;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      color: var(--text-primary);
+    }
+    .testimonial-role {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── MEET YOUR COACHES ── */
+    .meet-coaches { background: var(--bg-secondary); }
+    .coach-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .coach-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-3px);
+    }
+    .coach-photo {
+      width: 100%;
+      height: 280px;
+      background: linear-gradient(135deg, #1a0e05, #0a1628);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .coach-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+    }
+    .coach-photo .fallback-initials {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      color: var(--gold);
+      letter-spacing: 3px;
+      position: relative;
+      z-index: 1;
+    }
+    .coach-body {
+      padding: 32px 28px;
+    }
+    .coach-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
       letter-spacing: 2px;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .coach-role {
+      font-family: var(--font-condensed);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 16px;
     }
-    .testimonial-card blockquote {
+    .coach-body .teaser {
       color: var(--text-secondary);
       font-size: 0.95rem;
       line-height: 1.8;
-      font-style: italic;
-      margin-bottom: 18px;
+      margin-bottom: 24px;
     }
-    .testimonial-card .attribution {
+    .coach-cta {
+      display: inline-block;
       font-family: var(--font-condensed);
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      transition: color 0.2s;
+    }
+    .coach-cta:hover { color: var(--gold-hover); }
+
+    /* ── COMBINED BANNER ── */
+    .combined-banner {
+      background: linear-gradient(135deg, var(--card-bg), rgba(240,165,0,0.06));
+      border: 2px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 48px 36px;
+      text-align: center;
+      margin-top: 48px;
+    }
+    .combined-banner h3 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      letter-spacing: 3px;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .combined-banner p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 550px;
+      margin: 0 auto 28px;
     }
 
     /* ── FAQ ── */
-    .faq { background: var(--bg-secondary); }
+    .faq { background: var(--bg-primary); }
     .faq-list {
       max-width: 800px;
       margin: 0 auto;
@@ -568,9 +666,7 @@
       color: var(--gold);
       transition: transform 0.3s;
     }
-    .faq-item.open .faq-question::after {
-      content: '-';
-    }
+    .faq-item.open .faq-question::after { content: '-'; }
     .faq-answer {
       max-height: 0;
       overflow: hidden;
@@ -588,7 +684,7 @@
 
     /* ── FOOTER CTA ── */
     .footer-cta {
-      background: var(--bg-primary);
+      background: var(--bg-secondary);
       text-align: center;
       padding: 100px 24px;
       position: relative;
@@ -600,13 +696,9 @@
       background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(240,165,0,0.05) 0%, transparent 70%);
       pointer-events: none;
     }
-    .footer-cta .section-heading {
-      position: relative;
-      z-index: 1;
-    }
+    .footer-cta .section-heading { position: relative; z-index: 1; }
     .footer-cta p {
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       color: var(--text-secondary);
       font-size: 1.1rem;
       max-width: 600px;
@@ -617,7 +709,7 @@
 
     /* ── FOOTER ── */
     footer {
-      background: var(--bg-secondary);
+      background: var(--bg-primary);
       border-top: 1px solid var(--border-subtle);
       text-align: center;
       padding: 40px 24px;
@@ -654,12 +746,15 @@
     @media (max-width: 900px) {
       .grid-3 { grid-template-columns: 1fr; }
       .grid-2 { grid-template-columns: 1fr; }
-      .goal-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
       .nav-links { display: none; }
       nav { padding: 12px 18px; }
-      .hero { padding: 100px 18px 50px; }
-      .hero-buttons .btn-gold { width: 100%; text-align: center; }
+      .hero { padding: 80px 18px 50px; min-height: auto; }
+      .hero-buttons .btn-gold,
+      .hero-buttons .btn-outline { width: 100%; text-align: center; }
       .section { padding: 70px 0; }
+      .doc-anchor { grid-template-columns: 1fr; }
+      .doc-anchor-photo { min-height: 220px; }
     }
     @media (max-width: 600px) {
       .lang-toggle { display: none; }
@@ -679,7 +774,13 @@
       <a href="dashboard.html">Dashboard</a>
       <a href="/train.html">Train</a>
       <a href="progress.html">Progress</a>
-      <a href="debora.html">Debora</a>
+      <div class="coaches-dropdown">
+        <a href="#" onclick="return false;">Coaches &#9662;</a>
+        <div class="coaches-menu">
+          <a href="/coaching.html">Doc &mdash; 1-on-1 Coaching<span>Strength &middot; GLP-1 &middot; Recovery</span></a>
+          <a href="/debora.html">Debora &mdash; Skin &amp; Wellness<span>Esthetics &middot; Transformation</span></a>
+        </div>
+      </div>
       <a href="resources.html">Resources</a>
       <a href="book.html">Book</a>
     </div>
@@ -694,390 +795,176 @@
     </div>
   </nav>
 
-  <!-- ═══════════════════════ HERO ═══════════════════════ -->
+  <!-- ═══════════════════════ HERO (CHANGE 1) ═══════════════════════ -->
   <section class="hero">
     <div class="hero-content">
-      <h1 class="hero-tagline">WE NEVER HAVE TO QUIT.</h1>
-      <p class="hero-sub">Built by a combat veteran and his wife — who met at a gym, lost nearly 100 lbs between them, and rebuilt their lives through discipline, love, and a refusal to stop. Your AI coach was built from that story. It was built for yours.</p>
+      <div class="hero-eyebrow">DR. LOVATO AI &middot; POWERED BY ANTHROPIC</div>
+      <h1 class="hero-tagline">THE FIRST AI FITNESS COACH<br/>BUILT BY SOMEONE WHO HAD TO FIGHT FOR IT.</h1>
+      <p class="hero-sub">Your goals. Your injuries. Your reality.<br/>Dr. Lovato AI builds your program around you &mdash; not around an average.</p>
       <div class="hero-buttons">
-        <a href="signup.html" class="btn-gold">I WILL NOT QUIT</a>
-        <a href="#features" class="btn-outline">See How It Works</a>
+        <a href="signup.html" class="btn-gold">START FREE</a>
+        <a href="#features" class="btn-outline">SEE HOW IT WORKS</a>
+      </div>
+      <div class="trust-micro">
+        <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>&nbsp;&nbsp;Trusted by veterans, GLP-1 clients, and people who know what it means to keep going.
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════ STAT STRIP ═══════════════════════ -->
-  <div class="stat-strip">
-    <div class="stat-strip-track">
-      <span>98 LBS LOST</span><span class="sep">|</span>
-      <span>50 YEARS OLD</span><span class="sep">|</span>
-      <span>SIX PACK</span><span class="sep">|</span>
-      <span>STILL TRAINING</span><span class="sep">|</span>
-      <span>NEVER QUIT</span><span class="sep">|</span>
-      <span>98 LBS LOST</span><span class="sep">|</span>
-      <span>50 YEARS OLD</span><span class="sep">|</span>
-      <span>SIX PACK</span><span class="sep">|</span>
-      <span>STILL TRAINING</span><span class="sep">|</span>
-      <span>NEVER QUIT</span><span class="sep">|</span>
-      <span>98 LBS LOST</span><span class="sep">|</span>
-      <span>50 YEARS OLD</span><span class="sep">|</span>
-      <span>SIX PACK</span><span class="sep">|</span>
-      <span>STILL TRAINING</span><span class="sep">|</span>
-      <span>NEVER QUIT</span><span class="sep">|</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════ FEATURES ═══════════════════════ -->
+  <!-- ═══════════════════════ FEATURE CARDS (CHANGE 2) ═══════════════════════ -->
   <section id="features" class="section features">
     <div class="container">
-      <div class="grid-3">
+      <div class="features-grid">
 
+        <!-- Card 1 — AI Coach -->
         <div class="card">
-          <div class="card-icon">&#129302;</div>
-          <h3>AI COACH THAT ACTUALLY KNOWS YOU</h3>
-          <p>Your goals, your injuries, your history, your reality — every session built around you specifically. Not a template. A coach.</p>
+          <div class="card-icon">&#129504;</div>
+          <h3>YOUR COACH KNOWS YOUR NAME. AND YOUR KNEES.</h3>
+          <p>Goals, injuries, history &mdash; every session built around you. Not a template. A coach.</p>
         </div>
 
+        <!-- Card 2 — Built for Every Body -->
         <div class="card">
-          <div class="card-icon">&#128170;</div>
-          <h3>BUILT FOR BODIES THAT HAVE BEEN THROUGH IT</h3>
-          <p>Weight loss medications, injuries, surgeries, setbacks — your AI coach knows the difference and programs accordingly.</p>
+          <div class="card-icon">&#128737;</div>
+          <h3>BUILT FOR EVERY BODY. ESPECIALLY THE TESTED ONES.</h3>
+          <p>Medications, surgeries, setbacks &mdash; Dr. Lovato AI programs around your reality, not around an average.</p>
         </div>
 
-        <div class="card">
-          <div class="card-icon">&#127894;</div>
-          <h3>BUILT FOR ANYONE WHO HAS FOUGHT FOR SOMETHING</h3>
-          <p>Combat veterans, first responders, survivors, people in recovery — anyone who knows what it means to keep going when quitting would be easier. Dr. Lovato is a combat engineer who lost 98 lbs, turns 50 with a six pack, and still trains through a torn shoulder, knee surgery, and PTSD. He built this for you. Special pricing for veterans, active duty, first responders, police, fire, EMS, nurses, and educators. Because some people have already given enough.</p>
+        <!-- Card 3 — Doc's Story (FULL WIDTH ANCHOR) -->
+        <div class="doc-anchor">
+          <div class="doc-anchor-photo">
+            <img src="/images/doc-photo.jpg" alt="Dr. Michael Lovato" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+            <div class="fallback-initials" style="display:none;">ML</div>
+          </div>
+          <div class="doc-anchor-content">
+            <div class="doc-anchor-label">THE COACH BEHIND THE AI</div>
+            <h3>REAL COACH. REAL STORY.</h3>
+            <p>Combat engineer. Lost 98 lbs. Trains through a torn shoulder, knee surgery, and PTSD. Turning 50 with a six-pack. He built this because he lived it.</p>
+            <a href="/coaching.html" class="doc-anchor-cta">MEET DR. LOVATO &rarr;</a>
+          </div>
         </div>
 
+        <!-- Card 4 — Train Together -->
         <div class="card">
           <div class="card-icon">&#128149;</div>
-          <h3>TRAIN TOGETHER, FORGE TOGETHER</h3>
-          <p>Separate AI profiles. Shared challenges. One mission. Built by two coaches who met at a gym and never stopped.</p>
+          <h3>TRAIN TOGETHER. FORGE TOGETHER.</h3>
+          <p>Separate AI profiles. Shared challenges. One mission. Bring your person.</p>
         </div>
 
+        <!-- Card 5 — Three Languages -->
         <div class="card">
           <div class="card-icon">&#127758;</div>
           <h3>ENGLISH &middot; ESPA&Ntilde;OL &middot; PORTUGU&Ecirc;S</h3>
-          <p>The first AI fitness coach to serve you in three languages — natively, from day one.</p>
+          <p>The first AI fitness coach built natively in three languages &mdash; not translated. Native.</p>
         </div>
 
-        <div class="card">
-          <div class="card-icon">&#9889;</div>
-          <h3>POWERED BY CLAUDE &middot; ANTHROPIC</h3>
-          <p>The same AI trusted by researchers, clinicians, and Fortune 500 companies — now your personal fitness coach.</p>
-        </div>
+      </div>
 
+      <!-- Trust Bar (replaces Powered by Claude card) -->
+      <div class="trust-bar">
+        Dr. Lovato AI is powered by Claude <span class="gold-dot">&middot;</span> Anthropic &mdash; the same AI trusted by researchers, clinicians, and Fortune 500 companies.
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════ PHILOSOPHY ═══════════════════════ -->
-  <section class="section philosophy">
-    <div class="container">
-      <h2 class="section-heading">THE ONLY TOOL THAT NEVER FAILS YOU IS YOUR OWN DISCIPLINE.</h2>
-      <div style="height: 50px;"></div>
-      <div class="grid-3">
-
-        <div class="card">
-          <div class="pillar-title">GLP-1 WORKS BETTER WITH A COACH</div>
-          <p>GLP-1 medications are changing lives — and we have coached clients through that change firsthand. But the medication does not build the muscle. It does not rebuild confidence. It does not make the results permanent.</p>
-          <p>Research published in Frontiers in Endocrinology (2026) found that up to 25% of weight lost without resistance training comes from lean muscle — not fat. Less muscle means a slower metabolism and weight that comes back. More muscle means results that last.</p>
-          <p>The medication starts the journey. The coaching makes it permanent. That is exactly what FORGEIQ was built for.</p>
-        </div>
-
-        <div class="card">
-          <div class="pillar-title">A PLAN CHANGES EVERYTHING</div>
-          <p>73% of people who set fitness goals give them up. The ones who do not have one thing the others do not — a structured plan and someone who holds them to it.</p>
-          <p>Strava research found that 94% of athletes who practice goal setting remain active nine months later. A 2024 study from Northwestern Medicine found that people who combined in-person coaching with a fitness app lost 53% more weight than those using an app alone.</p>
-          <p>Your goals do not stop moving. Neither does your coach. Every session builds on the last. Every week raises the bar. That is not motivation — that is methodology.</p>
-        </div>
-
-        <div class="card">
-          <div class="pillar-title">YOU ARE NEVER DONE</div>
-          <p>Dr. Lovato turns 50 this year. Torn shoulder. Knee surgery. Torn bicep. Plantar fasciitis. Arthritis. Still training. Six pack.</p>
-          <p>Not because it is easy. Because the alternative — stopping — is not acceptable.</p>
-          <p>The goal at FORGEIQ has never been perfection. It has never been a number on a scale. It is the decision to keep going when every reasonable excuse says you should stop.</p>
-        </div>
-
-      </div>
-
-      <div class="philosophy-quote">
-        "I am not the exception. I am what happens when you decide to never quit."
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ COACHING MODES ═══════════════════════ -->
-  <section class="section coaching-modes">
-    <div class="container">
-      <h2 class="section-heading">WHAT IS YOUR PRIMARY GOAL?</h2>
-      <p class="section-subtext">Your AI coach builds every session around your goals. Select all that apply. You can update anytime.</p>
-
-      <div class="goal-grid">
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Lose Weight</h4>
-            <p>Fat loss, body change, and sustainable results — with or without medication support</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Build Muscle and Strength</h4>
-            <p>Progressive resistance training to get stronger and add lean mass</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Body Recomposition</h4>
-            <p>Lose fat and build muscle simultaneously</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Improve My Health</h4>
-            <p>Blood pressure, blood sugar, cholesterol, energy — fitness as medicine</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Train Around an Injury</h4>
-            <p>Pain-free programming built around what your body can do right now</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Athletic Performance</h4>
-            <p>Sport-specific training, competition prep, Phase 3-5 programming</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Build the Habit</h4>
-            <p>No specific goal yet — just ready to start and stay consistent</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>50+ Strong</h4>
-            <p>Joint health, longevity, and age-defying strength</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Train Together</h4>
-            <p>Couples and partner training with separate AI profiles</p>
-          </div>
-        </label>
-
-        <label class="checkbox-tile">
-          <input type="checkbox" />
-          <div class="tile-info">
-            <h4>Mental Health and Recovery</h4>
-            <p>Fitness as therapy for anxiety, depression, PTSD, and recovery</p>
-          </div>
-        </label>
-
-      </div>
-
-      <div style="text-align: center;">
-        <a href="signup.html" class="btn-gold">Get Started</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ FOUNDERS ═══════════════════════ -->
-  <section class="section founders">
-    <div class="container">
-      <h2 class="section-heading">BUILT FROM REAL BATTLES. NOT A BOARDROOM.</h2>
-      <div style="height: 40px;"></div>
-      <div class="grid-2">
-
-        <div class="founder-card">
-          <h3>DR. MICHAEL LOVATO, EdD</h3>
-          <div class="subtitle">Co-Founder &middot; Head Strength Coach &middot; Army Combat Engineer</div>
-          <div class="bio">
-            <p>At his heaviest, Dr. Lovato weighed 290 pounds. He was drinking too much, dealing with anxiety and depression from years of military service, and watching his health slip away. He did not have a personal trainer. He did not have a meal plan. He had a decision.</p>
-            <p>He stopped drinking. He started training. He lost 98 pounds — not with a shortcut, but with discipline, consistency, and the refusal to quit. He earned his doctorate in organizational leadership from Grand Canyon University while working full time as a superintendent and raising a family. He holds certifications in nutrition coaching, corrective exercise, and performance enhancement through NASM. He has completed more than 30 certifications in artificial intelligence.</p>
-            <p>He met Debora at a gym. They built a life together — and then they built FORGEIQ. Every protocol in this platform comes from real coaching, real science, and real experience. Dr. Lovato turns 50 this year. He trains through a torn shoulder, a surgically repaired knee, a torn bicep, plantar fasciitis, and arthritis. He has a six pack. He is not done.</p>
-            <p>He built FORGEIQ because no one should have to figure this out alone — and because the people who have been through the most deserve a coach who understands what that means.</p>
-          </div>
-          <div class="quote">"I am not the exception. I am what happens when you decide to never quit."</div>
-          <div class="credentials-section">
-            <div class="cred-category-label">EDUCATION</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">EdD — Grand Canyon University</span>
-              <span class="cred-badge cred-gold">MA Superintendent — Massachusetts</span>
-              <span class="cred-badge cred-gold">AILG CEO</span>
-            </div>
-            <div class="cred-category-label">NASM CERTIFICATIONS</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">NASM CNC</span>
-              <span class="cred-badge cred-gold">NASM CES</span>
-              <span class="cred-badge cred-gold">NASM PES</span>
-            </div>
-            <div class="cred-category-label">STRENGTH AND CONDITIONING</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">NCSC — National Certificate S&amp;C</span>
-              <span class="cred-badge cred-gold">EPI Phase 2</span>
-              <span class="cred-badge cred-gold">Building Bigger Muscles — Dr. Zachary Mang</span>
-              <span class="cred-badge cred-gold">Kettlebells: Mastering the Swing</span>
-              <span class="cred-badge cred-gold">Functional Techniques</span>
-              <span class="cred-badge cred-gold">MyFIIT Certification</span>
-              <span class="cred-badge cred-gold">Tactical Training Level 1</span>
-              <span class="cred-badge cred-gold">Foundations of Corrective Exercise</span>
-              <span class="cred-badge cred-gold">Fit Bodies Group Fitness Instructor</span>
-            </div>
-            <div class="cred-category-label">NUTRITION AND METABOLISM</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">Nutritional Coaching — Melissa Layne</span>
-              <span class="cred-badge cred-gold">Metabolism Reality Check — Sohallia Digsby</span>
-              <span class="cred-badge cred-gold">Abs Are Made in the Kitchen — Sohallia Digsby</span>
-              <span class="cred-badge cred-gold">ACE IFT Model: Program Design</span>
-            </div>
-            <div class="cred-category-label">GLP AND ANTI-OBESITY MEDICATIONS</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">Programming for GLP-1 Users — Pete McCall</span>
-              <span class="cred-badge cred-gold">Supporting Clients on Anti-Obesity Medications</span>
-            </div>
-            <div class="cred-category-label">MOVEMENT AND RECOVERY</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">Applying Yoga to Health and Fitness</span>
-              <span class="cred-badge cred-gold">Insights to Shoulder Pain — Chuck Wolf</span>
-              <span class="cred-badge cred-gold">Flexibility Highways</span>
-              <span class="cred-badge cred-gold">OA Functional Breathing Instructor</span>
-              <span class="cred-badge cred-gold">TRX Yoga Hip Opening</span>
-            </div>
-            <div class="cred-category-label">WELLNESS AND COACHING</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">Practical Stress Resilience Coaching</span>
-            </div>
-            <div class="cred-category-label">ARTIFICIAL INTELLIGENCE</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">AI in Fitness: The Next Frontier for Coaches</span>
-              <span class="cred-badge cred-gold">30+ AI Certifications (Google, Anthropic, DeepLearning.AI)</span>
-            </div>
-            <div class="cred-category-label">MILITARY SERVICE</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-military">Army Combat Engineer — U.S. Army</span>
-              <span class="cred-badge cred-military">100% Service Connected</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="founder-card">
-          <h3>DEBORA LOVATO</h3>
-          <div class="subtitle">Co-Founder &middot; Nutrition and Wellness Director</div>
-          <div class="bio">
-            <p>Debora Lovato is a certified nutrition coach, corrective exercise specialist, and performance enhancement specialist through NASM. She is also a state-certified esthetician with advanced certifications in laser treatments, tattoo removal, massage therapy, and facial treatments.</p>
-            <p>She brings a perspective to FORGEIQ that most fitness platforms ignore: what happens to your skin, your confidence, and your sense of self when your body changes. Rapid weight loss — especially with GLP-1 medications — can cause skin laxity, texture changes, and emotional challenges that no workout plan addresses. Debora does.</p>
-            <p>Her wellness track inside FORGEIQ integrates skin health, nutrition guidance, and body confidence coaching alongside fitness programming. She has worked with clients navigating post-surgical recovery, GLP-1 side effects, hormonal shifts, and the emotional weight of physical transformation.</p>
-            <p>She met Michael at a gym. They built their health together, built their family together, and now they coach together. Her work inside FORGEIQ ensures that transformation is not just physical — it is complete.</p>
-          </div>
-          <div class="credentials-section">
-            <div class="cred-category-label">FITNESS AND NUTRITION</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">NASM CNC — Certified Nutrition Coach</span>
-              <span class="cred-badge cred-gold">NASM CES — Corrective Exercise Specialist</span>
-              <span class="cred-badge cred-gold">NASM PES — Performance Enhancement Specialist</span>
-            </div>
-            <div class="cred-category-label">ESTHETICS AND SKIN</div>
-            <div class="cred-badges">
-              <span class="cred-badge cred-gold">State Licensed Esthetician</span>
-              <span class="cred-badge cred-gold">Laser Certified</span>
-              <span class="cred-badge cred-gold">Tattoo Removal</span>
-              <span class="cred-badge cred-gold">GLP-1 Skin Specialist</span>
-              <span class="cred-badge cred-gold">Massage</span>
-              <span class="cred-badge cred-gold">Facials</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ COUPLES ═══════════════════════ -->
-  <section class="section couples">
-    <div class="container">
-      <h2 class="section-heading">STRONGER TOGETHER.</h2>
-      <div class="couples-body">
-        <p>Michael and Debora met at a gym. They were not looking for a business partner — they were looking for a reason to keep going. They found it in each other. That is not a marketing story. That is the foundation of everything FORGEIQ was built on.</p>
-        <p>Research backs what they learned firsthand. A study published in JAMA Internal Medicine found that people are more likely to make healthy changes when their partner does too. Accountability is not a buzzword — it is a biological and psychological advantage.</p>
-        <p>FORGEIQ Couples Training gives each partner their own AI coach, their own profile, and their own programming — while sharing challenges, milestones, and motivation. You do not have to be at the same fitness level. You do not have to have the same goals. You just have to be willing to show up — together.</p>
-      </div>
-      <div style="text-align: center; margin-bottom: 50px;">
-        <a href="signup.html" class="btn-gold">Start Together</a>
-      </div>
-      <div class="grid-2">
-
-        <div class="card">
-          <h3>SEPARATE PROFILES, SHARED MISSION</h3>
-          <p>Each partner gets their own AI coach calibrated to their goals, injuries, and fitness level.</p>
-        </div>
-
-        <div class="card">
-          <h3>CONFIDENCE THAT CARRIES OVER</h3>
-          <p>Fitness builds self-confidence. Self-confident people show up better in their relationships.</p>
-        </div>
-
-        <div class="card">
-          <h3>DEBORA'S SKIN AND WELLNESS TRACK</h3>
-          <p>As bodies transform, skin needs support too. Post-weight-loss skin laxity, GLP-1 side effects, and body confidence coaching built in.</p>
-        </div>
-
-        <div class="card">
-          <h3>21-DAY COUPLES CHALLENGE</h3>
-          <p>A structured, progressive 21-day challenge built for two. Compete. Support. Celebrate. Never quit.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ TESTIMONIALS ═══════════════════════ -->
+  <!-- ═══════════════════════ TESTIMONIALS (CHANGE 3) ═══════════════════════ -->
   <section class="section testimonials">
     <div class="container">
-      <h2 class="section-heading">WHAT THEY SAY</h2>
+      <h2 class="section-heading">REAL PEOPLE. REAL RESULTS.</h2>
       <div style="height: 40px;"></div>
       <div class="grid-3">
 
+        <!-- Doc Testimonial -->
         <div class="testimonial-card">
-          <div class="label">GLP-1 Client</div>
-          <blockquote>"I lost 40 pounds on Ozempic but I was losing muscle too. FORGEIQ gave me a plan that actually protected my strength while the weight kept coming off. My doctor noticed the difference before I did."</blockquote>
-          <div class="attribution">— J.M.</div>
+          <div class="testimonial-quote">"[TESTIMONIAL FROM DR. LOVATO &mdash; COMING SOON]"</div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <img src="/images/doc-testimonial.jpg" alt="Dr. Michael Lovato" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+              <span class="avatar-fallback" style="display:none;">ML</span>
+            </div>
+            <div>
+              <div class="testimonial-name">Dr. Michael Lovato</div>
+              <div class="testimonial-role">Founder &middot; EdD &middot; Combat Veteran</div>
+            </div>
+          </div>
         </div>
 
+        <!-- Debora Testimonial -->
         <div class="testimonial-card">
-          <div class="label">Veteran</div>
-          <blockquote>"I have tried every app out there. None of them understood that some days my knee does not work and some days my head does not work. FORGEIQ gets it. It coaches around both."</blockquote>
-          <div class="attribution">— R.C.</div>
+          <div class="testimonial-quote">"[TESTIMONIAL FROM DEBORA &mdash; COMING SOON]"</div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <img src="/images/debora-testimonial.jpg" alt="Debora" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+              <span class="avatar-fallback" style="display:none;">D</span>
+            </div>
+            <div>
+              <div class="testimonial-name">Debora</div>
+              <div class="testimonial-role">Licensed Esthetician &middot; Wellness Coach</div>
+            </div>
+          </div>
         </div>
 
+        <!-- Client Placeholder -->
         <div class="testimonial-card">
-          <div class="label">Couple</div>
-          <blockquote>"We started the 21-day challenge thinking it would be fun. By day 10 we were having the best conversations we have had in years. Fitness gave us something to build together again."</blockquote>
-          <div class="attribution">— S.L.</div>
+          <div class="testimonial-quote">"[CLIENT TESTIMONIAL &mdash; COMING SOON]"</div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <span class="avatar-fallback" style="display:flex;">?</span>
+            </div>
+            <div>
+              <div class="testimonial-name">&mdash;</div>
+              <div class="testimonial-role">FORGEIQ Member</div>
+            </div>
+          </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ MEET YOUR COACHES (CHANGE 4) ═══════════════════════ -->
+  <section class="section meet-coaches">
+    <div class="container">
+      <h2 class="section-heading">NOT JUST FITNESS. TOTAL TRANSFORMATION.</h2>
+      <p class="section-subtext">Two coaches. One platform. Every part of you.</p>
+
+      <div class="grid-2">
+
+        <!-- Doc Card -->
+        <div class="coach-card">
+          <div class="coach-photo">
+            <img src="/images/doc-card.jpg" alt="Dr. Michael Lovato" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+            <div class="fallback-initials" style="display:none;">ML</div>
+          </div>
+          <div class="coach-body">
+            <h3>DR. MICHAEL LOVATO</h3>
+            <div class="coach-role">AI Fitness &middot; Strength &middot; GLP-1 &middot; Recovery</div>
+            <p class="teaser">EdD. Combat veteran. Lost 98 lbs. Trained through surgeries and PTSD. He's been where you are.</p>
+            <a href="/coaching.html" class="coach-cta">WORK WITH DOC &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Debora Card -->
+        <div class="coach-card">
+          <div class="coach-photo">
+            <img src="/images/debora-card.jpg" alt="Debora" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+            <div class="fallback-initials" style="display:none;">D</div>
+          </div>
+          <div class="coach-body">
+            <h3>DEBORA</h3>
+            <div class="coach-role">Skin &amp; Wellness &middot; Licensed Esthetician</div>
+            <p class="teaser">Your body is transforming. Your skin should too. Debora makes sure nothing gets left behind.</p>
+            <a href="/debora.html" class="coach-cta">WORK WITH DEBORA &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Combined Banner -->
+      <div class="combined-banner">
+        <h3>WANT BOTH?</h3>
+        <p>Doc handles the body. Debora handles everything else. The complete transformation. One platform.</p>
+        <a href="/coaching.html#combined" class="btn-gold">BUILD MY COMPLETE PLAN</a>
       </div>
     </div>
   </section>
@@ -1092,21 +979,21 @@
         <div class="faq-item">
           <button class="faq-question">What makes FORGEIQ different from other fitness apps?</button>
           <div class="faq-answer">
-            <p>Most fitness apps give you a generic plan and a library of exercises. FORGEIQ gives you an AI coach that knows your injuries, your goals, your medications, your history, and your reality. Every session is built specifically for you — and it adapts as you change. It was built by two certified coaches who have lived the transformation themselves, not a tech company guessing at fitness.</p>
+            <p>Most fitness apps give you a generic plan and a library of exercises. FORGEIQ gives you an AI coach that knows your injuries, your goals, your medications, your history, and your reality. Every session is built specifically for you &mdash; and it adapts as you change. It was built by two certified coaches who have lived the transformation themselves, not a tech company guessing at fitness.</p>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question">I am on a GLP-1 medication. Can FORGEIQ help me?</button>
           <div class="faq-answer">
-            <p>Yes. FORGEIQ was specifically designed to support people on GLP-1 medications like Ozempic, Wegovy, Mounjaro, and Zepbound. Your AI coach programs resistance training to protect lean muscle mass during weight loss, adjusts nutrition guidance for common GLP-1 side effects, and integrates Debora's skin and wellness protocols to address the physical changes that come with rapid weight loss. This is not a workaround — it is a core feature.</p>
+            <p>Yes. FORGEIQ was specifically designed to support people on GLP-1 medications like Ozempic, Wegovy, Mounjaro, and Zepbound. Your AI coach programs resistance training to protect lean muscle mass during weight loss, adjusts nutrition guidance for common GLP-1 side effects, and integrates Debora's skin and wellness protocols to address the physical changes that come with rapid weight loss. This is not a workaround &mdash; it is a core feature.</p>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question">I have injuries. Will the AI know how to work around them?</button>
           <div class="faq-answer">
-            <p>Yes. During onboarding, you tell your AI coach about every injury, limitation, and surgery. It programs around them — not through them. Dr. Lovato trains through a torn shoulder, knee surgery, a torn bicep, plantar fasciitis, and arthritis. The injury-adaptive protocols inside FORGEIQ come directly from that experience and from NASM corrective exercise methodology.</p>
+            <p>Yes. During onboarding, you tell your AI coach about every injury, limitation, and surgery. It programs around them &mdash; not through them. Dr. Lovato trains through a torn shoulder, knee surgery, a torn bicep, plantar fasciitis, and arthritis. The injury-adaptive protocols inside FORGEIQ come directly from that experience and from NASM corrective exercise methodology.</p>
           </div>
         </div>
 
@@ -1120,14 +1007,14 @@
         <div class="faq-item">
           <button class="faq-question">What languages does FORGEIQ support?</button>
           <div class="faq-answer">
-            <p>FORGEIQ supports English, Spanish, and Portuguese — natively, from day one. This is not a translation layer. Your AI coach speaks your language fluently, including fitness terminology, cultural context, and natural conversation. You can switch languages at any time.</p>
+            <p>FORGEIQ supports English, Spanish, and Portuguese &mdash; natively, from day one. This is not a translation layer. Your AI coach speaks your language fluently, including fitness terminology, cultural context, and natural conversation. You can switch languages at any time.</p>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question">How does couples training work?</button>
           <div class="faq-answer">
-            <p>Each partner gets their own AI coach, their own profile, and their own programming. You do not need to be at the same fitness level or have the same goals. FORGEIQ Couples Training connects your accounts so you can share challenges, track each other's milestones, and stay accountable together. The 21-Day Couples Challenge is a structured program designed to build the habit together.</p>
+            <p>Each partner gets their own AI coach, their own profile, and their own programming. You do not need to be at the same fitness level or have the same goals. FORGEIQ Couples Training connects your accounts so you can share challenges, track each other's milestones, and stay accountable together.</p>
           </div>
         </div>
 
@@ -1141,7 +1028,7 @@
         <div class="faq-item">
           <button class="faq-question">What AI powers FORGEIQ?</button>
           <div class="faq-answer">
-            <p>FORGEIQ is powered by Claude, built by Anthropic — the same AI trusted by researchers, clinicians, and Fortune 500 companies. Claude provides the intelligence behind your coaching sessions, nutrition guidance, and adaptive programming. It is the most capable and safety-focused AI available, and it is what makes FORGEIQ possible.</p>
+            <p>FORGEIQ is powered by Claude, built by Anthropic &mdash; the same AI trusted by researchers, clinicians, and Fortune 500 companies. Claude provides the intelligence behind your coaching sessions, nutrition guidance, and adaptive programming. It is the most capable and safety-focused AI available, and it is what makes FORGEIQ possible.</p>
           </div>
         </div>
 
@@ -1152,13 +1039,13 @@
   <!-- ═══════════════════════ FOOTER CTA ═══════════════════════ -->
   <section class="footer-cta">
     <h2 class="section-heading">MAKE THE DECISION.</h2>
-    <p>Nobody is coming to fix you. Nobody needs to. You have everything it takes — you just need a coach who believes that too.</p>
-    <a href="signup.html" class="btn-gold">I WILL NOT QUIT</a>
+    <p>Nobody is coming to fix you. Nobody needs to. You have everything it takes &mdash; you just need a coach who believes that too.</p>
+    <a href="signup.html" class="btn-gold">START FREE</a>
   </section>
 
   <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
   <footer>
-    <div class="footer-brand">FORGEIQ — Dr. Michael P. Lovato, EdD &middot; Debora Lovato</div>
+    <div class="footer-brand">FORGEIQ &mdash; Dr. Michael P. Lovato, EdD &middot; Debora Lovato</div>
     <div class="footer-url">forgeiq.netlify.app</div>
     <div class="footer-links">
       <a href="#">Privacy</a>
@@ -1174,24 +1061,11 @@
       btn.addEventListener('click', function() {
         var item = this.parentElement;
         var isOpen = item.classList.contains('open');
-        // Close all
         document.querySelectorAll('.faq-item').forEach(function(el) {
           el.classList.remove('open');
         });
-        // Toggle current
         if (!isOpen) {
           item.classList.add('open');
-        }
-      });
-    });
-
-    // Checkbox tile toggle styling
-    document.querySelectorAll('.checkbox-tile input[type="checkbox"]').forEach(function(cb) {
-      cb.addEventListener('change', function() {
-        if (this.checked) {
-          this.closest('.checkbox-tile').classList.add('checked');
-        } else {
-          this.closest('.checkbox-tile').classList.remove('checked');
         }
       });
     });
@@ -1202,6 +1076,22 @@
         document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
         this.classList.add('active');
       });
+    });
+
+    // Coaches dropdown — tap support for mobile
+    document.querySelectorAll('.coaches-dropdown > a').forEach(function(trigger) {
+      trigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.parentElement.classList.toggle('open');
+      });
+    });
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.coaches-dropdown')) {
+        document.querySelectorAll('.coaches-dropdown').forEach(function(d) {
+          d.classList.remove('open');
+        });
+      }
     });
   </script>
 

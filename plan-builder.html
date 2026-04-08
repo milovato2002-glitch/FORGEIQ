@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Multi-Day Plan Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#0a1628;color:#e8edf5;font-family:'Barlow',sans-serif;font-weight:300;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+    a{color:inherit;text-decoration:none;}
+
+    /* NAV */
+    .top-nav{position:sticky;top:0;z-index:100;padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:#0e1e36;border-bottom:1px solid rgba(255,255,255,0.07);height:60px;}
+    .nav-left{display:flex;align-items:center;gap:16px;}
+    .back-btn{background:none;border:none;color:#8fa3c0;font-size:1.2rem;cursor:pointer;padding:4px 8px;transition:color 0.2s;}
+    .back-btn:hover{color:#f0a500;}
+    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:3px;color:#e8edf5;}
+    .nav-logo span{color:#f0a500;}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .lang-toggle{display:flex;gap:0;border:1px solid rgba(255,255,255,0.07);border-radius:6px;overflow:hidden;}
+    .lang-btn{background:none;border:none;color:#4a6080;font-size:0.65rem;font-weight:600;padding:5px 10px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transition:all 0.2s;}
+    .lang-btn.active{background:rgba(240,165,0,0.12);color:#f0a500;}
+    .lang-btn:hover{color:#f0a500;}
+
+    /* PAGE */
+    .page{max-width:700px;margin:0 auto;padding:32px 20px 80px;}
+
+    /* PROGRESS BAR */
+    .pb-wrap{margin-bottom:32px;}
+    .pb-steps{display:flex;gap:6px;}
+    .pb-step{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.08);transition:background 0.4s;}
+    .pb-step.done{background:#f0a500;}
+    .pb-label{text-align:center;margin-top:10px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#4a6080;}
+
+    /* STEP PANELS */
+    .step{display:none;animation:fadeUp 0.3s ease;}
+    .step.active{display:block;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+    .step-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,4vw,2.2rem);letter-spacing:2px;color:#e8edf5;text-align:center;margin-bottom:28px;}
+
+    /* DURATION CARDS */
+    .dur-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+    .dur-card{background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.2s;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    .dur-card:hover{border-color:rgba(240,165,0,0.3);}
+    .dur-card.selected{border-color:#f0a500;background:rgba(240,165,0,0.06);}
+    .dur-card .dur-icon{font-size:2rem;margin-bottom:8px;}
+    .dur-card .dur-num{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:#f0a500;line-height:1;}
+    .dur-card .dur-label{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#8fa3c0;margin-top:4px;}
+
+    /* INTAKE CHAT */
+    .chat-area{margin-bottom:20px;}
+    .chat-msg{display:flex;margin-bottom:14px;animation:fadeUp 0.3s ease;}
+    .chat-msg.ai{justify-content:flex-start;}
+    .chat-msg.user{justify-content:flex-end;}
+    .chat-bubble{max-width:85%;padding:14px 18px;border-radius:12px;font-size:0.95rem;line-height:1.6;}
+    .chat-msg.ai .chat-bubble{background:#142444;border-left:3px solid #f0a500;border-radius:4px 12px 12px 4px;color:#e8edf5;}
+    .chat-msg.user .chat-bubble{background:#f0a500;border-radius:12px 4px 4px 12px;color:#0a1628;font-weight:600;}
+    .qr-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+    .qr-pill{padding:10px 18px;border-radius:24px;border:1px solid rgba(240,165,0,0.5);background:rgba(240,165,0,0.08);color:#f0a500;font-size:0.88rem;cursor:pointer;transition:all 0.15s;white-space:nowrap;min-height:48px;display:flex;align-items:center;}
+    .qr-pill:hover,.qr-pill:active{background:#f0a500;color:#0a1628;}
+    .input-row{display:flex;gap:8px;align-items:center;}
+    .input-row input{flex:1;height:48px;background:#142444;border:1px solid rgba(255,255,255,0.15);border-radius:24px;padding:0 18px;color:#e8edf5;font-size:1rem;outline:none;}
+    .input-row input:focus{border-color:#f0a500;}
+    .input-row .send-btn{width:48px;height:48px;border-radius:50%;background:#f0a500;border:none;color:#0a1628;font-size:1.2rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+    .input-row .send-btn:hover{background:#ffb820;}
+
+    /* MIC BUTTON */
+    .mic-btn{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#8fa3c0;font-size:1.2rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;position:relative;}
+    .mic-btn:hover{border-color:#f0a500;color:#f0a500;}
+    .mic-btn.listening{background:rgba(240,165,0,0.15);border-color:#f0a500;color:#f0a500;animation:micPulse 1.2s ease-in-out infinite;}
+    .mic-btn .mic-label{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:0.6rem;color:#4a6080;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;}
+    @keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(240,165,0,0.3);}50%{box-shadow:0 0 0 12px rgba(240,165,0,0);}}
+
+    /* LOADING */
+    .loading-overlay{display:none;position:fixed;inset:0;background:#0a1628;z-index:9999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+    .loading-overlay.active{display:flex;}
+    .loading-logo{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:6px;color:#f0a500;margin-bottom:32px;animation:pulse 1.5s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:0.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
+    .loading-text{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:#e8edf5;margin-bottom:12px;}
+    .loading-sub{font-size:0.95rem;color:#8fa3c0;max-width:400px;line-height:1.6;}
+
+    /* PLAN VIEW */
+    .plan-header{background:#142444;border:1px solid rgba(240,165,0,0.18);border-radius:12px;padding:24px;margin-bottom:24px;text-align:center;}
+    .plan-header .ph-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;color:#f0a500;}
+    .plan-header .ph-meta{font-size:0.85rem;color:#8fa3c0;margin-top:6px;}
+    .plan-progress{margin-bottom:24px;}
+    .plan-progress .pp-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+    .plan-progress .pp-fill{height:100%;background:#f0a500;border-radius:3px;transition:width 0.4s;}
+    .plan-progress .pp-label{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;color:#4a6080;margin-top:6px;text-align:center;}
+
+    /* DAY CARDS */
+    .day-card{background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color 0.2s;}
+    .day-card:hover{border-color:rgba(240,165,0,0.18);}
+    .day-card.completed{border-color:rgba(45,198,83,0.3);}
+    .day-card .dc-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;gap:12px;}
+    .day-card .dc-left{display:flex;align-items:center;gap:14px;flex:1;min-width:0;}
+    .day-card .dc-num{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#f0a500;letter-spacing:1px;flex-shrink:0;}
+    .day-card.completed .dc-num{color:#2dc653;}
+    .day-card .dc-summary{flex:1;min-width:0;}
+    .day-card .dc-workout{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.5px;color:#e8edf5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .day-card .dc-meals{font-size:0.78rem;color:#4a6080;margin-top:2px;}
+    .day-card .dc-chevron{color:#4a6080;font-size:0.9rem;transition:transform 0.2s;flex-shrink:0;}
+    .day-card.open .dc-chevron{transform:rotate(180deg);}
+    .day-card .dc-body{display:none;padding:0 20px 20px;border-top:1px solid rgba(255,255,255,0.05);}
+    .day-card.open .dc-body{display:block;}
+    .dc-section-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:1.5px;text-transform:uppercase;color:#f0a500;margin:16px 0 8px;}
+    .dc-exercise{font-size:0.88rem;color:#8fa3c0;line-height:1.6;padding:4px 0;}
+    .dc-meal{font-size:0.88rem;color:#8fa3c0;line-height:1.6;padding:4px 0;}
+    .btn-complete{display:inline-flex;align-items:center;gap:6px;background:rgba(45,198,83,0.1);border:1px solid rgba(45,198,83,0.25);color:#2dc653;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:1.5px;text-transform:uppercase;padding:10px 20px;border-radius:6px;cursor:pointer;transition:all 0.2s;margin-top:14px;min-height:48px;}
+    .btn-complete:hover{background:rgba(45,198,83,0.2);}
+    .btn-complete.done{background:#2dc653;color:#0a1628;border-color:#2dc653;}
+
+    /* MY PLANS */
+    .my-plans-section{margin-top:40px;border-top:1px solid rgba(255,255,255,0.07);padding-top:32px;}
+    .saved-plan-card{background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;transition:border-color 0.2s;}
+    .saved-plan-card:hover{border-color:rgba(240,165,0,0.18);}
+    .sp-info h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.95rem;letter-spacing:0.5px;color:#e8edf5;}
+    .sp-info p{font-size:0.78rem;color:#4a6080;margin-top:2px;}
+    .sp-arrow{color:#4a6080;font-size:1rem;}
+
+    /* BUTTONS */
+    .btn-gold{display:inline-flex;align-items:center;justify-content:center;background:#f0a500;color:#0a1628;border:none;border-radius:8px;padding:14px 32px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.95rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;min-height:48px;}
+    .btn-gold:hover{background:#ffb820;transform:translateY(-1px);}
+    .btn-gold:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+    .btn-gold.full{width:100%;}
+    .btn-outline{display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#e8edf5;border:1px solid rgba(240,165,0,0.18);border-radius:8px;padding:12px 24px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.85rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;min-height:48px;}
+    .btn-outline:hover{border-color:#f0a500;color:#f0a500;}
+
+    /* NOTIF */
+    .notif-toast{position:fixed;top:80px;right:20px;background:#142444;border:1px solid rgba(240,165,0,0.3);border-radius:10px;padding:16px 20px;max-width:340px;z-index:1000;transform:translateX(400px);transition:transform 0.4s ease;font-size:0.85rem;color:#8fa3c0;}
+    .notif-toast.show{transform:translateX(0);}
+    .notif-toast .nt-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:1px;color:#f0a500;margin-bottom:4px;}
+
+    @media(max-width:600px){
+      .dur-grid{grid-template-columns:1fr;gap:12px;}
+      .dur-card{flex-direction:row;gap:16px;padding:20px;min-height:auto;}
+      .page{padding:20px 16px 80px;}
+      .top-nav{padding:0 16px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="nav-left">
+    <button class="back-btn" onclick="if(window.history.length>1){history.back();}else{window.location.href='/train.html';}" title="Go back">&larr;</button>
+    <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="pt">PT</button>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+
+  <!-- PROGRESS BAR -->
+  <div class="pb-wrap">
+    <div class="pb-steps">
+      <div class="pb-step done" id="pb-1"></div>
+      <div class="pb-step" id="pb-2"></div>
+      <div class="pb-step" id="pb-3"></div>
+      <div class="pb-step" id="pb-4"></div>
+    </div>
+    <div class="pb-label" id="pb-label">STEP 1 — CHOOSE DURATION</div>
+  </div>
+
+  <!-- ══════ STEP 1: DURATION ══════ -->
+  <div class="step active" id="step-1">
+    <h1 class="step-title">HOW LONG IS YOUR PLAN?</h1>
+    <div class="dur-grid">
+      <div class="dur-card" onclick="selectDuration(7)" data-dur="7">
+        <div class="dur-icon">&#128197;</div>
+        <div class="dur-num">7</div>
+        <div class="dur-label">DAYS</div>
+      </div>
+      <div class="dur-card" onclick="selectDuration(14)" data-dur="14">
+        <div class="dur-icon">&#128170;</div>
+        <div class="dur-num">14</div>
+        <div class="dur-label">DAYS</div>
+      </div>
+      <div class="dur-card" onclick="selectDuration(21)" data-dur="21">
+        <div class="dur-icon">&#127942;</div>
+        <div class="dur-num">21</div>
+        <div class="dur-label">DAYS</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-bottom:24px;">
+      <button class="mic-btn" id="mic-1" onclick="startVoice('duration')">&#127908;<span class="mic-label">Tap to speak</span></button>
+    </div>
+    <button class="btn-gold full" id="btn-dur" disabled onclick="goStep(2)">CONTINUE</button>
+  </div>
+
+  <!-- ══════ STEP 2: AI INTAKE ══════ -->
+  <div class="step" id="step-2">
+    <h1 class="step-title">LET'S BUILD YOUR PLAN</h1>
+    <div class="chat-area" id="chat-area"></div>
+    <div id="intake-qr"></div>
+    <div class="input-row">
+      <input type="text" id="intake-input" placeholder="Type your answer..." autocomplete="off" />
+      <button class="mic-btn" id="mic-2" onclick="startVoice('intake')">&#127908;<span class="mic-label">Tap to speak</span></button>
+      <button class="send-btn" onclick="sendIntakeAnswer()">&#10148;</button>
+    </div>
+  </div>
+
+  <!-- ══════ STEP 3: GENERATING ══════ -->
+  <!-- (uses loading overlay) -->
+
+  <!-- ══════ STEP 4: PLAN VIEW ══════ -->
+  <div class="step" id="step-4">
+    <div class="plan-header">
+      <div class="ph-title" id="plan-title">21-DAY STRENGTH PLAN</div>
+      <div class="ph-meta" id="plan-meta">Goal: Muscle Gain &middot; Started Apr 7, 2026</div>
+    </div>
+    <div class="plan-progress">
+      <div class="pp-bar"><div class="pp-fill" id="pp-fill" style="width:0%;"></div></div>
+      <div class="pp-label" id="pp-label">0 of 21 days complete</div>
+    </div>
+    <div id="plan-days"></div>
+
+    <div style="text-align:center;margin-top:24px;">
+      <button class="btn-outline" onclick="showMyPlans()">VIEW ALL MY PLANS</button>
+    </div>
+  </div>
+
+  <!-- ══════ MY PLANS SECTION ══════ -->
+  <div class="step" id="step-plans">
+    <h1 class="step-title">MY PLANS</h1>
+    <div id="plans-list"></div>
+    <div style="text-align:center;margin-top:24px;">
+      <button class="btn-gold" onclick="startNewPlan()">BUILD NEW PLAN</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-logo">FORGEIQ</div>
+  <div class="loading-text">FORGE AI IS BUILDING YOUR PLAN...</div>
+  <div class="loading-sub">Personalizing workouts and nutrition for every day of your program.</div>
+</div>
+
+<!-- NOTIFICATION TOAST -->
+<div class="notif-toast" id="notif-toast">
+  <div class="nt-title">NOTIFICATION</div>
+  <div class="nt-body" id="notif-body"></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ── STATE ── */
+var planDuration = 0;
+var intakeStep = 0;
+var intakeAnswers = {};
+var currentPlanId = null;
+var currentStep = 1;
+
+var INTAKE_QUESTIONS = [
+  { key: "goal", q: "What is your primary goal?", options: ["Weight loss","Muscle gain","Performance","GLP-1 support","General health"] },
+  { key: "level", q: "What is your current fitness level?", options: ["Beginner","Intermediate","Advanced"] },
+  { key: "equipment", q: "What equipment do you have access to?", options: ["None","Dumbbells","Full gym","Bands only"] },
+  { key: "injuries", q: "Any injuries or limitations I should know about?", options: ["None","Yes — I'll describe"] },
+  { key: "diet", q: "Any dietary restrictions or preferences?", options: ["None","Vegan","Keto","Gluten-free","Other"] },
+  { key: "glp1", q: "Are you currently on a GLP-1 medication?", options: ["Yes","No"] }
+];
+
+/* ── HELPERS ── */
+function $(sel){ return document.querySelector(sel); }
+function $$(sel){ return document.querySelectorAll(sel); }
+
+function getProfile(){
+  try { return JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){ return {}; }
+}
+function getUserName(){
+  var p = getProfile();
+  return p.full_name || p.name || p.firstName || "Coach";
+}
+
+/* ── STEP NAVIGATION ── */
+function goStepInternal(n){
+  currentStep = n;
+  $$(".step").forEach(function(s){ s.classList.remove("active"); });
+  var target = $("#step-" + n);
+  if(target) target.classList.add("active");
+  for(var i = 1; i <= 4; i++){
+    var el = $("#pb-" + i);
+    if(el){ if(i <= n) el.classList.add("done"); else el.classList.remove("done"); }
+  }
+  var labels = ["STEP 1 — CHOOSE DURATION","STEP 2 — INTAKE","STEP 3 — GENERATING","STEP 4 — YOUR PLAN"];
+  $("#pb-label").textContent = labels[n - 1] || "";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+window.goStep = function(n){ goStepInternal(n); if(n === 2) startIntake(); };
+
+/* ── DURATION SELECTION ── */
+window.selectDuration = function(d){
+  planDuration = d;
+  $$(".dur-card").forEach(function(c){ c.classList.remove("selected"); });
+  var card = document.querySelector('[data-dur="'+d+'"]');
+  if(card) card.classList.add("selected");
+  $("#btn-dur").disabled = false;
+};
+
+/* ── INTAKE CHAT ── */
+function startIntake(){
+  intakeStep = 0;
+  intakeAnswers = {};
+  $("#chat-area").innerHTML = "";
+  askNextQuestion();
+}
+
+function addChatMsg(text, role){
+  var area = $("#chat-area");
+  var div = document.createElement("div");
+  div.className = "chat-msg " + role;
+  div.innerHTML = '<div class="chat-bubble">' + text + '</div>';
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+function showQuickReplies(options){
+  var container = $("#intake-qr");
+  container.innerHTML = "";
+  var row = document.createElement("div");
+  row.className = "qr-row";
+  options.forEach(function(opt){
+    var pill = document.createElement("button");
+    pill.className = "qr-pill";
+    pill.textContent = opt;
+    pill.onclick = function(){ sendIntakeAnswerText(opt); };
+    row.appendChild(pill);
+  });
+  container.appendChild(row);
+}
+
+function askNextQuestion(){
+  if(intakeStep >= INTAKE_QUESTIONS.length){
+    finishIntake();
+    return;
+  }
+  var q = INTAKE_QUESTIONS[intakeStep];
+  setTimeout(function(){
+    addChatMsg(q.q, "ai");
+    showQuickReplies(q.options);
+    $("#intake-input").value = "";
+    $("#intake-input").focus();
+  }, 400);
+}
+
+function sendIntakeAnswerText(text){
+  if(!text || !text.trim()) return;
+  var q = INTAKE_QUESTIONS[intakeStep];
+  addChatMsg(text, "user");
+  intakeAnswers[q.key] = text;
+  $("#intake-qr").innerHTML = "";
+  intakeStep++;
+  askNextQuestion();
+}
+
+window.sendIntakeAnswer = function(){
+  var input = $("#intake-input");
+  var text = input.value.trim();
+  if(!text) return;
+  input.value = "";
+  sendIntakeAnswerText(text);
+};
+
+// Enter key
+document.addEventListener("keydown", function(e){
+  if(e.key === "Enter" && currentStep === 2){
+    e.preventDefault();
+    window.sendIntakeAnswer();
+  }
+});
+
+/* ── PLAN GENERATION ── */
+function finishIntake(){
+  addChatMsg("Got it. Building your " + planDuration + "-day plan now...", "ai");
+  $("#intake-qr").innerHTML = "";
+
+  setTimeout(function(){
+    goStepInternal(3);
+    $("#loading-overlay").classList.add("active");
+    generatePlan();
+  }, 1000);
+}
+
+function generatePlan(){
+  var profile = getProfile();
+  var ctx = "";
+  if(profile.experience) ctx += "Experience: " + profile.experience + ". ";
+  if(profile.goal) ctx += "Onboarding goal: " + profile.goal + ". ";
+  if(profile.healthContext && profile.healthContext.length) ctx += "Health flags: " + profile.healthContext.join(", ") + ". ";
+
+  var prompt = "Generate a complete " + planDuration + "-day fitness plan.\n\n";
+  prompt += "CLIENT INTAKE:\n";
+  prompt += "- Goal: " + (intakeAnswers.goal || "General health") + "\n";
+  prompt += "- Fitness Level: " + (intakeAnswers.level || "Beginner") + "\n";
+  prompt += "- Equipment: " + (intakeAnswers.equipment || "Full gym") + "\n";
+  prompt += "- Injuries/Limitations: " + (intakeAnswers.injuries || "None") + "\n";
+  prompt += "- Diet: " + (intakeAnswers.diet || "None") + "\n";
+  prompt += "- GLP-1 Medication: " + (intakeAnswers.glp1 || "No") + "\n";
+  if(ctx) prompt += "- Profile: " + ctx + "\n";
+  prompt += "\nFor EACH day output EXACTLY this format:\n";
+  prompt += "===DAY [N]===\n";
+  prompt += "WORKOUT: [Title]\n";
+  prompt += "- [Exercise] — [sets]x[reps] — Rest: [seconds]s\n";
+  prompt += "(list 4-6 exercises per day)\n";
+  prompt += "NUTRITION:\n";
+  prompt += "Breakfast: [meal] ([calories] cal, [protein]g protein)\n";
+  prompt += "Lunch: [meal] ([calories] cal, [protein]g protein)\n";
+  prompt += "Dinner: [meal] ([calories] cal, [protein]g protein)\n";
+  prompt += "Snack: [meal] ([calories] cal, [protein]g protein)\n";
+  prompt += "Daily Total: ~[calories] cal · [protein]g protein\n\n";
+  prompt += "Include rest days where appropriate (mark as REST DAY with active recovery suggestion and still provide nutrition).\n";
+  prompt += "Use REAL exercise names. Vary workouts. Progressive overload across weeks.";
+
+  var sysPrompt = "You are FORGE AI Coach, built by Dr. Michael P. Lovato EdD (NASM CNC/CES/PES, NCSC, GLP-1 specialist, Army Combat Engineer veteran). Generate complete multi-day fitness and nutrition plans. Output ONLY the structured plan with no preamble or commentary. Use real exercise names. If the client is on GLP-1, prioritize muscle preservation and adjust nutrition accordingly.";
+
+  fetch("/.netlify/functions/chat", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 4000,
+      system: sysPrompt,
+      messages: [{role:"user", content: prompt}]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    var text = (data.content && data.content[0]) ? data.content[0].text : "";
+    if(!text) throw new Error("Empty response");
+
+    var plan = parsePlan(text);
+    savePlan(plan, text);
+    renderPlanView(plan);
+    sendCoachNotification();
+
+    $("#loading-overlay").classList.remove("active");
+    goStepInternal(4);
+  })
+  .catch(function(err){
+    console.error("Plan generation failed:", err);
+    $("#loading-overlay").classList.remove("active");
+    goStepInternal(2);
+    addChatMsg("Plan generation failed: " + err.message + ". Please try again.", "ai");
+  });
+}
+
+/* ── PLAN PARSING ── */
+function parsePlan(text){
+  var days = [];
+  var sections = text.split(/===DAY\s*\[?(\d+)\]?===/i);
+  // sections[0] is before first day, then alternating: dayNum, content
+  for(var i = 1; i < sections.length; i += 2){
+    var dayNum = parseInt(sections[i]);
+    var content = (sections[i+1] || "").trim();
+
+    var workoutTitle = "Workout";
+    var exercises = [];
+    var meals = {};
+    var dailyTotal = "";
+    var isRest = /rest\s*day/i.test(content);
+
+    // Extract workout title
+    var wtMatch = content.match(/WORKOUT:\s*(.+)/i);
+    if(wtMatch) workoutTitle = wtMatch[1].trim();
+
+    // Extract exercises (lines starting with -)
+    var workoutSection = content.split(/NUTRITION:/i)[0] || "";
+    var exLines = workoutSection.split("\n");
+    exLines.forEach(function(line){
+      line = line.trim();
+      if(line.match(/^[-•]\s/) && !line.match(/^WORKOUT/i)){
+        exercises.push(line.replace(/^[-•]\s*/, ""));
+      }
+    });
+
+    // Extract nutrition
+    var nutritionSection = content.split(/NUTRITION:/i)[1] || "";
+    var nLines = nutritionSection.split("\n");
+    nLines.forEach(function(line){
+      line = line.trim();
+      if(line.match(/^Breakfast:/i)) meals.breakfast = line.replace(/^Breakfast:\s*/i, "");
+      else if(line.match(/^Lunch:/i)) meals.lunch = line.replace(/^Lunch:\s*/i, "");
+      else if(line.match(/^Dinner:/i)) meals.dinner = line.replace(/^Dinner:\s*/i, "");
+      else if(line.match(/^Snack:/i)) meals.snack = line.replace(/^Snack:\s*/i, "");
+      else if(line.match(/^Daily Total:/i)) dailyTotal = line.replace(/^Daily Total:\s*/i, "");
+    });
+
+    days.push({
+      day: dayNum,
+      title: workoutTitle,
+      exercises: exercises,
+      meals: meals,
+      dailyTotal: dailyTotal,
+      isRest: isRest,
+      completed: false
+    });
+  }
+
+  // If parsing failed, create basic structure from raw text
+  if(days.length === 0){
+    for(var d = 1; d <= planDuration; d++){
+      days.push({day:d, title:"Day "+d, exercises:[], meals:{}, dailyTotal:"", isRest:false, completed:false, rawText: text.substring(0, 500)});
+    }
+  }
+
+  return days;
+}
+
+/* ── SAVE / LOAD PLANS ── */
+function savePlan(days, rawText){
+  var plan = {
+    id: Date.now(),
+    duration: planDuration,
+    goal: intakeAnswers.goal || "General",
+    level: intakeAnswers.level || "",
+    startDate: new Date().toISOString(),
+    days: days,
+    rawText: rawText,
+    intakeAnswers: intakeAnswers
+  };
+  currentPlanId = plan.id;
+
+  // Save as active plan
+  localStorage.setItem("forgeiq_active_multiday_plan", JSON.stringify(plan));
+
+  // Add to saved plans list
+  var plans = JSON.parse(localStorage.getItem("forgeiq_saved_plans") || "[]");
+  plans.unshift(plan);
+  if(plans.length > 20) plans = plans.slice(0, 20);
+  localStorage.setItem("forgeiq_saved_plans", JSON.stringify(plans));
+}
+
+function loadPlan(id){
+  var plans = JSON.parse(localStorage.getItem("forgeiq_saved_plans") || "[]");
+  for(var i = 0; i < plans.length; i++){
+    if(plans[i].id === id) return plans[i];
+  }
+  return null;
+}
+
+function updatePlanDay(planId, dayNum, completed){
+  var plans = JSON.parse(localStorage.getItem("forgeiq_saved_plans") || "[]");
+  for(var i = 0; i < plans.length; i++){
+    if(plans[i].id === planId){
+      for(var d = 0; d < plans[i].days.length; d++){
+        if(plans[i].days[d].day === dayNum){
+          plans[i].days[d].completed = completed;
+        }
+      }
+    }
+  }
+  localStorage.setItem("forgeiq_saved_plans", JSON.stringify(plans));
+
+  var active = JSON.parse(localStorage.getItem("forgeiq_active_multiday_plan") || "null");
+  if(active && active.id === planId){
+    for(var j = 0; j < active.days.length; j++){
+      if(active.days[j].day === dayNum) active.days[j].completed = completed;
+    }
+    localStorage.setItem("forgeiq_active_multiday_plan", JSON.stringify(active));
+  }
+}
+
+/* ── RENDER PLAN VIEW ── */
+function renderPlanView(plan){
+  if(!plan && currentPlanId){
+    plan = loadPlan(currentPlanId);
+  }
+  if(!plan || !plan.days) return;
+
+  var days = plan.days;
+  var startDate = plan.startDate ? new Date(plan.startDate) : new Date();
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var dateStr = months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear();
+
+  $("#plan-title").textContent = plan.duration + "-DAY " + (plan.goal || "FITNESS").toUpperCase() + " PLAN";
+  $("#plan-meta").textContent = "Goal: " + (plan.goal || "General") + " \u00B7 Started " + dateStr;
+
+  // Progress
+  var doneCount = 0;
+  days.forEach(function(d){ if(d.completed) doneCount++; });
+  var pct = days.length ? Math.round((doneCount / days.length) * 100) : 0;
+  $("#pp-fill").style.width = pct + "%";
+  $("#pp-label").textContent = doneCount + " of " + days.length + " days complete";
+
+  // Day cards
+  var container = $("#plan-days");
+  container.innerHTML = "";
+
+  days.forEach(function(day){
+    var card = document.createElement("div");
+    card.className = "day-card" + (day.completed ? " completed" : "");
+    card.id = "day-card-" + day.day;
+
+    var exCount = day.exercises ? day.exercises.length : 0;
+    var workoutSummary = day.isRest ? "Rest Day" : day.title + " \u2014 " + exCount + " exercises";
+    var mealSummary = day.dailyTotal || (day.meals && day.meals.breakfast ? "Meals planned" : "");
+
+    card.innerHTML =
+      '<div class="dc-header" onclick="toggleDay('+day.day+')">' +
+        '<div class="dc-left">' +
+          '<div class="dc-num">' + (day.completed ? "\u2713" : "DAY " + day.day) + '</div>' +
+          '<div class="dc-summary">' +
+            '<div class="dc-workout">' + escHtml(workoutSummary) + '</div>' +
+            '<div class="dc-meals">' + escHtml(mealSummary) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="dc-chevron">\u25BC</div>' +
+      '</div>' +
+      '<div class="dc-body">' +
+        renderDayBody(day) +
+      '</div>';
+
+    container.appendChild(card);
+  });
+}
+
+function renderDayBody(day){
+  var html = "";
+
+  // Workout section
+  html += '<div class="dc-section-title">' + (day.isRest ? "ACTIVE RECOVERY" : "WORKOUT: " + escHtml(day.title)) + '</div>';
+  if(day.exercises && day.exercises.length){
+    day.exercises.forEach(function(ex){
+      html += '<div class="dc-exercise">\u2022 ' + escHtml(ex) + '</div>';
+    });
+  } else if(day.isRest){
+    html += '<div class="dc-exercise">Light walking, stretching, or mobility work (20-30 min)</div>';
+  }
+
+  // Nutrition section
+  html += '<div class="dc-section-title">NUTRITION</div>';
+  if(day.meals){
+    if(day.meals.breakfast) html += '<div class="dc-meal"><strong>Breakfast:</strong> ' + escHtml(day.meals.breakfast) + '</div>';
+    if(day.meals.lunch) html += '<div class="dc-meal"><strong>Lunch:</strong> ' + escHtml(day.meals.lunch) + '</div>';
+    if(day.meals.dinner) html += '<div class="dc-meal"><strong>Dinner:</strong> ' + escHtml(day.meals.dinner) + '</div>';
+    if(day.meals.snack) html += '<div class="dc-meal"><strong>Snack:</strong> ' + escHtml(day.meals.snack) + '</div>';
+  }
+  if(day.dailyTotal) html += '<div class="dc-meal" style="color:#f0a500;margin-top:6px;font-weight:600;">' + escHtml(day.dailyTotal) + '</div>';
+
+  // Mark complete button
+  var btnClass = day.completed ? "btn-complete done" : "btn-complete";
+  var btnText = day.completed ? "\u2713 COMPLETED" : "MARK DAY COMPLETE";
+  html += '<button class="' + btnClass + '" onclick="markDayComplete(' + day.day + ',this)">' + btnText + '</button>';
+
+  return html;
+}
+
+function escHtml(s){
+  if(!s) return "";
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+window.toggleDay = function(dayNum){
+  var card = $("#day-card-" + dayNum);
+  if(card) card.classList.toggle("open");
+};
+
+window.markDayComplete = function(dayNum, btn){
+  if(!currentPlanId) return;
+  var isNowDone = !btn.classList.contains("done");
+  updatePlanDay(currentPlanId, dayNum, isNowDone);
+
+  if(isNowDone){
+    btn.classList.add("done");
+    btn.textContent = "\u2713 COMPLETED";
+    var card = $("#day-card-" + dayNum);
+    if(card) card.classList.add("completed");
+    var numEl = card ? card.querySelector(".dc-num") : null;
+    if(numEl) numEl.textContent = "\u2713";
+  } else {
+    btn.classList.remove("done");
+    btn.textContent = "MARK DAY COMPLETE";
+    var card2 = $("#day-card-" + dayNum);
+    if(card2) card2.classList.remove("completed");
+    var numEl2 = card2 ? card2.querySelector(".dc-num") : null;
+    if(numEl2) numEl2.textContent = "DAY " + dayNum;
+  }
+
+  // Update progress
+  var plan = loadPlan(currentPlanId);
+  if(plan){
+    var done = 0;
+    plan.days.forEach(function(d){ if(d.completed) done++; });
+    var pct = plan.days.length ? Math.round((done / plan.days.length) * 100) : 0;
+    $("#pp-fill").style.width = pct + "%";
+    $("#pp-label").textContent = done + " of " + plan.days.length + " days complete";
+  }
+};
+
+/* ── MY PLANS ── */
+window.showMyPlans = function(){
+  $$(".step").forEach(function(s){ s.classList.remove("active"); });
+  $("#step-plans").classList.add("active");
+  $(".pb-wrap").style.display = "none";
+
+  var plans = JSON.parse(localStorage.getItem("forgeiq_saved_plans") || "[]");
+  var container = $("#plans-list");
+  container.innerHTML = "";
+
+  if(plans.length === 0){
+    container.innerHTML = '<div style="text-align:center;color:#4a6080;padding:40px 0;">No plans yet. Build your first one!</div>';
+    return;
+  }
+
+  plans.forEach(function(plan){
+    var done = 0;
+    if(plan.days) plan.days.forEach(function(d){ if(d.completed) done++; });
+    var total = plan.days ? plan.days.length : plan.duration;
+    var startDate = plan.startDate ? new Date(plan.startDate) : new Date();
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var dateStr = months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear();
+
+    var card = document.createElement("div");
+    card.className = "saved-plan-card";
+    card.onclick = function(){ loadAndShowPlan(plan.id); };
+    card.innerHTML =
+      '<div class="sp-info">' +
+        '<h4>' + plan.duration + '-Day ' + escHtml(plan.goal || "Fitness") + ' Plan</h4>' +
+        '<p>Started ' + dateStr + ' \u00B7 ' + done + '/' + total + ' days done</p>' +
+      '</div>' +
+      '<div class="sp-arrow">\u2192</div>';
+    container.appendChild(card);
+  });
+};
+
+function loadAndShowPlan(id){
+  var plan = loadPlan(id);
+  if(!plan) return;
+  currentPlanId = plan.id;
+  planDuration = plan.duration;
+  intakeAnswers = plan.intakeAnswers || {};
+  $(".pb-wrap").style.display = "block";
+  renderPlanView(plan);
+  goStepInternal(4);
+}
+
+window.startNewPlan = function(){
+  $(".pb-wrap").style.display = "block";
+  planDuration = 0;
+  intakeStep = 0;
+  intakeAnswers = {};
+  currentPlanId = null;
+  $$(".dur-card").forEach(function(c){ c.classList.remove("selected"); });
+  $("#btn-dur").disabled = true;
+  goStepInternal(1);
+};
+
+/* ── COACH NOTIFICATION ── */
+function sendCoachNotification(){
+  var name = getUserName();
+  var date = new Date().toLocaleDateString();
+  var msg = "New " + planDuration + "-day plan created for " + name + " \u2014 Goal: " + (intakeAnswers.goal || "General") + " \u2014 Generated " + date;
+
+  // Save to notification log in localStorage
+  var notifs = JSON.parse(localStorage.getItem("forgeiq_coach_notifications") || "[]");
+  notifs.unshift({ id: Date.now(), text: msg, read: false, date: new Date().toISOString() });
+  if(notifs.length > 50) notifs = notifs.slice(0, 50);
+  localStorage.setItem("forgeiq_coach_notifications", JSON.stringify(notifs));
+
+  // Show toast
+  $("#notif-body").textContent = msg;
+  var toast = $("#notif-toast");
+  toast.classList.add("show");
+  setTimeout(function(){ toast.classList.remove("show"); }, 5000);
+}
+
+/* ── VOICE INPUT (Web Speech API) ── */
+var speechRecognition = null;
+var activeMicBtn = null;
+
+function initSpeech(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+  var recognition = new SR();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = "en-US";
+
+  // Check lang preference
+  var lang = localStorage.getItem("forgeiq_lang");
+  if(lang === "es") recognition.lang = "es-ES";
+  else if(lang === "pt") recognition.lang = "pt-BR";
+
+  recognition.onresult = function(event){
+    var transcript = event.results[0][0].transcript;
+    handleVoiceResult(transcript);
+  };
+  recognition.onerror = function(){
+    stopListening();
+  };
+  recognition.onend = function(){
+    stopListening();
+  };
+  return recognition;
+}
+
+function stopListening(){
+  if(activeMicBtn) activeMicBtn.classList.remove("listening");
+  activeMicBtn = null;
+}
+
+function handleVoiceResult(text){
+  if(!text) return;
+
+  if(currentStep === 1){
+    // Try to parse duration
+    var t = text.toLowerCase();
+    if(t.indexOf("7") !== -1 || t.indexOf("seven") !== -1) selectDuration(7);
+    else if(t.indexOf("14") !== -1 || t.indexOf("fourteen") !== -1) selectDuration(14);
+    else if(t.indexOf("21") !== -1 || t.indexOf("twenty") !== -1) selectDuration(21);
+  } else if(currentStep === 2){
+    sendIntakeAnswerText(text);
+  }
+}
+
+window.startVoice = function(context){
+  if(!speechRecognition) speechRecognition = initSpeech();
+  if(!speechRecognition){
+    alert("Voice input is not supported in this browser. Please type your answer instead.");
+    return;
+  }
+
+  var btn = context === "duration" ? $("#mic-1") : $("#mic-2");
+  if(activeMicBtn){
+    speechRecognition.abort();
+    stopListening();
+    return;
+  }
+  activeMicBtn = btn;
+  btn.classList.add("listening");
+
+  try {
+    speechRecognition.start();
+  } catch(e){
+    stopListening();
+  }
+};
+
+/* ── INIT ── */
+// Check for existing active plan
+var activePlan = JSON.parse(localStorage.getItem("forgeiq_active_multiday_plan") || "null");
+// Check URL params
+var urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get("plans") === "1"){
+  window.showMyPlans();
+} else if(activePlan && !urlParams.get("new")){
+  currentPlanId = activePlan.id;
+  planDuration = activePlan.duration;
+  intakeAnswers = activePlan.intakeAnswers || {};
+  renderPlanView(activePlan);
+  goStepInternal(4);
+} else {
+  goStepInternal(1);
+}
+
+})();
+</script>
+<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+<script src="/js/supabase-config.js"></script>
+<script src="/js/i18n.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/forge-ai-button.js"></script>
+</body>
+</html>

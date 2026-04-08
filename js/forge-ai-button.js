@@ -8,7 +8,9 @@
   /* ------------------------------------------------------------------ */
   /*  PART 1 — AUTH GUARD                                               */
   /* ------------------------------------------------------------------ */
-  var PUBLIC_PATHS = ['/', '/index.html', '/login.html', '/signup.html', '/pricing.html', '/onboarding.html', '/debora.html', '/coaching.html', '/book.html', '/glp-hub.html', '/peptide-library.html', '/resources.html'];
+  // Public pages that should NEVER redirect to login
+  // Matches both /signup and /signup.html variants
+  var PUBLIC_SLUGS = ['', 'index', 'login', 'signup', 'pricing', 'onboarding', 'debora', 'coaching', 'book', 'glp-hub', 'peptide-library', 'resources', 'doc', 'nutrition', 'plan-builder'];
 
   function currentPath() {
     return window.location.pathname.replace(/\/$/, '') || '/';
@@ -16,10 +18,19 @@
 
   function isPublicPage() {
     var p = currentPath();
-    return PUBLIC_PATHS.indexOf(p) !== -1;
+    // Root path is always public
+    if (p === '/' || p === '') return true;
+    // Strip leading slash and .html extension to get the slug
+    var slug = p.replace(/^\//, '').replace(/\.html$/, '');
+    return PUBLIC_SLUGS.indexOf(slug) !== -1;
   }
 
   function authGuard() {
+    // Flag set by public pages in <head> — runs before any other JS
+    if (window.__FORGEIQ_PUBLIC_PAGE__) {
+      injectLogoutButton();
+      return;
+    }
     if (!isPublicPage()) {
       var token = localStorage.getItem('forgeiq_token');
       if (!token) {

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FORGEIQ — Log In</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <script>window.__FORGEIQ_PUBLIC_PAGE__ = true;</script>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -410,7 +411,13 @@
       <a href="/dashboard.html">Dashboard</a>
       <a href="/train.html">Train</a>
       <a href="/progress.html">Progress</a>
-      <a href="/debora.html">Debora</a>
+      <div class="coaches-dropdown" style="position:relative;display:inline-block;">
+        <a href="#" onclick="event.preventDefault();this.parentElement.classList.toggle('open');">Coaches &#9662;</a>
+        <div class="coaches-menu" style="display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;background:#0a1628;border:1px solid #f0a500;border-radius:6px;padding:8px 0;min-width:240px;z-index:200;">
+          <a href="/coaching.html" style="display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;">Doc &mdash; 1-on-1 Coaching</a>
+          <a href="/debora.html" style="display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;">Debora &mdash; Skin &amp; Wellness</a>
+        </div>
+      </div>
       <a href="/resources.html">Resources</a>
       <a href="/book.html">Book</a>
     </div>
@@ -490,8 +497,13 @@
         <div class="divider-row"><span>or</span></div>
 
         <div class="switch-row">
-          <span data-i18n="auth.no_account">Don't have an account?</span>
-          <a href="/signup.html" data-i18n="auth.signup_link"> Sign up</a>
+          Don't have an account? <a href="/signup.html">Start Free &rarr;</a>
+        </div>
+
+        <div style="text-align:center;margin-top:12px;">
+          <button onclick="enterAsGuest()" style="background:transparent;border:none;color:var(--text-dim);font-size:0.83rem;cursor:pointer;text-decoration:underline;font-family:var(--font-body);">
+            Try without an account &rarr;
+          </button>
         </div>
 
       </div>
@@ -547,30 +559,30 @@
         if (typeof SupabaseClient !== 'undefined') {
           const result = await SupabaseClient.signIn(email, pass);
           if (result.access_token) {
-            // Check if onboarding complete via localStorage
-            const localProfile = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || localStorage.getItem('forgeiq_profile') || '{}');
-            if (localProfile.onboardingComplete) {
+            // Check if onboarding complete — check BOTH profile keys
+            var pv1 = {}; try { pv1 = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || '{}'); } catch(e) {}
+            var pv0 = {}; try { pv0 = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}'); } catch(e) {}
+            if (pv1.onboardingComplete === true || pv0.onboardingComplete === true) {
               window.location.href = '/dashboard.html';
             } else {
               window.location.href = '/onboarding.html';
             }
             return;
           }
-          // If Supabase failed, show error but also offer guest re-entry
           if (result.error_description) {
-            globalErr.innerHTML = result.error_description + '<br><a href="#" onclick="guestLogin(\'' + email.replace(/'/g, '') + '\')" style="color:var(--gold);font-size:0.75rem;">Continue as guest instead &rarr;</a>';
+            globalErr.textContent = result.error_description;
             globalErr.classList.add('show');
           } else {
-            globalErr.innerHTML = 'Login failed. Check your email and password.<br><a href="#" onclick="guestLogin(\'' + email.replace(/'/g, '') + '\')" style="color:var(--gold);font-size:0.75rem;">Continue as guest instead &rarr;</a>';
+            globalErr.textContent = 'Login failed. Check your email and password.';
             globalErr.classList.add('show');
           }
         } else {
-          // No Supabase — guest login
-          guestLogin(email);
+          globalErr.textContent = 'Login service is temporarily unavailable. Please try again later.';
+          globalErr.classList.add('show');
         }
       } catch (e) {
         console.error('Login error:', e);
-        globalErr.innerHTML = 'Connection issue.<br><a href="#" onclick="guestLogin(\'' + email.replace(/'/g, '') + '\')" style="color:var(--gold);font-size:0.75rem;">Continue as guest instead &rarr;</a>';
+        globalErr.textContent = 'Connection issue. Please check your internet and try again.';
         globalErr.classList.add('show');
       } finally {
         btn.classList.remove('loading');
@@ -578,26 +590,25 @@
       }
     }
 
-    function guestLogin(email) {
-      const guestToken = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-      localStorage.setItem('forgeiq_token', guestToken);
-      localStorage.setItem('forgeiq_user', JSON.stringify({
-        id: guestToken,
-        email: email || 'guest@forgeiq.com',
-        isGuest: true
-      }));
-      const localProfile = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || localStorage.getItem('forgeiq_profile') || '{}');
-      if (localProfile.onboardingComplete) {
-        window.location.href = '/dashboard.html';
-      } else {
-        window.location.href = '/onboarding.html';
-      }
-    }
-
     // Enter key support
     document.addEventListener('keydown', e => {
       if (e.key === 'Enter') handleLogin();
     });
+
+    // Guest access — always works, no account needed
+    function enterAsGuest() {
+      var guestToken = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      localStorage.setItem('forgeiq_token', guestToken);
+      localStorage.setItem('forgeiq_user', JSON.stringify({
+        id: guestToken,
+        name: 'Coach',
+        email: '',
+        isGuest: true
+      }));
+      localStorage.removeItem('forgeiq_profile_v1');
+      localStorage.removeItem('forgeiq_profile');
+      window.location.href = '/onboarding.html';
+    }
 
     async function switchLang(lang) {
       if (typeof ForgeIQ === 'undefined') return;
