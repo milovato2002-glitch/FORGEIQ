@@ -6,6 +6,11 @@
   <title>FORGEIQ — Create Account</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    // CRITICAL: Prevent any auth guard from redirecting this page
+    // This runs BEFORE any other scripts load
+    window.__FORGEIQ_PUBLIC_PAGE__ = true;
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -379,7 +384,13 @@
       <a href="/dashboard.html">Dashboard</a>
       <a href="/train.html">Train</a>
       <a href="/progress.html">Progress</a>
-      <a href="/debora.html">Debora</a>
+      <div class="coaches-dropdown" style="position:relative;display:inline-block;">
+        <a href="#" onclick="event.preventDefault();this.parentElement.classList.toggle('open');">Coaches &#9662;</a>
+        <div class="coaches-menu" style="display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;background:#0a1628;border:1px solid #f0a500;border-radius:6px;padding:8px 0;min-width:240px;z-index:200;">
+          <a href="/coaching.html" style="display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;">Doc &mdash; 1-on-1 Coaching</a>
+          <a href="/debora.html" style="display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;">Debora &mdash; Skin &amp; Wellness</a>
+        </div>
+      </div>
       <a href="/resources.html">Resources</a>
       <a href="/book.html">Book</a>
     </div>
@@ -444,30 +455,20 @@
     <div class="right-panel">
       <div class="auth-box">
 
-        <div style="background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.2);border-radius:8px;padding:14px 18px;margin-bottom:20px;text-align:center;">
-          <div style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:1px;color:#27ae60;">100% FREE TO START</div>
-          <div style="font-size:0.82rem;color:var(--text-dim);margin-top:4px;">No credit card required. No payment. Cancel anytime.</div>
-        </div>
-        <div class="auth-label">Free to Start</div>
-        <h1 class="auth-title" data-i18n="auth.signup_title">CREATE ACCOUNT</h1>
-        <p class="auth-sub" data-i18n="auth.signup_sub">Start free. No credit card required. Cancel anytime.</p>
+        <div class="auth-label">DR. LOVATO AI</div>
+        <h1 class="auth-title">START FREE</h1>
+        <p class="auth-sub">No credit card. No commitment. Just results.</p>
 
         <div class="global-error" id="globalError"></div>
 
         <div class="field">
-          <label data-i18n="auth.name_label">Full Name</label>
-          <input type="text" id="fullName" placeholder="Your full name" autocomplete="name" />
-          <div class="field-error" id="nameError"></div>
-        </div>
-
-        <div class="field">
-          <label data-i18n="auth.email_label">Email Address</label>
+          <label>Email Address</label>
           <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
           <div class="field-error" id="emailError"></div>
         </div>
 
         <div class="field">
-          <label data-i18n="auth.password_label">Password</label>
+          <label>Password</label>
           <input type="password" id="password" placeholder="Min. 8 characters"
                  autocomplete="new-password" oninput="checkStrength(this.value)" />
           <div class="password-strength">
@@ -477,6 +478,16 @@
           <div class="field-error" id="passwordError"></div>
         </div>
 
+        <div class="field">
+          <label>Confirm Password</label>
+          <input type="password" id="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" />
+          <div class="field-error" id="confirmError"></div>
+        </div>
+
+        <button type="button" style="width:100%;background:#f4f6fa;border:1px solid var(--border);border-radius:6px;padding:13px;color:#0a0a0a;font-family:var(--font-body);font-weight:600;font-size:0.88rem;cursor:pointer;margin-bottom:8px;transition:all 0.2s;" onclick="alert('Google sign-in coming soon');">CONTINUE WITH GOOGLE</button>
+
+        <button type="button" style="width:100%;background:#111318;border:1px solid var(--border);border-radius:6px;padding:13px;color:#f4f6fa;font-family:var(--font-body);font-weight:600;font-size:0.88rem;cursor:pointer;margin-bottom:16px;transition:all 0.2s;" onclick="alert('Apple sign-in coming soon');">CONTINUE WITH APPLE</button>
+
         <div class="terms-row">
           By creating an account you agree to our
           <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
@@ -485,17 +496,19 @@
         <div id="signupError" style="color:#e63946;font-size:14px;margin:8px 0;padding:10px;background:rgba(230,57,70,0.1);border-radius:6px;display:none;"></div>
 
         <button class="btn-submit" id="signupBtn" type="button">
-          <span id="signupBtnText">Create Free Account</span>
+          <span id="signupBtnText">CREATE MY ACCOUNT</span>
           <div class="spinner"></div>
         </button>
 
-        <button id="guestBtn" type="button" style="width:100%;background:transparent;border:1px solid var(--border);border-radius:6px;padding:12px;color:var(--text-dim);font-family:var(--font-body);font-size:0.82rem;cursor:pointer;margin-top:12px;transition:all 0.2s;">
-          Skip for now — Try as Guest
-        </button>
+        <div style="margin-top:24px;font-size:0.82rem;color:var(--text-dim);line-height:1.8;">
+          <div>&#10022; Dr. Lovato AI builds your program in minutes</div>
+          <div>&#10022; Adjusts for injuries, medications, and real life</div>
+          <div>&#10022; Cancel anytime &mdash; your data stays yours</div>
+        </div>
 
         <div class="switch-row" style="margin-top:16px;">
-          <span data-i18n="auth.has_account">Already have an account?</span>
-          <a href="/login.html" data-i18n="auth.login_link"> Log in</a>
+          <span>Already have an account?</span>
+          <a href="/login.html"> Log in</a>
         </div>
 
       </div>
@@ -507,17 +520,12 @@
   
   <script>
     /* ══════════════════════════════════════════════════════════
-       FORGEIQ SIGNUP — BULLETPROOF VERSION
-       Always routes user to onboarding. Never gets stuck.
+       FORGEIQ SIGNUP — BULLETPROOF VERSION v3
+       NEVER shows error. ALWAYS gets user to /onboarding.
+       Supabase success → save token → onboarding
+       Supabase fail → guest mode → onboarding
+       No network → guest mode → onboarding
        ══════════════════════════════════════════════════════════ */
-
-    // Redirect if already logged in
-    (function() {
-      try {
-        var token = localStorage.getItem('forgeiq_token');
-        if (token) { window.location.href = '/dashboard.html'; return; }
-      } catch(e) {}
-    })();
 
     // Password strength meter
     function checkStrength(val) {
@@ -537,209 +545,172 @@
       else                 { bar.style.background = '#27ae60'; label.textContent = 'Strong'; label.style.color = '#27ae60'; }
     }
 
-    // Fetch with timeout — critical for Supabase which may hang on paused projects
-    function fetchWithTimeout(url, options, timeoutMs) {
-      return Promise.race([
-        fetch(url, options),
-        new Promise(function(_, reject) {
-          setTimeout(function() { reject(new Error('Request timed out')); }, timeoutMs || 8000);
-        })
-      ]);
-    }
-
-    // Show visible error
-    function showSignupError(msg) {
-      var el = document.getElementById('signupError');
-      if (el) { el.textContent = msg; el.style.display = 'block'; }
-    }
-
-    // Create guest account — always works, no network needed
-    function createGuestAccount(name, email) {
-      var guestToken = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-      localStorage.setItem('forgeiq_token', guestToken);
+    // THE ONLY EXIT: guest mode → onboarding. Always works. No network needed.
+    function goGuest(email) {
+      console.log('[SIGNUP] Going guest mode with email:', email);
+      var id = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      localStorage.setItem('forgeiq_token', id);
       localStorage.setItem('forgeiq_auth_method', 'guest');
-      localStorage.setItem('forgeiq_user', JSON.stringify({
-        id: guestToken,
-        email: email || '',
-        full_name: name || 'Coach',
-        isGuest: true
-      }));
-      // Clear old profile so onboarding runs fresh
+      localStorage.setItem('forgeiq_user', JSON.stringify({ id: id, email: email || '', isGuest: true }));
       localStorage.removeItem('forgeiq_profile_v1');
-      localStorage.removeItem('forgeiq_profile');
-      var profile = {
-        full_name: name || 'Coach',
-        email: email || '',
-        isGuest: true,
-        signupDate: new Date().toISOString()
-      };
-      localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
-    }
-
-    // Navigate to onboarding (with fallback check)
-    function goToOnboarding() {
+      localStorage.setItem('forgeiq_profile', JSON.stringify({ email: email || '', isGuest: true, signupDate: new Date().toISOString() }));
       window.location.href = '/onboarding.html';
     }
 
-    // Main signup handler
+    // Main handler — called on button click and Enter key
     function handleSignup() {
+      console.log('[SIGNUP] Step 1: handleSignup() called');
+
       var btn = document.getElementById('signupBtn');
       var btnText = document.getElementById('signupBtnText');
-      var name = (document.getElementById('fullName') || {}).value || '';
-      var email = (document.getElementById('email') || {}).value || '';
-      var password = (document.getElementById('password') || {}).value || '';
+      var emailEl = document.getElementById('email');
+      var passEl = document.getElementById('password');
+      var confirmEl = document.getElementById('confirmPassword');
 
-      name = name.trim();
-      email = email.trim();
+      var email = emailEl ? emailEl.value.trim() : '';
+      var password = passEl ? passEl.value : '';
+      var confirm = confirmEl ? confirmEl.value : '';
 
-      // Hide previous errors
-      var errEl = document.getElementById('signupError');
-      if (errEl) errEl.style.display = 'none';
-      ['nameError', 'emailError', 'passwordError'].forEach(function(id) {
+      console.log('[SIGNUP] Step 2: email=' + email + ', password length=' + password.length);
+
+      // Clear errors
+      ['emailError', 'passwordError', 'confirmError'].forEach(function(id) {
         var el = document.getElementById(id);
-        if (el) el.classList.remove('show');
+        if (el) { el.classList.remove('show'); el.textContent = ''; }
       });
-      var ge = document.getElementById('globalError');
-      if (ge) ge.classList.remove('show');
+      var errBox = document.getElementById('signupError');
+      if (errBox) errBox.style.display = 'none';
 
       // Validate
-      var valid = true;
-      if (!name || name.length < 2) {
-        var ne = document.getElementById('nameError');
-        if (ne) { ne.textContent = 'Please enter your name'; ne.classList.add('show'); }
-        valid = false;
-      }
       if (!email || email.indexOf('@') === -1) {
         var ee = document.getElementById('emailError');
         if (ee) { ee.textContent = 'Please enter a valid email'; ee.classList.add('show'); }
-        valid = false;
+        console.log('[SIGNUP] Validation failed: bad email');
+        return;
       }
       if (!password || password.length < 6) {
         var pe = document.getElementById('passwordError');
         if (pe) { pe.textContent = 'Password must be at least 6 characters'; pe.classList.add('show'); }
-        valid = false;
+        console.log('[SIGNUP] Validation failed: password too short');
+        return;
       }
-      if (!valid) return;
+      if (password !== confirm) {
+        var ce = document.getElementById('confirmError');
+        if (ce) { ce.textContent = 'Passwords do not match'; ce.classList.add('show'); }
+        console.log('[SIGNUP] Validation failed: passwords mismatch');
+        return;
+      }
 
-      // Show loading state
+      console.log('[SIGNUP] Step 3: Validation passed. Showing loading...');
+
+      // Loading state
       if (btn) { btn.classList.add('loading'); btn.disabled = true; }
       if (btnText) btnText.textContent = 'Creating account...';
 
-      // Set a hard safety timeout — if ANYTHING takes more than 10 seconds, go guest
-      var safetyTimer = setTimeout(function() {
-        console.log('Safety timeout — going to guest mode');
-        createGuestAccount(name, email);
-        goToOnboarding();
-      }, 10000);
+      // Safety net: if NOTHING happens in 8 seconds, force guest
+      var safety = setTimeout(function() {
+        console.log('[SIGNUP] Step SAFETY: 8s timeout hit, forcing guest');
+        goGuest(email);
+      }, 8000);
 
-      // Try Supabase with 6-second timeout, fall back to guest
-      var supabaseWorked = false;
+      // Check if Supabase is available
+      if (typeof FORGEIQ_CONFIG === 'undefined' || typeof SupabaseClient === 'undefined') {
+        console.log('[SIGNUP] Step 4: No Supabase — going guest immediately');
+        clearTimeout(safety);
+        goGuest(email);
+        return;
+      }
 
-      (function trySupabase() {
-        if (typeof SupabaseClient === 'undefined' || typeof FORGEIQ_CONFIG === 'undefined') {
-          // No Supabase available — go guest immediately
-          clearTimeout(safetyTimer);
-          createGuestAccount(name, email);
-          goToOnboarding();
+      console.log('[SIGNUP] Step 4: Supabase available, calling signup API...');
+
+      // Try Supabase signup with 6-second timeout
+      var done = false;
+      var timer = setTimeout(function() {
+        if (!done) {
+          done = true;
+          console.log('[SIGNUP] Step 5: Supabase timed out after 6s — going guest');
+          clearTimeout(safety);
+          goGuest(email);
+        }
+      }, 6000);
+
+      fetch(FORGEIQ_CONFIG.supabaseUrl + '/auth/v1/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': FORGEIQ_CONFIG.supabaseKey },
+        body: JSON.stringify({ email: email, password: password })
+      })
+      .then(function(res) {
+        console.log('[SIGNUP] Step 5: Got response, status=' + res.status);
+        return res.json();
+      })
+      .then(function(result) {
+        if (done) return; // timeout already fired
+        done = true;
+        clearTimeout(timer);
+        clearTimeout(safety);
+
+        console.log('[SIGNUP] Step 6: Supabase result:', JSON.stringify(result).substring(0, 200));
+
+        // Success: got access token
+        if (result.access_token) {
+          console.log('[SIGNUP] Step 7: Got token! Saving and going to onboarding');
+          localStorage.setItem('forgeiq_token', result.access_token);
+          localStorage.setItem('forgeiq_auth_method', 'supabase');
+          localStorage.setItem('forgeiq_user', JSON.stringify(result.user || { email: email }));
+          localStorage.setItem('forgeiq_profile', JSON.stringify({ email: email, signupDate: new Date().toISOString() }));
+          window.location.href = '/onboarding.html';
           return;
         }
 
-        var url = FORGEIQ_CONFIG.supabaseUrl + '/auth/v1/signup';
-        fetchWithTimeout(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': FORGEIQ_CONFIG.supabaseKey
-          },
-          body: JSON.stringify({ email: email, password: password, data: { full_name: name } })
-        }, 6000)
-        .then(function(res) { return res.json(); })
-        .then(function(result) {
-          console.log('Supabase signup result:', result);
-
-          // Case 1: Got access token directly (auto-confirm enabled)
-          if (result.access_token) {
-            localStorage.setItem('forgeiq_token', result.access_token);
-            localStorage.setItem('forgeiq_auth_method', 'supabase');
-            localStorage.setItem('forgeiq_user', JSON.stringify(result.user || { email: email }));
-            var p = { full_name: name, email: email, signupDate: new Date().toISOString() };
-            localStorage.setItem('forgeiq_profile', JSON.stringify(p));
-            supabaseWorked = true;
-            clearTimeout(safetyTimer);
-            goToOnboarding();
-            return;
-          }
-
-          // Case 2: User created but needs email confirmation
-          if (result.id || (result.user && result.user.id)) {
-            // Try signing in immediately (works if confirm disabled)
-            return fetchWithTimeout(FORGEIQ_CONFIG.supabaseUrl + '/auth/v1/token?grant_type=password', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'apikey': FORGEIQ_CONFIG.supabaseKey },
-              body: JSON.stringify({ email: email, password: password })
-            }, 4000)
-            .then(function(r) { return r.json(); })
-            .then(function(signInResult) {
-              if (signInResult.access_token) {
-                localStorage.setItem('forgeiq_token', signInResult.access_token);
-                localStorage.setItem('forgeiq_auth_method', 'supabase');
-                localStorage.setItem('forgeiq_user', JSON.stringify(signInResult.user || { email: email }));
-                var p = { full_name: name, email: email, signupDate: new Date().toISOString() };
-                localStorage.setItem('forgeiq_profile', JSON.stringify(p));
-                supabaseWorked = true;
-                clearTimeout(safetyTimer);
-                goToOnboarding();
-              } else {
-                throw new Error('Sign in after signup failed');
-              }
-            });
-          }
-
-          // Case 3: Error from Supabase (user exists, etc) — go guest
-          throw new Error(result.error_description || result.msg || result.error || 'Signup failed');
-        })
-        .catch(function(err) {
-          console.error('Supabase signup error:', err.message);
-          if (!supabaseWorked) {
-            clearTimeout(safetyTimer);
-            createGuestAccount(name, email);
-            goToOnboarding();
-          }
-        });
-      })();
+        // User created but no token — go guest (will upgrade later)
+        console.log('[SIGNUP] Step 7: No token in response — going guest');
+        goGuest(email);
+      })
+      .catch(function(err) {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        clearTimeout(safety);
+        console.log('[SIGNUP] Step 5 ERROR: ' + err.message + ' — going guest');
+        goGuest(email);
+      });
     }
 
-    // Wire up buttons after DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
-      // Signup button
-      var signupBtn = document.getElementById('signupBtn');
-      if (signupBtn) {
-        signupBtn.addEventListener('click', function(e) {
+    // Wire up the button — do this IMMEDIATELY, not in DOMContentLoaded
+    // The button exists in the HTML above this script
+    (function wireButton() {
+      var btn = document.getElementById('signupBtn');
+      if (btn) {
+        console.log('[SIGNUP] Button found and wired');
+        btn.onclick = function(e) {
           e.preventDefault();
           handleSignup();
+        };
+      } else {
+        console.log('[SIGNUP] Button not found, retrying...');
+        // Retry once DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+          var btn2 = document.getElementById('signupBtn');
+          if (btn2) {
+            console.log('[SIGNUP] Button found on DOMContentLoaded');
+            btn2.onclick = function(e) {
+              e.preventDefault();
+              handleSignup();
+            };
+          } else {
+            console.error('[SIGNUP] CRITICAL: signupBtn not found even after DOMContentLoaded');
+          }
         });
       }
 
-      // Guest button
-      var guestBtn = document.getElementById('guestBtn');
-      if (guestBtn) {
-        guestBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          createGuestAccount('Coach', '');
-          goToOnboarding();
-        });
-        guestBtn.addEventListener('mouseover', function() { this.style.borderColor = '#c9a84c'; this.style.color = '#c9a84c'; });
-        guestBtn.addEventListener('mouseout', function() { this.style.borderColor = ''; this.style.color = ''; });
-      }
-
-      // Enter key
+      // Enter key support
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && document.activeElement && document.activeElement.tagName === 'INPUT') {
           e.preventDefault();
           handleSignup();
         }
       });
-    });
+    })();
   </script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 <script src="/js/supabase-config.js"></script>

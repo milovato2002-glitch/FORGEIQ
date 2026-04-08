@@ -598,7 +598,13 @@
       <a href="dashboard.html">Dashboard</a>
       <a href="/train.html">Train</a>
       <a href="progress.html">Progress</a>
-      <a href="debora.html">Debora</a>
+      <div class="coaches-dropdown" style="position:relative;display:inline-block;">
+        <a href="#" onclick="event.preventDefault();this.parentElement.classList.toggle('open');">Coaches &#9662;</a>
+        <div class="coaches-menu" style="display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;background:#0a1628;border:1px solid #f0a500;border-radius:6px;padding:8px 0;min-width:240px;z-index:200;">
+          <a href="/coaching.html" style="display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;">Doc &mdash; 1-on-1 Coaching</a>
+          <a href="/debora.html" style="display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;">Debora &mdash; Skin &amp; Wellness</a>
+        </div>
+      </div>
       <a href="resources.html">Resources</a>
       <a href="book.html">Book</a>
     </div>

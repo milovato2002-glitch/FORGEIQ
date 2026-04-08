@@ -44,6 +44,11 @@
   status = 200
 
 [[redirects]]
+  from = "/doc"
+  to = "/coaching.html"
+  status = 200
+
+[[redirects]]
   from = "/book"
   to = "/book.html"
   status = 200
@@ -66,4 +71,19 @@
 [[redirects]]
   from = "/peptide-library"
   to = "/peptide-library.html"
+  status = 200
+
+[[redirects]]
+  from = "/nutrition"
+  to = "/nutrition.html"
+  status = 200
+
+[[redirects]]
+  from = "/plan-builder"
+  to = "/plan-builder.html"
+  status = 200
+
+[[redirects]]
+  from = "/my-plans"
+  to = "/plan-builder.html?plans=1"
   status = 200

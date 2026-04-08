@@ -435,8 +435,13 @@
     <a href="/dashboard.html" class="nav-link active">Dashboard</a>
     <a href="/train.html" class="nav-link">Train</a>
     <a href="/progress.html" class="nav-link">Progress</a>
-    <a href="/coaching.html" class="nav-link">Doc</a>
-    <a href="/debora.html" class="nav-link">Debora</a>
+    <div class="coaches-dropdown" style="position:relative;display:inline-block;">
+      <a href="#" class="nav-link" onclick="event.preventDefault();this.parentElement.classList.toggle('open');">Coaches &#9662;</a>
+      <div class="coaches-menu" style="display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;background:#0a1628;border:1px solid #f0a500;border-radius:6px;padding:8px 0;min-width:240px;z-index:200;">
+        <a href="/coaching.html" style="display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;text-transform:none;letter-spacing:0;">Doc &mdash; 1-on-1 Coaching</a>
+        <a href="/debora.html" style="display:block;padding:10px 20px;font-size:0.78rem;color:#8fa3c0;transition:color 0.2s;text-transform:none;letter-spacing:0;">Debora &mdash; Skin &amp; Wellness</a>
+      </div>
+    </div>
     <a href="/resources.html" class="nav-link">Resources</a>
     <a href="/book.html" class="nav-link">Book</a>
   </div>
@@ -482,6 +487,51 @@
   <!-- 7-DAY WEEK OVERVIEW -->
   <div class="section-title">This Week</div>
   <div class="week-row" id="week-row"></div>
+
+  <!-- QUICK ACCESS (moved from bottom per Change 8) -->
+  <div class="section-title">Quick Access</div>
+  <div class="shortcuts-grid">
+    <a href="/nutrition.html" class="shortcut-tile">
+      <div class="shortcut-icon">&#129385;</div>
+      <div class="shortcut-text">
+        <h4>Nutrition</h4>
+        <p>Track meals, macros, and get AI briefs</p>
+      </div>
+      <div class="shortcut-arrow">&rarr;</div>
+    </a>
+    <a href="/plan-builder.html" class="shortcut-tile">
+      <div class="shortcut-icon">&#128197;</div>
+      <div class="shortcut-text">
+        <h4>My Plans</h4>
+        <p>Multi-day workout &amp; nutrition plans</p>
+      </div>
+      <div class="shortcut-arrow">&rarr;</div>
+    </a>
+    <a href="/debora.html" class="shortcut-tile">
+      <div class="shortcut-icon">&#10024;</div>
+      <div class="shortcut-text">
+        <h4>Debora's Track</h4>
+        <p>Skin, confidence, and GLP-1 support</p>
+      </div>
+      <div class="shortcut-arrow">&rarr;</div>
+    </a>
+    <a href="/resources.html" class="shortcut-tile">
+      <div class="shortcut-icon">&#128218;</div>
+      <div class="shortcut-text">
+        <h4>Resources</h4>
+        <p>Guides, protocols, and education</p>
+      </div>
+      <div class="shortcut-arrow">&rarr;</div>
+    </a>
+    <a href="/book.html" class="shortcut-tile">
+      <div class="shortcut-icon">&#128197;</div>
+      <div class="shortcut-text">
+        <h4>Book a Session</h4>
+        <p>1-on-1 coaching with Dr. Lovato</p>
+      </div>
+      <div class="shortcut-arrow">&rarr;</div>
+    </a>
+  </div>
 
   <!-- STREAK COUNTER -->
   <div class="streak-card" id="streak-card">
@@ -544,37 +594,28 @@
     </div>
   </div>
 
-  <!-- SHORTCUT TILES -->
-  <div class="section-title">Quick Access</div>
-  <div class="shortcuts-grid">
-    <a href="/debora.html" class="shortcut-tile">
-      <div class="shortcut-icon">&#10024;</div>
-      <div class="shortcut-text">
-        <h4>Debora's Track</h4>
-        <p>Skin, confidence, and GLP-1 support</p>
-      </div>
-      <div class="shortcut-arrow">&rarr;</div>
-    </a>
-    <a href="/resources.html" class="shortcut-tile">
-      <div class="shortcut-icon">&#128218;</div>
-      <div class="shortcut-text">
-        <h4>Resources</h4>
-        <p>Guides, protocols, and education</p>
-      </div>
-      <div class="shortcut-arrow">&rarr;</div>
-    </a>
-    <a href="/book.html" class="shortcut-tile">
-      <div class="shortcut-icon">&#128197;</div>
-      <div class="shortcut-text">
-        <h4>Book a Session</h4>
-        <p>1-on-1 coaching with Dr. Lovato</p>
-      </div>
-      <div class="shortcut-arrow">&rarr;</div>
-    </a>
+  <!-- COACHING CTA CARD (Change 8) -->
+  <div class="coaching-cta-card" style="background:linear-gradient(135deg,var(--card-bg),rgba(240,165,0,0.04));border:2px solid var(--gold);border-radius:var(--radius);padding:32px 28px;margin-bottom:28px;text-align:center;">
+    <div style="font-family:var(--font-display);font-size:clamp(1.4rem,3vw,1.8rem);letter-spacing:2px;color:var(--text-primary);margin-bottom:8px;">READY TO GO DEEPER?</div>
+    <p style="color:var(--text-secondary);font-size:0.95rem;margin-bottom:24px;">Take your results further with a real coach in your corner.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="/coaching.html" class="btn-gold" style="padding:12px 28px;font-size:0.85rem;">BOOK WITH DOC</a>
+      <a href="/debora.html" style="display:inline-block;background:transparent;color:var(--text-primary);padding:12px 28px;border-radius:var(--radius-sm);font-family:var(--font-condensed);font-weight:600;font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--border-gold);transition:all 0.2s;">BOOK WITH DEBORA</a>
+    </div>
   </div>
 
 </main>
 
+<script>
+// Coaches dropdown toggle
+(function(){
+  var dd = document.querySelector('.coaches-dropdown');
+  if (!dd) return;
+  dd.addEventListener('mouseenter', function(){ this.querySelector('.coaches-menu').style.display='block'; });
+  dd.addEventListener('mouseleave', function(){ this.querySelector('.coaches-menu').style.display='none'; this.classList.remove('open'); });
+  document.addEventListener('click', function(e){ if(!e.target.closest('.coaches-dropdown') && dd.querySelector('.coaches-menu')) dd.querySelector('.coaches-menu').style.display='none'; });
+})();
+</script>
 <script>
 (function() {
   "use strict";
