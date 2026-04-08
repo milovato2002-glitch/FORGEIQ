@@ -8,50 +8,112 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--bg:#0a1628;--card:#142444;--gold:#f0a500;--gold-hover:#ffb820;--gold-dim:rgba(240,165,0,0.12);--t1:#e8edf5;--t2:#8fa3c0;--t3:#4a6080;--border:rgba(255,255,255,0.07);--border-gold:rgba(240,165,0,0.18);--fd:'Bebas Neue',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;--green:#2dc653;--teal:#2dd4bf;}
+:root{--bg:#0a1628;--bg2:#0e1e36;--card:#142444;--gold:#f0a500;--gold-hover:#ffb820;--gold-dim:rgba(240,165,0,0.12);--t1:#e8edf5;--t2:#8fa3c0;--t3:#4a6080;--border:rgba(255,255,255,0.07);--border-gold:rgba(240,165,0,0.18);--fd:'Bebas Neue',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;--green:#2dc653;--teal:#2dd4bf;--red:#e63946;--amber:#f4a261;}
 body{background:var(--bg);color:var(--t1);font-family:var(--fb);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;}
 
-.progress-wrap{width:100%;max-width:600px;padding:32px 24px 0;}
+.progress-wrap{width:100%;max-width:640px;padding:24px 24px 0;}
 .progress-steps{display:flex;gap:4px;}
 .progress-step{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.08);transition:background 0.4s;}
 .progress-step.active{background:var(--gold);}
 .progress-label{text-align:center;margin-top:10px;font-family:var(--fc);font-size:0.72rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--t3);}
 
-.step-box{width:100%;max-width:600px;padding:32px 24px;display:none;flex-direction:column;animation:fadeIn 0.35s ease;}
+.step-box{width:100%;max-width:640px;padding:28px 24px;display:none;flex-direction:column;animation:fadeIn 0.35s ease;}
 .step-box.active{display:flex;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 
-.step-headline{font-family:var(--fd);font-size:clamp(1.5rem,4vw,2rem);letter-spacing:2px;color:var(--t1);text-align:center;margin-bottom:8px;}
-.step-context{text-align:center;font-size:0.88rem;color:var(--t2);margin-bottom:28px;line-height:1.5;}
+.step-headline{font-family:var(--fd);font-size:clamp(1.5rem,4vw,2rem);letter-spacing:2px;color:var(--t1);text-align:center;margin-bottom:6px;}
+.step-sub{text-align:center;font-size:0.85rem;color:var(--t2);margin-bottom:24px;line-height:1.5;}
+.step-ack{text-align:center;font-size:0.88rem;color:var(--gold);margin-bottom:20px;font-weight:600;}
 
-.tap-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
-.tap-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 22px;cursor:pointer;transition:all 0.2s;user-select:none;}
+/* TAP CARDS */
+.tap-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.tap-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;cursor:pointer;transition:all 0.2s;user-select:none;}
 .tap-card:hover{border-color:var(--border-gold);}
 .tap-card.selected{border-color:var(--gold);background:rgba(240,165,0,0.06);}
-.tap-card .card-title{font-family:var(--fc);font-weight:700;font-size:1.02rem;letter-spacing:0.5px;color:var(--t1);}
-.tap-card .card-sub{font-size:0.82rem;color:var(--t2);margin-top:3px;}
+.tap-card .card-title{font-family:var(--fc);font-weight:700;font-size:1rem;letter-spacing:0.5px;color:var(--t1);}
+.tap-card .card-sub{font-size:0.78rem;color:var(--t2);margin-top:2px;line-height:1.4;}
 
-.text-input-area{margin-bottom:24px;}
-.text-input-area label{display:block;font-family:var(--fc);font-size:0.78rem;font-weight:600;letter-spacing:1px;color:var(--t2);text-transform:uppercase;margin-bottom:8px;}
-.text-input-area input,.text-input-area textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;color:var(--t1);font-family:var(--fb);font-size:0.95rem;outline:none;transition:border-color 0.2s;}
-.text-input-area input:focus,.text-input-area textarea:focus{border-color:var(--gold);}
-.text-input-area textarea{min-height:80px;resize:vertical;}
+/* PILL GRID */
+.pill-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.pill{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:10px 18px;cursor:pointer;font-family:var(--fc);font-size:0.88rem;font-weight:600;color:var(--t2);transition:all 0.2s;user-select:none;}
+.pill:hover{border-color:var(--border-gold);}
+.pill.selected{border-color:var(--gold);background:rgba(240,165,0,0.06);color:var(--gold);}
 
-.step-nav{display:flex;gap:12px;margin-top:auto;}
+/* SUPPLEMENT GRID */
+.supp-group-label{font-family:var(--fc);font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin:16px 0 8px;display:block;}
+.supp-group-label:first-child{margin-top:0;}
+.supp-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
+.supp-pill{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px 14px;cursor:pointer;font-family:var(--fb);font-size:0.8rem;color:var(--t2);transition:all 0.2s;user-select:none;}
+.supp-pill:hover{border-color:var(--border-gold);}
+.supp-pill.selected{border-color:var(--gold);background:rgba(240,165,0,0.06);color:var(--gold);}
+
+/* FORM INPUTS */
+.form-row{display:flex;gap:12px;margin-bottom:14px;align-items:flex-end;flex-wrap:wrap;}
+.form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;}
+.form-group.small{flex:0 0 80px;}
+.form-label{font-family:var(--fc);font-size:0.72rem;font-weight:600;letter-spacing:1px;color:var(--t2);text-transform:uppercase;}
+.form-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--t1);font-family:var(--fb);font-size:0.95rem;outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--t3);}
+.form-hint{font-size:0.72rem;color:var(--t3);margin-top:2px;}
+.form-link{color:var(--gold);cursor:pointer;text-decoration:underline;}
+textarea.form-input{min-height:80px;resize:vertical;}
+
+/* UNIT TOGGLE */
+.unit-toggle{display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-left:8px;}
+.unit-btn{background:transparent;border:none;color:var(--t3);font-family:var(--fc);font-size:0.72rem;font-weight:600;padding:6px 12px;cursor:pointer;transition:all 0.2s;}
+.unit-btn.active{background:var(--gold-dim);color:var(--gold);}
+
+/* BODY FAT GUIDE */
+.bf-guide{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;display:none;}
+.bf-guide.visible{display:block;}
+.bf-guide-title{font-family:var(--fc);font-size:0.78rem;font-weight:700;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.bf-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;cursor:pointer;transition:all 0.2s;margin-bottom:4px;}
+.bf-row:hover{background:rgba(240,165,0,0.04);}
+.bf-row.selected{background:rgba(240,165,0,0.08);border:1px solid var(--border-gold);}
+.bf-range{font-family:var(--fd);font-size:1.1rem;color:var(--gold);min-width:70px;}
+.bf-label{font-family:var(--fc);font-weight:700;font-size:0.88rem;color:var(--t1);}
+.bf-desc{font-size:0.75rem;color:var(--t2);}
+
+/* NAVIGATION */
+.step-nav{display:flex;gap:12px;margin-top:auto;padding-top:12px;}
 .btn-continue{flex:1;background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:14px;font-family:var(--fc);font-weight:700;font-size:0.95rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
 .btn-continue:hover:not(:disabled){background:var(--gold-hover);transform:translateY(-1px);}
 .btn-continue:disabled{opacity:0.4;cursor:not-allowed;}
 .btn-back{background:transparent;color:var(--t2);border:1px solid var(--border);border-radius:6px;padding:14px 24px;font-family:var(--fc);font-weight:600;font-size:0.95rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
 .btn-back:hover{border-color:var(--t2);color:var(--t1);}
 
-/* PLAN REVEAL */
-.plan-reveal{background:var(--card);border:1px solid var(--border-gold);border-radius:12px;padding:28px 24px;margin-bottom:24px;}
-.pr-section{margin-bottom:20px;}
-.pr-section:last-child{margin-bottom:0;}
-.pr-label{font-family:var(--fc);font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
-.pr-row{display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--t2);padding:4px 0;}
-.pr-row strong{color:var(--t1);}
-.pr-highlight{background:rgba(240,165,0,0.06);border:1px solid var(--border-gold);border-radius:8px;padding:12px 16px;margin-top:12px;font-size:0.85rem;color:var(--gold);text-align:center;}
+/* REVEAL CARDS */
+.reveal-card{background:var(--card);border:1px solid var(--border-gold);border-radius:12px;padding:24px;margin-bottom:20px;}
+.reveal-section{margin-bottom:18px;}
+.reveal-section:last-child{margin-bottom:0;}
+.reveal-label{font-family:var(--fc);font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.reveal-row{display:flex;align-items:center;gap:8px;font-size:0.88rem;color:var(--t2);padding:3px 0;}
+.reveal-row strong{color:var(--t1);}
+.reveal-big{font-family:var(--fd);font-size:2.4rem;color:var(--gold);letter-spacing:1px;line-height:1;}
+.reveal-note{font-size:0.78rem;color:var(--t3);margin-top:8px;text-align:center;line-height:1.5;}
+
+/* CALORIE RING */
+.cal-ring-wrap{display:flex;align-items:center;gap:24px;margin-bottom:16px;justify-content:center;}
+.cal-ring-svg{width:160px;height:160px;transform:rotate(-90deg);}
+.cal-ring-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:12;}
+.cal-ring-fill{fill:none;stroke:var(--gold);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease;}
+.cal-ring-center{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.cal-ring-stats{display:flex;flex-direction:column;gap:6px;}
+.cal-ring-stat{font-size:0.82rem;color:var(--t2);}
+.cal-ring-stat strong{color:var(--t1);}
+
+/* MACRO BARS */
+.macro-bars{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.macro-bar-row{display:flex;align-items:center;gap:10px;}
+.macro-bar-label{font-family:var(--fc);font-size:0.75rem;font-weight:600;letter-spacing:1px;color:var(--t2);width:60px;text-transform:uppercase;}
+.macro-bar-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;}
+.macro-bar-fill{height:100%;border-radius:4px;transition:width 0.6s ease;}
+.macro-bar-val{font-size:0.75rem;color:var(--t2);width:80px;text-align:right;}
+
+/* SLIDER */
+.cal-slider-wrap{text-align:center;margin:12px 0;}
+.cal-slider{width:80%;accent-color:var(--gold);}
 
 /* LOADING */
 .loading-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:9999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
@@ -61,7 +123,13 @@ body{background:var(--bg);color:var(--t1);font-family:var(--fb);min-height:100vh
 .loading-text{font-family:var(--fd);font-size:1.4rem;letter-spacing:2px;color:var(--t1);margin-bottom:12px;}
 .loading-sub{font-size:0.95rem;color:var(--t2);max-width:400px;line-height:1.6;}
 
-.ob-wordmark{font-family:var(--fd);font-size:1rem;letter-spacing:4px;color:rgba(255,255,255,0.2);text-align:center;padding-top:32px;}
+.ob-wordmark{font-family:var(--fd);font-size:1rem;letter-spacing:4px;color:rgba(255,255,255,0.2);text-align:center;padding-top:28px;}
+
+@media(max-width:480px){
+  .form-row{flex-direction:column;}
+  .form-group.small{flex:1;}
+  .cal-ring-wrap{flex-direction:column;}
+}
 </style>
 </head>
 <body>
@@ -83,7 +151,6 @@ try {
 </div>
 <div id="steps-container"></div>
 
-<!-- LOADING SCREEN -->
 <div class="loading-screen" id="loading-screen">
   <div class="loading-logo">FORGEIQ</div>
   <div class="loading-text">DR. LOVATO AI IS BUILDING YOUR PROGRAM...</div>
@@ -94,457 +161,1077 @@ try {
 (function(){
 "use strict";
 
-/* ═══════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
+   PROFILE DATA — all answers stored here
+   ═══════════════════════════════════════════════════════════ */
+var profile = {};
+
+/* ═══════════════════════════════════════════════════════════
    STEP DEFINITIONS
-   ═══════════════════════════════════════ */
-var STEPS = [
-  { id:"goal", headline:"WHAT ARE YOU HERE TO DO?", context:"", mode:"single",
-    options:[
-      {value:"lose_weight",title:"Lose weight & burn fat"},
-      {value:"build_strength",title:"Build strength & muscle"},
-      {value:"recover",title:"Recover & rebuild after injury or surgery"},
-      {value:"general",title:"General fitness & feel better"}
-    ]},
-  { id:"health", headline:"ANYTHING DR. LOVATO AI SHOULD KNOW?", context:"", mode:"multi",
-    options:[
-      {value:"glp1",title:"I'm on GLP-1 medication",sub:"Ozempic, Wegovy, Mounjaro, etc."},
-      {value:"surgery",title:"I've had surgery in the last 2 years"},
-      {value:"chronic_pain",title:"I have chronic pain or an injury"},
-      {value:"veteran",title:"I'm a veteran or first responder"},
-      {value:"none",title:"None of the above"}
-    ]},
-  { id:"injuries", headline:"DESCRIBE YOUR INJURY OR LIMITATION", context:"Take your time — this helps your coach program around it safely.", mode:"text",
-    placeholder:"e.g. torn rotator cuff right shoulder, knee surgery 6 months ago...",
-    showIf: function(a){ return a.health && (a.health.indexOf("chronic_pain")>-1 || a.health.indexOf("surgery")>-1); }
-  },
-  { id:"experience", headline:"HOW LONG HAVE YOU BEEN TRAINING?", context:"", mode:"single",
-    options:[
-      {value:"beginner",title:"I'm just starting out"},
-      {value:"on_off",title:"I've trained on and off"},
-      {value:"consistent",title:"I train consistently"},
-      {value:"advanced",title:"I'm advanced / I coach others"}
-    ]},
-  { id:"language", headline:"YOUR LANGUAGE", context:"", mode:"single",
-    options:[
-      {value:"en",title:"English"},
-      {value:"es",title:"Espa\u00f1ol"},
-      {value:"pt",title:"Portugu\u00eas"}
-    ]},
-  { id:"dietaryApproach", headline:"HOW DO YOU EAT RIGHT NOW?", context:"", mode:"single",
-    options:[
-      {value:"track_macros",title:"I track macros"},
-      {value:"healthy_no_track",title:"I eat healthy but don't track"},
-      {value:"eat_whatever",title:"I eat whatever"},
-      {value:"need_help",title:"No idea \u2014 need help"}
-    ]},
-  { id:"dietaryRestrictions", headline:"ANY DIETARY RESTRICTIONS?", context:"", mode:"single",
-    options:[
-      {value:"none",title:"None"},
-      {value:"no_dairy",title:"No dairy"},
-      {value:"no_gluten",title:"No gluten"},
-      {value:"vegetarian",title:"Vegetarian"},
-      {value:"vegan",title:"Vegan"},
-      {value:"halal_kosher",title:"Halal / Kosher"}
-    ]},
-  { id:"nutritionChallenge", headline:"BIGGEST NUTRITION CHALLENGE?", context:"", mode:"single",
-    options:[
-      {value:"not_enough_protein",title:"Not eating enough protein"},
-      {value:"junk_food",title:"Eating too much junk food"},
-      {value:"no_time",title:"No time to cook"},
-      {value:"dont_know",title:"Don't know what to eat"},
-      {value:"eat_more",title:"Eating enough to build muscle"}
-    ]},
-  { id:"supplements", headline:"TAKING ANY SUPPLEMENTS?", context:"", mode:"single",
-    options:[
-      {value:"protein_powder",title:"Protein powder"},
-      {value:"creatine",title:"Creatine"},
-      {value:"preworkout",title:"Pre-workout"},
-      {value:"vitamins",title:"Vitamins only"},
-      {value:"nothing",title:"Nothing yet"},
-      {value:"several",title:"Several \u2014 I'll list them"}
-    ]},
-  { id:"nutritionMode", headline:"WHAT'S YOUR NUTRITION GOAL?", context:"This sets your calorie and macro targets.", mode:"single",
-    options:[
-      {value:"build",title:"Build muscle \u2014 I need to eat more"},
-      {value:"cut",title:"Lose fat \u2014 caloric deficit"},
-      {value:"recomp",title:"Recomposition \u2014 lose fat and gain muscle"},
-      {value:"maintain",title:"Maintain \u2014 just stay consistent"}
-    ]},
-  { id:"reveal", headline:"YOUR FORGE PLAN IS READY", context:"", mode:"reveal" }
-];
+   ═══════════════════════════════════════════════════════════ */
+var TOTAL_STEPS = 11;
+var currentStep = 1;
 
-var answers = {};
-var currentIdx = 0;
-var totalVisible = 0;
-
-/* ═══════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    CONTEXTUAL ACKNOWLEDGMENTS
-   ═══════════════════════════════════════ */
-var ACK = {
-  goal: {lose_weight:"Fat loss mode \u2014 got it.",build_strength:"Muscle gain \u2014 let's build.",recover:"Recovery focus \u2014 we'll be careful.",general:"General fitness \u2014 solid."},
-  health: function(vals){ if(!vals||!vals.length||vals[0]==="none") return ""; var parts=[]; if(vals.indexOf("glp1")>-1) parts.push("GLP-1 noted \u2014 protein-first at every meal."); if(vals.indexOf("surgery")>-1||vals.indexOf("chronic_pain")>-1) parts.push("I'll ask about that next."); if(vals.indexOf("veteran")>-1) parts.push("Thank you for your service."); return parts.join(" "); },
-  injuries: function(v){ return v ? "Noted. I'll program around that." : ""; },
-  experience: {beginner:"Starting from zero \u2014 we'll build the foundation right.",on_off:"On and off \u2014 time to lock in.",consistent:"Consistent \u2014 let's level up.",advanced:"Advanced \u2014 we'll push the ceiling."},
-  language: {en:"English it is.",es:"Espa\u00f1ol \u2014 perfecto.",pt:"Portugu\u00eas \u2014 vamos."},
-  dietaryApproach: {track_macros:"Good \u2014 you already track.",healthy_no_track:"Healthy but no tracking \u2014 we can add structure.",eat_whatever:"No judgment \u2014 let's build better habits.",need_help:"We'll figure it out together."},
-  dietaryRestrictions: {none:"No restrictions \u2014 maximum flexibility.",no_dairy:"No dairy \u2014 noted.",no_gluten:"Gluten-free \u2014 noted.",vegetarian:"Vegetarian \u2014 we'll hit protein targets with plant sources.",vegan:"Vegan \u2014 protein strategy is critical. I've got you.",halal_kosher:"Halal/Kosher \u2014 noted."},
-  nutritionChallenge: {not_enough_protein:"Protein is priority one. We'll fix that.",junk_food:"We'll crowd out the junk with better options.",no_time:"Quick meals \u2014 I've got recipes under 10 minutes.",dont_know:"I'll give you exact meals.",eat_more:"Building requires fuel. We'll dial it in."},
-  supplements: {protein_powder:"Good foundation.",creatine:"Smart choice.",preworkout:"Noted.",vitamins:"Vitamins are a start.",nothing:"No problem \u2014 we'll recommend what matters.",several:"We'll review your stack."},
-  nutritionMode: {build:"BUILD mode \u2014 slight surplus, max muscle.",cut:"CUT mode \u2014 deficit with muscle preservation.",recomp:"RECOMP \u2014 body recomposition.",maintain:"MAINTAIN \u2014 consistency is king."}
-};
-
-function getAck(stepId, val){
-  var a = ACK[stepId];
-  if(!a) return "";
-  if(typeof a === "function") return a(val);
-  if(typeof a === "object" && val) return a[val] || "";
+   ═══════════════════════════════════════════════════════════ */
+function getAck(stepNum){
+  if(stepNum <= 1) return "";
+  var prev = stepNum - 1;
+  if(prev === 1){
+    var g = profile.goals || [];
+    if(g.length === 0) return "";
+    if(g.indexOf("lose_fat") > -1) return "Fat loss and transformation — let's go.";
+    if(g.indexOf("build_muscle") > -1) return "Muscle building — time to get strong.";
+    if(g.indexOf("recomp") > -1) return "Recomp — the hardest and most rewarding path.";
+    if(g.indexOf("glp1") > -1) return "GLP-1 support noted — protein-first at every meal.";
+    return "Got it. Let's build your plan.";
+  }
+  if(prev === 2) return profile.currentWeight ? "Numbers locked in. This is the foundation." : "";
+  if(prev === 3){
+    var a = profile.activityLevel;
+    if(a === "sedentary") return "Sedentary — we'll factor that in.";
+    if(a === "very" || a === "extremely") return "High activity — your calorie needs are significant.";
+    return "Activity level noted.";
+  }
+  if(prev === 4) return profile.daysPerWeek ? profile.daysPerWeek + " days a week — we'll make every session count." : "";
+  if(prev === 5){
+    var c = profile.conditions || [];
+    if(c.indexOf("none") > -1 || c.length === 0) return "Clean bill — let's push.";
+    var parts = [];
+    if(c.indexOf("glp1") > -1) parts.push("GLP-1 noted.");
+    if(c.indexOf("injury") > -1 || c.indexOf("surgery") > -1 || c.indexOf("chronic_pain") > -1) parts.push("I'll program around your limitations.");
+    if(c.indexOf("veteran") > -1) parts.push("Thank you for your service.");
+    return parts.join(" ") || "Noted — your safety comes first.";
+  }
+  if(prev === 6) return "Got your current nutrition approach.";
+  if(prev === 7){
+    var r = profile.dietaryRestrictions || [];
+    if(r.indexOf("none") > -1 || r.length === 0) return "No restrictions — maximum flexibility.";
+    return "Dietary restrictions noted.";
+  }
+  if(prev === 8) return "I see the challenges. We'll address every one.";
+  if(prev === 9) return "Supplement stack noted.";
   return "";
 }
 
-/* ═══════════════════════════════════════
-   COMPUTE VISIBLE STEPS
-   ═══════════════════════════════════════ */
-function getVisibleSteps(){
-  var vis = [];
-  for(var i=0;i<STEPS.length;i++){
-    var s = STEPS[i];
-    if(s.showIf && !s.showIf(answers)) continue;
-    vis.push(s);
-  }
-  return vis;
-}
-
-/* ═══════════════════════════════════════
-   RENDER
-   ═══════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   RENDER ENGINE
+   ═══════════════════════════════════════════════════════════ */
 function render(){
-  var visible = getVisibleSteps();
-  totalVisible = visible.length;
-  var step = visible[currentIdx];
-  if(!step) return;
-
-  // Progress bar
-  var bar = document.getElementById("prog-bar");
-  bar.innerHTML = "";
-  for(var i=0;i<totalVisible;i++){
-    var d = document.createElement("div");
-    d.className = "progress-step" + (i <= currentIdx ? " active" : "");
-    bar.appendChild(d);
-  }
-  document.getElementById("prog-label").textContent = "STEP " + (currentIdx+1) + " OF " + totalVisible;
-
-  // Step content
+  renderProgressBar();
   var container = document.getElementById("steps-container");
 
-  // Get acknowledgment from previous step
-  var prevAck = "";
-  if(currentIdx > 0){
-    var prevStep = visible[currentIdx - 1];
-    if(prevStep){
-      var prevVal = answers[prevStep.id];
-      prevAck = getAck(prevStep.id, prevVal);
-    }
+  switch(currentStep){
+    case 1: renderStep1(container); break;
+    case 2: renderStep2(container); break;
+    case 3: renderStep3(container); break;
+    case 4: renderStep4(container); break;
+    case 5: renderStep5(container); break;
+    case 6: renderStep6(container); break;
+    case 7: renderStep7(container); break;
+    case 8: renderStep8(container); break;
+    case 9: renderStep9(container); break;
+    case 10: renderStep10(container); break;
+    case 11: renderStep11(container); break;
   }
+}
 
-  var contextText = prevAck || step.context || "";
-
-  if(step.mode === "reveal"){
-    container.innerHTML = renderReveal(contextText);
-    bindRevealButton();
-    return;
+function renderProgressBar(){
+  var bar = document.getElementById("prog-bar");
+  bar.innerHTML = "";
+  for(var i = 1; i <= TOTAL_STEPS; i++){
+    var d = document.createElement("div");
+    d.className = "progress-step" + (i <= currentStep ? " active" : "");
+    bar.appendChild(d);
   }
-
-  var html = '<div class="step-box active">';
-  html += '<h1 class="step-headline">' + esc(step.headline) + '</h1>';
-  if(contextText) html += '<div class="step-context">' + esc(contextText) + '</div>';
-
-  if(step.mode === "text"){
-    html += '<div class="text-input-area">';
-    html += '<textarea id="text-answer" placeholder="' + esc(step.placeholder || "") + '"></textarea>';
-    html += '</div>';
-  } else if(step.options){
-    html += '<div class="tap-cards" data-mode="' + step.mode + '">';
-    step.options.forEach(function(opt){
-      var sel = false;
-      if(step.mode === "single") sel = (answers[step.id] === opt.value);
-      else if(step.mode === "multi" && Array.isArray(answers[step.id])) sel = answers[step.id].indexOf(opt.value) > -1;
-      html += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + esc(opt.value) + '">';
-      html += '<div class="card-title">' + esc(opt.title) + '</div>';
-      if(opt.sub) html += '<div class="card-sub">' + esc(opt.sub) + '</div>';
-      html += '</div>';
-    });
-    html += '</div>';
-  }
-
-  html += '<div class="step-nav">';
-  if(currentIdx > 0) html += '<button class="btn-back" id="ob-back">BACK</button>';
-  html += '<button class="btn-continue" id="ob-next" disabled>CONTINUE</button>';
-  html += '</div></div>';
-
-  container.innerHTML = html;
-  bindStep(step);
+  document.getElementById("prog-label").textContent = "STEP " + currentStep + " OF " + TOTAL_STEPS;
 }
 
 function esc(s){ return s ? String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ""; }
 
-/* ═══════════════════════════════════════
-   BIND STEP INTERACTIONS
-   ═══════════════════════════════════════ */
-function bindStep(step){
-  var nextBtn = document.getElementById("ob-next");
-  var backBtn = document.getElementById("ob-back");
+function buildNav(showBack){
+  var h = '<div class="step-nav">';
+  if(showBack) h += '<button class="btn-back" id="ob-back">BACK</button>';
+  h += '<button class="btn-continue" id="ob-next" disabled>CONTINUE</button>';
+  h += '</div>';
+  return h;
+}
 
-  if(backBtn){
-    backBtn.addEventListener("click", function(){ currentIdx--; render(); });
-  }
+function bindBack(){
+  var b = document.getElementById("ob-back");
+  if(b) b.addEventListener("click", function(){ currentStep--; render(); });
+}
 
-  if(step.mode === "text"){
-    var ta = document.getElementById("text-answer");
-    if(answers[step.id]) ta.value = answers[step.id];
-    // Enable continue immediately for text (can be empty = skip)
-    nextBtn.disabled = false;
-    nextBtn.addEventListener("click", function(){
-      answers[step.id] = (ta.value || "").trim();
-      currentIdx++;
-      render();
-    });
-    return;
-  }
+function enableNext(){ var n = document.getElementById("ob-next"); if(n) n.disabled = false; }
+function disableNext(){ var n = document.getElementById("ob-next"); if(n) n.disabled = true; }
 
-  // Card selection
-  var cards = document.querySelectorAll(".tap-card");
-  cards.forEach(function(card){
+function bindNextClick(fn){
+  var n = document.getElementById("ob-next");
+  if(n) n.addEventListener("click", function(){ if(fn) fn(); currentStep++; render(); });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 1 — PRIMARY GOAL (multi-select)
+   ═══════════════════════════════════════════════════════════ */
+function renderStep1(c){
+  var opts = [
+    {v:"lose_fat",t:"Lose weight and burn fat"},
+    {v:"build_muscle",t:"Build muscle and get stronger"},
+    {v:"recomp",t:"Body recomposition (lose fat AND build muscle)"},
+    {v:"performance",t:"Athletic performance"},
+    {v:"glp1",t:"GLP-1 medication support"},
+    {v:"recover",t:"Recover from injury"},
+    {v:"general",t:"General health and energy"},
+    {v:"partner",t:"Train with my partner"}
+  ];
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">WHAT BRINGS YOU HERE?</h1>';
+  h += '<div class="step-sub">Select all that apply.</div>';
+  h += '<div class="tap-cards" id="goal-cards">';
+  opts.forEach(function(o){
+    var sel = (profile.goals || []).indexOf(o.v) > -1;
+    h += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + o.v + '"><div class="card-title">' + esc(o.t) + '</div></div>';
+  });
+  h += '</div>';
+  h += buildNav(false);
+  h += '</div>';
+  c.innerHTML = h;
+
+  if((profile.goals || []).length > 0) enableNext();
+
+  document.querySelectorAll("#goal-cards .tap-card").forEach(function(card){
     card.addEventListener("click", function(){
-      var val = card.getAttribute("data-value");
-      if(step.mode === "single"){
-        cards.forEach(function(c){ c.classList.remove("selected"); });
-        card.classList.add("selected");
-        answers[step.id] = val;
-      } else {
-        // Multi
-        if(val === "none"){
-          cards.forEach(function(c){ c.classList.remove("selected"); });
-          card.classList.add("selected");
-          answers[step.id] = ["none"];
-        } else {
-          var noneCard = document.querySelector('[data-value="none"]');
-          if(noneCard) noneCard.classList.remove("selected");
-          card.classList.toggle("selected");
-          var selected = [];
-          document.querySelectorAll(".tap-card.selected").forEach(function(c){ selected.push(c.getAttribute("data-value")); });
-          answers[step.id] = selected;
-        }
-      }
-      // Enable continue
-      var hasSelection = document.querySelectorAll(".tap-card.selected").length > 0;
-      nextBtn.disabled = !hasSelection;
+      card.classList.toggle("selected");
+      var sel = [];
+      document.querySelectorAll("#goal-cards .tap-card.selected").forEach(function(s){ sel.push(s.getAttribute("data-value")); });
+      profile.goals = sel;
+      if(sel.length > 0) enableNext(); else disableNext();
     });
   });
 
-  // Check if already has answer
-  if(answers[step.id]){
-    var hasAny = step.mode === "multi" ? (answers[step.id].length > 0) : !!answers[step.id];
-    nextBtn.disabled = !hasAny;
+  bindBack();
+  bindNextClick();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 2 — BODY STATS
+   ═══════════════════════════════════════════════════════════ */
+function renderStep2(c){
+  var ack = getAck(2);
+  var unit = profile._weightUnit || "lbs";
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">LET\'S GET YOUR NUMBERS</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="step-sub">These calculate your exact calorie and macro targets using the Mifflin-St Jeor formula.</div>';
+
+  // Weight unit toggle
+  h += '<div style="text-align:right;margin-bottom:8px;"><span class="form-label" style="margin-right:4px;">UNITS:</span>';
+  h += '<div class="unit-toggle" id="unit-toggle">';
+  h += '<button class="unit-btn' + (unit === "lbs" ? " active" : "") + '" data-u="lbs">LBS</button>';
+  h += '<button class="unit-btn' + (unit === "kg" ? " active" : "") + '" data-u="kg">KG</button>';
+  h += '</div></div>';
+
+  var wLabel = unit === "kg" ? "kg" : "lbs";
+
+  h += '<div class="form-row">';
+  h += '<div class="form-group"><label class="form-label">Current weight</label><input class="form-input" type="number" id="f-weight" placeholder="180" inputmode="decimal" step="0.1" value="' + (profile.currentWeight || "") + '"><div class="form-hint">' + wLabel + '</div></div>';
+  h += '<div class="form-group"><label class="form-label">Goal weight</label><input class="form-input" type="number" id="f-goal-weight" placeholder="175" inputmode="decimal" step="0.1" value="' + (profile.goalWeight || "") + '"><div class="form-hint">Same as current is fine for recomp/performance</div></div>';
+  h += '</div>';
+
+  h += '<div class="form-row">';
+  h += '<div class="form-group small"><label class="form-label">Height ft</label><input class="form-input" type="number" id="f-hft" placeholder="5" inputmode="numeric" value="' + (profile.heightFt || "") + '"></div>';
+  h += '<div class="form-group small"><label class="form-label">Height in</label><input class="form-input" type="number" id="f-hin" placeholder="11" inputmode="numeric" value="' + (profile.heightIn || "") + '"></div>';
+  h += '<div class="form-group small"><label class="form-label">Age</label><input class="form-input" type="number" id="f-age" placeholder="35" inputmode="numeric" value="' + (profile.age || "") + '"></div>';
+  h += '</div>';
+
+  h += '<div class="form-row"><div class="form-group"><label class="form-label">Gender (affects BMR formula)</label>';
+  h += '<div class="pill-grid" id="gender-pills">';
+  ["male","female","other"].forEach(function(g){
+    var label = g === "other" ? "Prefer not to say" : g.charAt(0).toUpperCase() + g.slice(1);
+    h += '<div class="pill' + (profile.gender === g ? " selected" : "") + '" data-value="' + g + '">' + label + '</div>';
+  });
+  h += '</div>';
+  h += '<div class="form-hint">"Prefer not to say" uses the male formula as default</div>';
+  h += '</div></div>';
+
+  h += '<div class="form-row">';
+  h += '<div class="form-group"><label class="form-label">Body fat % (optional)</label><input class="form-input" type="number" id="f-bf" placeholder="e.g. 18" inputmode="decimal" step="0.1" value="' + (profile.bodyFat || "") + '"><div class="form-hint">Don\'t know yours? <span class="form-link" id="bf-guide-toggle">Tap here to estimate</span></div></div>';
+  h += '<div class="form-group"><label class="form-label">Goal body fat % (optional)</label><input class="form-input" type="number" id="f-goal-bf" placeholder="e.g. 15" inputmode="decimal" step="0.1" value="' + (profile.goalBodyFat || "") + '"></div>';
+  h += '</div>';
+
+  // Body fat visual guide
+  h += '<div class="bf-guide" id="bf-guide">';
+  var gender = profile.gender || "male";
+  h += '<div class="bf-guide-title" id="bf-guide-title">BODY FAT VISUAL GUIDE — ' + (gender === "female" ? "WOMEN" : "MEN") + '</div>';
+  h += '<div id="bf-rows"></div>';
+  h += '</div>';
+
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  // Build BF guide rows
+  buildBFRows();
+
+  // Unit toggle
+  document.querySelectorAll("#unit-toggle .unit-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll("#unit-toggle .unit-btn").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      profile._weightUnit = btn.getAttribute("data-u");
+    });
+  });
+
+  // Gender pills
+  document.querySelectorAll("#gender-pills .pill").forEach(function(pill){
+    pill.addEventListener("click", function(){
+      document.querySelectorAll("#gender-pills .pill").forEach(function(p){ p.classList.remove("selected"); });
+      pill.classList.add("selected");
+      profile.gender = pill.getAttribute("data-value");
+      buildBFRows();
+      checkStep2();
+    });
+  });
+
+  // BF guide toggle
+  document.getElementById("bf-guide-toggle").addEventListener("click", function(){
+    var guide = document.getElementById("bf-guide");
+    guide.classList.toggle("visible");
+  });
+
+  // Validation
+  ["f-weight","f-goal-weight","f-hft","f-hin","f-age"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener("input", checkStep2);
+  });
+  checkStep2();
+
+  bindBack();
+  bindNextClick(function(){
+    var unit = profile._weightUnit || "lbs";
+    var w = parseFloat(document.getElementById("f-weight").value);
+    var gw = parseFloat(document.getElementById("f-goal-weight").value);
+    if(unit === "kg"){
+      profile.currentWeight = Math.round(w * 2.20462 * 10) / 10;
+      profile.goalWeight = gw ? Math.round(gw * 2.20462 * 10) / 10 : profile.currentWeight;
+    } else {
+      profile.currentWeight = w;
+      profile.goalWeight = gw || w;
+    }
+    profile.heightFt = parseInt(document.getElementById("f-hft").value) || 0;
+    profile.heightIn = parseInt(document.getElementById("f-hin").value) || 0;
+    profile.age = parseInt(document.getElementById("f-age").value) || 30;
+    var bf = parseFloat(document.getElementById("f-bf").value);
+    profile.bodyFat = isNaN(bf) ? null : bf;
+    var gbf = parseFloat(document.getElementById("f-goal-bf").value);
+    profile.goalBodyFat = isNaN(gbf) ? null : gbf;
+  });
+}
+
+function buildBFRows(){
+  var container = document.getElementById("bf-rows");
+  if(!container) return;
+  var gender = profile.gender || "male";
+  document.getElementById("bf-guide-title").textContent = "BODY FAT VISUAL GUIDE — " + (gender === "female" ? "WOMEN" : "MEN");
+
+  var ranges = gender === "female" ? [
+    {min:10,max:13,label:"Essential fat",desc:"Extremely lean, visible striations"},
+    {min:14,max:20,label:"Athletic",desc:"Defined muscle separation, very lean"},
+    {min:21,max:24,label:"Fitness",desc:"Toned, athletic look"},
+    {min:25,max:31,label:"Average",desc:"Some softness, healthy range"},
+    {min:32,max:38,label:"Above average",desc:"Rounded appearance, little definition"},
+    {min:39,max:45,label:"Obese",desc:"Significant excess body fat"}
+  ] : [
+    {min:2,max:5,label:"Essential fat",desc:"Extremely lean, visible striations"},
+    {min:6,max:13,label:"Athletic",desc:"Defined abs, visible muscle separation"},
+    {min:14,max:17,label:"Fitness",desc:"Some ab definition, athletic look"},
+    {min:18,max:24,label:"Average",desc:"Some softness, no visible abs"},
+    {min:25,max:31,label:"Above average",desc:"Rounded appearance, little definition"},
+    {min:32,max:40,label:"Obese",desc:"Significant excess body fat"}
+  ];
+
+  container.innerHTML = "";
+  ranges.forEach(function(r){
+    var mid = Math.round((r.min + r.max) / 2);
+    var row = document.createElement("div");
+    row.className = "bf-row";
+    row.innerHTML = '<div class="bf-range">' + r.min + '-' + r.max + '%</div><div><div class="bf-label">' + r.label + '</div><div class="bf-desc">' + r.desc + '</div></div>';
+    row.addEventListener("click", function(){
+      document.querySelectorAll(".bf-row").forEach(function(rr){ rr.classList.remove("selected"); });
+      row.classList.add("selected");
+      document.getElementById("f-bf").value = mid;
+      profile.bodyFat = mid;
+    });
+    container.appendChild(row);
+  });
+}
+
+function checkStep2(){
+  var w = document.getElementById("f-weight").value;
+  var hft = document.getElementById("f-hft").value;
+  var hin = document.getElementById("f-hin").value;
+  var age = document.getElementById("f-age").value;
+  var gender = profile.gender;
+  if(w && hft && age && gender) enableNext(); else disableNext();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 3 — ACTIVITY LEVEL
+   ═══════════════════════════════════════════════════════════ */
+function renderStep3(c){
+  var ack = getAck(3);
+  var levels = [
+    {v:"sedentary",m:1.2,t:"SEDENTARY",d:"Office job or mostly sitting. Little or no exercise outside your planned workouts."},
+    {v:"lightly",m:1.375,t:"LIGHTLY ACTIVE",d:"On your feet some of the day. Light exercise 1-2 days per week or casual walks."},
+    {v:"moderately",m:1.55,t:"MODERATELY ACTIVE",d:"Active job or exercise 3-4 days per week. You move around regularly throughout the day."},
+    {v:"very",m:1.725,t:"VERY ACTIVE",d:"Physical job (construction, nursing, teaching) OR intense exercise 5-6 days per week."},
+    {v:"extremely",m:1.9,t:"EXTREMELY ACTIVE",d:"Hard physical labor every day AND training regularly. Athletes in 2-a-days."}
+  ];
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">HOW ACTIVE ARE YOU?</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="step-sub">Be honest — this is the biggest factor in your calorie target.</div>';
+  h += '<div class="tap-cards" id="activity-cards">';
+  levels.forEach(function(l){
+    var sel = profile.activityLevel === l.v;
+    h += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + l.v + '" data-mult="' + l.m + '">';
+    h += '<div class="card-title">' + l.t + '</div>';
+    h += '<div class="card-sub">' + esc(l.d) + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  if(profile.activityLevel) enableNext();
+
+  document.querySelectorAll("#activity-cards .tap-card").forEach(function(card){
+    card.addEventListener("click", function(){
+      document.querySelectorAll("#activity-cards .tap-card").forEach(function(cc){ cc.classList.remove("selected"); });
+      card.classList.add("selected");
+      profile.activityLevel = card.getAttribute("data-value");
+      profile.activityMultiplier = parseFloat(card.getAttribute("data-mult"));
+      enableNext();
+    });
+  });
+
+  bindBack();
+  bindNextClick();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 4 — TRAINING DETAILS
+   ═══════════════════════════════════════════════════════════ */
+function renderStep4(c){
+  var ack = getAck(4);
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">TELL ME ABOUT YOUR TRAINING</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+
+  h += '<div class="form-label" style="margin-bottom:8px;">DAYS PER WEEK YOU CAN TRAIN</div>';
+  h += '<div class="pill-grid" id="days-pills">';
+  [2,3,4,5,6].forEach(function(d){
+    h += '<div class="pill' + (profile.daysPerWeek === d ? " selected" : "") + '" data-value="' + d + '" style="min-width:48px;text-align:center;">' + d + '</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="form-label" style="margin:16px 0 8px;">SESSION LENGTH</div>';
+  h += '<div class="pill-grid" id="dur-pills">';
+  ["20-30 min","30-45 min","45-60 min","60-90 min"].forEach(function(d){
+    h += '<div class="pill' + (profile.duration === d ? " selected" : "") + '" data-value="' + d + '">' + d + '</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="form-label" style="margin:16px 0 8px;">TRAINING EXPERIENCE</div>';
+  h += '<div class="pill-grid" id="exp-pills">';
+  [{v:"beginner",t:"Just starting"},{v:"under1",t:"Under 1 year"},{v:"1to3",t:"1-3 years"},{v:"3plus",t:"3+ years"},{v:"comeback",t:"Coming back after break"}].forEach(function(e){
+    h += '<div class="pill' + (profile.experience === e.v ? " selected" : "") + '" data-value="' + e.v + '">' + e.t + '</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="form-label" style="margin:16px 0 8px;">WHERE YOU TRAIN</div>';
+  h += '<div class="pill-grid" id="loc-pills">';
+  [{v:"commercial",t:"Commercial gym"},{v:"small",t:"Small gym"},{v:"home",t:"Home gym"},{v:"bodyweight",t:"Bodyweight only"}].forEach(function(l){
+    h += '<div class="pill' + (profile.location === l.v ? " selected" : "") + '" data-value="' + l.v + '">' + l.t + '</div>';
+  });
+  h += '</div>';
+
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  function checkStep4(){
+    if(profile.daysPerWeek && profile.duration && profile.experience && profile.location) enableNext();
+    else disableNext();
   }
 
-  nextBtn.addEventListener("click", function(){
-    currentIdx++;
+  function bindPillGroup(containerId, key, isNum){
+    document.querySelectorAll("#" + containerId + " .pill").forEach(function(pill){
+      pill.addEventListener("click", function(){
+        document.querySelectorAll("#" + containerId + " .pill").forEach(function(p){ p.classList.remove("selected"); });
+        pill.classList.add("selected");
+        profile[key] = isNum ? parseInt(pill.getAttribute("data-value")) : pill.getAttribute("data-value");
+        checkStep4();
+      });
+    });
+  }
+
+  bindPillGroup("days-pills", "daysPerWeek", true);
+  bindPillGroup("dur-pills", "duration", false);
+  bindPillGroup("exp-pills", "experience", false);
+  bindPillGroup("loc-pills", "location", false);
+  checkStep4();
+
+  bindBack();
+  bindNextClick();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 5 — HEALTH AND INJURIES
+   ═══════════════════════════════════════════════════════════ */
+function renderStep5(c){
+  var ack = getAck(5);
+  var opts = [
+    {v:"glp1",t:"I am on a GLP-1 medication",d:"Ozempic, Wegovy, Mounjaro, Zepbound"},
+    {v:"injury",t:"I am managing an injury"},
+    {v:"surgery",t:"I have had surgery or joint replacement"},
+    {v:"cardiovascular",t:"I have a cardiovascular condition"},
+    {v:"diabetes",t:"I have diabetes or blood sugar concerns"},
+    {v:"thyroid",t:"I have a thyroid condition"},
+    {v:"chronic_pain",t:"I have chronic pain"},
+    {v:"none",t:"None of these apply"}
+  ];
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">ANYTHING I SHOULD KNOW?</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="step-sub">Your coach uses this to protect you and build around your reality.</div>';
+  h += '<div class="tap-cards" id="health-cards">';
+  opts.forEach(function(o){
+    var sel = (profile.conditions || []).indexOf(o.v) > -1;
+    h += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + o.v + '"><div class="card-title">' + esc(o.t) + '</div>';
+    if(o.d) h += '<div class="card-sub">' + esc(o.d) + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+
+  // Conditional: injury text
+  h += '<div id="injury-section" style="display:none;margin-bottom:16px;">';
+  h += '<div class="form-label" style="margin-bottom:6px;">DESCRIBE YOUR INJURY OR LIMITATION</div>';
+  h += '<textarea class="form-input" id="f-injuries" placeholder="e.g. torn shoulder, bad knees, lower back pain...">' + esc(profile.injuries || "") + '</textarea>';
+  h += '</div>';
+
+  // Conditional: GLP-1 medication picker
+  h += '<div id="glp1-section" style="display:none;margin-bottom:16px;">';
+  h += '<div class="form-label" style="margin-bottom:6px;">WHICH MEDICATION?</div>';
+  h += '<div class="pill-grid" id="med-pills">';
+  ["Ozempic","Wegovy","Mounjaro","Zepbound","Rybelsus","Other"].forEach(function(m){
+    var sel = (profile.medications || []).indexOf(m) > -1;
+    h += '<div class="pill' + (sel ? " selected" : "") + '" data-value="' + m + '">' + m + '</div>';
+  });
+  h += '</div></div>';
+
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  function updateConditionals(){
+    var conds = profile.conditions || [];
+    var showInjury = conds.indexOf("injury") > -1 || conds.indexOf("surgery") > -1 || conds.indexOf("chronic_pain") > -1;
+    document.getElementById("injury-section").style.display = showInjury ? "block" : "none";
+    document.getElementById("glp1-section").style.display = conds.indexOf("glp1") > -1 ? "block" : "none";
+  }
+
+  if((profile.conditions || []).length > 0) enableNext();
+
+  document.querySelectorAll("#health-cards .tap-card").forEach(function(card){
+    card.addEventListener("click", function(){
+      var val = card.getAttribute("data-value");
+      if(val === "none"){
+        document.querySelectorAll("#health-cards .tap-card").forEach(function(cc){ cc.classList.remove("selected"); });
+        card.classList.add("selected");
+        profile.conditions = ["none"];
+      } else {
+        var noneCard = document.querySelector('#health-cards [data-value="none"]');
+        if(noneCard) noneCard.classList.remove("selected");
+        card.classList.toggle("selected");
+        var sel = [];
+        document.querySelectorAll("#health-cards .tap-card.selected").forEach(function(s){ sel.push(s.getAttribute("data-value")); });
+        profile.conditions = sel;
+      }
+      if(profile.conditions.length > 0) enableNext(); else disableNext();
+      updateConditionals();
+    });
+  });
+
+  // Medication pills (multi-select)
+  document.querySelectorAll("#med-pills .pill").forEach(function(pill){
+    pill.addEventListener("click", function(){
+      pill.classList.toggle("selected");
+      var sel = [];
+      document.querySelectorAll("#med-pills .pill.selected").forEach(function(p){ sel.push(p.getAttribute("data-value")); });
+      profile.medications = sel;
+    });
+  });
+
+  updateConditionals();
+  bindBack();
+  bindNextClick(function(){
+    profile.injuries = (document.getElementById("f-injuries").value || "").trim();
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 6 — NUTRITION APPROACH
+   ═══════════════════════════════════════════════════════════ */
+function renderStep6(c){
+  var ack = getAck(6);
+  var opts = [
+    {v:"track_macros",t:"I track macros carefully"},
+    {v:"healthy_no_track",t:"I try to eat healthy but don't track"},
+    {v:"eat_whatever",t:"I eat whatever is convenient"},
+    {v:"specific_diet",t:"I follow a specific diet (keto, vegan, etc.)"},
+    {v:"no_idea",t:"I have no idea — that's why I'm here"}
+  ];
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">HOW DO YOU EAT RIGHT NOW?</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="tap-cards" id="nutr-cards">';
+  opts.forEach(function(o){
+    var sel = profile.currentNutritionApproach === o.v;
+    h += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + o.v + '"><div class="card-title">' + esc(o.t) + '</div></div>';
+  });
+  h += '</div>';
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  if(profile.currentNutritionApproach) enableNext();
+  document.querySelectorAll("#nutr-cards .tap-card").forEach(function(card){
+    card.addEventListener("click", function(){
+      document.querySelectorAll("#nutr-cards .tap-card").forEach(function(cc){ cc.classList.remove("selected"); });
+      card.classList.add("selected");
+      profile.currentNutritionApproach = card.getAttribute("data-value");
+      enableNext();
+    });
+  });
+  bindBack();
+  bindNextClick();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 7 — DIETARY RESTRICTIONS (multi-select)
+   ═══════════════════════════════════════════════════════════ */
+function renderStep7(c){
+  var ack = getAck(7);
+  var opts = ["None","No dairy","No gluten","Vegetarian","Vegan","Halal","Kosher","Low sodium (heart health)","Diabetic-friendly (low glycemic)","Renal diet (kidney health)","Other"];
+  var vals = ["none","no_dairy","no_gluten","vegetarian","vegan","halal","kosher","low_sodium","diabetic_friendly","renal","other"];
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">ANY DIETARY RESTRICTIONS?</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="step-sub">Select all that apply.</div>';
+  h += '<div class="tap-cards" id="diet-cards">';
+  opts.forEach(function(o, i){
+    var sel = (profile.dietaryRestrictions || []).indexOf(vals[i]) > -1;
+    h += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + vals[i] + '"><div class="card-title">' + esc(o) + '</div></div>';
+  });
+  h += '</div>';
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  if((profile.dietaryRestrictions || []).length > 0) enableNext();
+  document.querySelectorAll("#diet-cards .tap-card").forEach(function(card){
+    card.addEventListener("click", function(){
+      var val = card.getAttribute("data-value");
+      if(val === "none"){
+        document.querySelectorAll("#diet-cards .tap-card").forEach(function(cc){ cc.classList.remove("selected"); });
+        card.classList.add("selected");
+        profile.dietaryRestrictions = ["none"];
+      } else {
+        var nc = document.querySelector('#diet-cards [data-value="none"]');
+        if(nc) nc.classList.remove("selected");
+        card.classList.toggle("selected");
+        var sel = [];
+        document.querySelectorAll("#diet-cards .tap-card.selected").forEach(function(s){ sel.push(s.getAttribute("data-value")); });
+        profile.dietaryRestrictions = sel;
+      }
+      if(profile.dietaryRestrictions.length > 0) enableNext(); else disableNext();
+    });
+  });
+  bindBack();
+  bindNextClick();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 8 — BIGGEST NUTRITION CHALLENGE (multi-select)
+   ═══════════════════════════════════════════════════════════ */
+function renderStep8(c){
+  var ack = getAck(8);
+  var opts = [
+    "Not eating enough protein","Eating too much junk food or sugar","No time to cook or meal prep",
+    "Don't know what to eat","Can't eat enough to build muscle","Eating too much — no self control",
+    "Emotional eating or stress eating","Skipping meals","Too expensive to eat healthy",
+    "Not enough variety","Poor relationship with food"
+  ];
+  var vals = ["low_protein","junk_food","no_time","dont_know","cant_eat_enough","overeating","emotional","skipping","expensive","no_variety","poor_relationship"];
+
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">WHAT\'S YOUR BIGGEST NUTRITION CHALLENGE?</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="step-sub">Select all that apply.</div>';
+  h += '<div class="tap-cards" id="challenge-cards">';
+  opts.forEach(function(o, i){
+    var sel = (profile.nutritionChallenges || []).indexOf(vals[i]) > -1;
+    h += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + vals[i] + '"><div class="card-title">' + esc(o) + '</div></div>';
+  });
+  h += '</div>';
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  if((profile.nutritionChallenges || []).length > 0) enableNext();
+  document.querySelectorAll("#challenge-cards .tap-card").forEach(function(card){
+    card.addEventListener("click", function(){
+      card.classList.toggle("selected");
+      var sel = [];
+      document.querySelectorAll("#challenge-cards .tap-card.selected").forEach(function(s){ sel.push(s.getAttribute("data-value")); });
+      profile.nutritionChallenges = sel;
+      if(sel.length > 0) enableNext(); else disableNext();
+    });
+  });
+  bindBack();
+  bindNextClick();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 9 — SUPPLEMENTS (multi-select grid with groups)
+   ═══════════════════════════════════════════════════════════ */
+function renderStep9(c){
+  var ack = getAck(9);
+  var groups = [
+    {label:"PROTEIN", items:["Whey protein powder","Casein protein (slow release / bedtime)","Plant-based protein powder","Collagen peptides"]},
+    {label:"PERFORMANCE", items:["Creatine monohydrate","Pre-workout / stimulants","Beta-alanine","Citrulline / pump formula","BCAAs or EAAs","Glutamine"]},
+    {label:"HEALTH AND RECOVERY", items:["Omega-3 / Fish oil","Magnesium glycinate","Vitamin D3 + K2","Zinc","B-Complex / B12","Multivitamin","Probiotics","Greens powder / Superfoods","Electrolytes"]},
+    {label:"FAT LOSS AND METABOLISM", items:["Ashwagandha / Adaptogen","L-Carnitine","Thermogenic / Fat burner","CLA"]},
+    {label:"HORMONAL AND ADVANCED", items:["Testosterone booster (OTC)","Peptides (BPC-157, TB-500, etc)","Hormone therapy (prescription)"]},
+    {label:"", items:["Nothing — I don't take supplements yet"]}
+  ];
+
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">TAKING ANY SUPPLEMENTS?</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="step-sub">Select all that apply — we use this to identify gaps and avoid redundant recommendations.</div>';
+
+  h += '<div id="supp-container" style="margin-bottom:16px;max-height:360px;overflow-y:auto;padding-right:8px;">';
+  groups.forEach(function(g){
+    if(g.label) h += '<span class="supp-group-label">' + g.label + '</span>';
+    h += '<div class="supp-grid">';
+    g.items.forEach(function(item){
+      var val = item.toLowerCase().replace(/[^a-z0-9]/g,"_");
+      var sel = (profile.supplements || []).indexOf(val) > -1;
+      h += '<div class="supp-pill' + (sel ? " selected" : "") + '" data-value="' + val + '">' + esc(item) + '</div>';
+    });
+    h += '</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="form-label" style="margin:12px 0 8px;">MONTHLY SUPPLEMENT BUDGET</div>';
+  h += '<div class="pill-grid" id="budget-pills">';
+  ["Under $50","$50-100","$100-200","$200+","Prefer not to say"].forEach(function(b){
+    var sel = profile.supplementBudget === b;
+    h += '<div class="pill' + (sel ? " selected" : "") + '" data-value="' + b + '">' + b + '</div>';
+  });
+  h += '</div>';
+
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  var nothingVal = "nothing___i_don_t_take_supplements_yet";
+
+  function checkSupp(){
+    if((profile.supplements || []).length > 0) enableNext(); else disableNext();
+  }
+
+  document.querySelectorAll(".supp-pill").forEach(function(pill){
+    pill.addEventListener("click", function(){
+      var val = pill.getAttribute("data-value");
+      if(val === nothingVal){
+        document.querySelectorAll(".supp-pill").forEach(function(p){ p.classList.remove("selected"); });
+        pill.classList.add("selected");
+        profile.supplements = [nothingVal];
+      } else {
+        var np = document.querySelector('.supp-pill[data-value="' + nothingVal + '"]');
+        if(np) np.classList.remove("selected");
+        pill.classList.toggle("selected");
+        var sel = [];
+        document.querySelectorAll(".supp-pill.selected").forEach(function(p){ sel.push(p.getAttribute("data-value")); });
+        profile.supplements = sel;
+      }
+      checkSupp();
+    });
+  });
+
+  document.querySelectorAll("#budget-pills .pill").forEach(function(pill){
+    pill.addEventListener("click", function(){
+      document.querySelectorAll("#budget-pills .pill").forEach(function(p){ p.classList.remove("selected"); });
+      pill.classList.add("selected");
+      profile.supplementBudget = pill.getAttribute("data-value");
+    });
+  });
+
+  checkSupp();
+  bindBack();
+  bindNextClick();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 10 — CALCULATION REVEAL
+   ═══════════════════════════════════════════════════════════ */
+function calculateNutritionTargets(){
+  var weightKg = (profile.currentWeight || 180) * 0.453592;
+  var heightCm = ((profile.heightFt || 5) * 30.48) + ((profile.heightIn || 10) * 2.54);
+  var age = profile.age || 30;
+  var gender = profile.gender || "male";
+
+  // Mifflin-St Jeor BMR
+  var bmr;
+  if(gender === "female"){
+    bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) - 161;
+  } else {
+    bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + 5;
+  }
+
+  var tdee = Math.round(bmr * (profile.activityMultiplier || 1.55));
+
+  // Determine mode from goals
+  var goals = profile.goals || [];
+  var isLosing = goals.indexOf("lose_fat") > -1 || goals.indexOf("glp1") > -1;
+  var isBuilding = goals.indexOf("build_muscle") > -1 || goals.indexOf("performance") > -1;
+  var isRecomp = goals.indexOf("recomp") > -1;
+
+  var nutritionMode, calorieTarget;
+  if(isLosing && !isBuilding){
+    nutritionMode = "cut";
+    calorieTarget = tdee - 400;
+  } else if(isBuilding && !isLosing){
+    nutritionMode = "build";
+    calorieTarget = tdee + 250;
+  } else {
+    nutritionMode = "recomp";
+    calorieTarget = tdee;
+  }
+
+  var bw = profile.currentWeight || 180;
+  var proteinTarget = nutritionMode === "cut" ? Math.round(bw * 1.4) :
+                      nutritionMode === "build" ? Math.round(bw * 1.2) :
+                      Math.round(bw * 1.0);
+  var fatTarget = Math.round(bw * 0.4);
+  var carbTarget = Math.round((calorieTarget - (proteinTarget * 4) - (fatTarget * 9)) / 4);
+  if(carbTarget < 50) carbTarget = 50;
+
+  return {
+    bmr: Math.round(bmr),
+    tdee: tdee,
+    calorieTarget: calorieTarget,
+    proteinTarget: proteinTarget,
+    carbTarget: carbTarget,
+    fatTarget: fatTarget,
+    nutritionMode: nutritionMode
+  };
+}
+
+function renderStep10(c){
+  var ack = getAck(10);
+  var targets = calculateNutritionTargets();
+
+  // Store targets
+  profile.bmr = targets.bmr;
+  profile.tdee = targets.tdee;
+  profile.calorieTarget = targets.calorieTarget;
+  profile.proteinTarget = targets.proteinTarget;
+  profile.carbTarget = targets.carbTarget;
+  profile.fatTarget = targets.fatTarget;
+  profile.nutritionMode = targets.nutritionMode;
+
+  var modeLabels = {build:"BUILD",cut:"CUT",recomp:"RECOMP"};
+  var modeColors = {build:"#2dc653",cut:"#f4a261",recomp:"#2dd4bf"};
+  var modeLabel = modeLabels[targets.nutritionMode] || "RECOMP";
+  var modeColor = modeColors[targets.nutritionMode] || "#2dd4bf";
+
+  var deficitNote = "";
+  if(targets.nutritionMode === "cut") deficitNote = "TDEE " + targets.tdee + " minus 400 cal deficit";
+  else if(targets.nutritionMode === "build") deficitNote = "TDEE " + targets.tdee + " plus 250 cal surplus";
+  else deficitNote = "Maintenance at TDEE " + targets.tdee;
+
+  var ppb = (targets.proteinTarget / (profile.currentWeight || 180)).toFixed(1);
+
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">YOUR NUMBERS ARE READY</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="step-sub">Calculated using the Mifflin-St Jeor formula — the gold standard used by registered dietitians.</div>';
+
+  h += '<div class="reveal-card">';
+
+  // Mode badge
+  h += '<div style="text-align:center;margin-bottom:16px;"><span style="background:' + modeColor + ';color:#0a1628;font-family:var(--fc);font-weight:700;font-size:0.8rem;letter-spacing:2px;padding:6px 20px;border-radius:20px;">' + modeLabel + ' MODE</span></div>';
+
+  // Calories
+  h += '<div style="text-align:center;margin-bottom:4px;"><div class="reveal-big" id="cal-display">' + targets.calorieTarget + '</div><div style="font-family:var(--fc);font-size:0.85rem;color:var(--t2);letter-spacing:1px;">CALORIES PER DAY</div>';
+  h += '<div style="font-size:0.75rem;color:var(--t3);margin-top:4px;">' + deficitNote + '</div></div>';
+
+  // Macro breakdown
+  h += '<div style="display:flex;justify-content:space-around;margin:20px 0;text-align:center;">';
+  h += '<div><div style="font-family:var(--fd);font-size:1.8rem;color:var(--gold);" id="prot-display">' + targets.proteinTarget + 'g</div><div style="font-family:var(--fc);font-size:0.72rem;color:var(--t2);letter-spacing:1px;">PROTEIN</div><div style="font-size:0.68rem;color:var(--t3);">' + ppb + 'g/lb</div></div>';
+  h += '<div><div style="font-family:var(--fd);font-size:1.8rem;color:var(--teal);" id="carb-display">' + targets.carbTarget + 'g</div><div style="font-family:var(--fc);font-size:0.72rem;color:var(--t2);letter-spacing:1px;">CARBS</div></div>';
+  h += '<div><div style="font-family:var(--fd);font-size:1.8rem;color:var(--amber);" id="fat-display">' + targets.fatTarget + 'g</div><div style="font-family:var(--fc);font-size:0.72rem;color:var(--t2);letter-spacing:1px;">FAT</div></div>';
+  h += '</div>';
+
+  // BMR/TDEE detail
+  h += '<div style="border-top:1px solid var(--border);padding-top:12px;font-size:0.78rem;color:var(--t3);text-align:center;line-height:1.8;">';
+  h += 'BMR: ' + targets.bmr + ' cal at complete rest<br>';
+  h += 'TDEE: ' + targets.tdee + ' cal for your activity level<br>';
+  h += 'Based on: ' + (profile.currentWeight || "—") + ' lbs · ' + (profile.heightFt || "—") + '\'' + (profile.heightIn || "0") + '" · ' + (profile.age || "—") + ' yrs · ' + (profile.activityLevel || "moderate");
+  h += '</div>';
+
+  h += '</div>'; // end reveal-card
+
+  // Adjustment slider
+  h += '<div class="cal-slider-wrap">';
+  h += '<div class="form-label" style="margin-bottom:6px;">WANT TO ADJUST? ±200 CALORIES</div>';
+  h += '<input type="range" class="cal-slider" id="cal-slider" min="' + (targets.calorieTarget - 200) + '" max="' + (targets.calorieTarget + 200) + '" value="' + targets.calorieTarget + '" step="25">';
+  h += '</div>';
+
+  h += '<div class="step-nav">';
+  h += '<button class="btn-back" id="ob-back">BACK</button>';
+  h += '<button class="btn-continue" id="ob-next">CONFIRM TARGETS</button>';
+  h += '</div>';
+  h += '</div>';
+  c.innerHTML = h;
+
+  // Slider interaction
+  var slider = document.getElementById("cal-slider");
+  slider.addEventListener("input", function(){
+    var newCal = parseInt(slider.value);
+    profile.calorieTarget = newCal;
+    document.getElementById("cal-display").textContent = newCal;
+    // Recalculate macros with new calories
+    var bw = profile.currentWeight || 180;
+    var prot = profile.proteinTarget;
+    var fat = profile.fatTarget;
+    var newCarb = Math.round((newCal - (prot * 4) - (fat * 9)) / 4);
+    if(newCarb < 50) newCarb = 50;
+    profile.carbTarget = newCarb;
+    document.getElementById("carb-display").textContent = newCarb + "g";
+  });
+
+  document.getElementById("ob-next").disabled = false;
+  bindBack();
+  document.getElementById("ob-next").addEventListener("click", function(){
+    currentStep++;
     render();
   });
 }
 
-/* ═══════════════════════════════════════
-   PLAN REVEAL
-   ═══════════════════════════════════════ */
-function renderReveal(contextText){
-  var goalLabels = {lose_weight:"Fat Loss",build_strength:"Muscle & Strength",recover:"Recovery & Rebuild",general:"General Fitness"};
-  var goalLabel = goalLabels[answers.goal] || "Fitness";
+/* ═══════════════════════════════════════════════════════════
+   STEP 11 — PLAN REVEAL
+   ═══════════════════════════════════════════════════════════ */
+function renderStep11(c){
+  var expLabels = {beginner:"Phase 1 — Stabilization",under1:"Phase 1 — Foundation",
+    "1to3":"Phase 2 — Strength Endurance",
+    "3plus":"Phase 3 — Muscular Development",
+    comeback:"Phase 2 — Rebuild"};
+  var phaseLabel = expLabels[profile.experience] || "Phase 1 — Foundation";
 
-  var expLabels = {beginner:"Phase 1 \u2014 Stabilization",on_off:"Phase 2 \u2014 Strength Endurance",consistent:"Phase 3 \u2014 Muscular Development",advanced:"Phase 4 \u2014 Max Strength"};
-  var phaseLabel = expLabels[answers.experience] || "Phase 1";
+  var splitMap = {2:"Full Body x2",3:"Full Body x3",4:"Upper/Lower Split",5:"Push/Pull/Legs + Upper/Lower",6:"Push/Pull/Legs x2"};
+  var splitLabel = splitMap[profile.daysPerWeek] || "Full Body";
 
-  var modeMap = {build:"BUILD",cut:"CUT",recomp:"RECOMP",maintain:"MAINTAIN"};
-  var modeLabel = modeMap[answers.nutritionMode] || "BUILD";
-  var modeColors = {BUILD:"#2dc653",CUT:"#f4a261",RECOMP:"#2dd4bf",MAINTAIN:"#8fa3c0"};
+  var locLabels = {commercial:"Full gym equipment",small:"Small gym",home:"Home gym",bodyweight:"Bodyweight only"};
+  var locLabel = locLabels[profile.location] || "";
 
-  // Try to get bodyweight from existing profile
-  var existingProfile = {};
-  try { existingProfile = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){}
-  var bw = existingProfile.bodyweight || 0;
+  var modeLabels = {build:"BUILD",cut:"CUT",recomp:"RECOMP"};
+  var modeColors = {build:"#2dc653",cut:"#f4a261",recomp:"#2dd4bf"};
+  var modeLabel = modeLabels[profile.nutritionMode] || "RECOMP";
+  var modeColor = modeColors[profile.nutritionMode] || "#2dd4bf";
 
-  var proteinPerLb = {build:1.2,cut:1.4,recomp:1.0,maintain:1.0};
-  var mult = proteinPerLb[answers.nutritionMode] || 1.0;
-  var proteinTarget = bw ? Math.round(bw * mult) : 0;
-  var maintenance = bw ? bw * 15 : 0;
-  var calTarget = 0;
-  if(bw){
-    if(answers.nutritionMode === "build") calTarget = maintenance + 250;
-    else if(answers.nutritionMode === "cut") calTarget = maintenance - 400;
-    else calTarget = maintenance;
-  }
+  var goalNames = {lose_fat:"Fat Loss",build_muscle:"Muscle & Strength",recomp:"Recomposition",performance:"Performance",glp1:"GLP-1 Support",recover:"Recovery",general:"General Health",partner:"Partner Training"};
+  var goalList = (profile.goals || []).map(function(g){ return goalNames[g] || g; }).join(", ");
 
-  var html = '<div class="step-box active">';
-  html += '<h1 class="step-headline">YOUR FORGE PLAN IS READY</h1>';
-  if(contextText) html += '<div class="step-context">' + esc(contextText) + '</div>';
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">YOUR FORGE PLAN IS READY</h1>';
 
-  html += '<div class="plan-reveal">';
+  h += '<div class="reveal-card">';
+  // Training
+  h += '<div class="reveal-section"><div class="reveal-label">TRAINING PLAN</div>';
+  h += '<div class="reveal-row"><strong>' + esc(phaseLabel) + '</strong></div>';
+  h += '<div class="reveal-row">' + (profile.daysPerWeek || 4) + ' days/week · <strong>' + splitLabel + '</strong></div>';
+  h += '<div class="reveal-row">Equipment: <strong>' + esc(locLabel) + '</strong></div>';
+  if(profile.injuries) h += '<div class="reveal-row" style="color:var(--amber);">Injury note: <strong>' + esc(profile.injuries) + '</strong></div>';
+  h += '<div class="reveal-row">Goals: <strong>' + esc(goalList) + '</strong></div>';
+  h += '</div>';
 
-  // Training section
-  html += '<div class="pr-section"><div class="pr-label">TRAINING</div>';
-  html += '<div class="pr-row"><strong>' + esc(phaseLabel) + '</strong></div>';
-  html += '<div class="pr-row">Goal: <strong>' + esc(goalLabel) + '</strong></div>';
-  if(answers.injuries) html += '<div class="pr-row">Injuries noted: <strong>' + esc(answers.injuries) + '</strong></div>';
-  html += '</div>';
+  // Nutrition
+  h += '<div class="reveal-section"><div class="reveal-label">NUTRITION PLAN</div>';
+  h += '<div class="reveal-row">Mode: <strong style="color:' + modeColor + '">' + modeLabel + '</strong></div>';
+  h += '<div class="reveal-row">Daily calories: <strong>' + (profile.calorieTarget || "—") + '</strong></div>';
+  h += '<div class="reveal-row">Protein: <strong>' + (profile.proteinTarget || "—") + 'g</strong> · Carbs: <strong>' + (profile.carbTarget || "—") + 'g</strong> · Fat: <strong>' + (profile.fatTarget || "—") + 'g</strong></div>';
+  if((profile.conditions || []).indexOf("glp1") > -1) h += '<div class="reveal-row" style="color:var(--amber);">GLP-1 protocol: protein-first every meal, smaller portions, hydration priority</div>';
+  h += '</div>';
+  h += '</div>'; // end reveal-card
 
-  // Nutrition section
-  html += '<div class="pr-section"><div class="pr-label">NUTRITION</div>';
-  html += '<div class="pr-row">Mode: <strong style="color:' + (modeColors[modeLabel]||"#f0a500") + '">' + modeLabel + '</strong></div>';
-  if(bw && proteinTarget){
-    html += '<div class="pr-row">Daily protein target: <strong>' + proteinTarget + 'g</strong></div>';
-    html += '<div class="pr-row">Daily calories: <strong>~' + Math.round(calTarget).toLocaleString() + '</strong></div>';
-  } else {
-    html += '<div class="pr-highlight">Set your bodyweight in Profile Settings to get exact targets</div>';
-  }
-  if(answers.dietaryRestrictions && answers.dietaryRestrictions !== "none") html += '<div class="pr-row">Restrictions: <strong>' + esc(answers.dietaryRestrictions.replace(/_/g," ")) + '</strong></div>';
-  html += '</div>';
+  // AI coach note placeholder
+  h += '<div id="coach-note" style="text-align:center;font-size:0.88rem;color:var(--t2);margin-bottom:20px;min-height:24px;"></div>';
 
-  html += '</div>'; // end plan-reveal
+  h += '<div class="step-nav">';
+  h += '<button class="btn-continue" id="ob-finish" style="font-size:1rem;padding:18px;">I WILL NOT QUIT — START NOW</button>';
+  h += '</div>';
+  h += '</div>';
+  c.innerHTML = h;
 
-  html += '<div class="step-nav">';
-  html += '<button class="btn-continue" id="ob-finish" style="background:var(--gold);font-size:1rem;padding:18px;">I WILL NOT QUIT \u2014 START NOW</button>';
-  html += '</div></div>';
+  // Fetch AI coach note
+  generateCoachNote();
 
-  return html;
-}
-
-function bindRevealButton(){
-  var btn = document.getElementById("ob-finish");
-  if(!btn) return;
-  btn.addEventListener("click", function(){
+  document.getElementById("ob-finish").addEventListener("click", function(){
+    var btn = document.getElementById("ob-finish");
     btn.disabled = true;
     btn.textContent = "BUILDING YOUR PROGRAM...";
     document.getElementById("loading-screen").classList.add("active");
-
-    // Generate plan summary via API (with safe fallback)
-    generatePlanSummary().then(function(summary){
-      saveFullProfile(summary);
-      window.location.href = "/dashboard.html";
-    });
+    saveFullProfile();
+    setTimeout(function(){ window.location.href = "/dashboard.html"; }, 1500);
   });
 }
 
-/* ═══════════════════════════════════════
-   PLAN GENERATION (safe)
-   ═══════════════════════════════════════ */
-function generatePlanSummary(){
-  return new Promise(function(resolve){
-    // Safety: always resolve within 8s
-    var timer = setTimeout(function(){ resolve("Your personalized plan is ready."); }, 8000);
+function generateCoachNote(){
+  var noteEl = document.getElementById("coach-note");
+  if(!noteEl) return;
 
-    try {
-      fetch("/.netlify/functions/chat", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 300,
-          system: "You are FORGE AI. Write a 2-3 sentence motivational welcome message for a new user. Mention their goal and one specific thing you will help them with. Be direct and warm. Plain text only. No JSON. No HTML. No markdown.",
-          messages: [{role:"user", content: "New user profile: Goal=" + (answers.goal||"fitness") + ", Experience=" + (answers.experience||"beginner") + ", NutritionMode=" + (answers.nutritionMode||"build") + ", GLP1=" + (answers.health && answers.health.indexOf("glp1")>-1 ? "yes" : "no")}]
-        })
+  var timer = setTimeout(function(){ noteEl.textContent = ""; }, 6000);
+
+  try {
+    fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 80,
+        system: "You are FORGE AI. Write one motivational sentence for this athlete. Be specific to their exact situation. Max 20 words. Plain text only.",
+        messages: [{role:"user", content: "goal=" + (profile.goals || []).join(",") + ", weight=" + (profile.currentWeight || "") + ", mode=" + (profile.nutritionMode || "") + ", injuries=" + (profile.injuries || "none") + ", supplements=" + ((profile.supplements || []).slice(0,3).join(","))}]
       })
-      .then(function(r){ return r.text(); })
-      .then(function(text){
-        clearTimeout(timer);
-        // Guard against HTML responses
-        if(text.trim().charAt(0) === "<"){
-          resolve("Your personalized plan is ready. Let's get to work.");
-          return;
-        }
-        try {
-          var data = JSON.parse(text);
-          resolve(data.content && data.content[0] ? data.content[0].text : "Your plan is ready.");
-        } catch(e){
-          // Not JSON — use raw text if it looks like a real message
-          if(text.length > 10 && text.length < 1000) resolve(text);
-          else resolve("Your personalized plan is ready.");
-        }
-      })
-      .catch(function(){
-        clearTimeout(timer);
-        resolve("Your personalized plan is ready. Let's get to work.");
-      });
-    } catch(e){
+    })
+    .then(function(r){ return r.text(); })
+    .then(function(text){
       clearTimeout(timer);
-      resolve("Your personalized plan is ready. Let's get to work.");
-    }
-  });
+      if(text.trim().charAt(0) === "<"){ noteEl.textContent = ""; return; }
+      try {
+        var data = JSON.parse(text);
+        noteEl.textContent = '"' + (data.content && data.content[0] ? data.content[0].text : "") + '"';
+      } catch(e){
+        if(text.length > 5 && text.length < 200) noteEl.textContent = '"' + text.trim() + '"';
+      }
+    })
+    .catch(function(){ clearTimeout(timer); });
+  } catch(e){ clearTimeout(timer); }
 }
 
-/* ═══════════════════════════════════════
-   SAVE PROFILE
-   ═══════════════════════════════════════ */
-function saveFullProfile(summary){
-  // Map nutritionMode
-  var modeKey = answers.nutritionMode || "build";
-  if(modeKey === "maintain") modeKey = "recomp";
-
-  // Get existing profile data (email, etc.)
+/* ═══════════════════════════════════════════════════════════
+   SAVE FULL PROFILE
+   ═══════════════════════════════════════════════════════════ */
+function saveFullProfile(){
   var existing = {};
   try { existing = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){}
   var existing1 = {};
   try { existing1 = JSON.parse(localStorage.getItem("forgeiq_profile_v1") || "{}"); } catch(e){}
 
-  var bw = existing.bodyweight || existing1.bodyweight || 0;
-  var proteinPerLb = {build:1.2,cut:1.4,recomp:1.0};
-  var proteinTarget = bw ? Math.round(bw * (proteinPerLb[modeKey] || 1.0)) : 0;
-  var maintenance = bw ? bw * 15 : 0;
-  var calTarget = 0;
-  if(bw){
-    calTarget = modeKey === "build" ? maintenance + 250 : modeKey === "cut" ? maintenance - 400 : maintenance;
-  }
-
   var profileData = {
-    goal: answers.goal,
-    healthContext: answers.health || [],
-    injuries: answers.injuries || "",
-    experience: answers.experience,
-    language: answers.language,
-    dietaryApproach: answers.dietaryApproach,
-    dietaryRestrictions: answers.dietaryRestrictions,
-    nutritionChallenge: answers.nutritionChallenge,
-    supplements: answers.supplements,
-    nutritionMode: modeKey,
-    proteinTarget: proteinTarget,
-    calorieTarget: calTarget,
-    planSummary: summary || "",
-    conversationSummary: Object.keys(answers).map(function(k){ return {question:k, answer:answers[k]}; }),
+    // Step 1
+    goals: profile.goals || [],
+    // Step 2
+    currentWeight: profile.currentWeight,
+    goalWeight: profile.goalWeight,
+    heightFt: profile.heightFt,
+    heightIn: profile.heightIn,
+    age: profile.age,
+    gender: profile.gender,
+    bodyFat: profile.bodyFat,
+    goalBodyFat: profile.goalBodyFat,
+    // Step 3
+    activityLevel: profile.activityLevel,
+    activityMultiplier: profile.activityMultiplier,
+    // Step 4
+    daysPerWeek: profile.daysPerWeek,
+    duration: profile.duration,
+    experience: profile.experience,
+    location: profile.location,
+    // Step 5
+    conditions: profile.conditions || [],
+    injuries: profile.injuries || "",
+    medications: profile.medications || [],
+    // Step 6
+    currentNutritionApproach: profile.currentNutritionApproach,
+    // Step 7
+    dietaryRestrictions: profile.dietaryRestrictions || [],
+    // Step 8
+    nutritionChallenges: profile.nutritionChallenges || [],
+    // Step 9
+    supplements: profile.supplements || [],
+    supplementBudget: profile.supplementBudget || "",
+    // Step 10 — calculated
+    bmr: profile.bmr,
+    tdee: profile.tdee,
+    calorieTarget: profile.calorieTarget,
+    proteinTarget: profile.proteinTarget,
+    carbTarget: profile.carbTarget,
+    fatTarget: profile.fatTarget,
+    nutritionMode: profile.nutritionMode,
+    // Meta
     onboardingComplete: true,
-    onboardingDate: new Date().toISOString()
+    onboardingDate: new Date().toISOString(),
+    // Legacy compat
+    goal: (profile.goals || [])[0] || "general",
+    bodyweight: profile.currentWeight,
+    healthContext: profile.conditions || [],
+    glp1: (profile.conditions || []).indexOf("glp1") > -1
   };
 
   // Merge into both profile keys
   var k;
   for(k in profileData){ existing[k] = profileData[k]; }
   localStorage.setItem("forgeiq_profile", JSON.stringify(existing));
-
   for(k in profileData){ existing1[k] = profileData[k]; }
   localStorage.setItem("forgeiq_profile_v1", JSON.stringify(existing1));
 
-  // Set language
-  if(answers.language) localStorage.setItem("forgeiq_lang", answers.language);
+  // Set language and GLP-1 flag
+  if(profile.language) localStorage.setItem("forgeiq_lang", profile.language);
 
-  // Set GLP-1 flag
-  if(answers.health && answers.health.indexOf("glp1") > -1){
-    existing.glp1 = true;
-    existing1.glp1 = true;
-    localStorage.setItem("forgeiq_profile", JSON.stringify(existing));
-    localStorage.setItem("forgeiq_profile_v1", JSON.stringify(existing1));
+  // Store goal weight for progress charts
+  if(profile.goalWeight) localStorage.setItem("forgeiq_goal_weight", String(profile.goalWeight));
+
+  // Seed initial weight log entry
+  if(profile.currentWeight){
+    var today = new Date().toISOString().slice(0,10);
+    var weightLog = [];
+    try { weightLog = JSON.parse(localStorage.getItem("forgeiq_weight_log") || "[]"); } catch(e){}
+    if(weightLog.length === 0){
+      weightLog.push({date: today, weight: profile.currentWeight});
+      localStorage.setItem("forgeiq_weight_log", JSON.stringify(weightLog));
+    }
+  }
+  if(profile.bodyFat){
+    var today2 = new Date().toISOString().slice(0,10);
+    var bfLog = [];
+    try { bfLog = JSON.parse(localStorage.getItem("forgeiq_bodyfat_log") || "[]"); } catch(e){}
+    if(bfLog.length === 0){
+      bfLog.push({date: today2, bodyFat: profile.bodyFat});
+      localStorage.setItem("forgeiq_bodyfat_log", JSON.stringify(bfLog));
+    }
   }
 }
 
-/* ═══════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    INIT
-   ═══════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════ */
 render();
 
 })();

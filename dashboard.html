@@ -403,6 +403,116 @@
       margin-bottom: 16px;
     }
 
+    /* ── CALORIE RING (MFP-style) ── */
+    .cal-widget {
+      background: var(--card-bg);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+    .cal-widget-inner {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .cal-ring-wrap {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      flex-shrink: 0;
+    }
+    .cal-ring-svg {
+      width: 160px;
+      height: 160px;
+      transform: rotate(-90deg);
+    }
+    .cal-ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 12; }
+    .cal-ring-fill { fill: none; stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
+    .cal-ring-center {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .cal-ring-number {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .cal-ring-label {
+      font-family: var(--font-condensed);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .cal-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      min-width: 160px;
+    }
+    .cal-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .cal-stat-row:last-child { border-bottom: none; }
+    .cal-stat-row strong { color: var(--text-primary); }
+
+    /* Macro progress bars */
+    .macro-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .macro-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .macro-bar-label {
+      font-family: var(--font-condensed);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      width: 60px;
+    }
+    .macro-bar-track {
+      flex: 1;
+      height: 10px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .macro-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.6s ease;
+    }
+    .macro-bar-fill.protein { background: var(--gold); }
+    .macro-bar-fill.carbs { background: var(--teal); }
+    .macro-bar-fill.fat { background: var(--amber); }
+    .macro-bar-val {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      width: 90px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .top-nav { padding: 0 16px; }
@@ -416,6 +526,8 @@
       }
       .streak-card { padding: 20px; }
       .greeting-card { padding: 24px 20px; }
+      .cal-widget-inner { flex-direction: column; align-items: center; text-align: center; }
+      .cal-stats { width: 100%; }
     }
     @media (max-width: 480px) {
       .nav-right .lang-toggle { display: none; }
@@ -463,6 +575,46 @@
   <div class="greeting-card" id="greeting-card">
     <div class="greeting-title" id="greeting-title">Good morning, <span class="name-highlight">Coach</span></div>
     <div class="greeting-sub" id="greeting-sub">Day 1 of your journey. Your coach has your workout ready.</div>
+  </div>
+
+  <!-- CALORIE RING WIDGET -->
+  <div class="cal-widget" id="cal-widget" style="display:none;">
+    <div class="section-title" style="margin-bottom:16px;">Today's Nutrition</div>
+    <div class="cal-widget-inner">
+      <div class="cal-ring-wrap">
+        <svg class="cal-ring-svg" viewBox="0 0 160 160">
+          <circle class="cal-ring-bg" cx="80" cy="80" r="68"/>
+          <circle class="cal-ring-fill" id="cal-ring-fill" cx="80" cy="80" r="68"
+            stroke-dasharray="427.26" stroke-dashoffset="427.26" stroke="var(--gold)"/>
+        </svg>
+        <div class="cal-ring-center">
+          <div class="cal-ring-number" id="cal-remaining">—</div>
+          <div class="cal-ring-label">Remaining</div>
+        </div>
+      </div>
+      <div class="cal-stats">
+        <div class="cal-stat-row">Base Goal<strong id="cal-base">—</strong></div>
+        <div class="cal-stat-row">Food<strong id="cal-food">0</strong></div>
+        <div class="cal-stat-row">Exercise<strong id="cal-exercise" style="color:var(--green);">+0</strong></div>
+      </div>
+    </div>
+    <div class="macro-bars">
+      <div class="macro-bar-row">
+        <div class="macro-bar-label">Protein</div>
+        <div class="macro-bar-track"><div class="macro-bar-fill protein" id="macro-prot-fill" style="width:0%"></div></div>
+        <div class="macro-bar-val" id="macro-prot-val">0g / —</div>
+      </div>
+      <div class="macro-bar-row">
+        <div class="macro-bar-label">Carbs</div>
+        <div class="macro-bar-track"><div class="macro-bar-fill carbs" id="macro-carb-fill" style="width:0%"></div></div>
+        <div class="macro-bar-val" id="macro-carb-val">0g / —</div>
+      </div>
+      <div class="macro-bar-row">
+        <div class="macro-bar-label">Fat</div>
+        <div class="macro-bar-track"><div class="macro-bar-fill fat" id="macro-fat-fill" style="width:0%"></div></div>
+        <div class="macro-bar-val" id="macro-fat-val">0g / —</div>
+      </div>
+    </div>
   </div>
 
   <!-- TODAY'S WORKOUT -->
@@ -835,6 +987,106 @@
   $("#ring-workouts-val").textContent = weekWorkoutCount + "/" + workoutTarget;
   $("#ring-nutrition-val").textContent = weekNutritionCount + "/" + nutritionTarget;
   $("#ring-goals-val").textContent = weekGoalsCount + "/" + goalsTarget;
+
+})();
+</script>
+<script>
+/* ── CALORIE RING WIDGET ── */
+(function(){
+  "use strict";
+
+  function getP(key){
+    try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch(e){ return {}; }
+  }
+
+  var prof = getP("forgeiq_profile");
+  var prof1 = getP("forgeiq_profile_v1");
+  var p = prof.calorieTarget ? prof : prof1;
+
+  var calorieTarget = p.calorieTarget || 0;
+  var proteinTarget = p.proteinTarget || 0;
+  var carbTarget = p.carbTarget || 0;
+  var fatTarget = p.fatTarget || 0;
+
+  if(!calorieTarget){
+    // No targets set — hide widget
+    return;
+  }
+
+  document.getElementById("cal-widget").style.display = "block";
+
+  // Get today's food log
+  var today = new Date().toDateString();
+  var foodLogged = 0;
+  var protLogged = 0;
+  var carbLogged = 0;
+  var fatLogged = 0;
+
+  try {
+    var meals = JSON.parse(localStorage.getItem("forgeiq_meals") || "{}");
+    var todayMeals = meals[today] || [];
+    todayMeals.forEach(function(m){
+      foodLogged += (m.calories || 0);
+      protLogged += (m.protein || 0);
+      carbLogged += (m.carbs || 0);
+      fatLogged += (m.fat || 0);
+    });
+  } catch(e){}
+
+  // Also check nutrition log format
+  try {
+    var nutLog = JSON.parse(localStorage.getItem("forgeiq_nutrition_log") || "{}");
+    var todayKey = new Date().toISOString().slice(0,10);
+    var todayNut = nutLog[todayKey];
+    if(todayNut){
+      foodLogged += (todayNut.calories || 0);
+      protLogged += (todayNut.protein || 0);
+      carbLogged += (todayNut.carbs || 0);
+      fatLogged += (todayNut.fat || 0);
+    }
+  } catch(e){}
+
+  // Get today's exercise calories
+  var exerciseBurned = 0;
+  try {
+    var exCal = JSON.parse(localStorage.getItem("forgeiq_exercise_calories") || "{}");
+    exerciseBurned = exCal[today] || 0;
+  } catch(e){}
+
+  var remaining = calorieTarget - foodLogged + exerciseBurned;
+
+  // Update display
+  document.getElementById("cal-base").textContent = calorieTarget;
+  document.getElementById("cal-food").textContent = foodLogged;
+  document.getElementById("cal-exercise").textContent = "+" + exerciseBurned;
+  document.getElementById("cal-remaining").textContent = remaining;
+
+  // Ring color
+  var ringEl = document.getElementById("cal-ring-fill");
+  var circumference = 2 * Math.PI * 68; // 427.26
+  var pctUsed = calorieTarget > 0 ? Math.min(foodLogged / (calorieTarget + exerciseBurned), 1) : 0;
+  var offset = circumference * (1 - pctUsed);
+  ringEl.setAttribute("stroke-dashoffset", offset);
+
+  if(remaining < 0){
+    ringEl.setAttribute("stroke", "#e63946"); // red — over budget
+    document.getElementById("cal-remaining").style.color = "#e63946";
+  } else if(remaining < 100){
+    ringEl.setAttribute("stroke", "#f4a261"); // amber — close
+  } else {
+    ringEl.setAttribute("stroke", "#2dc653"); // green — on track
+  }
+
+  // Macro bars
+  function setMacroBar(fillId, valId, logged, target, unit){
+    var pct = target > 0 ? Math.min((logged / target) * 100, 100) : 0;
+    document.getElementById(fillId).style.width = pct + "%";
+    document.getElementById(valId).textContent = Math.round(logged) + unit + " / " + target + unit;
+  }
+
+  setMacroBar("macro-prot-fill", "macro-prot-val", protLogged, proteinTarget, "g");
+  setMacroBar("macro-carb-fill", "macro-carb-val", carbLogged, carbTarget, "g");
+  setMacroBar("macro-fat-fill", "macro-fat-val", fatLogged, fatTarget, "g");
 
 })();
 </script>
