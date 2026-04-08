@@ -225,6 +225,18 @@
     </div>
     <div id="plan-days"></div>
 
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+      <button onclick="savePlanAndGoDashboard()" style="width:100%;padding:16px;background:#f0a500;border:none;border-radius:10px;color:#0a1628;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.08em;cursor:pointer;">
+        I WILL NOT QUIT — START NOW →
+      </button>
+      <button onclick="window.location.href='/train'" style="width:100%;padding:14px;background:transparent;border:1px solid rgba(240,165,0,0.4);border-radius:10px;color:#f0a500;font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:0.08em;cursor:pointer;">
+        GO TO WORKOUT BUILDER
+      </button>
+      <button onclick="window.location.href='/dashboard'" style="width:100%;padding:14px;background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#8fa3c0;font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:0.08em;cursor:pointer;">
+        GO TO DASHBOARD
+      </button>
+    </div>
+
     <div style="text-align:center;margin-top:24px;">
       <button class="btn-outline" onclick="showMyPlans()">VIEW ALL MY PLANS</button>
     </div>
@@ -674,6 +686,25 @@ function escHtml(s){
 window.toggleDay = function(dayNum){
   var card = $("#day-card-" + dayNum);
   if(card) card.classList.toggle("open");
+};
+
+window.savePlanAndGoDashboard = function(){
+  var profile = {};
+  try { profile = JSON.parse(localStorage.getItem("forgeiq_profile_v1") || "{}"); } catch(e){}
+  profile.onboardingComplete = true;
+  profile.planGenerated = true;
+  profile.planGeneratedDate = new Date().toISOString();
+  localStorage.setItem("forgeiq_profile_v1", JSON.stringify(profile));
+
+  var planData = {
+    type: planDuration + "-day",
+    goal: intakeAnswers.goal || (profile.goals || []),
+    generatedAt: new Date().toISOString(),
+    planId: currentPlanId
+  };
+  localStorage.setItem("forgeiq_active_plan", JSON.stringify(planData));
+
+  window.location.href = "/dashboard";
 };
 
 window.markDayComplete = function(dayNum, btn){
