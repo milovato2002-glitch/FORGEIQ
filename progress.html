@@ -773,7 +773,385 @@
     </div>
   </div>
 
-</div>
+  <!-- ── WEIGHT TRACKING SECTION ── -->
+  <div style="margin-top:32px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+      <h2 style="font-family:'Bebas Neue',cursive;font-size:1.5rem;letter-spacing:1px;color:var(--text-primary);">Weight Tracking</h2>
+      <button class="btn-outline" id="logWeightBtn" style="padding:8px 18px;font-size:0.82rem;">
+        Log Today's Weight
+      </button>
+    </div>
+
+    <!-- Weight input (hidden by default) -->
+    <div id="weightInputCard" class="card" style="display:none;margin-bottom:20px;">
+      <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+        <div class="form-group" style="flex:1;min-width:120px;">
+          <label for="wt-input" style="font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-secondary);">Weight (lbs)</label>
+          <input type="number" id="wt-input" step="0.1" min="50" max="800" placeholder="e.g. 185" style="background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:6px;padding:10px 12px;color:var(--text-primary);font-family:'Barlow',sans-serif;font-size:0.95rem;">
+        </div>
+        <button class="btn-submit" id="wt-save" style="width:auto;padding:10px 24px;margin-top:0;">Save</button>
+      </div>
+    </div>
+
+    <!-- Weight summary -->
+    <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;" id="wtSummary">
+      <div class="stat-card" style="flex:1;min-width:100px;">
+        <div class="stat-label">Start</div>
+        <div class="stat-value" id="wt-start">&mdash;</div>
+        <div class="stat-unit">lbs</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:100px;">
+        <div class="stat-label">Current</div>
+        <div class="stat-value" id="wt-current">&mdash;</div>
+        <div class="stat-unit">lbs</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:100px;">
+        <div class="stat-label">Goal</div>
+        <div class="stat-value" id="wt-goal">&mdash;</div>
+        <div class="stat-unit">lbs</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:100px;">
+        <div class="stat-label">Total Change</div>
+        <div class="stat-value" id="wt-change">&mdash;</div>
+        <div class="stat-unit">lbs</div>
+      </div>
+    </div>
+
+    <!-- Weight chart -->
+    <div class="card">
+      <div class="chart-wrap" style="min-height:280px;">
+        <canvas id="wtTrendChart"></canvas>
+      </div>
+      <div class="chart-empty" id="wtTrendEmpty" style="display:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 5-6"/></svg>
+        <p>Log your weight to see your trend over time.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BODY FAT TRACKING SECTION ── -->
+  <div style="margin-top:32px;" id="bfTrackingSection">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+      <h2 style="font-family:'Bebas Neue',cursive;font-size:1.5rem;letter-spacing:1px;color:var(--text-primary);">Body Fat Tracking</h2>
+      <button class="btn-outline" id="logBFBtn" style="padding:8px 18px;font-size:0.82rem;">
+        Log Today's Body Fat %
+      </button>
+    </div>
+
+    <!-- BF input (hidden by default) -->
+    <div id="bfInputCard" class="card" style="display:none;margin-bottom:20px;">
+      <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+        <div class="form-group" style="flex:1;min-width:120px;">
+          <label for="bf-input" style="font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-secondary);">Body Fat %</label>
+          <input type="number" id="bf-input" step="0.1" min="1" max="60" placeholder="e.g. 18" style="background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:6px;padding:10px 12px;color:var(--text-primary);font-family:'Barlow',sans-serif;font-size:0.95rem;">
+        </div>
+        <button class="btn-submit" id="bf-save" style="width:auto;padding:10px 24px;margin-top:0;">Save</button>
+      </div>
+    </div>
+
+    <!-- BF summary -->
+    <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;" id="bfSummary">
+      <div class="stat-card" style="flex:1;min-width:100px;">
+        <div class="stat-label">Start</div>
+        <div class="stat-value" id="bf-start">&mdash;</div>
+        <div class="stat-unit">%</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:100px;">
+        <div class="stat-label">Current</div>
+        <div class="stat-value" id="bf-current">&mdash;</div>
+        <div class="stat-unit">%</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:100px;">
+        <div class="stat-label">Goal</div>
+        <div class="stat-value" id="bf-goal">&mdash;</div>
+        <div class="stat-unit">%</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:100px;">
+        <div class="stat-label">Lean Mass</div>
+        <div class="stat-value" id="bf-lean">&mdash;</div>
+        <div class="stat-unit">lbs</div>
+      </div>
+    </div>
+
+    <!-- BF chart -->
+    <div class="card">
+      <div class="chart-wrap" style="min-height:280px;">
+        <canvas id="bfTrendChart"></canvas>
+      </div>
+      <div class="chart-empty" id="bfTrendEmpty" style="display:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 5-6"/></svg>
+        <p>Log your body fat percentage to track your composition changes.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-wrap -->
+
+<!-- ── WEIGHT & BODY FAT TRACKING JS ── -->
+<script>
+(function(){
+  "use strict";
+
+  var WT_KEY = "forgeiq_weight_log";
+  var BF_KEY = "forgeiq_bodyfat_log";
+
+  function loadLog(key){
+    try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch(e){ return []; }
+  }
+  function saveLog(key, data){ localStorage.setItem(key, JSON.stringify(data)); }
+  function todayISO(){ return new Date().toISOString().slice(0,10); }
+  function fmtDate(iso){
+    var d = new Date(iso + "T00:00:00");
+    return (d.getMonth()+1) + "/" + d.getDate();
+  }
+
+  // Get profile
+  var prof = {};
+  try { prof = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){}
+
+  var goalWeight = prof.goalWeight || parseFloat(localStorage.getItem("forgeiq_goal_weight")) || null;
+  var goalBF = prof.goalBodyFat || null;
+
+  // ── WEIGHT TRACKING ──
+  var wtChart = null;
+
+  function renderWeightTracking(){
+    var log = loadLog(WT_KEY);
+    var canvas = document.getElementById("wtTrendChart");
+    var empty = document.getElementById("wtTrendEmpty");
+
+    if(log.length === 0){
+      canvas.style.display = "none";
+      empty.style.display = "flex";
+      if(wtChart){ wtChart.destroy(); wtChart = null; }
+    } else {
+      canvas.style.display = "block";
+      empty.style.display = "none";
+
+      // Stats
+      var first = log[0];
+      var latest = log[log.length - 1];
+      document.getElementById("wt-start").textContent = first.weight;
+      document.getElementById("wt-current").textContent = latest.weight;
+      document.getElementById("wt-goal").textContent = goalWeight || "\u2014";
+      var change = (latest.weight - first.weight).toFixed(1);
+      var changePrefix = change > 0 ? "+" : "";
+      document.getElementById("wt-change").textContent = changePrefix + change;
+      document.getElementById("wt-change").style.color = change < 0 ? "#2dc653" : change > 0 ? "#f4a261" : "";
+
+      // Filter last 90 days
+      var cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 90);
+      var cutoffStr = cutoff.toISOString().slice(0,10);
+      var recent = log.filter(function(e){ return e.date >= cutoffStr; });
+      if(recent.length < 2) recent = log.slice(-30);
+
+      var labels = recent.map(function(e){ return fmtDate(e.date); });
+      var values = recent.map(function(e){ return e.weight; });
+      var minW = Math.min.apply(null, values) - 5;
+      var maxW = Math.max.apply(null, values) + 5;
+
+      var datasets = [{
+        label: "Weight (lbs)",
+        data: values,
+        borderColor: "#f0a500",
+        backgroundColor: "rgba(240,165,0,0.08)",
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: "#f0a500",
+        tension: 0.3,
+        fill: true
+      }];
+
+      if(goalWeight){
+        datasets.push({
+          label: "Goal Weight",
+          data: new Array(values.length).fill(goalWeight),
+          borderColor: "#2dc653",
+          borderWidth: 1.5,
+          borderDash: [6,4],
+          pointRadius: 0,
+          fill: false
+        });
+        if(goalWeight < minW) minW = goalWeight - 5;
+        if(goalWeight > maxW) maxW = goalWeight + 5;
+      }
+
+      if(wtChart) wtChart.destroy();
+      wtChart = new Chart(canvas, {
+        type: "line",
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: "#8fa3c0", font: { family: "Barlow Condensed", size: 12 } } } },
+          scales: {
+            x: { ticks: { color: "#8fa3c0", font: { family: "Barlow Condensed", size: 11 } }, grid: { color: "rgba(255,255,255,0.05)" } },
+            y: { min: minW, max: maxW, ticks: { color: "#8fa3c0", font: { family: "Barlow Condensed", size: 11 } }, grid: { color: "rgba(255,255,255,0.05)" } }
+          }
+        }
+      });
+    }
+  }
+
+  // ── BODY FAT TRACKING ──
+  var bfChart = null;
+
+  function renderBFTracking(){
+    var log = loadLog(BF_KEY);
+    var canvas = document.getElementById("bfTrendChart");
+    var empty = document.getElementById("bfTrendEmpty");
+
+    if(log.length === 0){
+      canvas.style.display = "none";
+      empty.style.display = "flex";
+      if(bfChart){ bfChart.destroy(); bfChart = null; }
+    } else {
+      canvas.style.display = "block";
+      empty.style.display = "none";
+
+      var first = log[0];
+      var latest = log[log.length - 1];
+      document.getElementById("bf-start").textContent = first.bodyFat;
+      document.getElementById("bf-current").textContent = latest.bodyFat;
+      document.getElementById("bf-goal").textContent = goalBF || "\u2014";
+
+      // Calculate lean mass
+      var currentWeight = prof.currentWeight || prof.bodyweight || 0;
+      // Try to get latest weight from weight log
+      var wtLog = loadLog(WT_KEY);
+      if(wtLog.length > 0) currentWeight = wtLog[wtLog.length - 1].weight;
+      var leanMass = currentWeight && latest.bodyFat ? Math.round(currentWeight * (1 - latest.bodyFat / 100)) : null;
+      document.getElementById("bf-lean").textContent = leanMass || "\u2014";
+
+      var labels = log.map(function(e){ return fmtDate(e.date); });
+      var values = log.map(function(e){ return e.bodyFat; });
+      var minV = Math.min.apply(null, values) - 3;
+      var maxV = Math.max.apply(null, values) + 3;
+
+      var datasets = [{
+        label: "Body Fat %",
+        data: values,
+        borderColor: "#2dd4bf",
+        backgroundColor: "rgba(45,212,191,0.08)",
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: "#2dd4bf",
+        tension: 0.3,
+        fill: true
+      }];
+
+      if(goalBF){
+        datasets.push({
+          label: "Goal BF%",
+          data: new Array(values.length).fill(goalBF),
+          borderColor: "#2dc653",
+          borderWidth: 1.5,
+          borderDash: [6,4],
+          pointRadius: 0,
+          fill: false
+        });
+        if(goalBF < minV) minV = goalBF - 3;
+      }
+
+      if(bfChart) bfChart.destroy();
+      bfChart = new Chart(canvas, {
+        type: "line",
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: "#8fa3c0", font: { family: "Barlow Condensed", size: 12 } } } },
+          scales: {
+            x: { ticks: { color: "#8fa3c0", font: { family: "Barlow Condensed", size: 11 } }, grid: { color: "rgba(255,255,255,0.05)" } },
+            y: { min: minV, max: maxV, ticks: { color: "#8fa3c0", font: { family: "Barlow Condensed", size: 11 } }, grid: { color: "rgba(255,255,255,0.05)" } }
+          }
+        }
+      });
+    }
+  }
+
+  // ── EVENT HANDLERS ──
+
+  // Weight log
+  var wtBtn = document.getElementById("logWeightBtn");
+  var wtCard = document.getElementById("weightInputCard");
+  wtBtn.addEventListener("click", function(){
+    wtCard.style.display = wtCard.style.display === "none" ? "block" : "none";
+    if(wtCard.style.display === "block") document.getElementById("wt-input").focus();
+  });
+
+  document.getElementById("wt-save").addEventListener("click", function(){
+    var val = parseFloat(document.getElementById("wt-input").value);
+    if(isNaN(val) || val < 50 || val > 800) return;
+    var log = loadLog(WT_KEY);
+    var today = todayISO();
+    // Update today's entry if exists, otherwise add
+    var found = false;
+    for(var i = 0; i < log.length; i++){
+      if(log[i].date === today){ log[i].weight = val; found = true; break; }
+    }
+    if(!found) log.push({ date: today, weight: val });
+    saveLog(WT_KEY, log);
+    document.getElementById("wt-input").value = "";
+    wtCard.style.display = "none";
+
+    // Also update profile current weight
+    try {
+      var p = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}");
+      p.currentWeight = val;
+      p.bodyweight = val;
+      localStorage.setItem("forgeiq_profile", JSON.stringify(p));
+      var p1 = JSON.parse(localStorage.getItem("forgeiq_profile_v1") || "{}");
+      p1.currentWeight = val;
+      p1.bodyweight = val;
+      localStorage.setItem("forgeiq_profile_v1", JSON.stringify(p1));
+    } catch(e){}
+
+    renderWeightTracking();
+    // Show toast if available
+    if(typeof showToast === "function") showToast("Weight logged: " + val + " lbs");
+  });
+
+  // Body fat log
+  var bfBtn = document.getElementById("logBFBtn");
+  var bfCard = document.getElementById("bfInputCard");
+  bfBtn.addEventListener("click", function(){
+    bfCard.style.display = bfCard.style.display === "none" ? "block" : "none";
+    if(bfCard.style.display === "block") document.getElementById("bf-input").focus();
+  });
+
+  document.getElementById("bf-save").addEventListener("click", function(){
+    var val = parseFloat(document.getElementById("bf-input").value);
+    if(isNaN(val) || val < 1 || val > 60) return;
+    var log = loadLog(BF_KEY);
+    var today = todayISO();
+    var found = false;
+    for(var i = 0; i < log.length; i++){
+      if(log[i].date === today){ log[i].bodyFat = val; found = true; break; }
+    }
+    if(!found) log.push({ date: today, bodyFat: val });
+    saveLog(BF_KEY, log);
+    document.getElementById("bf-input").value = "";
+    bfCard.style.display = "none";
+
+    // Update profile body fat
+    try {
+      var p = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}");
+      p.bodyFat = val;
+      localStorage.setItem("forgeiq_profile", JSON.stringify(p));
+    } catch(e){}
+
+    renderBFTracking();
+    if(typeof showToast === "function") showToast("Body fat logged: " + val + "%");
+  });
+
+  // ── INIT ──
+  renderWeightTracking();
+  renderBFTracking();
+
+})();
+</script>
 
 <!-- Clear History Modal -->
 <div class="modal-overlay" id="clearModal">

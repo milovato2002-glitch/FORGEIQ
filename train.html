@@ -3343,16 +3343,50 @@
       saveToday();
 
       // Save for post-workout nutrition brief
+      var _wkDuration = Math.round(workoutSeconds / 60);
+      var _wkType = window._pendingSession ? window._pendingSession.type : "strength";
       localStorage.setItem("forgeiq_last_completed_workout", JSON.stringify({
         name: todayData.workout.name,
         muscles: window._pendingSession ? window._pendingSession.muscleGroup : "",
-        duration: Math.round(workoutSeconds / 60),
+        duration: _wkDuration,
         totalVolume: todayData.workout.volume,
         completedAt: new Date().toISOString()
       }));
 
+      // ── AUTO-UPDATE NUTRITION BUDGET ──
+      (function(){
+        var prof = {};
+        try { prof = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){}
+        var bwLbs = prof.currentWeight || prof.bodyweight || 0;
+        if(bwLbs && _wkDuration > 0){
+          var weightKg = bwLbs * 0.453592;
+          var MET_VALUES = {
+            strength:3.5, bodybuilding:4.0, hiit:8.0, crossfit:7.0, cardio:7.0,
+            powerlifting:4.0, olympic:5.0, kettlebell:6.0, corrective:2.5, mobility:2.5
+          };
+          var type = (_wkType || "strength").toLowerCase();
+          var met = 4.0;
+          var keys = Object.keys(MET_VALUES);
+          for(var mi=0; mi<keys.length; mi++){
+            if(type.indexOf(keys[mi]) >= 0){ met = MET_VALUES[keys[mi]]; break; }
+          }
+          var burned = Math.round(met * weightKg * (_wkDuration / 60));
+          var todayStr = new Date().toDateString();
+          var exCal = {};
+          try { exCal = JSON.parse(localStorage.getItem("forgeiq_exercise_calories") || "{}"); } catch(e){}
+          exCal[todayStr] = (exCal[todayStr] || 0) + burned;
+          localStorage.setItem("forgeiq_exercise_calories", JSON.stringify(exCal));
+
+          var calTarget = prof.calorieTarget || 0;
+          var newBudget = calTarget + burned;
+          window._postWorkoutBurned = burned;
+          window._postWorkoutBudget = newBudget;
+        }
+      })();
+
       window._pendingSession = null;
-      alert("Session logged successfully! Check your Nutrition tab for a post-workout brief.");
+      var burnMsg = window._postWorkoutBurned ? "\n\nYou burned ~" + window._postWorkoutBurned + " calories. Your calorie budget is now " + window._postWorkoutBudget + ". Time to fuel recovery." : "";
+      alert("Session logged successfully! Check your Nutrition tab for a post-workout brief." + burnMsg);
       renderHistory();
     }
   });
