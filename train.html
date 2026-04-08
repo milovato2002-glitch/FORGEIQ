@@ -1250,6 +1250,7 @@
       .top-nav { padding: 0 16px; }
       .nav-center { display: none; }
       .page { padding: 20px 16px; }
+      #build-chooser { grid-template-columns: 1fr !important; }
       .form-row { grid-template-columns: 1fr; }
       .wc-stats { grid-template-columns: 1fr; }
       .fuel-grid { grid-template-columns: 1fr; }
@@ -1320,18 +1321,260 @@
 
   <!-- BUILD TYPE CHOOSER -->
   <div class="section-title" style="margin-top:24px;">Build <em>Something</em></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;" id="build-chooser">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:28px;" id="build-chooser">
     <div style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;" onclick="document.getElementById('build-chooser').style.display='none';" onmouseover="this.style.borderColor='rgba(240,165,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
       <div style="font-size:2rem;margin-bottom:8px;">&#9889;</div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;color:#f0a500;">SINGLE WORKOUT</div>
-      <div style="font-size:0.78rem;color:#8fa3c0;margin-top:4px;">Build one session for today</div>
+      <div style="font-size:0.78rem;color:#8fa3c0;margin-top:4px;">AI builds one session</div>
     </div>
     <a href="/plan-builder.html?new=1" style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:inherit;" onmouseover="this.style.borderColor='rgba(240,165,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
       <div style="font-size:2rem;margin-bottom:8px;">&#128197;</div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;color:#f0a500;">MULTI-DAY PLAN</div>
       <div style="font-size:0.78rem;color:#8fa3c0;margin-top:4px;">7, 14, or 21-day program</div>
     </a>
+    <div style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;" onclick="document.getElementById('build-chooser').style.display='none';document.getElementById('manual-builder').style.display='block';" onmouseover="this.style.borderColor='rgba(240,165,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+      <div style="font-size:2rem;margin-bottom:8px;">&#9997;&#65039;</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;color:#f0a500;">MANUAL ENTRY</div>
+      <div style="font-size:0.78rem;color:#8fa3c0;margin-top:4px;">Build your own workout</div>
+    </div>
   </div>
+
+  <!-- MANUAL WORKOUT BUILDER -->
+  <div id="manual-builder" style="display:none;margin-bottom:28px;">
+    <div class="card card-gold">
+      <div class="card-header">Manual Workout Builder</div>
+      <div class="card-sub">Create your own workout from scratch — like JEFIT.</div>
+
+      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:180px;">
+          <label style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8fa3c0;display:block;margin-bottom:4px;">Workout Name</label>
+          <input type="text" id="manual-wk-name" placeholder="e.g. Push Day, Leg Day..." style="width:100%;background:#0e1e36;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;color:#e8edf5;font-size:0.9rem;outline:none;" onfocus="this.style.borderColor='#f0a500'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+        </div>
+        <div style="min-width:140px;">
+          <label style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8fa3c0;display:block;margin-bottom:4px;">Muscle Group</label>
+          <select id="manual-wk-muscle" style="width:100%;background:#0e1e36;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;color:#e8edf5;font-size:0.9rem;outline:none;">
+            <option value="chest">Chest</option><option value="back">Back</option><option value="shoulders">Shoulders</option>
+            <option value="legs">Legs</option><option value="arms">Arms</option><option value="core">Core</option>
+            <option value="full_body">Full Body</option><option value="upper">Upper Body</option><option value="lower">Lower Body</option>
+            <option value="push">Push</option><option value="pull">Pull</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#f0a500;margin-bottom:10px;">EXERCISES</div>
+
+      <div id="manual-exercise-list"></div>
+
+      <button onclick="addManualExercise()" style="width:100%;background:rgba(240,165,0,0.08);border:1px dashed rgba(240,165,0,0.3);border-radius:8px;padding:12px;color:#f0a500;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.85rem;letter-spacing:1px;cursor:pointer;transition:all 0.2s;margin-top:8px;">+ ADD EXERCISE</button>
+
+      <div style="display:flex;gap:12px;margin-top:20px;">
+        <button onclick="saveManualWorkout()" class="btn-outline" style="flex:1;padding:14px;">SAVE WORKOUT</button>
+        <button onclick="startManualWorkout()" class="btn-gold" style="flex:1;padding:14px;">START WORKOUT NOW</button>
+      </div>
+      <button onclick="document.getElementById('manual-builder').style.display='none';document.getElementById('build-chooser').style.display='grid';" class="btn-outline" style="width:100%;margin-top:8px;padding:10px;font-size:0.78rem;">&larr; Back to choices</button>
+    </div>
+
+    <!-- Saved Manual Workouts -->
+    <div id="saved-manual-workouts" style="margin-top:16px;"></div>
+  </div>
+
+  <script>
+  /* ── MANUAL WORKOUT BUILDER ── */
+  (function(){
+    var EXERCISE_LIB = {
+      chest: ["Barbell Bench Press","Incline Dumbbell Press","Decline Bench Press","Cable Fly","Dumbbell Fly","Push-Up","Chest Dip","Machine Chest Press","Pec Deck"],
+      back: ["Barbell Bent-Over Row","Deadlift","Pull-Up","Lat Pulldown","Seated Cable Row","Single-Arm DB Row","T-Bar Row","Face Pull","Rack Pull","Straight-Arm Pulldown"],
+      shoulders: ["Overhead Press","Dumbbell Lateral Raise","Front Raise","Rear Delt Fly","Upright Row","Arnold Press","Cable Lateral Raise","Machine Shoulder Press"],
+      legs: ["Barbell Back Squat","Romanian Deadlift","Leg Press","Hack Squat","Bulgarian Split Squat","Walking Lunge","Leg Extension","Leg Curl","Calf Raise","Hip Thrust","Glute Bridge"],
+      arms: ["Barbell Curl","Dumbbell Curl","Hammer Curl","Preacher Curl","Tricep Pushdown","Skull Crusher","Close-Grip Bench","Overhead Tricep Extension","Dip"],
+      core: ["Plank","Ab Wheel Rollout","Cable Crunch","Hanging Leg Raise","Russian Twist","Dead Bug","Bird Dog","Side Plank","V-Up"]
+    };
+    var ALL_EXERCISES = [];
+    Object.keys(EXERCISE_LIB).forEach(function(k){ ALL_EXERCISES = ALL_EXERCISES.concat(EXERCISE_LIB[k]); });
+
+    var exerciseCount = 0;
+
+    window.addManualExercise = function(prefill){
+      var idx = exerciseCount++;
+      var list = document.getElementById("manual-exercise-list");
+      var row = document.createElement("div");
+      row.id = "manual-ex-" + idx;
+      row.style.cssText = "background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:14px;margin-bottom:8px;position:relative;";
+      row.innerHTML =
+        '<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">' +
+          '<div style="flex:1;position:relative;">' +
+            '<input type="text" id="ex-name-' + idx + '" placeholder="Exercise name..." value="' + (prefill ? prefill.name || "" : "") + '" style="width:100%;background:#142444;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:8px 12px;color:#e8edf5;font-size:0.88rem;outline:none;" autocomplete="off" onfocus="showExSuggestions(' + idx + ')" oninput="filterExSuggestions(' + idx + ')">' +
+            '<div id="ex-suggest-' + idx + '" style="display:none;position:absolute;top:100%;left:0;right:0;background:#0e1e36;border:1px solid rgba(240,165,0,0.2);border-radius:6px;max-height:200px;overflow-y:auto;z-index:50;margin-top:2px;"></div>' +
+          '</div>' +
+          '<button onclick="findVideo(' + idx + ')" style="background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.2);border-radius:6px;padding:6px 10px;color:#f0a500;font-size:0.7rem;font-family:\'Barlow Condensed\',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;">FIND VIDEO</button>' +
+          '<button onclick="removeManualExercise(' + idx + ')" style="background:none;border:none;color:#4a6080;font-size:1.2rem;cursor:pointer;padding:0 6px;" title="Remove">&times;</button>' +
+        '</div>' +
+        '<div style="display:flex;gap:10px;flex-wrap:wrap;">' +
+          '<div style="flex:1;min-width:60px;"><label style="font-size:0.65rem;color:#4a6080;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px;">SETS</label><input type="number" id="ex-sets-' + idx + '" value="' + (prefill ? prefill.sets || 3 : 3) + '" min="1" max="20" style="width:100%;background:#142444;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 8px;color:#e8edf5;font-size:0.88rem;text-align:center;outline:none;"></div>' +
+          '<div style="flex:1;min-width:60px;"><label style="font-size:0.65rem;color:#4a6080;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px;">REPS</label><input type="number" id="ex-reps-' + idx + '" value="' + (prefill ? prefill.reps || 10 : 10) + '" min="1" max="100" style="width:100%;background:#142444;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 8px;color:#e8edf5;font-size:0.88rem;text-align:center;outline:none;"></div>' +
+          '<div style="flex:1;min-width:80px;"><label style="font-size:0.65rem;color:#4a6080;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px;">REST (sec)</label><input type="number" id="ex-rest-' + idx + '" value="' + (prefill ? prefill.rest || 90 : 90) + '" min="0" max="600" step="15" style="width:100%;background:#142444;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 8px;color:#e8edf5;font-size:0.88rem;text-align:center;outline:none;"></div>' +
+        '</div>';
+      list.appendChild(row);
+
+      // Close suggestions when clicking elsewhere
+      document.addEventListener("click", function handler(e){
+        var suggest = document.getElementById("ex-suggest-" + idx);
+        if(suggest && !suggest.contains(e.target) && e.target.id !== "ex-name-" + idx){
+          suggest.style.display = "none";
+        }
+      });
+    };
+
+    window.removeManualExercise = function(idx){
+      var el = document.getElementById("manual-ex-" + idx);
+      if(el) el.remove();
+    };
+
+    window.showExSuggestions = function(idx){
+      filterExSuggestions(idx);
+    };
+
+    window.filterExSuggestions = function(idx){
+      var input = document.getElementById("ex-name-" + idx);
+      var suggest = document.getElementById("ex-suggest-" + idx);
+      if(!input || !suggest) return;
+      var q = input.value.toLowerCase().trim();
+      var matches = q.length === 0 ? ALL_EXERCISES.slice(0, 15) : ALL_EXERCISES.filter(function(e){ return e.toLowerCase().indexOf(q) > -1; }).slice(0, 12);
+      if(matches.length === 0){ suggest.style.display = "none"; return; }
+      suggest.style.display = "block";
+      suggest.innerHTML = "";
+      matches.forEach(function(m){
+        var div = document.createElement("div");
+        div.textContent = m;
+        div.style.cssText = "padding:8px 12px;cursor:pointer;font-size:0.82rem;color:#8fa3c0;transition:background 0.15s;";
+        div.addEventListener("mouseenter", function(){ div.style.background = "rgba(240,165,0,0.08)"; div.style.color = "#e8edf5"; });
+        div.addEventListener("mouseleave", function(){ div.style.background = "transparent"; div.style.color = "#8fa3c0"; });
+        div.addEventListener("click", function(){
+          input.value = m;
+          suggest.style.display = "none";
+        });
+        suggest.appendChild(div);
+      });
+    };
+
+    window.findVideo = function(idx){
+      var name = document.getElementById("ex-name-" + idx);
+      if(!name || !name.value.trim()) return;
+      var query = encodeURIComponent(name.value.trim() + " proper form");
+      window.open("https://www.youtube.com/results?search_query=" + query, "_blank");
+    };
+
+    function getManualExercises(){
+      var exercises = [];
+      var rows = document.querySelectorAll("[id^='manual-ex-']");
+      rows.forEach(function(row){
+        var idStr = row.id.replace("manual-ex-", "");
+        var nameEl = document.getElementById("ex-name-" + idStr);
+        var setsEl = document.getElementById("ex-sets-" + idStr);
+        var repsEl = document.getElementById("ex-reps-" + idStr);
+        var restEl = document.getElementById("ex-rest-" + idStr);
+        if(nameEl && nameEl.value.trim()){
+          exercises.push({
+            name: nameEl.value.trim(),
+            sets: parseInt(setsEl ? setsEl.value : 3) || 3,
+            reps: parseInt(repsEl ? repsEl.value : 10) || 10,
+            rest: parseInt(restEl ? restEl.value : 90) || 90
+          });
+        }
+      });
+      return exercises;
+    }
+
+    window.saveManualWorkout = function(){
+      var name = (document.getElementById("manual-wk-name").value || "").trim();
+      var muscle = document.getElementById("manual-wk-muscle").value;
+      var exercises = getManualExercises();
+      if(!name){ alert("Enter a workout name."); return; }
+      if(exercises.length === 0){ alert("Add at least one exercise."); return; }
+      var saved = [];
+      try { saved = JSON.parse(localStorage.getItem("forgeiq_saved_workouts") || "[]"); } catch(e){}
+      saved.push({ name: name, muscle: muscle, exercises: exercises, createdAt: new Date().toISOString() });
+      localStorage.setItem("forgeiq_saved_workouts", JSON.stringify(saved));
+      alert("Workout '" + name + "' saved!");
+      renderSavedWorkouts();
+    };
+
+    window.startManualWorkout = function(){
+      var name = (document.getElementById("manual-wk-name").value || "").trim() || "Custom Workout";
+      var muscle = document.getElementById("manual-wk-muscle").value;
+      var exercises = getManualExercises();
+      if(exercises.length === 0){ alert("Add at least one exercise."); return; }
+
+      // Build workout data compatible with the existing startWorkout flow
+      var exList = exercises.map(function(ex){
+        return {
+          name: ex.name,
+          sets: ex.sets,
+          reps: ex.reps,
+          rest: ex.rest,
+          muscles: [muscle]
+        };
+      });
+
+      // Store as current workout and trigger the active logging screen
+      window.currentWorkoutData = { name: name, exercises: exList };
+      window.selectedType = "MANUAL";
+      window.selectedMuscle = muscle.toUpperCase();
+      if(typeof showExercisePreview === "function"){
+        showExercisePreview();
+      } else if(typeof startWorkout === "function"){
+        startWorkout();
+      }
+    };
+
+    window.loadSavedWorkout = function(idx){
+      var saved = [];
+      try { saved = JSON.parse(localStorage.getItem("forgeiq_saved_workouts") || "[]"); } catch(e){}
+      var wk = saved[idx];
+      if(!wk) return;
+      document.getElementById("manual-wk-name").value = wk.name;
+      document.getElementById("manual-wk-muscle").value = wk.muscle;
+      document.getElementById("manual-exercise-list").innerHTML = "";
+      exerciseCount = 0;
+      wk.exercises.forEach(function(ex){ window.addManualExercise(ex); });
+      document.getElementById("manual-builder").style.display = "block";
+      document.getElementById("build-chooser").style.display = "none";
+    };
+
+    window.deleteSavedWorkout = function(idx){
+      if(!confirm("Delete this saved workout?")) return;
+      var saved = [];
+      try { saved = JSON.parse(localStorage.getItem("forgeiq_saved_workouts") || "[]"); } catch(e){}
+      saved.splice(idx, 1);
+      localStorage.setItem("forgeiq_saved_workouts", JSON.stringify(saved));
+      renderSavedWorkouts();
+    };
+
+    function renderSavedWorkouts(){
+      var container = document.getElementById("saved-manual-workouts");
+      if(!container) return;
+      var saved = [];
+      try { saved = JSON.parse(localStorage.getItem("forgeiq_saved_workouts") || "[]"); } catch(e){}
+      if(saved.length === 0){ container.innerHTML = ""; return; }
+
+      var h = '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#f0a500;margin-bottom:10px;">SAVED WORKOUTS</div>';
+      saved.forEach(function(wk, i){
+        h += '<div style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:14px 16px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">';
+        h += '<div style="cursor:pointer;flex:1;" onclick="loadSavedWorkout(' + i + ')">';
+        h += '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:0.9rem;color:#e8edf5;">' + wk.name + '</div>';
+        h += '<div style="font-size:0.72rem;color:#4a6080;">' + wk.exercises.length + ' exercises · ' + wk.muscle + '</div>';
+        h += '</div>';
+        h += '<button onclick="deleteSavedWorkout(' + i + ')" style="background:none;border:none;color:#4a6080;font-size:1rem;cursor:pointer;padding:4px 8px;" title="Delete">&times;</button>';
+        h += '</div>';
+      });
+      container.innerHTML = h;
+    }
+
+    // Init: add one empty exercise row + render saved
+    window.addManualExercise();
+    renderSavedWorkouts();
+  })();
+  </script>
 
   <!-- MY ACTIVE PLAN (if exists) -->
   <div id="active-plan-banner" style="display:none;background:#0e1e36;border:1px solid rgba(240,165,0,0.18);border-radius:10px;padding:16px 20px;margin-bottom:28px;cursor:pointer;transition:border-color 0.2s;" onclick="window.location.href='/plan-builder.html'" onmouseover="this.style.borderColor='#f0a500'" onmouseout="this.style.borderColor='rgba(240,165,0,0.18)'">

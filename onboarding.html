@@ -167,35 +167,53 @@ try {
 var profile = {};
 
 /* ═══════════════════════════════════════════════════════════
-   STEP DEFINITIONS
+   DYNAMIC STEP SYSTEM
    ═══════════════════════════════════════════════════════════ */
-var TOTAL_STEPS = 11;
-var currentStep = 1;
+var ALL_STEPS = ["goals","bodyStats","activity","training","trainingStyle","health","nutritionApproach","dietaryRestrictions","nutritionChallenges","supplements","calcReveal","planReveal"];
+
+function getVisibleSteps(){
+  var vis = [];
+  for(var i=0;i<ALL_STEPS.length;i++){
+    var s = ALL_STEPS[i];
+    if(s === "trainingStyle"){
+      var exp = profile.experience || "";
+      if(exp !== "1to3" && exp !== "3plus" && exp !== "comeback") continue;
+    }
+    vis.push(s);
+  }
+  return vis;
+}
+
+var currentIdx = 0;
+
+function currentStepId(){ return getVisibleSteps()[currentIdx]; }
 
 /* ═══════════════════════════════════════════════════════════
    CONTEXTUAL ACKNOWLEDGMENTS
    ═══════════════════════════════════════════════════════════ */
-function getAck(stepNum){
-  if(stepNum <= 1) return "";
-  var prev = stepNum - 1;
-  if(prev === 1){
+function getAck(stepId){
+  var vis = getVisibleSteps();
+  var idx = vis.indexOf(stepId);
+  if(idx <= 0) return "";
+  var prevId = vis[idx - 1];
+  if(prevId === "goals"){
     var g = profile.goals || [];
     if(g.length === 0) return "";
     if(g.indexOf("lose_fat") > -1) return "Fat loss and transformation — let's go.";
     if(g.indexOf("build_muscle") > -1) return "Muscle building — time to get strong.";
     if(g.indexOf("recomp") > -1) return "Recomp — the hardest and most rewarding path.";
-    if(g.indexOf("glp1") > -1) return "GLP-1 support noted — protein-first at every meal.";
     return "Got it. Let's build your plan.";
   }
-  if(prev === 2) return profile.currentWeight ? "Numbers locked in. This is the foundation." : "";
-  if(prev === 3){
+  if(prevId === "bodyStats") return profile.currentWeight ? "Numbers locked in. This is the foundation." : "";
+  if(prevId === "activity"){
     var a = profile.activityLevel;
     if(a === "sedentary") return "Sedentary — we'll factor that in.";
     if(a === "very" || a === "extremely") return "High activity — your calorie needs are significant.";
     return "Activity level noted.";
   }
-  if(prev === 4) return profile.daysPerWeek ? profile.daysPerWeek + " days a week — we'll make every session count." : "";
-  if(prev === 5){
+  if(prevId === "training") return profile.daysPerWeek ? profile.daysPerWeek + " days a week — we'll make every session count." : "";
+  if(prevId === "trainingStyle") return (profile.trainingStyles || []).length > 0 ? "Training style locked in." : "";
+  if(prevId === "health"){
     var c = profile.conditions || [];
     if(c.indexOf("none") > -1 || c.length === 0) return "Clean bill — let's push.";
     var parts = [];
@@ -204,14 +222,14 @@ function getAck(stepNum){
     if(c.indexOf("veteran") > -1) parts.push("Thank you for your service.");
     return parts.join(" ") || "Noted — your safety comes first.";
   }
-  if(prev === 6) return "Got your current nutrition approach.";
-  if(prev === 7){
+  if(prevId === "nutritionApproach") return "Got your current nutrition approach.";
+  if(prevId === "dietaryRestrictions"){
     var r = profile.dietaryRestrictions || [];
     if(r.indexOf("none") > -1 || r.length === 0) return "No restrictions — maximum flexibility.";
     return "Dietary restrictions noted.";
   }
-  if(prev === 8) return "I see the challenges. We'll address every one.";
-  if(prev === 9) return "Supplement stack noted.";
+  if(prevId === "nutritionChallenges") return "I see the challenges. We'll address every one.";
+  if(prevId === "supplements") return "Supplement stack noted.";
   return "";
 }
 
@@ -219,33 +237,42 @@ function getAck(stepNum){
    RENDER ENGINE
    ═══════════════════════════════════════════════════════════ */
 function render(){
+  var vis = getVisibleSteps();
+  if(currentIdx < 0) currentIdx = 0;
+  if(currentIdx >= vis.length) currentIdx = vis.length - 1;
+  var stepId = vis[currentIdx];
   renderProgressBar();
   var container = document.getElementById("steps-container");
 
-  switch(currentStep){
-    case 1: renderStep1(container); break;
-    case 2: renderStep2(container); break;
-    case 3: renderStep3(container); break;
-    case 4: renderStep4(container); break;
-    case 5: renderStep5(container); break;
-    case 6: renderStep6(container); break;
-    case 7: renderStep7(container); break;
-    case 8: renderStep8(container); break;
-    case 9: renderStep9(container); break;
-    case 10: renderStep10(container); break;
-    case 11: renderStep11(container); break;
-  }
+  var RENDERERS = {
+    goals: renderStep1,
+    bodyStats: renderStep2,
+    activity: renderStep3,
+    training: renderStep4,
+    trainingStyle: renderStepTrainingStyle,
+    health: renderStep5,
+    nutritionApproach: renderStep6,
+    dietaryRestrictions: renderStep7,
+    nutritionChallenges: renderStep8,
+    supplements: renderStep9,
+    calcReveal: renderStep10,
+    planReveal: renderStep11
+  };
+
+  if(RENDERERS[stepId]) RENDERERS[stepId](container);
 }
 
 function renderProgressBar(){
+  var vis = getVisibleSteps();
+  var total = vis.length;
   var bar = document.getElementById("prog-bar");
   bar.innerHTML = "";
-  for(var i = 1; i <= TOTAL_STEPS; i++){
+  for(var i = 0; i < total; i++){
     var d = document.createElement("div");
-    d.className = "progress-step" + (i <= currentStep ? " active" : "");
+    d.className = "progress-step" + (i <= currentIdx ? " active" : "");
     bar.appendChild(d);
   }
-  document.getElementById("prog-label").textContent = "STEP " + currentStep + " OF " + TOTAL_STEPS;
+  document.getElementById("prog-label").textContent = "STEP " + (currentIdx + 1) + " OF " + total;
 }
 
 function esc(s){ return s ? String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ""; }
@@ -260,7 +287,7 @@ function buildNav(showBack){
 
 function bindBack(){
   var b = document.getElementById("ob-back");
-  if(b) b.addEventListener("click", function(){ currentStep--; render(); });
+  if(b) b.addEventListener("click", function(){ currentIdx--; render(); });
 }
 
 function enableNext(){ var n = document.getElementById("ob-next"); if(n) n.disabled = false; }
@@ -268,7 +295,7 @@ function disableNext(){ var n = document.getElementById("ob-next"); if(n) n.disa
 
 function bindNextClick(fn){
   var n = document.getElementById("ob-next");
-  if(n) n.addEventListener("click", function(){ if(fn) fn(); currentStep++; render(); });
+  if(n) n.addEventListener("click", function(){ if(fn) fn(); currentIdx++; render(); });
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -280,7 +307,6 @@ function renderStep1(c){
     {v:"build_muscle",t:"Build muscle and get stronger"},
     {v:"recomp",t:"Body recomposition (lose fat AND build muscle)"},
     {v:"performance",t:"Athletic performance"},
-    {v:"glp1",t:"GLP-1 medication support"},
     {v:"recover",t:"Recover from injury"},
     {v:"general",t:"General health and energy"},
     {v:"partner",t:"Train with my partner"}
@@ -318,7 +344,7 @@ function renderStep1(c){
    STEP 2 — BODY STATS
    ═══════════════════════════════════════════════════════════ */
 function renderStep2(c){
-  var ack = getAck(2);
+  var ack = getAck("bodyStats");
   var unit = profile._weightUnit || "lbs";
   var h = '<div class="step-box active">';
   h += '<h1 class="step-headline">LET\'S GET YOUR NUMBERS</h1>';
@@ -480,7 +506,7 @@ function checkStep2(){
    STEP 3 — ACTIVITY LEVEL
    ═══════════════════════════════════════════════════════════ */
 function renderStep3(c){
-  var ack = getAck(3);
+  var ack = getAck("activity");
   var levels = [
     {v:"sedentary",m:1.2,t:"SEDENTARY",d:"Office job or mostly sitting. Little or no exercise outside your planned workouts."},
     {v:"lightly",m:1.375,t:"LIGHTLY ACTIVE",d:"On your feet some of the day. Light exercise 1-2 days per week or casual walks."},
@@ -525,7 +551,7 @@ function renderStep3(c){
    STEP 4 — TRAINING DETAILS
    ═══════════════════════════════════════════════════════════ */
 function renderStep4(c){
-  var ack = getAck(4);
+  var ack = getAck("training");
   var h = '<div class="step-box active">';
   h += '<h1 class="step-headline">TELL ME ABOUT YOUR TRAINING</h1>';
   if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
@@ -589,10 +615,63 @@ function renderStep4(c){
 }
 
 /* ═══════════════════════════════════════════════════════════
+   STEP 4B — TRAINING STYLE (conditional)
+   ═══════════════════════════════════════════════════════════ */
+function renderStepTrainingStyle(c){
+  var ack = getAck("trainingStyle");
+  var opts = [
+    {v:"bodybuilding",t:"Bodybuilding / Hypertrophy",d:"Pump, isolation, mind-muscle connection"},
+    {v:"powerlifting",t:"Powerlifting",d:"Squat, bench, deadlift — max strength"},
+    {v:"olympic",t:"Olympic Weightlifting",d:"Snatch, clean and jerk"},
+    {v:"strength",t:"Strength Training",d:"General barbell strength"},
+    {v:"hiit",t:"HIIT / Metabolic Conditioning",d:"High intensity interval training"},
+    {v:"crossfit",t:"CrossFit / Functional Fitness",d:"Varied functional movements"},
+    {v:"deka",t:"DEKA FIT / Obstacle Training",d:"Functional obstacle course prep"},
+    {v:"kettlebell",t:"Kettlebell Training",d:"Swings, cleans, snatches, Turkish get-ups"},
+    {v:"calisthenics",t:"Calisthenics / Bodyweight",d:"Pull-ups, dips, muscle-ups, levers"},
+    {v:"corrective",t:"Corrective / Rehab Focused",d:"NASM CES corrective exercise protocols"},
+    {v:"mobility",t:"Mobility and Flexibility",d:"ROM, stretching, yoga-based movement"},
+    {v:"sports",t:"Sports Performance",d:"Speed, agility, sport-specific training"},
+    {v:"glp1_adaptive",t:"GLP-1 Adaptive Training",d:"Modified programming for GLP-1 medication users"}
+  ];
+  var h = '<div class="step-box active">';
+  h += '<h1 class="step-headline">YOUR TRAINING STYLE</h1>';
+  if(ack) h += '<div class="step-ack">' + esc(ack) + '</div>';
+  h += '<div class="step-sub">You have experience — how do you like to train? Select all that apply.</div>';
+  h += '<div class="tap-cards" id="style-cards" style="max-height:400px;overflow-y:auto;">';
+  opts.forEach(function(o){
+    var sel = (profile.trainingStyles || []).indexOf(o.v) > -1;
+    h += '<div class="tap-card' + (sel ? " selected" : "") + '" data-value="' + o.v + '">';
+    h += '<div class="card-title">' + esc(o.t) + '</div>';
+    h += '<div class="card-sub">' + esc(o.d) + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  h += buildNav(true);
+  h += '</div>';
+  c.innerHTML = h;
+
+  if((profile.trainingStyles || []).length > 0) enableNext();
+
+  document.querySelectorAll("#style-cards .tap-card").forEach(function(card){
+    card.addEventListener("click", function(){
+      card.classList.toggle("selected");
+      var sel = [];
+      document.querySelectorAll("#style-cards .tap-card.selected").forEach(function(s){ sel.push(s.getAttribute("data-value")); });
+      profile.trainingStyles = sel;
+      if(sel.length > 0) enableNext(); else disableNext();
+    });
+  });
+
+  bindBack();
+  bindNextClick();
+}
+
+/* ═══════════════════════════════════════════════════════════
    STEP 5 — HEALTH AND INJURIES
    ═══════════════════════════════════════════════════════════ */
 function renderStep5(c){
-  var ack = getAck(5);
+  var ack = getAck("health");
   var opts = [
     {v:"glp1",t:"I am on a GLP-1 medication",d:"Ozempic, Wegovy, Mounjaro, Zepbound"},
     {v:"injury",t:"I am managing an injury"},
@@ -686,7 +765,7 @@ function renderStep5(c){
    STEP 6 — NUTRITION APPROACH
    ═══════════════════════════════════════════════════════════ */
 function renderStep6(c){
-  var ack = getAck(6);
+  var ack = getAck("nutritionApproach");
   var opts = [
     {v:"track_macros",t:"I track macros carefully"},
     {v:"healthy_no_track",t:"I try to eat healthy but don't track"},
@@ -724,7 +803,7 @@ function renderStep6(c){
    STEP 7 — DIETARY RESTRICTIONS (multi-select)
    ═══════════════════════════════════════════════════════════ */
 function renderStep7(c){
-  var ack = getAck(7);
+  var ack = getAck("dietaryRestrictions");
   var opts = ["None","No dairy","No gluten","Vegetarian","Vegan","Halal","Kosher","Low sodium (heart health)","Diabetic-friendly (low glycemic)","Renal diet (kidney health)","Other"];
   var vals = ["none","no_dairy","no_gluten","vegetarian","vegan","halal","kosher","low_sodium","diabetic_friendly","renal","other"];
   var h = '<div class="step-box active">';
@@ -768,7 +847,7 @@ function renderStep7(c){
    STEP 8 — BIGGEST NUTRITION CHALLENGE (multi-select)
    ═══════════════════════════════════════════════════════════ */
 function renderStep8(c){
-  var ack = getAck(8);
+  var ack = getAck("nutritionChallenges");
   var opts = [
     "Not eating enough protein","Eating too much junk food or sugar","No time to cook or meal prep",
     "Don't know what to eat","Can't eat enough to build muscle","Eating too much — no self control",
@@ -809,7 +888,7 @@ function renderStep8(c){
    STEP 9 — SUPPLEMENTS (multi-select grid with groups)
    ═══════════════════════════════════════════════════════════ */
 function renderStep9(c){
-  var ack = getAck(9);
+  var ack = getAck("supplements");
   var groups = [
     {label:"PROTEIN", items:["Whey protein powder","Casein protein (slow release / bedtime)","Plant-based protein powder","Collagen peptides"]},
     {label:"PERFORMANCE", items:["Creatine monohydrate","Pre-workout / stimulants","Beta-alanine","Citrulline / pump formula","BCAAs or EAAs","Glutamine"]},
@@ -944,7 +1023,7 @@ function calculateNutritionTargets(){
 }
 
 function renderStep10(c){
-  var ack = getAck(10);
+  var ack = getAck("calcReveal");
   var targets = calculateNutritionTargets();
 
   // Store targets
@@ -1030,7 +1109,7 @@ function renderStep10(c){
   document.getElementById("ob-next").disabled = false;
   bindBack();
   document.getElementById("ob-next").addEventListener("click", function(){
-    currentStep++;
+    currentIdx++;
     render();
   });
 }
@@ -1103,11 +1182,31 @@ function renderStep11(c){
   });
 }
 
+function getLocalPlanSummary(){
+  var goal = (profile.goals || [])[0] || "your goals";
+  var exp = profile.experience || "intermediate";
+  var injuries = profile.injuries;
+  var mode = profile.nutritionMode || "build";
+
+  if(injuries && injuries.length > 10){
+    return "Your program is built around your injuries — every exercise protects you while pushing you forward.";
+  }
+  if(exp === "3plus"){
+    return "Advanced athlete programming — periodized, progressive, and calibrated to your " + mode + " phase targets.";
+  }
+  if(goal === "lose_fat"){
+    return "Your " + mode + " protocol prioritizes muscle preservation while creating the deficit needed for fat loss.";
+  }
+  return "Your personalized plan is built on NASM OPT methodology and calibrated to your exact profile.";
+}
+
 function generateCoachNote(){
   var noteEl = document.getElementById("coach-note");
   if(!noteEl) return;
 
-  var timer = setTimeout(function(){ noteEl.textContent = ""; }, 6000);
+  var timer = setTimeout(function(){
+    noteEl.textContent = '"' + getLocalPlanSummary() + '"';
+  }, 6000);
 
   try {
     fetch("/.netlify/functions/chat", {
@@ -1115,24 +1214,39 @@ function generateCoachNote(){
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: 80,
-        system: "You are FORGE AI. Write one motivational sentence for this athlete. Be specific to their exact situation. Max 20 words. Plain text only.",
-        messages: [{role:"user", content: "goal=" + (profile.goals || []).join(",") + ", weight=" + (profile.currentWeight || "") + ", mode=" + (profile.nutritionMode || "") + ", injuries=" + (profile.injuries || "none") + ", supplements=" + ((profile.supplements || []).slice(0,3).join(","))}]
+        max_tokens: 150,
+        system: "You are FORGE AI. Write one specific coaching sentence (max 25 words) for this athlete based on their exact profile. No JSON. No formatting. Plain text only.",
+        messages: [{role:"user", content: "Profile: goal=" + (profile.goals || []).join(",") + " experience=" + (profile.experience || "") + " injuries=" + (profile.injuries || "none") + " nutritionMode=" + (profile.nutritionMode || "build") + " supplements=" + ((profile.supplements || []).slice(0,3).join(","))}]
       })
     })
     .then(function(r){ return r.text(); })
     .then(function(text){
       clearTimeout(timer);
-      if(text.trim().charAt(0) === "<"){ noteEl.textContent = ""; return; }
-      try {
-        var data = JSON.parse(text);
-        noteEl.textContent = '"' + (data.content && data.content[0] ? data.content[0].text : "") + '"';
-      } catch(e){
-        if(text.length > 5 && text.length < 200) noteEl.textContent = '"' + text.trim() + '"';
+      if(!text || text.trim().charAt(0) === "<" || text.trim().substring(0,2) === "<!"){
+        noteEl.textContent = '"' + getLocalPlanSummary() + '"';
+        return;
       }
+      var parsed;
+      try { parsed = JSON.parse(text); }
+      catch(e){
+        if(text.length > 5 && text.length < 200){
+          noteEl.textContent = '"' + text.trim() + '"';
+        } else {
+          noteEl.textContent = '"' + getLocalPlanSummary() + '"';
+        }
+        return;
+      }
+      var reply = parsed && parsed.content && parsed.content[0] ? parsed.content[0].text : null;
+      noteEl.textContent = '"' + (reply || getLocalPlanSummary()) + '"';
     })
-    .catch(function(){ clearTimeout(timer); });
-  } catch(e){ clearTimeout(timer); }
+    .catch(function(){
+      clearTimeout(timer);
+      noteEl.textContent = '"' + getLocalPlanSummary() + '"';
+    });
+  } catch(e){
+    clearTimeout(timer);
+    noteEl.textContent = '"' + getLocalPlanSummary() + '"';
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1164,6 +1278,8 @@ function saveFullProfile(){
     duration: profile.duration,
     experience: profile.experience,
     location: profile.location,
+    // Step 4b (conditional)
+    trainingStyles: profile.trainingStyles || [],
     // Step 5
     conditions: profile.conditions || [],
     injuries: profile.injuries || "",
