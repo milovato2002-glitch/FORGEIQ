@@ -2,6 +2,7 @@
   "name": "forgeiq-functions",
   "version": "1.0.0",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0"
+    "@anthropic-ai/sdk": "^0.39.0",
+    "docx": "^9.6.1"
   }
 }

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Macro Plan Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/forgeiq.css" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:#0a1628;color:#e8edf5;font-family:'Barlow',sans-serif;font-weight:300;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+    a{color:inherit;text-decoration:none;}
+
+    /* ── NAV (matches FORGEIQ standard) ── */
+    .top-nav{position:sticky;top:0;z-index:100;padding:0 32px;display:flex;align-items:center;justify-content:space-between;background:#0e1e36;border-bottom:1px solid rgba(255,255,255,0.07);height:60px;}
+    .nav-left{display:flex;align-items:center;gap:16px;}
+    .back-btn{background:none;border:none;color:#8fa3c0;font-size:1.2rem;cursor:pointer;padding:4px 8px;transition:color 0.2s;}
+    .back-btn:hover{color:#f0a500;}
+    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:3px;color:#e8edf5;}
+    .nav-logo span{color:#f0a500;}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .lang-toggle{display:flex;gap:0;border:1px solid rgba(255,255,255,0.07);border-radius:6px;overflow:hidden;}
+    .lang-btn{background:none;border:none;color:#4a6080;font-size:0.65rem;font-weight:600;padding:5px 10px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transition:all 0.2s;}
+    .lang-btn.active{background:rgba(240,165,0,0.12);color:#f0a500;}
+
+    /* ── PAGE ── */
+    .page{max-width:760px;margin:0 auto;padding:32px 20px 100px;}
+
+    /* ── PROGRESS BAR ── */
+    .pb-wrap{margin-bottom:32px;}
+    .pb-steps{display:flex;gap:6px;}
+    .pb-step{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.08);transition:background 0.4s;}
+    .pb-step.done{background:#f0a500;}
+    .pb-label{text-align:center;margin-top:10px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#4a6080;}
+
+    /* ── STEPS ── */
+    .step{display:none;animation:fadeUp 0.3s ease;}
+    .step.active{display:block;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+    .step-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:2px;color:#e8edf5;text-align:center;margin-bottom:8px;}
+    .step-sub{text-align:center;font-size:0.9rem;color:#8fa3c0;margin-bottom:28px;line-height:1.6;}
+
+    /* ── FORM ROWS ── */
+    .form-group{margin-bottom:18px;}
+    .form-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:1.5px;text-transform:uppercase;color:#8fa3c0;margin-bottom:8px;display:block;}
+    .form-label em{font-style:normal;color:#f0a500;}
+    .form-input{width:100%;height:48px;background:#142444;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:0 16px;color:#e8edf5;font-size:0.95rem;font-family:'Barlow',sans-serif;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+    .form-input:focus{border-color:#f0a500;}
+    .form-input::placeholder{color:#4a6080;}
+    select.form-input{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a6080' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+    /* ── PILL SELECTOR ── */
+    .pill-group{display:flex;flex-wrap:wrap;gap:8px;}
+    .pill{padding:10px 18px;border-radius:24px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#8fa3c0;font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;min-height:42px;display:flex;align-items:center;}
+    .pill:hover{border-color:rgba(240,165,0,0.4);color:#e8edf5;}
+    .pill.selected{background:rgba(240,165,0,0.12);border-color:#f0a500;color:#f0a500;}
+
+    /* ── SECTION DIVIDER ── */
+    .form-section{margin-bottom:28px;}
+    .form-section-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:#f0a500;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(240,165,0,0.15);}
+
+    /* ── CONDITIONAL ALERT ── */
+    .condition-alert{background:rgba(240,165,0,0.06);border:1px solid rgba(240,165,0,0.2);border-radius:8px;padding:12px 16px;margin-top:12px;font-size:0.82rem;color:#8fa3c0;display:none;}
+    .condition-alert.show{display:block;}
+    .condition-alert strong{color:#f0a500;}
+
+    /* ── CALC PREVIEW CARD ── */
+    .calc-preview{background:#142444;border:1px solid rgba(240,165,0,0.18);border-radius:12px;padding:20px;margin-bottom:24px;display:none;}
+    .calc-preview.show{display:block;}
+    .cp-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:#f0a500;margin-bottom:14px;}
+    .cp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+    .cp-cell{text-align:center;background:rgba(0,0,0,0.2);border-radius:8px;padding:12px 6px;}
+    .cp-val{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#e8edf5;line-height:1;}
+    .cp-unit{font-size:0.68rem;color:#4a6080;text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+    .cp-label{font-size:0.62rem;color:#8fa3c0;text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+
+    /* ── BUTTONS ── */
+    .btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#f0a500;color:#0a1628;border:none;border-radius:8px;padding:14px 32px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.95rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;min-height:52px;}
+    .btn-gold:hover{background:#ffb820;transform:translateY(-1px);}
+    .btn-gold:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+    .btn-gold.full{width:100%;}
+    .btn-outline{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:#e8edf5;border:1px solid rgba(240,165,0,0.18);border-radius:8px;padding:12px 28px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.88rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;min-height:52px;}
+    .btn-outline:hover{border-color:#f0a500;color:#f0a500;}
+
+    /* ── LOADING ── */
+    .loading-overlay{display:none;position:fixed;inset:0;background:#0a1628;z-index:9999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+    .loading-overlay.active{display:flex;}
+    .loading-logo{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:6px;color:#f0a500;margin-bottom:32px;animation:pulse 1.5s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:0.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
+    .loading-text{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:#e8edf5;margin-bottom:12px;}
+    .loading-sub{font-size:0.95rem;color:#8fa3c0;max-width:400px;line-height:1.6;}
+    .loading-steps{margin-top:28px;display:flex;flex-direction:column;gap:8px;width:100%;max-width:320px;}
+    .ls-step{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:8px;background:rgba(255,255,255,0.03);font-size:0.82rem;color:#4a6080;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.5px;transition:all 0.4s;}
+    .ls-step.active{background:rgba(240,165,0,0.08);color:#e8edf5;border-left:2px solid #f0a500;}
+    .ls-step.done{color:#2dc653;}
+    .ls-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.1);flex-shrink:0;}
+    .ls-step.active .ls-dot{background:#f0a500;box-shadow:0 0 8px rgba(240,165,0,0.5);}
+    .ls-step.done .ls-dot{background:#2dc653;}
+
+    /* ── RESULT PANEL ── */
+    .result-header{background:linear-gradient(135deg,#142444,rgba(240,165,0,0.06));border:1px solid rgba(240,165,0,0.3);border-radius:12px;padding:28px;text-align:center;margin-bottom:24px;}
+    .rh-client{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;color:#f0a500;margin-bottom:6px;}
+    .rh-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;color:#e8edf5;margin-bottom:4px;}
+    .rh-meta{font-size:0.82rem;color:#8fa3c0;}
+
+    /* ── MACRO SUMMARY BAR ── */
+    .macro-bar-card{background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:20px;margin-bottom:20px;}
+    .mb-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:#4a6080;margin-bottom:14px;}
+    .mb-main{display:flex;align-items:baseline;justify-content:center;gap:8px;margin-bottom:14px;}
+    .mb-cal{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:#f0a500;line-height:1;}
+    .mb-cal-label{font-size:0.88rem;color:#4a6080;}
+    .mb-macros{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .mb-macro{text-align:center;padding:12px 8px;background:rgba(0,0,0,0.2);border-radius:8px;}
+    .mb-macro-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#e8edf5;}
+    .mb-macro-g{font-size:0.78rem;color:#4a6080;}
+    .mb-macro-bar{height:4px;border-radius:2px;margin:8px 8px 4px;overflow:hidden;background:rgba(255,255,255,0.06);}
+    .mb-macro-fill{height:100%;border-radius:2px;}
+    .mb-macro-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;color:#4a6080;}
+
+    /* ── MEAL PLAN CARDS ── */
+    .meal-card{background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color 0.2s;}
+    .meal-card:hover{border-color:rgba(240,165,0,0.2);}
+    .mc-header{display:flex;align-items:center;padding:16px 18px;gap:12px;cursor:pointer;}
+    .mc-icon{font-size:1.3rem;flex-shrink:0;}
+    .mc-info{flex:1;}
+    .mc-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.92rem;letter-spacing:0.5px;color:#e8edf5;}
+    .mc-time{font-size:0.75rem;color:#4a6080;margin-top:2px;}
+    .mc-macros{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;color:#f0a500;font-weight:600;}
+    .mc-body{display:none;padding:0 18px 18px;border-top:1px solid rgba(255,255,255,0.05);}
+    .meal-card.open .mc-body{display:block;}
+    .mc-chevron{color:#4a6080;font-size:0.85rem;transition:transform 0.2s;flex-shrink:0;}
+    .meal-card.open .mc-chevron{transform:rotate(180deg);}
+    .food-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.85rem;}
+    .food-row:last-child{border-bottom:none;}
+    .food-name{color:#e8edf5;}
+    .food-amount{color:#4a6080;font-size:0.78rem;margin-top:2px;}
+    .food-macros{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;color:#8fa3c0;}
+
+    /* ── SUPPLEMENT SECTION ── */
+    .supp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .supp-card{background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:14px;}
+    .supp-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.85rem;color:#e8edf5;margin-bottom:4px;}
+    .supp-dose{font-size:0.75rem;color:#f0a500;margin-bottom:4px;}
+    .supp-timing{font-size:0.72rem;color:#4a6080;}
+
+    /* ── SECTION TITLES ── */
+    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px;color:#e8edf5;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .sec-title em{font-style:normal;color:#f0a500;}
+
+    /* ── COACHING NOTES ── */
+    .note-card{background:#0e1e36;border-left:3px solid #f0a500;border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:10px;font-size:0.85rem;color:#8fa3c0;line-height:1.7;}
+    .note-card strong{color:#e8edf5;display:block;margin-bottom:4px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:1px;text-transform:uppercase;}
+
+    /* ── DOWNLOAD ROW ── */
+    .action-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+    .action-row .btn-gold,.action-row .btn-outline{flex:1;min-width:140px;}
+
+    /* ── HEALTH CONDITION BADGE ── */
+    .condition-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.2);font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#f0a500;}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;top:80px;right:20px;background:#142444;border:1px solid rgba(240,165,0,0.3);border-radius:10px;padding:16px 20px;max-width:320px;z-index:1000;transform:translateX(400px);transition:transform 0.4s ease;font-size:0.85rem;color:#8fa3c0;}
+    .toast.show{transform:translateX(0);}
+    .toast .toast-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:1px;color:#f0a500;margin-bottom:4px;}
+
+    @media(max-width:600px){
+      .top-nav{padding:0 16px;}
+      .page{padding:20px 14px 100px;}
+      .form-row{grid-template-columns:1fr;}
+      .cp-grid{grid-template-columns:repeat(2,1fr);}
+      .supp-grid{grid-template-columns:1fr;}
+      .action-row{flex-direction:column;}
+      .mb-macros{grid-template-columns:repeat(3,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="nav-left">
+    <button class="back-btn" onclick="if(window.history.length>1){history.back();}else{window.location.href='/nutrition.html';}" title="Go back">&larr;</button>
+    <a href="/index.html" class="nav-logo">FORGE<span>IQ</span></a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active">EN</button>
+      <button class="lang-btn">ES</button>
+      <button class="lang-btn">PT</button>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+
+  <!-- PROGRESS BAR -->
+  <div class="pb-wrap">
+    <div class="pb-steps">
+      <div class="pb-step done" id="pb-1"></div>
+      <div class="pb-step" id="pb-2"></div>
+      <div class="pb-step" id="pb-3"></div>
+    </div>
+    <div class="pb-label" id="pb-label">STEP 1 — CLIENT PROFILE</div>
+  </div>
+
+  <!-- ══════ STEP 1: CLIENT PROFILE ══════ -->
+  <div class="step active" id="step-1">
+    <h1 class="step-title">MACRO PLAN GENERATOR</h1>
+    <p class="step-sub">Dr. Lovato's evidence-based methodology. Blended BMR calculation. FORGEIQ-branded output.</p>
+
+    <!-- IDENTITY -->
+    <div class="form-section">
+      <div class="form-section-title">CLIENT IDENTITY</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Client Name <em>*</em></label>
+          <input type="text" class="form-input" id="f-name" placeholder="e.g. Wilmari" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age <em>*</em></label>
+          <input type="number" class="form-input" id="f-age" placeholder="e.g. 44" min="16" max="90" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Height</label>
+          <input type="text" class="form-input" id="f-height" placeholder="e.g. 5'1&quot;" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (lbs) <em>*</em></label>
+          <input type="number" class="form-input" id="f-weight" placeholder="e.g. 170" min="80" max="500" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Body Fat % <em>(or leave blank to estimate)</em></label>
+          <input type="number" class="form-input" id="f-bf" placeholder="Leave blank to auto-estimate" min="5" max="60" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sex</label>
+          <select class="form-input" id="f-sex">
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- GOAL & TRAINING -->
+    <div class="form-section">
+      <div class="form-section-title">GOAL & TRAINING</div>
+      <div class="form-group">
+        <label class="form-label">Primary Goal <em>*</em></label>
+        <div class="pill-group" id="pg-goal">
+          <button class="pill" data-val="Body Recomposition">Body Recomp</button>
+          <button class="pill" data-val="Fat Loss">Fat Loss</button>
+          <button class="pill" data-val="Muscle Gain">Muscle Gain</button>
+          <button class="pill" data-val="Maintenance">Maintenance</button>
+          <button class="pill" data-val="GLP-1 Support">GLP-1 Support</button>
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:18px;">
+        <div class="form-group">
+          <label class="form-label">Training Days / Week <em>*</em></label>
+          <select class="form-input" id="f-training">
+            <option value="2">2x / week</option>
+            <option value="3">3x / week</option>
+            <option value="4">4x / week</option>
+            <option value="5" selected>5x / week</option>
+            <option value="6">6x / week</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Meals / Day</label>
+          <select class="form-input" id="f-meals">
+            <option value="3">3 meals</option>
+            <option value="4" selected>4 meals</option>
+            <option value="5">5 meals</option>
+            <option value="6">6 meals</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:4px;">
+        <div class="form-group">
+          <label class="form-label">Activity Level (non-exercise)</label>
+          <select class="form-input" id="f-activity">
+            <option value="1.2">Sedentary (desk job)</option>
+            <option value="1.375">Low (light movement)</option>
+            <option value="1.55" selected>Medium (on feet often)</option>
+            <option value="1.725">High (physical labor)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Experience Level</label>
+          <select class="form-input" id="f-experience">
+            <option value="Beginner" selected>Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEALTH -->
+    <div class="form-section">
+      <div class="form-section-title">HEALTH & RESTRICTIONS</div>
+      <div class="form-group">
+        <label class="form-label">Health Conditions</label>
+        <div class="pill-group" id="pg-conditions">
+          <button class="pill" data-val="None">None</button>
+          <button class="pill" data-val="High Cholesterol">High Cholesterol</button>
+          <button class="pill" data-val="Type 2 Diabetes">Type 2 Diabetes</button>
+          <button class="pill" data-val="Hypertension">Hypertension</button>
+          <button class="pill" data-val="Hypothyroidism">Hypothyroidism</button>
+          <button class="pill" data-val="PCOS">PCOS</button>
+          <button class="pill" data-val="On GLP-1 Medication">On GLP-1 Medication</button>
+        </div>
+        <div class="condition-alert" id="condition-alert">
+          <strong>⚕️ Health Protocol Active</strong> — Macro splits, food choices, and supplement stack will be customized for <span id="condition-alert-text"></span> based on AHA/NIH guidelines.
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:18px;">
+        <label class="form-label">Dietary Restrictions</label>
+        <div class="pill-group" id="pg-diet">
+          <button class="pill" data-val="None">None</button>
+          <button class="pill" data-val="Vegetarian">Vegetarian</button>
+          <button class="pill" data-val="Vegan">Vegan</button>
+          <button class="pill" data-val="No Fish">No Fish</button>
+          <button class="pill" data-val="Lactose Intolerant">Lactose Intolerant</button>
+          <button class="pill" data-val="Gluten-Free">Gluten-Free</button>
+          <button class="pill" data-val="Halal">Halal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE CALC PREVIEW -->
+    <div class="calc-preview" id="calc-preview">
+      <div class="cp-title">⚡ ESTIMATED TARGETS (live preview)</div>
+      <div class="cp-grid">
+        <div class="cp-cell"><div class="cp-val" id="cp-bmr">—</div><div class="cp-unit">kcal</div><div class="cp-label">BMR</div></div>
+        <div class="cp-cell"><div class="cp-val" id="cp-tdee">—</div><div class="cp-unit">kcal</div><div class="cp-label">TDEE</div></div>
+        <div class="cp-cell"><div class="cp-val" id="cp-target">—</div><div class="cp-unit">kcal</div><div class="cp-label">TARGET</div></div>
+        <div class="cp-cell"><div class="cp-val" id="cp-protein">—</div><div class="cp-unit">g/day</div><div class="cp-label">PROTEIN</div></div>
+      </div>
+    </div>
+
+    <button class="btn-gold full" id="btn-step1" onclick="goStep2()" disabled>CALCULATE MY MACROS →</button>
+  </div>
+
+  <!-- ══════ STEP 2: REVIEW & CONFIRM ══════ -->
+  <div class="step" id="step-2">
+    <h1 class="step-title">REVIEW & CONFIRM</h1>
+    <p class="step-sub">Dr. Lovato's blended BMR method. Two formulas averaged to reduce error.</p>
+
+    <div class="form-section">
+      <div class="form-section-title">CALCULATION BREAKDOWN</div>
+      <div style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;margin-bottom:20px;">
+        <div id="calc-breakdown"></div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">MACRO SPLIT RATIONALE</div>
+      <div id="macro-rationale"></div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">ADJUST IF NEEDED</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Calorie Target Override</label>
+          <input type="number" class="form-input" id="f-cal-override" placeholder="Leave blank to use calculated" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Protein Target (g/lb bodyweight)</label>
+          <select class="form-input" id="f-protein-target">
+            <option value="0.8">0.8g/lb — Fat loss focus</option>
+            <option value="1.0" selected>1.0g/lb — Recomp standard</option>
+            <option value="1.2">1.2g/lb — Aggressive muscle gain</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn-outline" onclick="goStep(1)" style="flex:0 0 auto;">← BACK</button>
+      <button class="btn-gold" style="flex:1;" onclick="generatePlan()">FORGE THE PLAN →</button>
+    </div>
+  </div>
+
+  <!-- ══════ STEP 3: RESULT ══════ -->
+  <div class="step" id="step-3">
+    <!-- Result injected by JS -->
+    <div id="result-container"></div>
+  </div>
+
+</main>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-logo">FORGEIQ</div>
+  <div class="loading-text" id="loading-text">FORGING YOUR PLAN...</div>
+  <div class="loading-sub" id="loading-sub">Building your personalized macro plan using Dr. Lovato's blended BMR methodology.</div>
+  <div class="loading-steps">
+    <div class="ls-step" id="ls-1"><div class="ls-dot"></div>Estimating body composition</div>
+    <div class="ls-step" id="ls-2"><div class="ls-dot"></div>Running blended BMR calculation</div>
+    <div class="ls-step" id="ls-3"><div class="ls-dot"></div>Applying health condition protocols</div>
+    <div class="ls-step" id="ls-4"><div class="ls-dot"></div>Building meal plan with macros</div>
+    <div class="ls-step" id="ls-5"><div class="ls-dot"></div>Selecting evidence-based supplements</div>
+    <div class="ls-step" id="ls-6"><div class="ls-dot"></div>Generating coaching notes</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-title" id="toast-title">NOTIFICATION</div>
+  <div id="toast-body"></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ── STATE ── */
+var state = {
+  name:"", age:0, height:"", weight:0, bf:null, sex:"female",
+  goal:"Body Recomposition", training:5, meals:4, activity:1.55,
+  experience:"Beginner", conditions:[], diet:[],
+  bmrCunningham:0, bmrMifflin:0, bmrBlended:0, tdee:0, calories:0,
+  protein:0, carbs:0, fat:0, lbm:0,
+  proteinMultiplier:1.0, calorieOverride:null
+};
+
+var planData = null;
+
+/* ── HELPERS ── */
+function $(s){ return document.querySelector(s); }
+function $$(s){ return Array.from(document.querySelectorAll(s)); }
+function toast(title, msg, dur){
+  dur = dur || 3000;
+  var t = $("#toast");
+  $("#toast-title").textContent = title;
+  $("#toast-body").textContent = msg;
+  t.classList.add("show");
+  setTimeout(function(){ t.classList.remove("show"); }, dur);
+}
+
+/* ── PILL GROUPS ── */
+function initPillGroups(){
+  $$(".pill-group").forEach(function(group){
+    var id = group.id;
+    var multi = (id === "pg-conditions" || id === "pg-diet");
+    group.addEventListener("click", function(e){
+      var pill = e.target.closest(".pill");
+      if(!pill) return;
+      var val = pill.dataset.val;
+      if(multi){
+        if(val === "None"){
+          $$(".pill", group).forEach(function(p){ p.classList.remove("selected"); });
+          pill.classList.add("selected");
+        } else {
+          var nonePill = group.querySelector("[data-val='None']");
+          if(nonePill) nonePill.classList.remove("selected");
+          pill.classList.toggle("selected");
+        }
+      } else {
+        $$(".pill", group).forEach(function(p){ p.classList.remove("selected"); });
+        pill.classList.add("selected");
+        if(id === "pg-goal") state.goal = val;
+      }
+      if(id === "pg-conditions") updateConditionAlert();
+      recalcLive();
+    });
+  });
+  // Default None selections
+  var noneGoal = $("[data-val='Body Recomposition']");
+  if(noneGoal) noneGoal.classList.add("selected");
+  var noneC = $("#pg-conditions [data-val='None']");
+  if(noneC) noneC.classList.add("selected");
+  var noneD = $("#pg-diet [data-val='None']");
+  if(noneD) noneD.classList.add("selected");
+}
+
+function getSelectedPills(groupId){
+  return $$(".pill.selected", $("#"+groupId)).map(function(p){ return p.dataset.val; });
+}
+
+/* ── CONDITION ALERT ── */
+function updateConditionAlert(){
+  var sel = getSelectedPills("pg-conditions").filter(function(v){ return v !== "None"; });
+  var alert = $("#condition-alert");
+  if(sel.length > 0){
+    alert.classList.add("show");
+    $("#condition-alert-text").textContent = sel.join(", ");
+  } else {
+    alert.classList.remove("show");
+  }
+}
+
+/* ── LIVE CALC ── */
+function lbsToKg(lbs){ return lbs * 0.453592; }
+function cmFromHeight(h){
+  // supports "5'1", "5'1"", "154", "154cm"
+  h = (h||"").trim();
+  var ft = h.match(/(\d+)[''](\d+)/);
+  if(ft) return parseInt(ft[1])*30.48 + parseInt(ft[2])*2.54;
+  var cm = parseFloat(h);
+  return isNaN(cm) ? 165 : cm;
+}
+function estimateBF(age, sex, weightLbs, heightCm){
+  // BMI-based rough estimate
+  var bmi = lbsToKg(weightLbs) / Math.pow(heightCm/100, 2);
+  if(sex === "female") return Math.round(1.20 * bmi + 0.23 * age - 5.4);
+  return Math.round(1.20 * bmi + 0.23 * age - 16.2);
+}
+
+function recalcLive(){
+  var name = $("#f-name").value.trim();
+  var age = parseInt($("#f-age").value) || 0;
+  var wt = parseFloat($("#f-weight").value) || 0;
+  var ht = cmFromHeight($("#f-height").value);
+  var bfInput = parseFloat($("#f-bf").value);
+  var sex = $("#f-sex").value;
+  var activity = parseFloat($("#f-activity").value) || 1.55;
+  var training = parseInt($("#f-training").value) || 5;
+  var goal = getSelectedPills("pg-goal")[0] || "Body Recomposition";
+
+  var valid = name && age > 15 && wt > 50;
+  $("#btn-step1").disabled = !valid;
+
+  if(!valid){ $("#calc-preview").classList.remove("show"); return; }
+
+  // BF + LBM
+  var bf = isNaN(bfInput) ? estimateBF(age, sex, wt, ht) : bfInput;
+  bf = Math.max(5, Math.min(60, bf));
+  var lbm = wt * (1 - bf/100); // lbs
+
+  // Cunningham: 500 + 22 * LBM(kg)
+  var lbmKg = lbsToKg(lbm);
+  var bmrC = Math.round(500 + 22 * lbmKg);
+
+  // Mifflin-St Jeor
+  var wtKg = lbsToKg(wt);
+  var bmrM;
+  if(sex === "female") bmrM = Math.round(10*wtKg + 6.25*ht - 5*age - 161);
+  else bmrM = Math.round(10*wtKg + 6.25*ht - 5*age + 5);
+
+  var bmrBlended = Math.round((bmrC + bmrM) / 2);
+  // Adjust activity multiplier for training days
+  var actMult = activity;
+  if(training >= 5) actMult = Math.max(actMult, 1.55);
+  if(training === 6) actMult = Math.max(actMult, 1.725);
+  var tdee = Math.round(bmrBlended * actMult);
+
+  // Calorie target based on goal
+  var deficit = 0;
+  if(goal === "Fat Loss") deficit = 0.18;
+  else if(goal === "Body Recomposition") deficit = 0.11;
+  else if(goal === "Maintenance") deficit = 0;
+  else if(goal === "Muscle Gain") deficit = -0.08; // surplus
+  else if(goal === "GLP-1 Support") deficit = 0.15;
+  var cals = Math.round(tdee * (1 - deficit));
+
+  // Protein 1.0g/lb
+  var pm = parseFloat($("#f-protein-target") ? ($("#f-protein-target").value || 1.0) : 1.0);
+  var protein = Math.round(wt * (pm || 1.0));
+  var proteinCals = protein * 4;
+  var carbCals = Math.round(cals * 0.40);
+  var carbs = Math.round(carbCals / 4);
+  var fatCals = cals - proteinCals - carbCals;
+  var fat = Math.round(Math.max(0, fatCals) / 9);
+
+  // Store
+  state.name = name; state.age = age; state.weight = wt; state.height = $("#f-height").value;
+  state.bf = bf; state.lbm = lbm; state.sex = sex; state.goal = goal;
+  state.activity = actMult; state.training = training;
+  state.bmrCunningham = bmrC; state.bmrMifflin = bmrM; state.bmrBlended = bmrBlended;
+  state.tdee = tdee; state.calories = cals;
+  state.protein = protein; state.carbs = carbs; state.fat = fat;
+  state.meals = parseInt($("#f-meals").value) || 4;
+  state.experience = $("#f-experience").value;
+  state.conditions = getSelectedPills("pg-conditions").filter(function(v){ return v !== "None"; });
+  state.diet = getSelectedPills("pg-diet").filter(function(v){ return v !== "None"; });
+
+  // Update preview
+  $("#calc-preview").classList.add("show");
+  $("#cp-bmr").textContent = bmrBlended.toLocaleString();
+  $("#cp-tdee").textContent = tdee.toLocaleString();
+  $("#cp-target").textContent = cals.toLocaleString();
+  $("#cp-protein").textContent = protein;
+}
+
+/* ── STEP 2: REVIEW ── */
+function goStep2(){
+  recalcLive();
+  if(!state.name || !state.age || !state.weight){
+    toast("MISSING INFO", "Please fill in name, age, and weight at minimum."); return;
+  }
+  buildCalcBreakdown();
+  buildMacroRationale();
+  goStep(2);
+}
+
+function buildCalcBreakdown(){
+  var rows = [
+    ["Cunningham Equation","500 + (22 × " + state.lbm.toFixed(1) + " lbs LBM as kg)", state.bmrCunningham.toLocaleString() + " kcal","Best for known LBM"],
+    ["Mifflin-St Jeor","10W + 6.25H − 5A " + (state.sex==="female"?"− 161":"+ 5"), state.bmrMifflin.toLocaleString() + " kcal","Standard cross-check"],
+    ["BLENDED BMR (avg)","(" + state.bmrCunningham + " + " + state.bmrMifflin + ") ÷ 2", state.bmrBlended.toLocaleString() + " kcal","Reduces formula error"],
+    ["Activity × " + state.activity,"TDEE","", state.tdee.toLocaleString() + " kcal"],
+    ["CALORIE TARGET","Goal: " + state.goal,"", state.calories.toLocaleString() + " kcal / day"],
+  ];
+  var html = rows.map(function(r, i){
+    var bg = i === rows.length-1 ? "background:rgba(240,165,0,0.06);border-top:1px solid rgba(240,165,0,0.15);" : (i%2===0?"":"background:rgba(255,255,255,0.02);");
+    var valColor = i === rows.length-1 ? "color:#f0a500;font-weight:700;" : "";
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;' + bg + 'font-size:0.85rem;gap:12px;">' +
+      '<span style="color:#e8edf5;font-family:\'Barlow Condensed\',sans-serif;font-weight:600;letter-spacing:0.5px;">' + r[0] + '</span>' +
+      '<span style="color:#4a6080;font-size:0.78rem;flex:1;text-align:center;">' + r[1] + '</span>' +
+      '<span style="' + valColor + 'color:' + (valColor?'':'#8fa3c0') + ';font-family:\'Bebas Neue\',sans-serif;font-size:1rem;">' + (r[2]||r[3]) + '</span>' +
+      '</div>';
+  }).join("");
+  $("#calc-breakdown").innerHTML = html;
+}
+
+function buildMacroRationale(){
+  var conditions = state.conditions;
+  var pm = parseFloat($("#f-protein-target").value) || 1.0;
+  state.proteinMultiplier = pm;
+  var proteinRationale = pm===1.0
+    ? "1.0g/lb — floor for muscle retention in deficit" + (state.age >= 40 ? "; higher justified at "+state.age+" due to anabolic resistance" : "")
+    : pm===1.2 ? "1.2g/lb — aggressive muscle-building protocol" : "0.8g/lb — fat loss focus, still protective of muscle";
+  var fatNote = conditions.includes("High Cholesterol") ? "27% — capped to manage saturated fat (AHA guidelines)" : "30% — supports hormone production";
+  var html =
+    '<div style="display:flex;flex-direction:column;gap:8px;">' +
+    macroRow("🥩 Protein", state.protein + "g", Math.round(state.protein*4) + " kcal", "33%", proteinRationale, "#2dd4bf") +
+    macroRow("🌾 Carbs", state.carbs + "g", Math.round(state.carbs*4) + " kcal", "40%", "Fuels " + state.training + "x/week training; supports performance (ACSM/AND/DC)", "#f0a500") +
+    macroRow("🥑 Fat", state.fat + "g", Math.round(state.fat*9) + " kcal", "27%", fatNote, "#f4a261") +
+    '</div>';
+  if(conditions.length > 0){
+    html += '<div style="margin-top:14px;padding:14px;background:rgba(240,165,0,0.06);border:1px solid rgba(240,165,0,0.15);border-radius:8px;font-size:0.82rem;color:#8fa3c0;line-height:1.7;">' +
+      '<strong style="color:#f0a500;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px;">⚕️ HEALTH PROTOCOL: ' + conditions.join(" + ").toUpperCase() + '</strong><br/>' +
+      'Food selections, macro ratios, and supplement stack will be customized for your condition(s) based on AHA, NIH, and DGA 2020-2025 guidelines.' +
+      '</div>';
+  }
+  $("#macro-rationale").innerHTML = html;
+}
+
+function macroRow(name, g, kcal, pct, rationale, color){
+  return '<div style="background:#142444;border-radius:8px;padding:14px 16px;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">' +
+    '<span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:0.9rem;color:#e8edf5;">' + name + '</span>' +
+    '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:' + color + ';">' + g + ' &nbsp; ' + kcal + ' &nbsp; ' + pct + '</span>' +
+    '</div>' +
+    '<div style="font-size:0.78rem;color:#8fa3c0;">' + rationale + '</div>' +
+    '</div>';
+}
+
+/* ── GENERATE PLAN VIA FORGEIQ AI ── */
+function generatePlan(){
+  var override = parseInt($("#f-cal-override").value);
+  if(!isNaN(override) && override > 800) state.calories = override;
+  state.proteinMultiplier = parseFloat($("#f-protein-target").value) || 1.0;
+  state.protein = Math.round(state.weight * state.proteinMultiplier);
+
+  showLoading();
+  animateLoadingSteps();
+
+  var prompt = buildPrompt();
+
+  fetch("/.netlify/functions/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      system: "You are Dr. Michael Lovato's FORGEIQ AI nutrition system. You generate precise, evidence-based macro plans. Always respond with ONLY valid JSON — no markdown, no code blocks, no explanation.",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 4000
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    hideLoading();
+    var text = "";
+    if(data.content) {
+      data.content.forEach(function(block){ if(block.type==="text") text += block.text; });
+    } else if(data.message || data.error) {
+      showError(data.message || data.error); return;
+    }
+    text = text.replace(/```json|```/g,"").trim();
+    try {
+      planData = JSON.parse(text);
+      renderResult(planData);
+      goStep(3);
+    } catch(e) {
+      showError("Could not parse the plan. Please try again."); return;
+    }
+  })
+  .catch(function(e){
+    hideLoading();
+    showError("Connection error. Please check your connection and try again.");
+  });
+}
+
+function buildPrompt(){
+  return "Generate a complete macro plan as a JSON object with this EXACT structure for " + state.name + ".\n\n" +
+  "CLIENT: Name=" + state.name + ", Age=" + state.age + ", Sex=" + state.sex + ", Height=" + state.height + ", Weight=" + state.weight + "lbs, Est BF=" + Math.round(state.bf) + "%, LBM=" + state.lbm.toFixed(1) + "lbs\n" +
+  "GOAL: " + state.goal + ", Training=" + state.training + "x/week, Meals=" + state.meals + "/day, Experience=" + state.experience + "\n" +
+  "CONDITIONS: " + (state.conditions.join(", ")||"None") + "\n" +
+  "DIET RESTRICTIONS: " + (state.diet.join(", ")||"None") + "\n" +
+  "TARGETS: Calories=" + state.calories + "kcal, Protein=" + state.protein + "g, Carbs=" + state.carbs + "g, Fat=" + state.fat + "g\n\n" +
+  "Return ONLY this JSON structure:\n" +
+  '{"client":{"name":"...","goal":"...","calories":0,"protein":0,"carbs":0,"fat":0,"bmr":0,"tdee":0},' +
+  '"meals":[{"name":"Meal 1 — Morning","time":"7:00 AM","emoji":"🌅","foods":[{"name":"...","amount":"...","protein":0,"carbs":0,"fat":0,"calories":0}],"totals":{"protein":0,"carbs":0,"fat":0,"calories":0}}],' +
+  '"supplements":{"foundation":[{"name":"...","dose":"...","timing":"...","reason":"..."}],"performance":[{"name":"...","dose":"...","timing":"...","reason":"..."}]},' +
+  '"coaching_notes":[{"title":"...","body":"..."}],' +
+  '"foods_avoid":["..."],' +
+  '"foods_prioritize":["..."]}' +
+  "\n\nFor meals: include exactly " + state.meals + " meals with realistic foods. If conditions include High Cholesterol: no red meat/butter/full-fat dairy, prioritize salmon/olive oil/oats/walnuts/avocado/chia. If on GLP-1: smaller portions, high protein density, easy to digest. Match diet restrictions strictly. Foundation supplements must include Omega-3 if High Cholesterol. Include CoQ10 if on statin.\n\nAll macro numbers must add up correctly. Return ONLY the JSON object.";
+}
+
+/* ── RENDER RESULT ── */
+function renderResult(plan){
+  var c = plan.client;
+  var pct = {
+    p: Math.round((c.protein*4/c.calories)*100),
+    c: Math.round((c.carbs*4/c.calories)*100),
+    f: Math.round((c.fat*9/c.calories)*100)
+  };
+
+  var conditionBadges = state.conditions.map(function(cond){
+    return '<span class="condition-badge">⚕️ ' + cond + '</span>';
+  }).join(" ");
+
+  var html = '<div class="result-header">' +
+    '<div class="rh-client">MACRO PLAN — ' + c.name.toUpperCase() + '</div>' +
+    '<div class="rh-title">BODY RECOMPOSITION PLAN</div>' +
+    '<div class="rh-meta">Dr. Michael Lovato, EdD &middot; FORGEIQ &middot; ' + new Date().toLocaleDateString("en-US",{month:"long",year:"numeric"}) + '</div>' +
+    (conditionBadges ? '<div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">' + conditionBadges + '</div>' : '') +
+    '</div>';
+
+  // Macro summary
+  html += '<div class="macro-bar-card">' +
+    '<div class="mb-title">DAILY TARGETS</div>' +
+    '<div class="mb-main"><div class="mb-cal">' + c.calories.toLocaleString() + '</div><div class="mb-cal-label">kcal / day</div></div>' +
+    '<div class="mb-macros">' +
+    macroBubble("🥩 Protein", c.protein, "g", pct.p + "%", "#2dd4bf", pct.p) +
+    macroBubble("🌾 Carbs", c.carbs, "g", pct.c + "%", "#f0a500", pct.c) +
+    macroBubble("🥑 Fat", c.fat, "g", pct.f + "%", "#f4a261", pct.f) +
+    '</div></div>';
+
+  // Meals
+  html += '<div class="sec-title">MEAL PLAN</div>';
+  (plan.meals||[]).forEach(function(meal, i){
+    html += '<div class="meal-card" id="meal-' + i + '">' +
+      '<div class="mc-header" onclick="toggleMeal(' + i + ')">' +
+      '<div class="mc-icon">' + (meal.emoji||"🍽️") + '</div>' +
+      '<div class="mc-info">' +
+        '<div class="mc-name">' + meal.name + '</div>' +
+        '<div class="mc-time">' + (meal.time||"") + '</div>' +
+      '</div>' +
+      '<div class="mc-macros">P:' + meal.totals.protein + 'g &nbsp; C:' + meal.totals.carbs + 'g &nbsp; ' + meal.totals.calories + ' kcal</div>' +
+      '<div class="mc-chevron">▼</div>' +
+      '</div>' +
+      '<div class="mc-body">' +
+        '<div style="height:12px;"></div>' +
+        (meal.foods||[]).map(function(f){
+          return '<div class="food-row">' +
+            '<div><div class="food-name">' + f.name + '</div><div class="food-amount">' + f.amount + '</div></div>' +
+            '<div class="food-macros">P:' + f.protein + 'g &nbsp; C:' + f.carbs + 'g &nbsp; F:' + f.fat + 'g &nbsp; <strong style="color:#f0a500">' + f.calories + '</strong> kcal</div>' +
+            '</div>';
+        }).join("") +
+        '<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(240,165,0,0.12);display:flex;justify-content:space-between;font-family:\'Barlow Condensed\',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.5px;">' +
+          '<span style="color:#8fa3c0;">MEAL TOTAL</span>' +
+          '<span style="color:#f0a500;">P:' + meal.totals.protein + 'g &nbsp; C:' + meal.totals.carbs + 'g &nbsp; F:' + meal.totals.fat + 'g &nbsp; ' + meal.totals.calories + ' kcal</span>' +
+        '</div>' +
+      '</div>' +
+      '</div>';
+  });
+
+  // Supplements
+  html += '<div style="height:24px;"></div><div class="sec-title">SUPPLEMENT STACK</div>';
+  if(plan.supplements && plan.supplements.foundation && plan.supplements.foundation.length > 0){
+    html += '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4a6080;margin-bottom:10px;">FOUNDATION TIER</div>';
+    html += '<div class="supp-grid">';
+    plan.supplements.foundation.forEach(function(s){
+      html += '<div class="supp-card"><div class="supp-name">' + s.name + '</div><div class="supp-dose">' + s.dose + '</div><div class="supp-timing">' + s.timing + '</div><div style="font-size:0.72rem;color:#4a6080;margin-top:6px;line-height:1.5;">' + s.reason + '</div></div>';
+    });
+    html += '</div>';
+  }
+  if(plan.supplements && plan.supplements.performance && plan.supplements.performance.length > 0){
+    html += '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4a6080;margin:14px 0 10px;">PERFORMANCE TIER</div>';
+    html += '<div class="supp-grid">';
+    plan.supplements.performance.forEach(function(s){
+      html += '<div class="supp-card"><div class="supp-name">' + s.name + '</div><div class="supp-dose">' + s.dose + '</div><div class="supp-timing">' + s.timing + '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  // Foods to prioritize / avoid
+  if(plan.foods_prioritize && plan.foods_prioritize.length > 0){
+    html += '<div style="height:24px;"></div><div class="sec-title">FOOD PRIORITIES</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">';
+    plan.foods_prioritize.forEach(function(f){
+      html += '<span style="padding:6px 14px;border-radius:20px;background:rgba(45,212,191,0.08);border:1px solid rgba(45,212,191,0.2);font-size:0.78rem;color:#2dd4bf;">' + f + '</span>';
+    });
+    html += '</div>';
+  }
+  if(plan.foods_avoid && plan.foods_avoid.length > 0){
+    html += '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4a6080;margin-bottom:10px;">AVOID</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">';
+    plan.foods_avoid.forEach(function(f){
+      html += '<span style="padding:6px 14px;border-radius:20px;background:rgba(230,57,70,0.08);border:1px solid rgba(230,57,70,0.2);font-size:0.78rem;color:#e63946;">' + f + '</span>';
+    });
+    html += '</div>';
+  }
+
+  // Coaching notes
+  if(plan.coaching_notes && plan.coaching_notes.length > 0){
+    html += '<div style="height:24px;"></div><div class="sec-title">COACHING NOTES</div>';
+    plan.coaching_notes.forEach(function(note){
+      html += '<div class="note-card"><strong>' + note.title + '</strong>' + note.body + '</div>';
+    });
+  }
+
+  // Actions
+  html += '<div class="action-row">' +
+    '<button class="btn-gold" onclick="downloadPlan()">⬇ DOWNLOAD .DOCX</button>' +
+    '<button class="btn-outline" onclick="buildAnother()">BUILD ANOTHER PLAN</button>' +
+    '</div>' +
+    '<div style="margin-top:12px;text-align:center;font-size:0.75rem;color:#4a6080;">FORGEIQ &middot; Dr. Michael Lovato, EdD &middot; Confidential — For ' + c.name + '\'s use only</div>';
+
+  $("#result-container").innerHTML = html;
+  // Open first meal by default
+  setTimeout(function(){ toggleMeal(0); }, 100);
+}
+
+function macroBubble(label, val, unit, pct, color, width){
+  return '<div class="mb-macro">' +
+    '<div class="mb-macro-val" style="color:' + color + ';">' + val + '</div>' +
+    '<div class="mb-macro-g">' + unit + ' (' + pct + ')</div>' +
+    '<div class="mb-macro-bar"><div class="mb-macro-fill" style="width:' + Math.min(100,width) + '%;background:' + color + ';"></div></div>' +
+    '<div class="mb-macro-label">' + label + '</div>' +
+    '</div>';
+}
+
+function toggleMeal(i){
+  var card = $("#meal-" + i);
+  if(card) card.classList.toggle("open");
+}
+
+/* ── DOWNLOAD ── */
+function downloadPlan(){
+  if(!planData){ toast("NO PLAN", "Generate a plan first."); return; }
+  toast("DOWNLOADING", "Generating your FORGEIQ .docx — this may take a moment.", 5000);
+  fetch("/.netlify/functions/generate-docx", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ plan: planData, state: state })
+  })
+  .then(function(r){
+    if(!r.ok) throw new Error("Server error");
+    return r.blob();
+  })
+  .then(function(blob){
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = state.name.replace(/\s+/g,"_") + "_Macro_Plan_FORGEIQ.docx";
+    a.click();
+    URL.revokeObjectURL(url);
+  })
+  .catch(function(){
+    // Fallback: print-friendly summary
+    toast("DOC DOWNLOAD", "Opening print view as fallback.", 3000);
+    window.print();
+  });
+}
+
+function buildAnother(){
+  goStep(1);
+  $("#result-container").innerHTML = "";
+  planData = null;
+}
+
+/* ── LOADING ── */
+var loadingTimer = null;
+function showLoading(){
+  var overlay = $("#loading-overlay");
+  overlay.classList.add("active");
+  $$(".ls-step").forEach(function(s){ s.classList.remove("active","done"); });
+}
+function hideLoading(){
+  $("#loading-overlay").classList.remove("active");
+  if(loadingTimer) clearTimeout(loadingTimer);
+}
+function animateLoadingSteps(){
+  var steps = [1,2,3,4,5,6];
+  var delays = [0, 800, 1800, 3000, 4200, 5500];
+  steps.forEach(function(n, i){
+    setTimeout(function(){
+      if(i > 0){ var prev = $("#ls-" + steps[i-1]); if(prev){ prev.classList.remove("active"); prev.classList.add("done"); } }
+      var el = $("#ls-" + n);
+      if(el) el.classList.add("active");
+    }, delays[i]);
+  });
+}
+
+function showError(msg){
+  hideLoading();
+  toast("ERROR", msg || "Something went wrong.", 5000);
+}
+
+/* ── STEP NAV ── */
+function goStep(n){
+  $$(".step").forEach(function(s){ s.classList.remove("active"); });
+  var t = $("#step-" + n);
+  if(t) t.classList.add("active");
+  var labels = ["STEP 1 — CLIENT PROFILE","STEP 2 — REVIEW & CONFIRM","STEP 3 — YOUR PLAN"];
+  for(var i=1;i<=3;i++){
+    var el = $("#pb-" + i);
+    if(el){ if(i<=n) el.classList.add("done"); else el.classList.remove("done"); }
+  }
+  var lbl = $("#pb-label");
+  if(lbl) lbl.textContent = labels[n-1] || "";
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+/* ── INPUT LISTENERS ── */
+function attachListeners(){
+  ["f-name","f-age","f-weight","f-height","f-bf","f-sex","f-activity","f-training","f-meals","f-experience"].forEach(function(id){
+    var el = $("#" + id);
+    if(el) el.addEventListener("input", recalcLive);
+  });
+}
+
+/* ── INIT ── */
+initPillGroups();
+attachListeners();
+
+// Pre-fill from localStorage profile if available
+try {
+  var p = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}");
+  if(p.full_name || p.name){ $("#f-name").value = p.full_name || p.name; }
+  if(p.bodyweight){ $("#f-weight").value = p.bodyweight; }
+  if(p.age){ $("#f-age").value = p.age; }
+  recalcLive();
+} catch(e){}
+
+})();
+</script>
+
+<script src="/js/supabase-config.js"></script>
+<script src="/js/i18n.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/forge-ai-button.js"></script>
+</body>
+</html>
