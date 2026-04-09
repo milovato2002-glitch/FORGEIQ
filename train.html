@@ -1516,7 +1516,13 @@
         };
       });
 
-      // Store as current workout and trigger the active logging screen
+      // Launch the dedicated workout logger
+      if(typeof window.launchWorkoutLogger === "function"){
+        window.launchWorkoutLogger(name, exList);
+        return;
+      }
+
+      // Fallback: use inline overlay
       window.currentWorkoutData = { name: name, exercises: exList };
       window.selectedType = "MANUAL";
       window.selectedMuscle = muscle.toUpperCase();
@@ -4265,6 +4271,90 @@
     renderWeekPlanner();
   };
 
+  renderWeekPlanner();
+
+  /* ── LAUNCH WORKOUT LOGGER ── */
+  window.launchWorkoutLogger = function(workoutName, exercises) {
+    localStorage.setItem('forgeiq_workout_to_start', JSON.stringify({
+      name: workoutName,
+      exercises: exercises,
+      startTime: new Date().toISOString()
+    }));
+    window.location.href = '/workout-logger';
+  };
+
+  /* ── WEEK PLANNER DAY CLICK EXPANSION ── */
+  window.expandWeekDay = function(dateStr) {
+    var existing = document.getElementById("wp-expand-" + dateStr);
+    // Close all other expansions
+    document.querySelectorAll("[id^='wp-expand-']").forEach(function(el) {
+      if (el.id !== "wp-expand-" + dateStr) el.remove();
+    });
+    if (existing) { existing.remove(); return; }
+
+    var plan = ls("forgeiq_weekly_plan") || {};
+    var entry = plan[dateStr] || {};
+    if (!entry.type || entry.type === "rest" || entry.type === "Rest") return;
+
+    var wkLog = ls("forgeiq_workouts") || {};
+    var isDone = wkLog[dateStr] === true || wkLog[dateStr] === "done" || (typeof wkLog[dateStr] === "object" && wkLog[dateStr] && wkLog[dateStr].completed);
+
+    var container = document.getElementById("week-planner");
+    if (!container) return;
+
+    var expandDiv = document.createElement("div");
+    expandDiv.id = "wp-expand-" + dateStr;
+    expandDiv.style.cssText = "grid-column:1/-1;background:#142444;border:1px solid rgba(240,165,0,0.18);border-radius:10px;padding:20px;margin-top:8px;animation:fadeIn 0.3s ease;";
+
+    var h = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;letter-spacing:1px;color:#f0a500;margin-bottom:12px;">' + entry.type + '</div>';
+    if (entry.exercises && entry.exercises.length) {
+      entry.exercises.forEach(function(ex) {
+        h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.85rem;">';
+        h += '<span style="color:#e8edf5;">' + (ex.name || ex) + '</span>';
+        if (ex.sets && ex.reps) h += '<span style="color:#8fa3c0;">' + ex.sets + ' × ' + ex.reps + '</span>';
+        h += '</div>';
+      });
+    } else {
+      h += '<div style="color:#4a6080;font-size:0.82rem;">No exercises specified — generate with AI or start manually.</div>';
+    }
+
+    if (!isDone) {
+      h += '<button onclick="launchWorkoutLogger(\'' + entry.type.replace(/'/g, "\\'") + '\', ' + JSON.stringify(entry.exercises || []).replace(/"/g, '&quot;') + ')" style="width:100%;margin-top:14px;padding:14px;background:#f0a500;border:none;border-radius:8px;color:#0a1628;font-family:\'Bebas Neue\',sans-serif;font-size:1rem;letter-spacing:1px;cursor:pointer;">START WORKOUT</button>';
+    } else {
+      h += '<div style="text-align:center;margin-top:14px;color:#2dc653;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;letter-spacing:1px;">✓ COMPLETED</div>';
+    }
+
+    expandDiv.innerHTML = h;
+    container.appendChild(expandDiv);
+  };
+
+  // Make week planner day cards clickable
+  function makeWeekPlannerClickable() {
+    var container = document.getElementById("week-planner");
+    if (!container) return;
+    var days = container.querySelectorAll(".wp-day");
+    days.forEach(function(day) {
+      if (day.dataset.date) {
+        day.style.cursor = "pointer";
+        day.onclick = function() { window.expandWeekDay(day.dataset.date); };
+      }
+    });
+  }
+
+  // Patch renderWeekPlanner to add data-date attributes
+  var _origRenderWP = renderWeekPlanner;
+  renderWeekPlanner = function() {
+    _origRenderWP();
+    var container = document.getElementById("week-planner");
+    if (!container) return;
+    var monday = getMonday(new Date());
+    var wpDays = container.querySelectorAll(".wp-day");
+    for (var i = 0; i < wpDays.length && i < 7; i++) {
+      var dt = new Date(monday); dt.setDate(monday.getDate() + i);
+      wpDays[i].dataset.date = fmtDate(dt);
+    }
+    makeWeekPlannerClickable();
+  };
   renderWeekPlanner();
 
   /* ── QUICK VIEW / DETAIL VIEW TOGGLE ── */

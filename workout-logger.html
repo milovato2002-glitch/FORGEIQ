@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>FORGEIQ — Active Workout</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: #0a1628;
+  color: #e8edf5;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 400;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Scrollable area */
+.scroll-wrap { height: 100vh; overflow-y: auto; padding-bottom: 100px; }
+
+/* HEADER */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+  background: #0e1e36;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.header-exit {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: rgba(230,57,70,0.12); border: 1px solid rgba(230,57,70,0.25);
+  color: #e63946; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.header-exit:hover { background: rgba(230,57,70,0.22); }
+.header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 1.5px; color: #e8edf5;
+  text-align: center; flex: 1;
+}
+.header-timer {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 20px; color: #f0a500;
+  min-width: 60px; text-align: right;
+}
+
+/* PROGRESS BAR */
+.progress-wrap {
+  padding: 10px 18px 6px;
+  background: #0e1e36;
+}
+.progress-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; color: #8fa3c0; margin-bottom: 5px;
+  font-weight: 500;
+}
+.progress-bar-bg {
+  height: 6px; border-radius: 3px;
+  background: rgba(255,255,255,0.07);
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, #f0a500, #ffb820);
+  transition: width .4s ease;
+}
+
+/* SCREEN 1 — EXERCISE LIST */
+.exercise-list { padding: 14px 16px; }
+.exercise-card {
+  background: #142444;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: border-color .2s;
+}
+.exercise-card:hover { border-color: rgba(240,165,0,0.18); }
+.exercise-card-left { flex: 1; min-width: 0; }
+.exercise-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 17px; color: #e8edf5;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.exercise-meta {
+  font-size: 13px; color: #8fa3c0; margin-top: 3px;
+}
+.exercise-last {
+  font-size: 12px; color: #4a6080; margin-top: 2px;
+}
+.exercise-right { display: flex; align-items: center; gap: 10px; margin-left: 12px; }
+.sets-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; color: #8fa3c0; white-space: nowrap;
+}
+.btn-log {
+  background: rgba(240,165,0,0.12);
+  border: 1px solid rgba(240,165,0,0.18);
+  color: #f0a500; font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 14px; letter-spacing: 0.5px;
+  padding: 8px 18px; border-radius: 8px; cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.btn-log:hover { background: #f0a500; color: #0a1628; }
+.check-done {
+  color: #2dc653; font-size: 24px;
+}
+
+/* SCREEN 2 — SET LOGGER */
+.set-logger { padding: 14px 16px; display: none; }
+.set-logger.active { display: block; }
+.exercise-list.hidden { display: none; }
+
+.back-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+}
+.btn-back {
+  background: transparent; border: 1px solid rgba(255,255,255,0.07);
+  color: #8fa3c0; font-size: 14px; padding: 6px 14px;
+  border-radius: 8px; cursor: pointer; font-family: 'Barlow', sans-serif;
+  transition: border-color .2s;
+}
+.btn-back:hover { border-color: #f0a500; color: #f0a500; }
+.set-indicator {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 16px; color: #8fa3c0;
+}
+.set-exercise-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 1px; color: #e8edf5;
+  margin-left: auto;
+}
+
+/* Last session box */
+.last-session-box {
+  background: #0e1e36;
+  border: 1px solid rgba(240,165,0,0.18);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.last-session-header {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 13px; color: #f0a500;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.last-session-set {
+  font-size: 13px; color: #8fa3c0; margin-bottom: 3px;
+}
+.last-session-empty {
+  font-size: 13px; color: #4a6080; font-style: italic;
+}
+
+/* Input group */
+.input-group { margin-bottom: 18px; }
+.input-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 13px; color: #8fa3c0;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.stepper-row {
+  display: flex; align-items: center; gap: 0;
+  justify-content: center;
+}
+.stepper-btn {
+  width: 52px; height: 52px; border-radius: 10px;
+  background: #0e1e36; border: 1px solid rgba(255,255,255,0.07);
+  color: #e8edf5; font-size: 22px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s, background .2s;
+  font-family: 'Barlow', sans-serif;
+}
+.stepper-btn:hover { border-color: #f0a500; color: #f0a500; }
+.stepper-value {
+  width: 90px; height: 52px; text-align: center;
+  background: #142444; border: 1px solid rgba(255,255,255,0.07);
+  border-left: none; border-right: none;
+  color: #e8edf5; font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 24px;
+  outline: none;
+}
+.stepper-value:focus { border-color: #f0a500; }
+
+/* Increment selector */
+.increment-selector {
+  display: flex; gap: 6px; justify-content: center; margin-top: 8px;
+}
+.inc-btn {
+  padding: 4px 14px; border-radius: 6px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.07);
+  color: #4a6080; font-size: 12px; cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 500;
+  transition: all .2s;
+}
+.inc-btn.active {
+  background: rgba(240,165,0,0.12);
+  border-color: rgba(240,165,0,0.18);
+  color: #f0a500;
+}
+
+/* Completed sets list */
+.completed-sets { margin-bottom: 16px; }
+.completed-set-row {
+  display: flex; justify-content: space-between;
+  padding: 8px 14px; margin-bottom: 4px;
+  background: rgba(45,198,83,0.08);
+  border: 1px solid rgba(45,198,83,0.15);
+  border-radius: 8px;
+  font-size: 14px; color: #2dc653;
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 500;
+}
+
+/* Action buttons */
+.action-row {
+  display: flex; gap: 10px; margin-top: 10px;
+}
+.btn-save-set, .btn-save-rest {
+  flex: 1; padding: 14px; border-radius: 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 16px;
+  letter-spacing: 0.5px; cursor: pointer;
+  border: none; transition: all .2s;
+  text-transform: uppercase;
+}
+.btn-save-set {
+  background: rgba(240,165,0,0.12);
+  border: 1px solid rgba(240,165,0,0.18);
+  color: #f0a500;
+}
+.btn-save-set:hover { background: #f0a500; color: #0a1628; }
+.btn-save-rest {
+  background: #f0a500; color: #0a1628;
+}
+.btn-save-rest:hover { background: #ffb820; }
+
+/* Exercise complete overlay */
+.exercise-complete-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(10,22,40,0.92);
+  flex-direction: column; align-items: center; justify-content: center;
+}
+.exercise-complete-overlay.active { display: flex; }
+.exercise-complete-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px; color: #2dc653;
+  letter-spacing: 2px; margin-bottom: 24px;
+}
+.btn-next-exercise {
+  background: #f0a500; color: #0a1628;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 18px;
+  padding: 14px 40px; border-radius: 10px;
+  border: none; cursor: pointer;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: background .2s;
+}
+.btn-next-exercise:hover { background: #ffb820; }
+
+/* REST TIMER */
+.rest-overlay {
+  display: none; position: fixed; inset: 0; z-index: 300;
+  background: #0a1628;
+  flex-direction: column; align-items: center; justify-content: center;
+}
+.rest-overlay.active { display: flex; }
+.rest-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500; font-size: 16px;
+  color: #8fa3c0; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 10px;
+}
+.rest-timer-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 96px; color: #f0a500;
+  line-height: 1; margin-bottom: 20px;
+}
+.rest-exercise-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px; color: #4a6080;
+  margin-bottom: 30px; text-transform: uppercase;
+}
+.rest-adjust-row {
+  display: flex; gap: 12px; margin-bottom: 30px;
+}
+.rest-adjust-btn {
+  padding: 10px 22px; border-radius: 10px;
+  background: #142444; border: 1px solid rgba(255,255,255,0.07);
+  color: #8fa3c0; font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 16px; cursor: pointer;
+  transition: border-color .2s;
+}
+.rest-adjust-btn:hover { border-color: #f0a500; color: #f0a500; }
+.btn-skip-rest {
+  padding: 14px 40px; border-radius: 10px;
+  background: rgba(230,57,70,0.12);
+  border: 1px solid rgba(230,57,70,0.25);
+  color: #e63946; font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 16px; cursor: pointer;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: background .2s;
+}
+.btn-skip-rest:hover { background: rgba(230,57,70,0.22); }
+.rest-complete-msg {
+  display: none;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; color: #2dc653;
+  letter-spacing: 2px; margin-top: 18px;
+}
+.rest-complete-msg.active { display: block; }
+
+/* WORKOUT COMPLETE SCREEN */
+.workout-complete { display: none; padding: 30px 18px; text-align: center; }
+.workout-complete.active { display: block; }
+.wc-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 44px; color: #f0a500;
+  letter-spacing: 3px; margin-bottom: 6px;
+}
+.wc-flame { font-size: 48px; margin-bottom: 20px; display: block; }
+
+.stats-card {
+  background: #142444;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 20px; margin-bottom: 20px;
+  text-align: left;
+}
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.stat-item {}
+.stat-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px; color: #e8edf5;
+}
+.stat-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; color: #4a6080;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.pr-section { margin-bottom: 24px; }
+.pr-item {
+  background: rgba(240,165,0,0.12);
+  border: 1px solid rgba(240,165,0,0.18);
+  border-radius: 10px;
+  padding: 12px 16px; margin-bottom: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 15px; color: #f0a500;
+  text-align: left;
+}
+
+.wc-actions { display: flex; flex-direction: column; gap: 10px; }
+.btn-save-workout {
+  width: 100%; padding: 16px; border-radius: 10px;
+  background: #f0a500; color: #0a1628;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 18px;
+  border: none; cursor: pointer;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: background .2s;
+}
+.btn-save-workout:hover { background: #ffb820; }
+.btn-share-workout {
+  width: 100%; padding: 14px; border-radius: 10px;
+  background: rgba(240,165,0,0.12);
+  border: 1px solid rgba(240,165,0,0.18);
+  color: #f0a500;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 16px;
+  cursor: pointer; text-transform: uppercase;
+  letter-spacing: 1px; transition: background .2s;
+}
+.btn-share-workout:hover { background: rgba(240,165,0,0.22); }
+
+/* Utility */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="scroll-wrap" id="scrollWrap">
+  <!-- HEADER -->
+  <div class="header">
+    <button class="header-exit" id="btnExit">&times;</button>
+    <div class="header-title" id="workoutTitle">WORKOUT</div>
+    <div class="header-timer" id="elapsedTimer">0:00</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label" id="progressLabel">0 / 0 exercises complete</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 — EXERCISE LIST -->
+  <div class="exercise-list" id="exerciseList"></div>
+
+  <!-- SCREEN 2 — SET LOGGER -->
+  <div class="set-logger" id="setLogger">
+    <div class="back-row">
+      <button class="btn-back" id="btnBack">&larr; Back</button>
+      <span class="set-indicator" id="setIndicator">SET 1 / 4</span>
+      <span class="set-exercise-name" id="setExerciseName"></span>
+    </div>
+
+    <!-- Last session -->
+    <div class="last-session-box" id="lastSessionBox">
+      <div class="last-session-header">LAST SESSION</div>
+      <div id="lastSessionSets"></div>
+    </div>
+
+    <!-- Completed sets -->
+    <div class="completed-sets" id="completedSets"></div>
+
+    <!-- Weight input -->
+    <div class="input-group">
+      <div class="input-label">WEIGHT (LBS)</div>
+      <div class="stepper-row">
+        <button class="stepper-btn" id="weightMinus">&minus;</button>
+        <input type="number" class="stepper-value" id="weightInput" value="0">
+        <button class="stepper-btn" id="weightPlus">+</button>
+      </div>
+      <div class="increment-selector" id="incrementSelector">
+        <button class="inc-btn" data-inc="2.5">2.5</button>
+        <button class="inc-btn active" data-inc="5">5</button>
+        <button class="inc-btn" data-inc="10">10</button>
+      </div>
+    </div>
+
+    <!-- Reps input -->
+    <div class="input-group">
+      <div class="input-label">REPS</div>
+      <div class="stepper-row">
+        <button class="stepper-btn" id="repsMinus">&minus;</button>
+        <input type="number" class="stepper-value" id="repsInput" value="8">
+        <button class="stepper-btn" id="repsPlus">+</button>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="action-row">
+      <button class="btn-save-set" id="btnSaveSet">SAVE SET</button>
+      <button class="btn-save-rest" id="btnSaveRest">SAVE &amp; REST</button>
+    </div>
+  </div>
+
+  <!-- WORKOUT COMPLETE -->
+  <div class="workout-complete" id="workoutComplete">
+    <span class="wc-flame">&#128293;</span>
+    <div class="wc-title">WORKOUT COMPLETE</div>
+
+    <div class="stats-card">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="wcTime">0:00</div>
+          <div class="stat-label">Total Time</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="wcVolume">0</div>
+          <div class="stat-label">Total Volume (lbs)</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="wcExercises">0</div>
+          <div class="stat-label">Exercises</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="wcSets">0</div>
+          <div class="stat-label">Sets Completed</div>
+        </div>
+        <div class="stat-item" style="grid-column: span 2">
+          <div class="stat-value" id="wcCalories">0</div>
+          <div class="stat-label">Estimated Calories</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pr-section" id="prSection"></div>
+
+    <div class="wc-actions">
+      <button class="btn-save-workout" id="btnSaveWorkout">SAVE WORKOUT</button>
+      <button class="btn-share-workout" id="btnShareWorkout">SHARE WORKOUT</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXERCISE COMPLETE OVERLAY -->
+<div class="exercise-complete-overlay" id="exerciseCompleteOverlay">
+  <div class="exercise-complete-text">EXERCISE COMPLETE &#10003;</div>
+  <button class="btn-next-exercise" id="btnNextExercise">NEXT EXERCISE &rarr;</button>
+</div>
+
+<!-- REST TIMER OVERLAY -->
+<div class="rest-overlay" id="restOverlay">
+  <div class="rest-label">REST</div>
+  <div class="rest-timer-display" id="restTimerDisplay">60</div>
+  <div class="rest-exercise-name" id="restExerciseName"></div>
+  <div class="rest-adjust-row">
+    <button class="rest-adjust-btn" id="restMinus15">&minus;15</button>
+    <button class="rest-adjust-btn" id="restPlus15">+15</button>
+  </div>
+  <button class="btn-skip-rest" id="btnSkipRest">SKIP REST</button>
+  <div class="rest-complete-msg" id="restCompleteMsg">REST COMPLETE &mdash; NEXT SET</div>
+</div>
+
+<script>
+(function() {
+  // ── Bootstrap ──
+  const workoutToStart = JSON.parse(localStorage.getItem('forgeiq_workout_to_start') || 'null');
+  if (!workoutToStart) { window.location.href = '/train'; return; }
+
+  const exercises = workoutToStart.exercises || [];
+  const workoutName = workoutToStart.name || workoutToStart.workoutName || 'WORKOUT';
+  const bodyWeightKg = parseFloat(localStorage.getItem('forgeiq_body_weight_kg')) || 75;
+
+  document.getElementById('workoutTitle').textContent = workoutName;
+
+  // ── State ──
+  let elapsedSeconds = 0;
+  let currentExerciseIndex = -1;
+  let currentSetIndex = 0;
+  let weightIncrement = 5;
+  const exerciseData = exercises.map(ex => ({
+    name: ex.name || ex.exercise || '',
+    targetSets: parseInt(ex.sets) || 4,
+    targetReps: parseInt(ex.reps) || 8,
+    muscleGroup: ex.muscleGroup || ex.muscle || '',
+    completedSets: [],
+    done: false
+  }));
+
+  // ── History helper ──
+  function getHistory() {
+    return JSON.parse(localStorage.getItem('forgeiq_workout_history') || '[]');
+  }
+  function getLastSession(exerciseName) {
+    const history = getHistory();
+    for (const session of history) {
+      if (!session.exercises) continue;
+      const found = session.exercises.find(e => e.name === exerciseName);
+      if (found) return found.sets || [];
+    }
+    return [];
+  }
+  function getMaxLifts() {
+    return JSON.parse(localStorage.getItem('forgeiq_max_lifts') || '{}');
+  }
+
+  // ── Elapsed Timer ──
+  const timerEl = document.getElementById('elapsedTimer');
+  setInterval(() => {
+    elapsedSeconds++;
+    const m = Math.floor(elapsedSeconds / 60);
+    const s = elapsedSeconds % 60;
+    timerEl.textContent = m + ':' + String(s).padStart(2, '0');
+  }, 1000);
+
+  // ── Render Exercise List ──
+  function renderExerciseList() {
+    const listEl = document.getElementById('exerciseList');
+    const completedCount = exerciseData.filter(e => e.done).length;
+    document.getElementById('progressLabel').textContent = completedCount + ' / ' + exerciseData.length + ' exercises complete';
+    document.getElementById('progressFill').style.width = (exerciseData.length ? (completedCount / exerciseData.length * 100) : 0) + '%';
+
+    listEl.innerHTML = '';
+    exerciseData.forEach((ex, idx) => {
+      const lastSets = getLastSession(ex.name);
+      const lastText = lastSets.length
+        ? lastSets[0].weight + ' x ' + lastSets[0].reps
+        : 'No history';
+
+      const card = document.createElement('div');
+      card.className = 'exercise-card';
+      card.innerHTML = `
+        <div class="exercise-card-left">
+          <div class="exercise-name">${esc(ex.name)}</div>
+          <div class="exercise-meta">${ex.targetSets} sets &times; ${ex.targetReps} reps</div>
+          <div class="exercise-last">Last session: ${esc(lastText)}</div>
+        </div>
+        <div class="exercise-right">
+          ${ex.done
+            ? '<span class="check-done">&#10003;</span>'
+            : '<button class="btn-log" data-idx="' + idx + '">&#9654; LOG</button>'}
+        </div>`;
+      listEl.appendChild(card);
+    });
+
+    // Attach LOG handlers
+    listEl.querySelectorAll('.btn-log').forEach(btn => {
+      btn.addEventListener('click', () => openExercise(parseInt(btn.dataset.idx)));
+    });
+
+    // Check if all done
+    if (completedCount === exerciseData.length && exerciseData.length > 0) {
+      showWorkoutComplete();
+    }
+  }
+
+  function esc(s) {
+    const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+  }
+
+  // ── Open Exercise (Screen 2) ──
+  function openExercise(idx) {
+    currentExerciseIndex = idx;
+    currentSetIndex = exerciseData[idx].completedSets.length;
+    document.getElementById('exerciseList').classList.add('hidden');
+    document.getElementById('progressWrap').classList.add('hidden');
+    const logger = document.getElementById('setLogger');
+    logger.classList.add('active');
+    renderSetLogger();
+  }
+
+  function closeExercise() {
+    document.getElementById('setLogger').classList.remove('active');
+    document.getElementById('exerciseList').classList.remove('hidden');
+    document.getElementById('progressWrap').classList.remove('hidden');
+    renderExerciseList();
+  }
+
+  // ── Render Set Logger ──
+  function renderSetLogger() {
+    const ex = exerciseData[currentExerciseIndex];
+    document.getElementById('setIndicator').textContent = 'SET ' + (currentSetIndex + 1) + ' / ' + ex.targetSets;
+    document.getElementById('setExerciseName').textContent = ex.name;
+
+    // Last session
+    const lastSets = getLastSession(ex.name);
+    const lsContainer = document.getElementById('lastSessionSets');
+    lsContainer.innerHTML = '';
+    if (lastSets.length) {
+      lastSets.forEach((s, i) => {
+        const div = document.createElement('div');
+        div.className = 'last-session-set';
+        div.textContent = 'Set ' + (i + 1) + ': ' + s.weight + ' lbs \u00D7 ' + s.reps + ' reps';
+        lsContainer.appendChild(div);
+      });
+    } else {
+      lsContainer.innerHTML = '<div class="last-session-empty">First time \u2014 no previous data</div>';
+    }
+
+    // Pre-fill weight/reps from last session or previous set
+    if (ex.completedSets.length > 0) {
+      const prev = ex.completedSets[ex.completedSets.length - 1];
+      document.getElementById('weightInput').value = prev.weight;
+      document.getElementById('repsInput').value = prev.reps;
+    } else if (lastSets.length && lastSets[currentSetIndex]) {
+      document.getElementById('weightInput').value = lastSets[currentSetIndex].weight;
+      document.getElementById('repsInput').value = lastSets[currentSetIndex].reps;
+    } else if (lastSets.length) {
+      document.getElementById('weightInput').value = lastSets[0].weight;
+      document.getElementById('repsInput').value = lastSets[0].reps;
+    } else {
+      document.getElementById('weightInput').value = 0;
+      document.getElementById('repsInput').value = ex.targetReps;
+    }
+
+    // Render completed sets
+    renderCompletedSets();
+  }
+
+  function renderCompletedSets() {
+    const ex = exerciseData[currentExerciseIndex];
+    const container = document.getElementById('completedSets');
+    container.innerHTML = '';
+    ex.completedSets.forEach((s, i) => {
+      const row = document.createElement('div');
+      row.className = 'completed-set-row';
+      row.innerHTML = '<span>Set ' + (i + 1) + '</span><span>' + s.weight + ' lbs &times; ' + s.reps + ' reps</span>';
+      container.appendChild(row);
+    });
+  }
+
+  // ── Stepper controls ──
+  document.getElementById('weightPlus').addEventListener('click', () => {
+    const inp = document.getElementById('weightInput');
+    inp.value = parseFloat(inp.value || 0) + weightIncrement;
+  });
+  document.getElementById('weightMinus').addEventListener('click', () => {
+    const inp = document.getElementById('weightInput');
+    inp.value = Math.max(0, parseFloat(inp.value || 0) - weightIncrement);
+  });
+  document.getElementById('repsPlus').addEventListener('click', () => {
+    const inp = document.getElementById('repsInput');
+    inp.value = parseInt(inp.value || 0) + 1;
+  });
+  document.getElementById('repsMinus').addEventListener('click', () => {
+    const inp = document.getElementById('repsInput');
+    inp.value = Math.max(0, parseInt(inp.value || 0) - 1);
+  });
+
+  // Increment selector
+  document.getElementById('incrementSelector').addEventListener('click', (e) => {
+    if (!e.target.dataset.inc) return;
+    weightIncrement = parseFloat(e.target.dataset.inc);
+    document.querySelectorAll('.inc-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+  });
+
+  // ── Save Set ──
+  function saveCurrentSet() {
+    const ex = exerciseData[currentExerciseIndex];
+    const weight = parseFloat(document.getElementById('weightInput').value) || 0;
+    const reps = parseInt(document.getElementById('repsInput').value) || 0;
+    ex.completedSets.push({ set: currentSetIndex + 1, weight, reps, completed: true });
+    currentSetIndex++;
+
+    if (currentSetIndex >= ex.targetSets) {
+      ex.done = true;
+      document.getElementById('setLogger').classList.remove('active');
+      document.getElementById('exerciseCompleteOverlay').classList.add('active');
+      return true; // exercise done
+    }
+    renderSetLogger();
+    return false; // more sets
+  }
+
+  document.getElementById('btnSaveSet').addEventListener('click', () => {
+    saveCurrentSet();
+  });
+
+  document.getElementById('btnSaveRest').addEventListener('click', () => {
+    const done = saveCurrentSet();
+    if (!done) startRestTimer();
+  });
+
+  // ── Back button ──
+  document.getElementById('btnBack').addEventListener('click', closeExercise);
+
+  // ── Exercise Complete Overlay ──
+  document.getElementById('btnNextExercise').addEventListener('click', () => {
+    document.getElementById('exerciseCompleteOverlay').classList.remove('active');
+    document.getElementById('exerciseList').classList.remove('hidden');
+    document.getElementById('progressWrap').classList.remove('hidden');
+    renderExerciseList();
+  });
+
+  // ── REST TIMER ──
+  let restTime = 60;
+  let restInterval = null;
+
+  function startRestTimer() {
+    restTime = 60;
+    const overlay = document.getElementById('restOverlay');
+    overlay.classList.add('active');
+    document.getElementById('restTimerDisplay').textContent = restTime;
+    document.getElementById('restExerciseName').textContent = exerciseData[currentExerciseIndex].name;
+    document.getElementById('restCompleteMsg').classList.remove('active');
+
+    clearInterval(restInterval);
+    restInterval = setInterval(() => {
+      restTime--;
+      document.getElementById('restTimerDisplay').textContent = Math.max(0, restTime);
+      if (restTime <= 0) {
+        clearInterval(restInterval);
+        restInterval = null;
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        document.getElementById('restCompleteMsg').classList.add('active');
+        setTimeout(() => closeRestTimer(), 2000);
+      }
+    }, 1000);
+  }
+
+  function closeRestTimer() {
+    clearInterval(restInterval);
+    restInterval = null;
+    document.getElementById('restOverlay').classList.remove('active');
+  }
+
+  document.getElementById('restPlus15').addEventListener('click', () => {
+    restTime += 15;
+    document.getElementById('restTimerDisplay').textContent = Math.max(0, restTime);
+  });
+  document.getElementById('restMinus15').addEventListener('click', () => {
+    restTime = Math.max(0, restTime - 15);
+    document.getElementById('restTimerDisplay').textContent = restTime;
+  });
+  document.getElementById('btnSkipRest').addEventListener('click', closeRestTimer);
+
+  // ── Exit button ──
+  document.getElementById('btnExit').addEventListener('click', () => {
+    if (confirm('End workout? Progress will be saved.')) {
+      saveWorkoutData();
+      window.location.href = '/train';
+    }
+  });
+
+  // ── WORKOUT COMPLETE ──
+  function showWorkoutComplete() {
+    document.getElementById('exerciseList').classList.add('hidden');
+    document.getElementById('progressWrap').classList.add('hidden');
+    document.getElementById('setLogger').classList.remove('active');
+
+    const wc = document.getElementById('workoutComplete');
+    wc.classList.add('active');
+
+    const totalMinutes = Math.floor(elapsedSeconds / 60);
+    const totalSecs = elapsedSeconds % 60;
+    document.getElementById('wcTime').textContent = totalMinutes + ':' + String(totalSecs).padStart(2, '0');
+
+    let totalVolume = 0;
+    let totalSetsCount = 0;
+    exerciseData.forEach(ex => {
+      ex.completedSets.forEach(s => {
+        totalVolume += s.weight * s.reps;
+        totalSetsCount++;
+      });
+    });
+
+    document.getElementById('wcVolume').textContent = totalVolume.toLocaleString();
+    document.getElementById('wcExercises').textContent = exerciseData.length;
+    document.getElementById('wcSets').textContent = totalSetsCount;
+
+    const hours = elapsedSeconds / 3600;
+    const calories = Math.round(4.0 * bodyWeightKg * hours);
+    document.getElementById('wcCalories').textContent = calories;
+
+    // PRs
+    const maxLifts = getMaxLifts();
+    const prSection = document.getElementById('prSection');
+    prSection.innerHTML = '';
+    const prs = [];
+    exerciseData.forEach(ex => {
+      const maxWeight = Math.max(0, ...ex.completedSets.map(s => s.weight));
+      if (maxWeight > 0) {
+        const prev = maxLifts[ex.name];
+        if (!prev || maxWeight > prev.weight) {
+          prs.push({ name: ex.name, weight: maxWeight });
+        }
+      }
+    });
+    prs.forEach(pr => {
+      const div = document.createElement('div');
+      div.className = 'pr-item';
+      div.innerHTML = '&#11088; ' + esc(pr.name) + ' &mdash; New PR: ' + pr.weight + ' lbs';
+      prSection.appendChild(div);
+    });
+  }
+
+  // ── Save Workout Data ──
+  function saveWorkoutData() {
+    let totalVolume = 0;
+    let totalSetsCount = 0;
+    const exercisesPayload = exerciseData.map(ex => {
+      let vol = 0;
+      ex.completedSets.forEach(s => { vol += s.weight * s.reps; totalSetsCount++; });
+      totalVolume += vol;
+      return { name: ex.name, sets: ex.completedSets, volume: vol };
+    });
+
+    const hours = elapsedSeconds / 3600;
+    const caloriesBurned = Math.round(4.0 * bodyWeightKg * hours);
+    const muscleGroups = [...new Set(exerciseData.map(e => e.muscleGroup).filter(Boolean))];
+
+    // 1. forgeiq_workout_history
+    const history = getHistory();
+    history.unshift({
+      id: Date.now(),
+      date: new Date().toISOString(),
+      name: workoutName,
+      duration: elapsedSeconds,
+      exercises: exercisesPayload,
+      totalVolume,
+      caloriesBurned,
+      muscleGroups
+    });
+    if (history.length > 200) history.length = 200;
+    localStorage.setItem('forgeiq_workout_history', JSON.stringify(history));
+
+    // 2. forgeiq_max_lifts
+    const maxLifts = getMaxLifts();
+    exerciseData.forEach(ex => {
+      const maxWeight = Math.max(0, ...ex.completedSets.map(s => s.weight));
+      const maxReps = Math.max(0, ...ex.completedSets.filter(s => s.weight === maxWeight).map(s => s.reps));
+      if (maxWeight > 0 && (!maxLifts[ex.name] || maxWeight > maxLifts[ex.name].weight)) {
+        maxLifts[ex.name] = { weight: maxWeight, reps: maxReps, date: new Date().toISOString() };
+      }
+    });
+    localStorage.setItem('forgeiq_max_lifts', JSON.stringify(maxLifts));
+
+    // 3. forgeiq_exercise_calories
+    const calLog = JSON.parse(localStorage.getItem('forgeiq_exercise_calories') || '{}');
+    const todayStr = new Date().toISOString().slice(0, 10);
+    calLog[todayStr] = (calLog[todayStr] || 0) + caloriesBurned;
+    localStorage.setItem('forgeiq_exercise_calories', JSON.stringify(calLog));
+
+    // 4. forgeiq_workouts
+    const wkLog = JSON.parse(localStorage.getItem('forgeiq_workouts') || '{}');
+    wkLog[todayStr] = { completed: true, name: workoutName, volume: totalVolume };
+    localStorage.setItem('forgeiq_workouts', JSON.stringify(wkLog));
+
+    // 5. Clean up
+    localStorage.removeItem('forgeiq_workout_to_start');
+  }
+
+  // ── Save Workout button ──
+  document.getElementById('btnSaveWorkout').addEventListener('click', () => {
+    saveWorkoutData();
+    window.location.href = '/dashboard';
+  });
+
+  // ── Share Workout button ──
+  document.getElementById('btnShareWorkout').addEventListener('click', () => {
+    let totalVolume = 0;
+    let totalSetsCount = 0;
+    exerciseData.forEach(ex => {
+      ex.completedSets.forEach(s => { totalVolume += s.weight * s.reps; totalSetsCount++; });
+    });
+    const mins = Math.floor(elapsedSeconds / 60);
+    let text = 'FORGEIQ Workout Complete!\n';
+    text += workoutName + '\n';
+    text += 'Time: ' + mins + ' min\n';
+    text += 'Volume: ' + totalVolume.toLocaleString() + ' lbs\n';
+    text += 'Exercises: ' + exerciseData.length + '\n';
+    text += 'Sets: ' + totalSetsCount + '\n';
+    text += '---\n';
+    exerciseData.forEach(ex => {
+      text += ex.name + ': ';
+      text += ex.completedSets.map(s => s.weight + 'x' + s.reps).join(', ') + '\n';
+    });
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('btnShareWorkout');
+      btn.textContent = 'COPIED TO CLIPBOARD!';
+      setTimeout(() => { btn.textContent = 'SHARE WORKOUT'; }, 2000);
+    }).catch(() => {
+      alert('Could not copy to clipboard.');
+    });
+  });
+
+  // ── Init ──
+  renderExerciseList();
+})();
+</script>
+</body>
+</html>

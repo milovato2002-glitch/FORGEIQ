@@ -533,6 +533,33 @@
       .nav-right .lang-toggle { display: none; }
       .nav-right .btn-login { display: none; }
     }
+    .pr-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+    .pr-card .pr-exercise {
+      font-family: var(--font-condensed);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .pr-card .pr-weight {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .pr-card .pr-detail {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -753,6 +780,32 @@
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <a href="/coaching.html" class="btn-gold" style="padding:12px 28px;font-size:0.85rem;">BOOK WITH DOC</a>
       <a href="/debora.html" style="display:inline-block;background:transparent;color:var(--text-primary);padding:12px 28px;border-radius:var(--radius-sm);font-family:var(--font-condensed);font-weight:600;font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--border-gold);transition:all 0.2s;">BOOK WITH DEBORA</a>
+    </div>
+  </div>
+
+  <!-- PERSONAL RECORDS -->
+  <div class="section-title">Personal Records</div>
+  <div id="pr-section" class="stats-row"></div>
+
+  <!-- WEEKLY VOLUME -->
+  <div class="section-title">This Week's Volume</div>
+  <div id="weekly-volume-section" style="background:var(--card-bg);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:24px;margin-bottom:28px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div>
+        <div style="font-family:var(--font-display);font-size:2rem;color:var(--gold);letter-spacing:1px;" id="weekly-vol-total">0</div>
+        <div style="font-family:var(--font-condensed);font-size:0.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-secondary);">Total Volume (lbs)</div>
+      </div>
+      <div id="weekly-vol-compare" style="font-family:var(--font-condensed);font-size:0.85rem;color:var(--green);"></div>
+    </div>
+    <div id="weekly-vol-bars" style="display:flex;align-items:flex-end;gap:8px;height:120px;"></div>
+    <div style="display:flex;gap:8px;margin-top:6px;">
+      <div style="flex:1;text-align:center;font-size:0.65rem;color:var(--text-muted);font-family:var(--font-condensed);letter-spacing:1px;">MON</div>
+      <div style="flex:1;text-align:center;font-size:0.65rem;color:var(--text-muted);font-family:var(--font-condensed);letter-spacing:1px;">TUE</div>
+      <div style="flex:1;text-align:center;font-size:0.65rem;color:var(--text-muted);font-family:var(--font-condensed);letter-spacing:1px;">WED</div>
+      <div style="flex:1;text-align:center;font-size:0.65rem;color:var(--text-muted);font-family:var(--font-condensed);letter-spacing:1px;">THU</div>
+      <div style="flex:1;text-align:center;font-size:0.65rem;color:var(--text-muted);font-family:var(--font-condensed);letter-spacing:1px;">FRI</div>
+      <div style="flex:1;text-align:center;font-size:0.65rem;color:var(--text-muted);font-family:var(--font-condensed);letter-spacing:1px;">SAT</div>
+      <div style="flex:1;text-align:center;font-size:0.65rem;color:var(--text-muted);font-family:var(--font-condensed);letter-spacing:1px;">SUN</div>
     </div>
   </div>
 
@@ -1094,5 +1147,91 @@
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/forge-ai-button.js"></script>
+<script>
+// Personal Records
+(function(){
+  var container = document.getElementById('pr-section');
+  if(!container) return;
+  var maxLifts = {};
+  try { maxLifts = JSON.parse(localStorage.getItem('forgeiq_max_lifts') || '{}'); } catch(e){}
+  var entries = Object.keys(maxLifts).map(function(k){ return {name:k, data:maxLifts[k]}; });
+  entries.sort(function(a,b){ return (b.data.weight||0) - (a.data.weight||0); });
+  entries = entries.slice(0,6);
+  if(entries.length === 0){
+    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#4a6080;font-size:0.88rem;padding:20px;">Complete your first workout to set your PRs</div>';
+    return;
+  }
+  var h = '';
+  entries.forEach(function(e){
+    var d = e.data.date ? new Date(e.data.date) : null;
+    var dateStr = d ? (d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})) : '';
+    h += '<div class="pr-card">';
+    h += '<div class="pr-exercise">' + e.name + '</div>';
+    h += '<div class="pr-weight">' + e.data.weight + ' lbs</div>';
+    h += '<div class="pr-detail">' + (e.data.reps||'') + ' reps · ' + dateStr + '</div>';
+    h += '</div>';
+  });
+  container.innerHTML = h;
+})();
+
+// Weekly Volume
+(function(){
+  var history = [];
+  try { history = JSON.parse(localStorage.getItem('forgeiq_workout_history') || '[]'); } catch(e){}
+
+  function getMonday(d){ var dt=new Date(d); var day=dt.getDay(); var diff=day===0?-6:1-day; dt.setDate(dt.getDate()+diff); dt.setHours(0,0,0,0); return dt; }
+  function fmtD(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+  var today = new Date();
+  var monday = getMonday(today);
+  var lastMonday = new Date(monday); lastMonday.setDate(lastMonday.getDate()-7);
+
+  var dailyVol = [0,0,0,0,0,0,0];
+  var lastWeekVol = 0;
+  var thisWeekVol = 0;
+
+  history.forEach(function(session){
+    if(!session.date) return;
+    var sd = new Date(session.date);
+    var sds = fmtD(sd);
+    var vol = session.totalVolume || 0;
+    // This week
+    for(var i=0;i<7;i++){
+      var dt=new Date(monday); dt.setDate(monday.getDate()+i);
+      if(fmtD(dt)===sds){ dailyVol[i]+=vol; thisWeekVol+=vol; }
+    }
+    // Last week
+    for(var j=0;j<7;j++){
+      var dt2=new Date(lastMonday); dt2.setDate(lastMonday.getDate()+j);
+      if(fmtD(dt2)===sds){ lastWeekVol+=vol; }
+    }
+  });
+
+  var totalEl = document.getElementById('weekly-vol-total');
+  var compareEl = document.getElementById('weekly-vol-compare');
+  var barsEl = document.getElementById('weekly-vol-bars');
+  if(totalEl) totalEl.textContent = thisWeekVol.toLocaleString();
+  if(compareEl && lastWeekVol > 0){
+    var pct = Math.round(((thisWeekVol - lastWeekVol) / lastWeekVol) * 100);
+    if(pct >= 0) compareEl.textContent = '↑ ' + pct + '% vs last week';
+    else { compareEl.textContent = '↓ ' + Math.abs(pct) + '% vs last week'; compareEl.style.color = '#e63946'; }
+  } else if(compareEl) {
+    compareEl.textContent = 'First week tracking';
+  }
+
+  if(barsEl){
+    var maxVol = Math.max.apply(null, dailyVol) || 1;
+    var h = '';
+    for(var k=0;k<7;k++){
+      var pctH = dailyVol[k] > 0 ? Math.max(Math.round((dailyVol[k]/maxVol)*100), 8) : 4;
+      var color = dailyVol[k] > 0 ? '#f0a500' : 'rgba(255,255,255,0.06)';
+      h += '<div style="flex:1;height:'+pctH+'%;background:'+color+';border-radius:4px 4px 0 0;transition:height 0.4s;position:relative;" title="'+dailyVol[k].toLocaleString()+' lbs">';
+      if(dailyVol[k]>0) h += '<div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:0.6rem;color:#8fa3c0;white-space:nowrap;">'+dailyVol[k].toLocaleString()+'</div>';
+      h += '</div>';
+    }
+    barsEl.innerHTML = h;
+  }
+})();
+</script>
 </body>
 </html>
