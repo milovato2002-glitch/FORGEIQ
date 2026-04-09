@@ -405,6 +405,35 @@
 
     /* Auth guard */
     authGuard();
+
+    /* Nav auth state — swap nav links based on login */
+    updateNavForAuthState();
+  }
+
+  function updateNavForAuthState() {
+    var token = localStorage.getItem('forgeiq_token');
+    var navContainer = document.querySelector('.nav-center') || document.querySelector('.nav-items') || document.querySelector('.nav-links');
+    if (!navContainer) return;
+
+    // Don't touch nav on login/signup/onboarding pages
+    var slug = currentPath().replace(/^\//, '').replace(/\.html$/, '');
+    if (['login', 'signup', 'onboarding'].indexOf(slug) !== -1) return;
+
+    if (!token) {
+      // Not logged in — show public nav
+      // Detect which class pattern this page uses
+      var isNavLink = navContainer.classList.contains('nav-center');
+      var isNavItems = navContainer.classList.contains('nav-items');
+      var linkClass = isNavLink ? 'nav-link' : (isNavItems ? 'nav-item' : '');
+      var classAttr = linkClass ? ' class="' + linkClass + '"' : '';
+
+      navContainer.innerHTML =
+        '<a href="/index.html#features"' + classAttr + '>How It Works</a>' +
+        '<a href="/coaching.html"' + classAttr + '>Coaches</a>' +
+        '<a href="/pricing.html"' + classAttr + '>Pricing</a>' +
+        '<a href="/macro-plan.html"' + classAttr + '>Free Macro Plan</a>';
+    }
+    // If logged in, leave the nav as-is (already has Dashboard, Train, Progress, etc.)
   }
 
   /* Run on DOMContentLoaded or immediately if already loaded */
