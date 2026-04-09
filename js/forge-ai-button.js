@@ -10,7 +10,7 @@
   /* ------------------------------------------------------------------ */
   // Public pages that should NEVER redirect to login
   // Matches both /signup and /signup.html variants
-  var PUBLIC_SLUGS = ['', 'index', 'login', 'signup', 'pricing', 'onboarding', 'debora', 'coaching', 'book', 'glp-hub', 'peptide-library', 'resources', 'doc', 'nutrition', 'plan-builder'];
+  var PUBLIC_SLUGS = ['', 'index', 'login', 'signup', 'pricing', 'onboarding', 'debora', 'coaching', 'book', 'glp-hub', 'peptide-library', 'resources', 'doc', 'nutrition', 'plan-builder', 'macro-plan'];
 
   function currentPath() {
     return window.location.pathname.replace(/\/$/, '') || '/';

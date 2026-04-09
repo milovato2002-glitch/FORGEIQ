@@ -87,3 +87,8 @@
   from = "/my-plans"
   to = "/plan-builder.html?plans=1"
   status = 200
+
+[[redirects]]
+  from = "/macro-plan"
+  to = "/macro-plan.html"
+  status = 200
