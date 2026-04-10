@@ -11,7 +11,7 @@ exports.handler = async function(event, context) {
   if (!apiKey) return { statusCode: 500, headers, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not set' }) };
   let body;
   try { body = JSON.parse(event.body || '{}'); } catch(e) { return { statusCode: 400, headers, body: JSON.stringify({ error: 'Bad JSON' }) }; }
-  const payload = { model: body.model || 'claude-sonnet-4-6', max_tokens: body.max_tokens || 2000, messages: body.messages || [] };
+  const payload = { model: body.model || 'claude-sonnet-4-5', max_tokens: body.max_tokens || 2000, messages: body.messages || [] };
   if (body.system) payload.system = body.system;
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -21,7 +21,14 @@ exports.handler = async function(event, context) {
     });
     const text = await r.text();
     let data;
-    try { data = JSON.parse(text); } catch(e) { return { statusCode: 500, headers, body: JSON.stringify({ error: 'Parse fail', raw: text.slice(0,300) }) }; }
+    try { data = JSON.parse(text); } catch(e) {
+      console.error('[FORGEIQ chat] Anthropic returned non-JSON:', text.slice(0, 500));
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Anthropic returned non-JSON response', status: r.status, raw: text.slice(0, 500) }) };
+    }
+    if (data.error) {
+      console.error('[FORGEIQ chat] Anthropic API error:', JSON.stringify(data.error));
+      return { statusCode: r.status, headers, body: JSON.stringify({ error: data.error.message || data.error.type || 'Anthropic API error', type: data.error.type, anthropic_status: r.status }) };
+    }
     return { statusCode: r.status, headers, body: JSON.stringify(data) };
   } catch(err) { return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) }; }
 };

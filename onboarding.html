@@ -1207,7 +1207,7 @@ async function generatePlanSummary(p){
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-4-5',
         max_tokens: 150,
         system: 'You are FORGE AI. Write one specific coaching sentence (max 25 words) for this athlete based on their exact profile. No JSON. No formatting. Plain text only.',
         messages: [{

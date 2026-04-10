@@ -300,6 +300,36 @@
     </div>
   </div>
 
+  <!-- Exercise Calories Banner -->
+  <div id="exercise-cal-banner" style="display:none;background:rgba(45,198,83,0.08);border:1px solid rgba(45,198,83,0.25);border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+    <div id="exercise-cal-workout-msg" style="display:none;font-size:0.88rem;color:#2dc653;margin-bottom:8px;font-weight:600;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div id="exercise-cal-text" style="font-size:0.88rem;color:#8fa3c0;"></div>
+      <button onclick="document.getElementById('manual-ex-cal').style.display=document.getElementById('manual-ex-cal').style.display==='none'?'block':'none';" style="background:none;border:1px solid rgba(240,165,0,0.3);border-radius:6px;padding:6px 14px;color:#f0a500;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1px;cursor:pointer;">+ LOG EXERCISE</button>
+    </div>
+  </div>
+  <!-- Manual Exercise Entry -->
+  <div id="manual-ex-cal" style="display:none;background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:16px;margin-bottom:16px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;color:#f0a500;margin-bottom:10px;">LOG EXERCISE</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+      <div style="flex:1;min-width:120px;">
+        <label style="font-size:0.68rem;color:#4a6080;display:block;margin-bottom:4px;">Type</label>
+        <select id="ex-cal-type" style="width:100%;height:38px;background:#0e1e36;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0 10px;color:#e8edf5;font-size:0.85rem;">
+          <option value="strength">Strength</option>
+          <option value="cardio">Cardio</option>
+          <option value="hiit">HIIT</option>
+          <option value="yoga">Yoga</option>
+          <option value="walking">Walking</option>
+        </select>
+      </div>
+      <div style="flex:0 0 80px;">
+        <label style="font-size:0.68rem;color:#4a6080;display:block;margin-bottom:4px;">Minutes</label>
+        <input type="number" id="ex-cal-min" value="45" min="5" max="300" style="width:100%;height:38px;background:#0e1e36;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0 10px;color:#e8edf5;font-size:0.85rem;text-align:center;">
+      </div>
+      <button onclick="logManualExerciseCal()" style="height:38px;background:#f0a500;border:none;border-radius:6px;padding:0 20px;color:#0a1628;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:1px;cursor:pointer;">LOG</button>
+    </div>
+  </div>
+
   <!-- Protein Progress Bar -->
   <div class="protein-bar-wrap">
     <div class="protein-bar-row">
@@ -572,8 +602,37 @@ function updateDashboard(){
   // Calories
   $("#dh-cal-logged").textContent = Math.round(totals.calories).toLocaleString();
   $("#dh-cal-target").textContent = "/ " + targets.calories.toLocaleString();
-  var calRemaining = targets.calories - totals.calories;
-  $("#dh-cal-remaining").textContent = "REMAINING: " + Math.max(0, Math.round(calRemaining)).toLocaleString();
+  // Exercise calories
+  var exerciseBurned = 0;
+  try {
+    var exCal = JSON.parse(localStorage.getItem("forgeiq_exercise_calories") || "{}");
+    exerciseBurned = exCal[new Date().toDateString()] || 0;
+  } catch(e){}
+  var calRemaining = targets.calories - totals.calories + exerciseBurned;
+
+  // Show exercise banner
+  var exBanner = $("#exercise-cal-banner");
+  if(exBanner){
+    exBanner.style.display = "block";
+    var exText = exerciseBurned > 0
+      ? "\uD83D\uDD25 " + exerciseBurned + " cal burned today — added to your budget"
+      : "No exercise logged yet today";
+    $("#exercise-cal-text").textContent = exText;
+    // Check for completed workout
+    try {
+      var lastWk = JSON.parse(localStorage.getItem("forgeiq_last_completed_workout") || "null");
+      var wkMsg = $("#exercise-cal-workout-msg");
+      if(lastWk && lastWk.completedAt){
+        var wkDate = new Date(lastWk.completedAt).toDateString();
+        if(wkDate === new Date().toDateString()){
+          wkMsg.style.display = "block";
+          wkMsg.textContent = "\u2713 Workout logged — calorie budget updated";
+        }
+      }
+    } catch(e){}
+  }
+
+  $("#dh-cal-remaining").textContent = "REMAINING: " + Math.max(0, Math.round(calRemaining)).toLocaleString() + (exerciseBurned > 0 ? " (+" + exerciseBurned + " exercise)" : "");
   var calPct = Math.min(totals.calories / targets.calories * 100, 100);
   var calBar = $("#dh-cal-bar");
   calBar.style.width = calPct + "%";
@@ -673,7 +732,7 @@ function checkPostWorkoutBrief(){
 
   fetch("/.netlify/functions/chat",{
     method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:200,
+    body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:200,
       system:"You are FORGE AI nutrition coach. Give specific, number-driven post-workout nutrition guidance. Always mention specific foods. Never be generic. 3 sentences maximum.",
       messages:[{role:"user",content:prompt}]})
   }).then(function(r){return r.json();}).then(function(data){
@@ -799,7 +858,7 @@ $("#usda-search").addEventListener("input",function(){
       // Fallback to AI search
       fetch("/.netlify/functions/chat",{
         method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:500,
+        body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:500,
           system:"You are a nutrition database. Return a JSON array of 5 food items matching the query. Each item: {name, calories, protein, carbs, fat} per 100g serving. Return ONLY the JSON array.",
           messages:[{role:"user",content:"Search: "+q}]})
       }).then(function(r){return r.json();}).then(function(data){
@@ -960,7 +1019,7 @@ function analyzeAndLogText(description, source){
   if(btnEl){btnEl.disabled=true;btnEl.textContent="Analyzing...";}
   fetch("/.netlify/functions/chat",{
     method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:250,
+    body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:250,
       system:"You are a precision nutrition calculator. Respond with ONLY a raw JSON object. No markdown. No code blocks. No explanation.",
       messages:[{role:"user",content:'Analyze: "' + description + '". Return ONLY: {"name":"meal name","calories":0,"protein":0,"carbs":0,"fat":0,"fiber":0,"sugar":0,"sodium":0,"servingNote":"brief note"}'}]})
   }).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
@@ -1237,7 +1296,7 @@ window.generateWeeklyReport = function(){
 
   fetch("/.netlify/functions/chat",{
     method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:600,
+    body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:600,
       system:"You are an elite sports nutritionist. Write data-driven weekly reports. Use specific numbers. Never be generic.",
       messages:[{role:"user",content:prompt}]})
   }).then(function(r){return r.json();}).then(function(data){
@@ -1316,6 +1375,31 @@ window.saveBodyweight = function(){
 };
 
 /* ══════════════════════════════════════════
+   MANUAL EXERCISE CALORIE LOG
+   ══════════════════════════════════════════ */
+window.logManualExerciseCal = function(){
+  var type = ($("#ex-cal-type") ? $("#ex-cal-type").value : "strength").toLowerCase();
+  var mins = parseInt($("#ex-cal-min") ? $("#ex-cal-min").value : 45) || 45;
+  var profile = {};
+  try { profile = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){}
+  var bwLbs = profile.currentWeight || profile.bodyweight || 170;
+  var weightKg = bwLbs * 0.453592;
+  var MET = {strength:3.5,cardio:7.0,hiit:8.0,yoga:2.5,walking:3.5};
+  var met = MET[type] || 4.0;
+  var burned = Math.round(met * weightKg * (mins / 60));
+
+  var todayStr = new Date().toDateString();
+  var exCal = {};
+  try { exCal = JSON.parse(localStorage.getItem("forgeiq_exercise_calories") || "{}"); } catch(e){}
+  exCal[todayStr] = (exCal[todayStr] || 0) + burned;
+  localStorage.setItem("forgeiq_exercise_calories", JSON.stringify(exCal));
+
+  $("#manual-ex-cal").style.display = "none";
+  updateDashboard();
+  alert("Logged " + mins + " min " + type + " — ~" + burned + " calories burned. Budget updated.");
+};
+
+/* ══════════════════════════════════════════
    INIT
    ══════════════════════════════════════════ */
 updateDashboard();
@@ -1325,6 +1409,7 @@ checkPostWorkoutBrief();
 </script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 <script src="/js/supabase-config.js"></script>
+<script src="/js/auth-guard.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/forge-ai-button.js"></script>

@@ -296,7 +296,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-4-5',
         max_tokens: 2000,
         system: sysPrompt,
         messages: msgs
@@ -414,6 +414,8 @@
     var token = localStorage.getItem('forgeiq_token');
     var navContainer = document.querySelector('.nav-center') || document.querySelector('.nav-items') || document.querySelector('.nav-links');
     if (!navContainer) return;
+    // Remove hidden state (set by inline style to prevent flash)
+    navContainer.style.visibility = 'visible';
 
     // Don't touch nav on login/signup/onboarding pages
     var slug = currentPath().replace(/^\//, '').replace(/\.html$/, '');
