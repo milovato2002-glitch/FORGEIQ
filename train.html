@@ -1652,6 +1652,10 @@
           <div class="tool-title">1RM Calculator</div>
           <div class="card-sub" style="font-size:0.75rem;">Epley formula: Weight x (1 + Reps / 30)</div>
           <div class="form-group">
+            <label class="form-label">Exercise Name</label>
+            <input type="text" class="form-input" id="orm-exercise" placeholder="e.g. Bench Press" />
+          </div>
+          <div class="form-group">
             <label class="form-label">Weight (lbs)</label>
             <input type="number" class="form-input" id="orm-weight" placeholder="e.g. 225" />
           </div>
@@ -1663,7 +1667,10 @@
           <div class="tool-result" id="orm-result">
             <div class="tool-result-val" id="orm-val"></div>
             <div style="font-size:0.72rem;color:#8fa3c0;margin-bottom:8px;">Estimated 1 Rep Max</div>
-            <table class="pct-table" id="orm-pct-table"></table>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#f0a500;margin:12px 0 8px;">PERCENTAGE REFERENCE TABLE</div>
+            <table class="pct-table" id="orm-pct-table" style="width:100%;border-collapse:collapse;font-size:0.82rem;"></table>
+            <button class="btn-gold btn-sm" id="btn-save-orm" style="width:100%;margin-top:12px;">SAVE TO MY LIFTS</button>
+            <div id="orm-saved-msg" style="display:none;text-align:center;font-size:0.78rem;color:#2dc653;margin-top:8px;"></div>
           </div>
         </div>
         <!-- Plates Calculator -->
@@ -2739,7 +2746,7 @@
 
     fetch('/.netlify/functions/chat', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:300, system:BUILDER_SYSTEM, messages:beginnerHistory })
+      body: JSON.stringify({ model:'claude-sonnet-4-5', max_tokens:300, system:BUILDER_SYSTEM, messages:beginnerHistory })
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
@@ -2811,24 +2818,60 @@
     if (stepA) stepA.classList.add('active');
   };
 
-  /* ── RENDER STEP B: MUSCLE GROUPS ── */
+  /* ── RENDER STEP B: MUSCLE GROUPS (multi-select) ── */
+  var selectedMuscles = [];
   function renderMuscleGroups(){
     var grid = $("#mg-grid");
     grid.innerHTML = "";
+    selectedMuscles = [];
     muscleGroups.forEach(function(mg){
       var btn = document.createElement("button");
       btn.className = "mg-btn";
       btn.textContent = mg;
       btn.addEventListener("click", function(){
-        selectedMuscle = mg;
-        $("#bc-type-c").textContent = selectedType;
-        $("#bc-muscle-c").textContent = mg;
-        showStep("c");
-        renderFocusModifiers();
+        btn.classList.toggle("selected");
+        if(btn.classList.contains("selected")){
+          if(selectedMuscles.indexOf(mg) === -1) selectedMuscles.push(mg);
+        } else {
+          selectedMuscles = selectedMuscles.filter(function(m){ return m !== mg; });
+        }
+        btn.style.borderColor = btn.classList.contains("selected") ? "#f0a500" : "";
+        btn.style.background = btn.classList.contains("selected") ? "rgba(240,165,0,0.08)" : "";
+        btn.style.color = btn.classList.contains("selected") ? "#f0a500" : "";
+        updateMuscleConfirm();
       });
       grid.appendChild(btn);
     });
+    // Add confirm button
+    var confirmRow = document.createElement("div");
+    confirmRow.id = "mg-confirm-row";
+    confirmRow.style.cssText = "grid-column:1/-1;margin-top:8px;display:none;flex-direction:column;gap:8px;";
+    confirmRow.innerHTML = '<div id="mg-tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;"></div>' +
+      '<button id="mg-confirm-btn" class="btn-gold" style="width:100%;" onclick="confirmMuscleSelection()">CONTINUE WITH SELECTED</button>';
+    grid.appendChild(confirmRow);
   }
+
+  function updateMuscleConfirm(){
+    var row = $("#mg-confirm-row");
+    var tags = $("#mg-tags");
+    if(selectedMuscles.length > 0){
+      row.style.display = "flex";
+      tags.innerHTML = selectedMuscles.map(function(m){
+        return '<span style="padding:4px 12px;border-radius:16px;background:rgba(240,165,0,0.12);border:1px solid rgba(240,165,0,0.3);font-family:\'Barlow Condensed\',sans-serif;font-size:0.78rem;font-weight:600;color:#f0a500;">' + m + '</span>';
+      }).join("");
+    } else {
+      row.style.display = "none";
+    }
+  }
+
+  window.confirmMuscleSelection = function(){
+    if(selectedMuscles.length === 0) return;
+    selectedMuscle = selectedMuscles.join(", ");
+    $("#bc-type-c").textContent = selectedType;
+    $("#bc-muscle-c").textContent = selectedMuscle;
+    showStep("c");
+    renderFocusModifiers();
+  };
 
   /* ── RENDER STEP C: FOCUS MODIFIERS ── */
   function renderFocusModifiers(){
@@ -2918,7 +2961,7 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: "claude-sonnet-4-5",
         max_tokens: 2000,
         system: sysPrompt,
         messages: [{ role: "user", content: prompt }]
@@ -3464,7 +3507,7 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: "claude-sonnet-4-5",
         max_tokens: 200,
         system: "You are FORGE AI, an expert personal trainer. Give brief actionable coaching answers in 2-3 sentences. Focus on form, safety, and modifications. Be direct.",
         messages: [{ role: "user", content: "Exercise: " + exName + ". Question: " + q }]
@@ -3762,7 +3805,9 @@
      TRAINING TOOLS
      ═══════════════════════════════════════════════════ */
 
-  /* ── 1RM CALCULATOR ── */
+  /* ── 1RM CALCULATOR (upgraded) ── */
+  var lastORM = 0;
+  var lastORMExercise = "";
   $("#btn-calc-orm").addEventListener("click", function(){
     var weight = parseFloat($("#orm-weight").value);
     var reps = parseFloat($("#orm-reps").value);
@@ -3770,19 +3815,44 @@
       alert("Please enter valid weight and reps.");
       return;
     }
-    // Epley formula: weight * (1 + reps/30)
+    lastORMExercise = ($("#orm-exercise").value || "").trim() || "Unknown";
     var orm = Math.round(weight * (1 + reps / 30));
+    lastORM = orm;
     $("#orm-val").textContent = orm + " lbs";
 
-    var pcts = [95, 90, 85, 80, 75, 70, 65, 60];
+    var pctData = [
+      {pct:95, purpose:"Near-max singles"},
+      {pct:85, purpose:"Heavy strength (3-5 reps)"},
+      {pct:75, purpose:"Hypertrophy (8-12 reps)"},
+      {pct:65, purpose:"Muscular endurance (12-15)"},
+      {pct:50, purpose:"Warm-up / technique"}
+    ];
     var table = $("#orm-pct-table");
-    table.innerHTML = "";
-    pcts.forEach(function(p){
+    table.innerHTML = '<tr style="border-bottom:1px solid rgba(240,165,0,0.15);"><th style="text-align:left;padding:6px 8px;color:#f0a500;font-family:\'Barlow Condensed\',sans-serif;font-size:0.7rem;letter-spacing:1px;">%</th><th style="text-align:left;padding:6px 8px;color:#f0a500;font-family:\'Barlow Condensed\',sans-serif;font-size:0.7rem;letter-spacing:1px;">WEIGHT</th><th style="text-align:left;padding:6px 8px;color:#f0a500;font-family:\'Barlow Condensed\',sans-serif;font-size:0.7rem;letter-spacing:1px;">PURPOSE</th></tr>';
+    pctData.forEach(function(d){
       var tr = document.createElement("tr");
-      tr.innerHTML = '<td>' + p + '%</td><td>' + Math.round(orm * p / 100) + ' lbs</td>';
+      tr.style.borderBottom = "1px solid rgba(255,255,255,0.04)";
+      tr.innerHTML = '<td style="padding:8px;color:#e8edf5;font-weight:600;">' + d.pct + '%</td>' +
+        '<td style="padding:8px;color:#f0a500;font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;">' + Math.round(orm * d.pct / 100) + ' lbs</td>' +
+        '<td style="padding:8px;color:#8fa3c0;font-size:0.78rem;">' + d.purpose + '</td>';
       table.appendChild(tr);
     });
     $("#orm-result").classList.add("active");
+    $("#orm-saved-msg").style.display = "none";
+  });
+
+  // Save to My Lifts
+  $("#btn-save-orm").addEventListener("click", function(){
+    if(!lastORM) return;
+    var lifts = {};
+    try { lifts = JSON.parse(localStorage.getItem("forgeiq_lift_maxes") || "{}"); } catch(e){}
+    var key = lastORMExercise.toLowerCase().replace(/[^a-z0-9]/g, "_");
+    if(!lifts[key]) lifts[key] = [];
+    lifts[key].push({ exercise: lastORMExercise, orm: lastORM, date: new Date().toISOString().slice(0,10) });
+    localStorage.setItem("forgeiq_lift_maxes", JSON.stringify(lifts));
+    var msg = $("#orm-saved-msg");
+    msg.textContent = "\u2713 " + lastORMExercise + " 1RM: " + lastORM + " lbs saved";
+    msg.style.display = "block";
   });
 
   /* ── PLATES CALCULATOR ── */
@@ -3964,7 +4034,7 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-6",
+          model: "claude-sonnet-4-5",
           max_tokens: 500,
           system: "You are a nutrition database. Return a JSON array of 5 food items matching the query. Each item: {name, calories, protein, carbs, fat} per 100g serving. Return ONLY the JSON array, no other text.",
           messages: [{ role: "user", content: "Search: " + q }]
@@ -4031,7 +4101,7 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: "claude-sonnet-4-5",
         max_tokens: 200,
         system: 'Return ONLY raw JSON. No markdown. No explanation. Format: {"name":"meal name","calories":0,"protein":0,"carbs":0,"fat":0,"fiber":0}',
         messages: [{ role: "user", content: 'Nutrition for: "' + description + '". Return ONLY the JSON object.' }]
@@ -4453,7 +4523,7 @@
 
     fetch("/.netlify/functions/chat", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 4000,
+      body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 4000,
         system: "You are FORGE AI Coach. Generate complete multi-day training programs with REAL exercise names. No preamble. Structured format only.",
         messages: [{ role: "user", content: prompt }]
       })
@@ -4748,7 +4818,7 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: "claude-sonnet-4-5",
         max_tokens: 2000,
         system: sysPrompt,
         messages: msgs
@@ -4871,6 +4941,7 @@ function getMusclesForExercise(name) {
 
 <script src="js/muscleDiagram.js"></script>
 <script src="js/supabase-config.js"></script>
+<script src="/js/auth-guard.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 <script src="js/forge-ai-button.js"></script>

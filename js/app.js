@@ -101,7 +101,7 @@ const ForgeIQ = (() => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-sonnet-4-5',
           max_tokens: 800,
           system: systemPrompt,
           messages: _conversationHistory

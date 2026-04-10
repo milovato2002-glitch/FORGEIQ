@@ -198,15 +198,18 @@
     <button class="btn-gold full" id="btn-dur" disabled onclick="goStep(2)">CONTINUE</button>
   </div>
 
-  <!-- ══════ STEP 2: AI INTAKE ══════ -->
+  <!-- ══════ STEP 2: CONFIRM / EDIT INTAKE ══════ -->
   <div class="step" id="step-2">
-    <h1 class="step-title">LET'S BUILD YOUR PLAN</h1>
-    <div class="chat-area" id="chat-area"></div>
-    <div id="intake-qr"></div>
-    <div class="input-row">
-      <input type="text" id="intake-input" placeholder="Type your answer..." autocomplete="off" />
-      <button class="mic-btn" id="mic-2" onclick="startVoice('intake')">&#127908;<span class="mic-label">Tap to speak</span></button>
-      <button class="send-btn" onclick="sendIntakeAnswer()">&#10148;</button>
+    <button onclick="goStep(1)" style="background:none;border:none;color:#8fa3c0;font-size:0.88rem;cursor:pointer;margin-bottom:16px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">&larr; BACK TO DURATION</button>
+    <h1 class="step-title">CONFIRM YOUR PLAN</h1>
+    <div id="confirm-card" style="background:#142444;border:1px solid rgba(240,165,0,0.18);border-radius:12px;padding:24px;margin-bottom:20px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:#f0a500;margin-bottom:12px;">PLAN SUMMARY</div>
+      <div id="confirm-summary" style="font-size:0.92rem;color:#e8edf5;line-height:1.8;"></div>
+    </div>
+    <div id="edit-section" style="display:none;margin-bottom:20px;"></div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn-outline" id="btn-edit-intake" onclick="toggleEditIntake()" style="flex:0 0 auto;">EDIT</button>
+      <button class="btn-gold" id="btn-confirm-intake" onclick="confirmAndGenerate()" style="flex:1;">FORGE THE PLAN &rarr;</button>
     </div>
   </div>
 
@@ -215,6 +218,7 @@
 
   <!-- ══════ STEP 4: PLAN VIEW ══════ -->
   <div class="step" id="step-4">
+    <button onclick="goStep(1)" style="background:none;border:none;color:#8fa3c0;font-size:0.88rem;cursor:pointer;margin-bottom:16px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">&larr; BACK</button>
     <div class="plan-header">
       <div class="ph-title" id="plan-title">21-DAY STRENGTH PLAN</div>
       <div class="ph-meta" id="plan-meta">Goal: Muscle Gain &middot; Started Apr 7, 2026</div>
@@ -312,7 +316,10 @@ function goStepInternal(n){
   $("#pb-label").textContent = labels[n - 1] || "";
   window.scrollTo({top:0,behavior:"smooth"});
 }
-window.goStep = function(n){ goStepInternal(n); if(n === 2) startIntake(); };
+window.goStep = function(n){
+  goStepInternal(n);
+  if(n === 2) startIntake();
+};
 
 /* ── DURATION SELECTION ── */
 window.selectDuration = function(d){
@@ -323,82 +330,134 @@ window.selectDuration = function(d){
   $("#btn-dur").disabled = false;
 };
 
-/* ── INTAKE CHAT ── */
+/* ── INTAKE: Profile Auto-Populate ── */
 function startIntake(){
-  intakeStep = 0;
-  intakeAnswers = {};
-  $("#chat-area").innerHTML = "";
-  askNextQuestion();
+  var profile = getProfile();
+  // Auto-populate from profile
+  var goals = profile.goals || [];
+  var goalLabels = {lose_fat:"Weight loss",build_muscle:"Muscle gain",recomp:"Body recomposition",performance:"Performance",glp1:"GLP-1 support",recover:"Recovery",general:"General health",partner:"Partner training"};
+  var primary = goals[0] ? (goalLabels[goals[0]] || goals[0]) : "";
+  var secondary = goals[1] ? (goalLabels[goals[1]] || goals[1]) : "";
+
+  var expLabels = {beginner:"Beginner",under1:"Beginner","1to3":"Intermediate","3plus":"Advanced",comeback:"Intermediate"};
+  var locLabels = {commercial:"Full gym",small:"Full gym",home:"Dumbbells",bodyweight:"None"};
+
+  intakeAnswers.goal = primary || "General health";
+  intakeAnswers.goalSecondary = secondary || "";
+  intakeAnswers.level = expLabels[profile.experience] || profile.experience || "Beginner";
+  intakeAnswers.equipment = locLabels[profile.location] || profile.location || "Full gym";
+  intakeAnswers.injuries = (profile.injuries && profile.injuries.length > 2) ? profile.injuries : (profile.conditions && profile.conditions.indexOf("injury") > -1 ? "Yes" : "None");
+  intakeAnswers.diet = (profile.dietaryRestrictions && profile.dietaryRestrictions.length > 0 && profile.dietaryRestrictions[0] !== "none") ? profile.dietaryRestrictions.join(", ") : "None";
+  intakeAnswers.glp1 = (profile.conditions && profile.conditions.indexOf("glp1") > -1) || profile.glp1 ? "Yes" : "No";
+
+  renderConfirmCard();
 }
 
-function addChatMsg(text, role){
-  var area = $("#chat-area");
-  var div = document.createElement("div");
-  div.className = "chat-msg " + role;
-  div.innerHTML = '<div class="chat-bubble">' + text + '</div>';
-  area.appendChild(div);
-  area.scrollTop = area.scrollHeight;
+function renderConfirmCard(){
+  var name = getUserName();
+  var goalText = intakeAnswers.goal;
+  if(intakeAnswers.goalSecondary) goalText = "Primary: " + intakeAnswers.goal + " · Secondary: " + intakeAnswers.goalSecondary;
+  var html = '<div style="font-size:1.05rem;color:#e8edf5;margin-bottom:12px;">Building your <strong style="color:#f0a500;">' + planDuration + '-day</strong> plan for <strong style="color:#f0a500;">' + name + '</strong></div>';
+  html += '<div style="display:flex;flex-direction:column;gap:6px;font-size:0.88rem;">';
+  html += confirmRow("Goal", goalText);
+  html += confirmRow("Level", intakeAnswers.level);
+  html += confirmRow("Equipment", intakeAnswers.equipment);
+  html += confirmRow("Injuries", intakeAnswers.injuries);
+  html += confirmRow("Diet", intakeAnswers.diet);
+  html += confirmRow("GLP-1", intakeAnswers.glp1);
+  html += '</div>';
+  $("#confirm-summary").innerHTML = html;
+  $("#edit-section").style.display = "none";
+  $("#btn-edit-intake").textContent = "EDIT";
 }
 
-function showQuickReplies(options){
-  var container = $("#intake-qr");
-  container.innerHTML = "";
-  var row = document.createElement("div");
-  row.className = "qr-row";
-  options.forEach(function(opt){
-    var pill = document.createElement("button");
-    pill.className = "qr-pill";
-    pill.textContent = opt;
-    pill.onclick = function(){ sendIntakeAnswerText(opt); };
-    row.appendChild(pill);
-  });
-  container.appendChild(row);
+function confirmRow(label, val){
+  return '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);">' +
+    '<span style="color:#8fa3c0;">' + label + '</span>' +
+    '<span style="color:#e8edf5;font-weight:600;">' + (val || "—") + '</span></div>';
 }
 
-function askNextQuestion(){
-  if(intakeStep >= INTAKE_QUESTIONS.length){
-    finishIntake();
-    return;
+var editOpen = false;
+window.toggleEditIntake = function(){
+  editOpen = !editOpen;
+  if(editOpen){
+    renderEditForm();
+    $("#edit-section").style.display = "block";
+    $("#btn-edit-intake").textContent = "DONE";
+  } else {
+    // Save edits
+    var goalPills = document.querySelectorAll("#edit-goals .qr-pill.selected");
+    var goals = [];
+    goalPills.forEach(function(p){ goals.push(p.textContent); });
+    if(goals.length > 0) intakeAnswers.goal = goals[0];
+    if(goals.length > 1) intakeAnswers.goalSecondary = goals[1];
+    else intakeAnswers.goalSecondary = "";
+
+    intakeAnswers.level = $("#edit-level") ? $("#edit-level").value : intakeAnswers.level;
+    intakeAnswers.equipment = $("#edit-equip") ? $("#edit-equip").value : intakeAnswers.equipment;
+    intakeAnswers.injuries = $("#edit-injuries") ? $("#edit-injuries").value : intakeAnswers.injuries;
+    intakeAnswers.diet = $("#edit-diet") ? $("#edit-diet").value : intakeAnswers.diet;
+    intakeAnswers.glp1 = $("#edit-glp1") ? $("#edit-glp1").value : intakeAnswers.glp1;
+
+    renderConfirmCard();
   }
-  var q = INTAKE_QUESTIONS[intakeStep];
-  setTimeout(function(){
-    addChatMsg(q.q, "ai");
-    showQuickReplies(q.options);
-    $("#intake-input").value = "";
-    $("#intake-input").focus();
-  }, 400);
-}
-
-function sendIntakeAnswerText(text){
-  if(!text || !text.trim()) return;
-  var q = INTAKE_QUESTIONS[intakeStep];
-  addChatMsg(text, "user");
-  intakeAnswers[q.key] = text;
-  $("#intake-qr").innerHTML = "";
-  intakeStep++;
-  askNextQuestion();
-}
-
-window.sendIntakeAnswer = function(){
-  var input = $("#intake-input");
-  var text = input.value.trim();
-  if(!text) return;
-  input.value = "";
-  sendIntakeAnswerText(text);
 };
 
-// Enter key
-document.addEventListener("keydown", function(e){
-  if(e.key === "Enter" && currentStep === 2){
-    e.preventDefault();
-    window.sendIntakeAnswer();
+function renderEditForm(){
+  var goalOptions = ["Weight loss","Muscle gain","Performance","GLP-1 support","General health","Body recomposition","Recovery"];
+  var h = '<div style="background:#0e1e36;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:18px;">';
+  h += '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:#f0a500;margin-bottom:10px;">GOALS (select up to 2)</div>';
+  h += '<div id="edit-goals" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">';
+  goalOptions.forEach(function(g){
+    var sel = (g === intakeAnswers.goal || g === intakeAnswers.goalSecondary) ? " selected" : "";
+    h += '<button class="qr-pill' + sel + '" onclick="toggleGoalPill(this)">' + g + '</button>';
+  });
+  h += '</div>';
+  h += editSelect("Level", "edit-level", ["Beginner","Intermediate","Advanced"], intakeAnswers.level);
+  h += editSelect("Equipment", "edit-equip", ["None","Dumbbells","Full gym","Bands only"], intakeAnswers.equipment);
+  h += editInput("Injuries / Limitations", "edit-injuries", intakeAnswers.injuries);
+  h += editInput("Dietary Restrictions", "edit-diet", intakeAnswers.diet);
+  h += editSelect("GLP-1 Medication", "edit-glp1", ["Yes","No"], intakeAnswers.glp1);
+  h += '</div>';
+  $("#edit-section").innerHTML = h;
+}
+
+function editSelect(label, id, options, current){
+  var h = '<div style="margin-bottom:12px;"><label style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8fa3c0;display:block;margin-bottom:4px;">' + label + '</label>';
+  h += '<select id="' + id + '" style="width:100%;height:40px;background:#142444;border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:0 12px;color:#e8edf5;font-size:0.9rem;outline:none;">';
+  options.forEach(function(o){
+    h += '<option value="' + o + '"' + (o === current ? ' selected' : '') + '>' + o + '</option>';
+  });
+  h += '</select></div>';
+  return h;
+}
+
+function editInput(label, id, current){
+  return '<div style="margin-bottom:12px;"><label style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8fa3c0;display:block;margin-bottom:4px;">' + label + '</label>' +
+    '<input type="text" id="' + id + '" value="' + (current || "") + '" style="width:100%;height:40px;background:#142444;border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:0 12px;color:#e8edf5;font-size:0.9rem;outline:none;" /></div>';
+}
+
+window.toggleGoalPill = function(pill){
+  var selected = document.querySelectorAll("#edit-goals .qr-pill.selected");
+  if(pill.classList.contains("selected")){
+    pill.classList.remove("selected");
+  } else {
+    if(selected.length >= 2){
+      // Deselect oldest
+      selected[0].classList.remove("selected");
+    }
+    pill.classList.add("selected");
   }
-});
+};
+
+window.confirmAndGenerate = function(){
+  goStepInternal(3);
+  $("#loading-overlay").classList.add("active");
+  generatePlan();
+};
 
 /* ── PLAN GENERATION ── */
 function finishIntake(){
-  addChatMsg("Got it. Building your " + planDuration + "-day plan now...", "ai");
-  $("#intake-qr").innerHTML = "";
 
   setTimeout(function(){
     goStepInternal(3);
@@ -416,7 +475,8 @@ function generatePlan(){
 
   var prompt = "Generate a complete " + planDuration + "-day fitness plan.\n\n";
   prompt += "CLIENT INTAKE:\n";
-  prompt += "- Goal: " + (intakeAnswers.goal || "General health") + "\n";
+  prompt += "- Primary Goal: " + (intakeAnswers.goal || "General health") + "\n";
+  if(intakeAnswers.goalSecondary) prompt += "- Secondary Goal: " + intakeAnswers.goalSecondary + "\n";
   prompt += "- Fitness Level: " + (intakeAnswers.level || "Beginner") + "\n";
   prompt += "- Equipment: " + (intakeAnswers.equipment || "Full gym") + "\n";
   prompt += "- Injuries/Limitations: " + (intakeAnswers.injuries || "None") + "\n";
@@ -443,7 +503,7 @@ function generatePlan(){
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
+      model: "claude-sonnet-4-5",
       max_tokens: 4000,
       system: sysPrompt,
       messages: [{role:"user", content: prompt}]
@@ -909,6 +969,7 @@ if(urlParams.get("plans") === "1"){
 </script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 <script src="/js/supabase-config.js"></script>
+<script src="/js/auth-guard.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/forge-ai-button.js"></script>
