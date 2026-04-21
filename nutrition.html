@@ -257,22 +257,47 @@
     </div>
   </div>
 
-  <!-- Daily Header -->
-  <div class="daily-header" id="daily-header">
-    <div class="dh-top">
+  <!-- Visual Budget Graph -->
+  <div id="daily-header" style="margin-bottom:20px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <div class="dh-date" id="dh-date">TODAY</div>
       <div class="mode-badge mode-build" id="dh-mode">BUILD</div>
     </div>
-    <div class="dh-cal">
-      <div class="dh-cal-row">
-        <span style="font-size:1.2rem;">&#128293;</span>
-        <span class="dh-cal-num" id="dh-cal-logged">0</span>
-        <span class="dh-cal-target" id="dh-cal-target">/ 2,950</span>
+
+    <!-- Budget Equation Row -->
+    <div style="display:flex;align-items:stretch;gap:0;margin-bottom:14px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:80px;background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px 0 0 10px;padding:14px 10px;text-align:center;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4a6080;margin-bottom:4px;">TARGET</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:#e8edf5;" id="budget-target">3,000</div>
       </div>
-      <div class="dh-bar"><div class="dh-bar-fill" id="dh-cal-bar" style="width:0%;"></div></div>
-      <div class="dh-cal-remaining" id="dh-cal-remaining">REMAINING: 2,950</div>
+      <div style="display:flex;align-items:center;padding:0 6px;color:#f0a500;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;background:#0e1e36;">+</div>
+      <div style="flex:1;min-width:80px;background:#142444;border:1px solid rgba(255,255,255,0.07);padding:14px 10px;text-align:center;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4a6080;margin-bottom:4px;">EXERCISE</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:#2dc653;" id="budget-exercise">0</div>
+      </div>
+      <div style="display:flex;align-items:center;padding:0 6px;color:#f0a500;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;background:#0e1e36;">&minus;</div>
+      <div style="flex:1;min-width:80px;background:#142444;border:1px solid rgba(255,255,255,0.07);padding:14px 10px;text-align:center;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4a6080;margin-bottom:4px;">CONSUMED</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:#f4a261;" id="budget-consumed">0</div>
+      </div>
+      <div style="display:flex;align-items:center;padding:0 6px;color:#f0a500;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;background:#0e1e36;">=</div>
+      <div style="flex:1;min-width:80px;background:#142444;border:1px solid rgba(240,165,0,0.18);border-radius:0 10px 10px 0;padding:14px 10px;text-align:center;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#f0a500;margin-bottom:4px;">REMAINING</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:#f0a500;" id="budget-remaining">3,000</div>
+      </div>
     </div>
-    <div class="dh-macros">
+
+    <!-- Progress Bar: consumed vs total budget -->
+    <div style="height:10px;background:rgba(255,255,255,0.06);border-radius:5px;overflow:hidden;margin-bottom:8px;">
+      <div id="budget-bar-fill" style="height:100%;border-radius:5px;background:linear-gradient(90deg,#f0a500,#ffb820);transition:width 0.4s;width:0%;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:#4a6080;">
+      <span id="budget-bar-label">0% of daily budget</span>
+      <button onclick="document.getElementById('manual-ex-cal').style.display=document.getElementById('manual-ex-cal').style.display==='none'?'block':'none';" style="background:none;border:1px solid rgba(240,165,0,0.3);border-radius:6px;padding:4px 12px;color:#f0a500;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:1px;cursor:pointer;">+ LOG EXERCISE</button>
+    </div>
+
+    <!-- Macro bars row -->
+    <div class="dh-macros" style="margin-top:14px;">
       <div class="dh-macro">
         <div class="dh-macro-icon">&#129385;</div>
         <div class="dh-macro-val" id="dh-p-val">0g</div>
@@ -297,15 +322,6 @@
         <div class="dh-macro-bar"><div class="dh-macro-bar-fill" id="dh-w-bar" style="width:0%;background:#60a5fa;"></div></div>
         <div class="dh-macro-label">Water</div>
       </div>
-    </div>
-  </div>
-
-  <!-- Exercise Calories Banner -->
-  <div id="exercise-cal-banner" style="display:none;background:rgba(45,198,83,0.08);border:1px solid rgba(45,198,83,0.25);border-radius:10px;padding:14px 18px;margin-bottom:16px;">
-    <div id="exercise-cal-workout-msg" style="display:none;font-size:0.88rem;color:#2dc653;margin-bottom:8px;font-weight:600;"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <div id="exercise-cal-text" style="font-size:0.88rem;color:#8fa3c0;"></div>
-      <button onclick="document.getElementById('manual-ex-cal').style.display=document.getElementById('manual-ex-cal').style.display==='none'?'block':'none';" style="background:none;border:1px solid rgba(240,165,0,0.3);border-radius:6px;padding:6px 14px;color:#f0a500;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1px;cursor:pointer;">+ LOG EXERCISE</button>
     </div>
   </div>
   <!-- Manual Exercise Entry -->
@@ -374,11 +390,33 @@
 <div class="npanel" id="panel-report">
   <div class="section-title">Weekly <em>Report</em></div>
   <div id="week-bars-container" style="position:relative;margin-bottom:20px;"></div>
-  <div class="report-card" id="report-card">
-    <div class="report-body" id="report-body">Tap "Generate Report" to analyze your week.</div>
+
+  <!-- Report Type Cards -->
+  <div id="report-options" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+    <div onclick="generateWeeklyReport('full')" style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:18px 16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(240,165,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+      <div style="font-size:1.4rem;margin-bottom:6px;">&#128202;</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.88rem;color:#e8edf5;letter-spacing:0.5px;">FULL WEEKLY SUMMARY</div>
+      <div style="font-size:0.75rem;color:#4a6080;margin-top:4px;line-height:1.5;">Workouts, nutrition adherence, PRs, weight trend</div>
+    </div>
+    <div onclick="generateWeeklyReport('training')" style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:18px 16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(240,165,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+      <div style="font-size:1.4rem;margin-bottom:6px;">&#128170;</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.88rem;color:#e8edf5;letter-spacing:0.5px;">TRAINING ONLY</div>
+      <div style="font-size:0.75rem;color:#4a6080;margin-top:4px;line-height:1.5;">Volume, PRs, muscle group distribution, consistency</div>
+    </div>
+    <div onclick="generateWeeklyReport('nutrition')" style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:18px 16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(240,165,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+      <div style="font-size:1.4rem;margin-bottom:6px;">&#129367;</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.88rem;color:#e8edf5;letter-spacing:0.5px;">NUTRITION ONLY</div>
+      <div style="font-size:0.75rem;color:#4a6080;margin-top:4px;line-height:1.5;">Macro hit rate, calorie average, meal timing</div>
+    </div>
+    <div onclick="generateWeeklyReport('goals')" style="background:#142444;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:18px 16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(240,165,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+      <div style="font-size:1.4rem;margin-bottom:6px;">&#127919;</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.88rem;color:#e8edf5;letter-spacing:0.5px;">GOAL PROGRESS</div>
+      <div style="font-size:0.75rem;color:#4a6080;margin-top:4px;line-height:1.5;">Trend vs goal, adjustments, red flags</div>
+    </div>
   </div>
-  <div style="text-align:center;margin-top:16px;">
-    <button class="btn-gold" id="btn-gen-report" onclick="generateWeeklyReport()">GENERATE REPORT</button>
+
+  <div class="report-card" id="report-card">
+    <div class="report-body" id="report-body">Select a report type above to analyze your week.</div>
   </div>
 </div>
 
@@ -599,44 +637,34 @@ function updateDashboard(){
   modeEl.textContent = mode.toUpperCase();
   modeEl.className = "mode-badge mode-" + mode;
 
-  // Calories
-  $("#dh-cal-logged").textContent = Math.round(totals.calories).toLocaleString();
-  $("#dh-cal-target").textContent = "/ " + targets.calories.toLocaleString();
   // Exercise calories
   var exerciseBurned = 0;
   try {
     var exCal = JSON.parse(localStorage.getItem("forgeiq_exercise_calories") || "{}");
-    exerciseBurned = exCal[new Date().toDateString()] || 0;
+    exerciseBurned = exCal[new Date().toDateString()] || exCal[new Date().toISOString().slice(0,10)] || 0;
   } catch(e){}
-  var calRemaining = targets.calories - totals.calories + exerciseBurned;
 
-  // Show exercise banner
-  var exBanner = $("#exercise-cal-banner");
-  if(exBanner){
-    exBanner.style.display = "block";
-    var exText = exerciseBurned > 0
-      ? "\uD83D\uDD25 " + exerciseBurned + " cal burned today — added to your budget"
-      : "No exercise logged yet today";
-    $("#exercise-cal-text").textContent = exText;
-    // Check for completed workout
-    try {
-      var lastWk = JSON.parse(localStorage.getItem("forgeiq_last_completed_workout") || "null");
-      var wkMsg = $("#exercise-cal-workout-msg");
-      if(lastWk && lastWk.completedAt){
-        var wkDate = new Date(lastWk.completedAt).toDateString();
-        if(wkDate === new Date().toDateString()){
-          wkMsg.style.display = "block";
-          wkMsg.textContent = "\u2713 Workout logged — calorie budget updated";
-        }
-      }
-    } catch(e){}
+  var totalBudget = targets.calories + exerciseBurned;
+  var consumed = Math.round(totals.calories);
+  var calRemaining = totalBudget - consumed;
+
+  // Visual budget graph
+  var bt = $("#budget-target"); if(bt) bt.textContent = targets.calories.toLocaleString();
+  var be = $("#budget-exercise"); if(be) be.textContent = exerciseBurned.toLocaleString();
+  var bc = $("#budget-consumed"); if(bc) bc.textContent = consumed.toLocaleString();
+  var br = $("#budget-remaining");
+  if(br){
+    br.textContent = Math.max(0, Math.round(calRemaining)).toLocaleString();
+    br.style.color = calRemaining < 0 ? "#e63946" : "#f0a500";
   }
-
-  $("#dh-cal-remaining").textContent = "REMAINING: " + Math.max(0, Math.round(calRemaining)).toLocaleString() + (exerciseBurned > 0 ? " (+" + exerciseBurned + " exercise)" : "");
-  var calPct = Math.min(totals.calories / targets.calories * 100, 100);
-  var calBar = $("#dh-cal-bar");
-  calBar.style.width = calPct + "%";
-  calBar.className = "dh-bar-fill" + (totals.calories > targets.calories ? " over" : "");
+  var budgetPct = totalBudget > 0 ? Math.min(consumed / totalBudget * 100, 100) : 0;
+  var bbf = $("#budget-bar-fill");
+  if(bbf){
+    bbf.style.width = budgetPct + "%";
+    bbf.style.background = consumed > totalBudget ? "#e63946" : "linear-gradient(90deg,#f0a500,#ffb820)";
+  }
+  var bbl = $("#budget-bar-label");
+  if(bbl) bbl.textContent = Math.round(budgetPct) + "% of daily budget";
 
   // Macros
   function setMacro(id, val, target){
@@ -1248,9 +1276,11 @@ window.logRecipe = function(cat,idx,btn){
 /* ══════════════════════════════════════════
    WEEKLY REPORT
    ══════════════════════════════════════════ */
-window.generateWeeklyReport = function(){
-  var btn = $("#btn-gen-report");
-  if(btn){btn.disabled=true;btn.textContent="GENERATING...";}
+window.generateWeeklyReport = function(reportType){
+  reportType = reportType || "full";
+  $("#report-body").textContent = "Generating your " + reportType + " report...";
+
+  // Gather data
   var foodLog = JSON.parse(localStorage.getItem("forgeiq_food_log")||"[]");
   var sevenDaysAgo = new Date(Date.now() - 7*24*60*60*1000);
   var weekLog = foodLog.filter(function(e){return new Date(e.date) > sevenDaysAgo;});
@@ -1272,6 +1302,18 @@ window.generateWeeklyReport = function(){
   var avgCalories = days.length ? Math.round(days.reduce(function(a,d){return a+d.calories;},0)/days.length) : 0;
   var daysHitProtein = days.filter(function(d){return d.protein >= targets.protein;}).length;
 
+  // Gather workout data
+  var workoutHistory = [];
+  try { workoutHistory = JSON.parse(localStorage.getItem("forgeiq_workout_history")||"[]"); } catch(e){}
+  var weekWorkouts = workoutHistory.filter(function(w){return new Date(w.date) > sevenDaysAgo;});
+  var totalVolume = weekWorkouts.reduce(function(a,w){return a+(w.totalVolume||0);},0);
+  var muscleGroups = {};
+  weekWorkouts.forEach(function(w){(w.muscleGroups||[]).forEach(function(mg){muscleGroups[mg]=(muscleGroups[mg]||0)+1;});});
+  var prs = [];
+  try { var maxLifts = JSON.parse(localStorage.getItem("forgeiq_max_lifts")||"{}"); for(var k in maxLifts){ if(maxLifts[k].date && new Date(maxLifts[k].date) > sevenDaysAgo) prs.push(k + ": " + maxLifts[k].weight + "lbs"); } } catch(e){}
+  var profileGoal = "";
+  try { var pp = JSON.parse(localStorage.getItem("forgeiq_profile")||"{}"); profileGoal = pp.goal || pp.primaryGoal || "general"; } catch(e){}
+
   // Render bars
   renderWeekBars(dailyTotals, targets.protein);
 
@@ -1279,19 +1321,36 @@ window.generateWeeklyReport = function(){
   var mode = getMode();
   var prompt;
 
-  if(exp === "beginner" || exp === "on_off"){
-    prompt = "Generate a simple weekly nutrition summary for a beginner.\n" +
-      "Days with food logged: " + days.length + "\nAvg daily protein: " + avgProtein + "g (target: " + targets.protein + "g)\n" +
-      "Days hit protein target: " + daysHitProtein + "/7\nAvg daily calories: " + avgCalories + " (target: " + targets.calories + ")\n" +
-      "Keep it simple: 1. Did they hit protein? 2. Best day. 3. One thing to focus on next week. 4. One food suggestion. 5 sentences max.";
-  } else {
-    prompt = "Generate a detailed weekly nutrition report for an " + exp + " level athlete in " + mode + " mode.\n" +
-      "Days with food logged: " + days.length + "\nAvg daily protein: " + avgProtein + "g (target: " + targets.protein + "g)\n" +
-      "Days hit protein target: " + daysHitProtein + "/7\nAvg daily calories: " + avgCalories + " (target: " + targets.calories + ")\n" +
+  var dataBlock = "Days with food logged: " + days.length + "\nAvg daily protein: " + avgProtein + "g (target: " + targets.protein + "g)\n" +
+    "Days hit protein target: " + daysHitProtein + "/7\nAvg daily calories: " + avgCalories + " (target: " + targets.calories + ")\n" +
+    "Workouts this week: " + weekWorkouts.length + "\nTotal volume: " + totalVolume.toLocaleString() + " lbs\n" +
+    "Muscle groups trained: " + Object.keys(muscleGroups).join(", ") + "\n" +
+    "New PRs: " + (prs.length ? prs.join(", ") : "None") + "\n" +
+    "Goal: " + profileGoal + "\nMode: " + mode + "\n";
+
+  if(reportType === "training"){
+    prompt = "Generate a TRAINING-ONLY weekly report.\nData:\n" + dataBlock +
+      "Focus on: volume trends, PRs, muscle group distribution, consistency, progressive overload. No nutrition analysis.";
+  } else if(reportType === "nutrition"){
+    prompt = "Generate a NUTRITION-ONLY weekly report.\nData:\n" + dataBlock +
       "Avg carbs: " + Math.round(days.reduce(function(a,d){return a+d.carbs;},0)/(days.length||1)) + "g\n" +
       "Avg fat: " + Math.round(days.reduce(function(a,d){return a+d.fat;},0)/(days.length||1)) + "g\n" +
+      "Focus on: macro hit rate, calorie average vs target, meal timing patterns, protein consistency. No training analysis.";
+  } else if(reportType === "goals"){
+    prompt = "Generate a GOAL PROGRESS report.\nData:\n" + dataBlock +
+      "Focus on: trend vs stated goal (" + profileGoal + "), whether training and nutrition align with goal, specific adjustments needed, red flags to address. Be prescriptive.";
+  } else {
+    // full
+    if(exp === "beginner" || exp === "on_off"){
+      prompt = "Generate a simple weekly summary for a beginner.\n" + dataBlock +
+        "Keep it simple: 1. Did they hit protein? 2. Best day. 3. Workout consistency. 4. One thing to focus on next week. 5 sentences max.";
+    } else {
+      prompt = "Generate a detailed weekly report for an " + exp + " level athlete in " + mode + " mode.\n" + dataBlock +
+        "Avg carbs: " + Math.round(days.reduce(function(a,d){return a+d.carbs;},0)/(days.length||1)) + "g\n" +
+        "Avg fat: " + Math.round(days.reduce(function(a,d){return a+d.fat;},0)/(days.length||1)) + "g\n" +
       "Avg fiber: " + Math.round(days.reduce(function(a,d){return a+d.fiber;},0)/(days.length||1)) + "g\n\n" +
       "Include: 1. PROTEIN ANALYSIS 2. CALORIC ANALYSIS 3. TRAINING-NUTRITION ALIGNMENT 4. MICRONUTRIENT CONCERN 5. TOP WIN 6. TOP PRIORITY 7. NEXT WEEK TARGET. Be specific with numbers.";
+    }
   }
 
   fetch("/.netlify/functions/chat",{
@@ -1305,7 +1364,7 @@ window.generateWeeklyReport = function(){
   }).catch(function(err){
     $("#report-body").textContent = "Report generation failed: " + err.message;
   }).finally(function(){
-    if(btn){btn.disabled=false;btn.textContent="GENERATE REPORT";}
+    // Report cards re-enabled on completion
   });
 };
 

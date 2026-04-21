@@ -497,11 +497,37 @@ function generatePlan(){
   prompt += "Include rest days where appropriate (mark as REST DAY with active recovery suggestion and still provide nutrition).\n";
   prompt += "Use REAL exercise names. Vary workouts. Progressive overload across weeks.";
 
-  var sysPrompt = "You are FORGE AI Coach, built by Dr. Michael P. Lovato EdD (NASM CNC/CES/PES, NCSC, GLP-1 specialist, Army Combat Engineer veteran). Generate complete multi-day fitness and nutrition plans. Output ONLY the structured plan with no preamble or commentary. Use real exercise names. If the client is on GLP-1, prioritize muscle preservation and adjust nutrition accordingly.";
+  var sysPrompt = "You are FORGE AI Coach, built by Dr. Michael P. Lovato EdD (NASM CNC/CES/PES, NCSC, GLP-1 specialist, Army Combat Engineer veteran). Generate complete multi-day fitness and nutrition plans. Output ONLY the structured plan with no preamble or commentary. Use real exercise names.\n\n" +
+    "HARD RULES — FOLLOW EXACTLY:\n\n" +
+    "INJURY CONSTRAINTS:\n" +
+    "- 'knee': exclude jumping, deep squats, lunges; suggest leg press, hip thrusts, goblet squats to parallel only\n" +
+    "- 'shoulder': exclude overhead press, behind-neck, dips; suggest landmine press, neutral-grip DB press, cable work\n" +
+    "- 'lower back': exclude conventional deadlift, bent-over row; suggest trap bar DL, chest-supported row, RDL light\n" +
+    "- 'wrist': exclude standard push-ups, barbell curls; suggest push-up handles, DB neutral grip, rope work\n\n" +
+    "GLP-1 PROTOCOL (if client is on GLP-1):\n" +
+    "- Protein minimum 1.2g/lb bodyweight (non-negotiable — muscle preservation risk)\n" +
+    "- Session volume cap: 12 working sets total\n" +
+    "- Add cue: 'Drink 16oz water before training'\n\n" +
+    "LEVEL SCALING:\n" +
+    "- Beginner: max 3 compound lifts per session, form cue notes, rep ranges 8-12\n" +
+    "- Intermediate: max 4 compounds, rep ranges 5-12 varied\n" +
+    "- Advanced: periodized intensity, 1RM percentages, rep ranges 3-15 across mesocycle\n\n" +
+    "EQUIPMENT CONSTRAINTS:\n" +
+    "- 'Bodyweight only': exclude barbell/dumbbell/machine; use progressions (archer push-ups, pistol squats)\n" +
+    "- 'Home gym basic' (DBs + bands): exclude barbell, cables\n" +
+    "- 'Full gym': full exercise pool\n\n" +
+    "GOAL PRIORITIZATION:\n" +
+    "- weight_loss + muscle_gain = recomp: -300 to -500 deficit, protein 1.0-1.2g/lb, lift 4x/week, cardio 2x/week\n" +
+    "- muscle_gain + weight_loss = lean bulk: +100 to +200 surplus, protein 1.0g/lb, lift 4-5x/week\n" +
+    "- strength primary = low-volume high-intensity, 3-5 rep work, 3-4 lifts/week";
+
+  var abortController = new AbortController();
+  var timeoutId = setTimeout(function(){ abortController.abort(); }, 60000);
 
   fetch("/.netlify/functions/chat", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
+    signal: abortController.signal,
     body: JSON.stringify({
       model: "claude-sonnet-4-5",
       max_tokens: 4000,
@@ -509,7 +535,15 @@ function generatePlan(){
       messages: [{role:"user", content: prompt}]
     })
   })
-  .then(function(r){ return r.text(); })
+  .then(function(r){
+    clearTimeout(timeoutId);
+    if(!r.ok){
+      return r.text().then(function(body){
+        throw new Error("HTTP " + r.status + ": " + (body || "Server error"));
+      });
+    }
+    return r.text();
+  })
   .then(function(raw){
     // Detect HTML error page
     if(!raw || raw.trim().charAt(0) === '<' || raw.trim().substring(0,2) === '<!'){
@@ -530,10 +564,26 @@ function generatePlan(){
     goStepInternal(4);
   })
   .catch(function(err){
-    console.error("Plan generation error:", err);
+    clearTimeout(timeoutId);
+    var errMsg = err.name === 'AbortError'
+      ? "Request timed out after 60 seconds. The AI may be overloaded — please try again."
+      : (err.message || "Unknown error");
+    console.error("[plan-builder] generation failed:", err);
     $("#loading-overlay").classList.remove("active");
     goStepInternal(2);
-    addChatMsg("Could not generate your plan right now. Please try again in a moment.", "ai");
+    addChatMsg(errMsg, "ai");
+    // Add retry + escape buttons
+    var retryHtml = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">' +
+      '<button class="qr-pill" onclick="window.confirmAndGenerate()" style="flex:1;">&#128260; RETRY</button>' +
+      '<a href="/dashboard.html" class="qr-pill" style="flex:1;text-align:center;text-decoration:none;">BACK TO DASHBOARD</a>' +
+      '</div>';
+    var chatArea = $("#chat-area");
+    if(chatArea){
+      var div = document.createElement("div");
+      div.innerHTML = retryHtml;
+      chatArea.appendChild(div);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
   });
 }
 

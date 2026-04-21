@@ -1,3 +1,6 @@
+// Netlify synchronous function limit: 26 seconds
+exports.config = { maxDuration: 26 };
+
 exports.handler = async function(event, context) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
