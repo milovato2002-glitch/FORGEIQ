@@ -307,11 +307,30 @@ const ForgeIQ = (() => {
   }
 
 
+  // ─── Logo Smart Routing ─────────────────────────────────────────
+  function initLogoRouting() {
+    var logos = document.querySelectorAll('.nav-logo');
+    if (!logos.length) return;
+    // Quick sync check from localStorage
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('forgeiq_user')); } catch(e){}
+    var dest = (user && user.id) ? '/dashboard.html' : '/index.html';
+    logos.forEach(function(logo) { logo.setAttribute('href', dest); });
+    // Async Supabase correction
+    if (window.forgeiqSupabase) {
+      window.forgeiqSupabase.auth.getSession().then(function(r) {
+        var finalDest = (r.data && r.data.session) ? '/dashboard.html' : '/index.html';
+        logos.forEach(function(logo) { logo.setAttribute('href', finalDest); });
+      });
+    }
+  }
+
   // ─── Init ──────────────────────────────────────────────────────
   async function init() {
     const savedLang = localStorage.getItem('forgeiq_lang') || 'en';
     await loadLanguage(savedLang);
     initNav();
+    initLogoRouting();
 
     // Sync lang toggle buttons if present
     document.querySelectorAll('.lang-btn').forEach(b => {

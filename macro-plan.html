@@ -749,6 +749,22 @@ function renderResult(plan){
     macroBubble("🥑 Fat", c.fat, "g", pct.f + "%", "#f4a261", pct.f) +
     '</div></div>';
 
+  // Calorie adjustment slider
+  var sliderTdee = state.tdee || c.calories;
+  var savedGoal = "";
+  try { var sp = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); savedGoal = sp.goal || sp.primaryGoal || ""; } catch(e){}
+
+  html += '<div class="macro-bar-card" id="cal-slider-card">' +
+    '<div class="mb-title">ADJUST CALORIES &nbsp;&nbsp;<span style="font-weight:400;color:#8fa3c0;">±200 from target</span></div>' +
+    '<div style="padding:0 8px;">' +
+    '<input type="range" id="cal-slider" min="' + (c.calories - 200) + '" max="' + (c.calories + 200) + '" value="' + c.calories + '" step="25" style="width:100%;accent-color:#f0a500;cursor:pointer;">' +
+    '<div style="display:flex;justify-content:space-between;font-size:0.68rem;color:#4a6080;margin-top:2px;">' +
+    '<span>' + (c.calories - 200) + '</span><span style="color:#f0a500;font-weight:700;">' + c.calories + '</span><span>' + (c.calories + 200) + '</span>' +
+    '</div></div>' +
+    '<div id="slider-readout" style="margin-top:14px;padding:12px 14px;background:rgba(0,0,0,0.2);border-radius:8px;font-size:0.85rem;line-height:1.8;"></div>' +
+    '<div id="slider-warning" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:0.82rem;line-height:1.6;border:1px solid rgba(240,165,0,0.3);background:rgba(240,165,0,0.06);color:#f0a500;"></div>' +
+    '</div>';
+
   // Meals
   html += '<div class="sec-title">MEAL PLAN</div>';
   (plan.meals||[]).forEach(function(meal, i){
@@ -833,6 +849,8 @@ function renderResult(plan){
   $("#result-container").innerHTML = html;
   // Open first meal by default
   setTimeout(function(){ toggleMeal(0); }, 100);
+  // Init calorie slider
+  setTimeout(initSlider, 200);
 }
 
 function macroBubble(label, val, unit, pct, color, width){
@@ -847,6 +865,61 @@ function macroBubble(label, val, unit, pct, color, width){
 function toggleMeal(i){
   var card = $("#meal-" + i);
   if(card) card.classList.toggle("open");
+}
+
+/* ── SLIDER READOUT ── */
+function initSlider(){
+  var slider = $("#cal-slider");
+  if(!slider) return;
+  var baseCals = state.calories;
+  var tdee = state.tdee || baseCals;
+  var savedGoal = "";
+  try { var sp = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); savedGoal = (sp.goal || sp.primaryGoal || "").toLowerCase(); } catch(e){}
+
+  function updateReadout(){
+    var val = parseInt(slider.value);
+    var delta = val - tdee;
+    var readout = $("#slider-readout");
+    var warning = $("#slider-warning");
+    if(!readout) return;
+
+    // Delta label
+    var deltaText = delta > 0 ? "+" + delta + " cal surplus" : delta < 0 ? delta + " cal deficit" : "At maintenance";
+
+    // Weekly weight change: (delta × 7) / 3500
+    var weeklyLbs = Math.abs(delta * 7 / 3500);
+    var weeklyText = delta > 0 ? "~" + weeklyLbs.toFixed(1) + " lb/week gain" : delta < 0 ? "~" + weeklyLbs.toFixed(1) + " lb/week loss" : "No change";
+
+    // Zone label
+    var zone, zoneColor;
+    if(delta > 300){ zone = "Bulk"; zoneColor = "#f0a500"; }
+    else if(delta >= 0){ zone = "Lean gain / Recomp"; zoneColor = "#2dc653"; }
+    else if(delta >= -300){ zone = "Mild deficit"; zoneColor = "#2dc653"; }
+    else if(delta >= -500){ zone = "Moderate cut"; zoneColor = "#f4a261"; }
+    else { zone = "Aggressive cut"; zoneColor = "#e63946"; }
+
+    readout.innerHTML =
+      '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">' +
+      '<span style="color:#e8edf5;font-weight:600;">' + val.toLocaleString() + ' kcal</span>' +
+      '<span style="color:' + zoneColor + ';font-family:\'Barlow Condensed\',sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;">' + zone + '</span>' +
+      '</div>' +
+      '<div style="color:#8fa3c0;margin-top:4px;">' + deltaText + ' vs TDEE (' + tdee + ') &middot; ' + weeklyText + '</div>';
+
+    // Goal conflict warning
+    if(warning){
+      var msg = "";
+      if((savedGoal.indexOf("loss") >= 0 || savedGoal.indexOf("fat") >= 0) && delta > 0){
+        msg = "⚠ This surplus conflicts with your weight loss goal.";
+      } else if((savedGoal.indexOf("muscle") >= 0 || savedGoal.indexOf("gain") >= 0) && delta < -300){
+        msg = "⚠ Deeper deficits may limit muscle gain.";
+      }
+      if(msg){ warning.textContent = msg; warning.style.display = "block"; }
+      else { warning.style.display = "none"; }
+    }
+  }
+
+  slider.addEventListener("input", updateReadout);
+  updateReadout();
 }
 
 /* ── DOWNLOAD ── */
@@ -951,6 +1024,7 @@ try {
 </script>
 
 <script src="/js/supabase-config.js"></script>
+<script src="/js/auth-guard.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/forge-ai-button.js"></script>
