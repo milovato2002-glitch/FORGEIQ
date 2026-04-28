@@ -1,3 +1,5 @@
+// The Doc Lovato Method — Session gating
+// Note: `__FORGEIQ_PUBLIC_PAGE__` flag and `forgeiq_*` localStorage keys preserved by design (see FORGEIQ_SESSION_NOTES.md → BRAND HISTORY).
 (function(){
   console.log('[auth-guard] checking session on ' + window.location.pathname);
   if(window.__FORGEIQ_PUBLIC_PAGE__) return;

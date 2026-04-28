@@ -1,5 +1,5 @@
 /**
- * FORGEIQ Internationalization System
+ * The Doc Lovato Method — Internationalization System
  * Supports EN, ES, PT across every page
  */
 (function() {
@@ -17,8 +17,8 @@
       nav_login: 'Log In',
       nav_signup: 'Get Started',
 
-      // FORGE AI
-      forge_ai_btn: 'FORGE AI',
+      // Doc Lovato AI
+      forge_ai_btn: 'DR. LOVATO AI',
       forge_ai_sub: 'Powered by Claude',
       forge_ai_placeholder: 'Ask your coach...',
 
@@ -125,14 +125,14 @@
       pricing_sub: 'Less than one session with a trainer. Cancel anytime. No excuses.',
       pricing_discount: 'Because some people have already given enough.',
 
-      // FORGE AI greetings
+      // Dr. Lovato AI greetings
       forge_ai_greeting_dashboard: 'Good {timeOfDay}. I have your workout ready and I can see your recent activity. What do you need?',
       forge_ai_greeting_train: 'Your coach is ready. Ask me about today\'s workout, your nutrition targets, or your supplement stack.',
       forge_ai_greeting_progress: 'I can analyze your progress data. Ask me about your trends, what\'s working, or what to adjust.',
       forge_ai_greeting_resources: 'I can explain any research here in plain language. Ask me about any GLP medication, peptide, or supplement.',
       forge_ai_greeting_debora: 'Debora\'s specialty is post-transformation support. I can help you understand what coaching area fits your situation.',
       forge_ai_greeting_book: 'Ready to book with Doc or Debora? I can help you pick the right session based on your goals.',
-      forge_ai_greeting_default: 'I am your FORGE AI coach. Ask me anything about training, nutrition, recovery, or your goals.',
+      forge_ai_greeting_default: 'I am Dr. Lovato AI, your coach inside The Doc Lovato Method. Ask me anything about training, nutrition, recovery, or your goals.',
 
       // Auth
       'auth.login_title': 'Welcome Back',
@@ -141,7 +141,7 @@
       'auth.password_label': 'Password',
       'auth.forgot': 'Forgot password?',
       'auth.login_btn': 'Log In',
-      'auth.signup_title': 'Join FORGEIQ',
+      'auth.signup_title': 'Join The Doc Lovato Method',
       'auth.signup_sub': 'Your transformation starts now.',
       'auth.name_label': 'Full Name',
       'auth.confirm_password': 'Confirm Password',
@@ -153,7 +153,7 @@
 
       // Misc
       disclaimer_medical: 'This is not medical advice. Always consult your physician.',
-      disclaimer_supplements: 'FORGEIQ supplement recommendations are educational and evidence-based. They are not medical advice.',
+      disclaimer_supplements: 'The Doc Lovato Method supplement recommendations are educational and evidence-based. They are not medical advice.',
     },
 
     es: {
@@ -165,7 +165,7 @@
       nav_book: 'Reservar',
       nav_login: 'Iniciar sesión',
       nav_signup: 'Comenzar',
-      forge_ai_btn: 'FORGE AI',
+      forge_ai_btn: 'DR. LOVATO AI',
       forge_ai_sub: 'Impulsado por Claude',
       forge_ai_placeholder: 'Pregunta a tu coach...',
       hero_tagline: 'NUNCA TENEMOS QUE RENDIRNOS.',
@@ -257,7 +257,7 @@
       forge_ai_greeting_resources: 'Puedo explicar cualquier investigación aquí en lenguaje sencillo.',
       forge_ai_greeting_debora: 'La especialidad de Debora es el apoyo post-transformación.',
       forge_ai_greeting_book: '¿Listo para reservar? Puedo ayudarte a elegir la sesión correcta.',
-      forge_ai_greeting_default: 'Soy tu entrenador FORGE AI. Pregúntame lo que quieras sobre entrenamiento, nutrición o tus objetivos.',
+      forge_ai_greeting_default: 'Soy Dr. Lovato AI, tu entrenador en The Doc Lovato Method. Pregúntame lo que quieras sobre entrenamiento, nutrición o tus objetivos.',
       // Auth
       'auth.login_title': 'Bienvenido de vuelta',
       'auth.login_sub': 'Tu coach está listo.',
@@ -265,7 +265,7 @@
       'auth.password_label': 'Contraseña',
       'auth.forgot': '¿Olvidaste tu contraseña?',
       'auth.login_btn': 'Iniciar sesión',
-      'auth.signup_title': 'Únete a FORGEIQ',
+      'auth.signup_title': 'Únete a The Doc Lovato Method',
       'auth.signup_sub': 'Tu transformación empieza ahora.',
       'auth.name_label': 'Nombre completo',
       'auth.confirm_password': 'Confirmar contraseña',
@@ -276,7 +276,7 @@
       'auth.guest': 'Probar sin cuenta',
 
       disclaimer_medical: 'Esto no es consejo médico. Siempre consulta a tu médico.',
-      disclaimer_supplements: 'Las recomendaciones de suplementos de FORGEIQ son educativas y basadas en evidencia. No son consejo médico.',
+      disclaimer_supplements: 'Las recomendaciones de suplementos de The Doc Lovato Method son educativas y basadas en evidencia. No son consejo médico.',
     },
 
     pt: {
@@ -288,7 +288,7 @@
       nav_book: 'Reservar',
       nav_login: 'Entrar',
       nav_signup: 'Começar',
-      forge_ai_btn: 'FORGE AI',
+      forge_ai_btn: 'DR. LOVATO AI',
       forge_ai_sub: 'Desenvolvido por Claude',
       forge_ai_placeholder: 'Pergunte ao seu coach...',
       hero_tagline: 'NUNCA TEMOS QUE DESISTIR.',
@@ -380,7 +380,7 @@
       forge_ai_greeting_resources: 'Posso explicar qualquer pesquisa aqui em linguagem simples.',
       forge_ai_greeting_debora: 'A especialidade da Debora é o suporte pós-transformação.',
       forge_ai_greeting_book: 'Pronto para reservar? Posso ajudá-lo a escolher a sessão certa.',
-      forge_ai_greeting_default: 'Sou seu coach FORGE AI. Pergunte qualquer coisa sobre treino, nutrição ou seus objetivos.',
+      forge_ai_greeting_default: 'Sou Dr. Lovato AI, seu coach dentro de The Doc Lovato Method. Pergunte qualquer coisa sobre treino, nutrição ou seus objetivos.',
       // Auth
       'auth.login_title': 'Bem-vindo de volta',
       'auth.login_sub': 'Seu coach está pronto.',
@@ -388,7 +388,7 @@
       'auth.password_label': 'Senha',
       'auth.forgot': 'Esqueceu a senha?',
       'auth.login_btn': 'Entrar',
-      'auth.signup_title': 'Junte-se ao FORGEIQ',
+      'auth.signup_title': 'Junte-se ao The Doc Lovato Method',
       'auth.signup_sub': 'Sua transformação começa agora.',
       'auth.name_label': 'Nome completo',
       'auth.confirm_password': 'Confirmar senha',
@@ -399,7 +399,7 @@
       'auth.guest': 'Experimentar sem conta',
 
       disclaimer_medical: 'Isto não é conselho médico. Sempre consulte seu médico.',
-      disclaimer_supplements: 'As recomendações de suplementos da FORGEIQ são educacionais e baseadas em evidências. Não são conselho médico.',
+      disclaimer_supplements: 'As recomendações de suplementos do The Doc Lovato Method são educacionais e baseadas em evidências. Não são conselho médico.',
     }
   };
 

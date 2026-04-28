@@ -1,4 +1,4 @@
-# FORGEIQ Authentication Status
+# The Doc Lovato Method — Authentication Status
 
 ## Providers
 
@@ -13,7 +13,7 @@
 
 - **Supabase unreachable**: Signup falls back to guest mode automatically. Login shows connection error.
 - **Guest mode**: Users get a local-only experience. Data stored in localStorage only. No cloud sync.
-- **Auth-guard bypass**: Guest users with `forgeiq_user` in localStorage are allowed through auth-guard.
+- **Auth-guard bypass**: Guest users with `forgeiq_user` in localStorage are allowed through auth-guard. (Note: localStorage keys retain the `forgeiq_*` prefix intentionally — see FORGEIQ_SESSION_NOTES.md "BRAND HISTORY" section.)
 - **Session expiry**: Supabase sessions expire. User must re-login. No refresh token handling in current implementation.
 
 ## Files

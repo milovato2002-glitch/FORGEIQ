@@ -41,7 +41,7 @@ exports.handler = async function(event) {
       alignment: AlignmentType.CENTER,
       spacing: { after: 100 },
       children: [
-        new TextRun({ text: "FORGEIQ", bold: true, size: 48, color: gold, font: "Arial" }),
+        new TextRun({ text: "THE DOC LOVATO METHOD", bold: true, size: 40, color: gold, font: "Arial" }),
       ]
     }));
     children.push(new Paragraph({
@@ -261,7 +261,7 @@ exports.handler = async function(event) {
       alignment: AlignmentType.CENTER,
       spacing: { before: 400 },
       children: [
-        new TextRun({ text: "FORGEIQ — Dr. Michael Lovato, EdD — Confidential", size: 16, color: textSec, font: "Arial" }),
+        new TextRun({ text: "The Doc Lovato Method — Dr. Michael Lovato, EdD — Confidential", size: 16, color: textSec, font: "Arial" }),
       ]
     }));
     children.push(new Paragraph({
@@ -286,7 +286,7 @@ exports.handler = async function(event) {
       headers: {
         ...headers,
         "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "Content-Disposition": "attachment; filename=" + (c.name || "Client").replace(/\s+/g, "_") + "_Macro_Plan_FORGEIQ.docx"
+        "Content-Disposition": "attachment; filename=" + (c.name || "Client").replace(/\s+/g, "_") + "_Macro_Plan_DocLovatoMethod.docx"
       },
       body: buffer.toString("base64"),
       isBase64Encoded: true
