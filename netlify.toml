@@ -1,3 +1,6 @@
+# The Doc Lovato Method — Netlify configuration
+# Currently deployed at forgeiq.netlify.app (doclovatomethod.com pending purchase)
+
 [build]
   publish = "."
   functions = "netlify/functions"

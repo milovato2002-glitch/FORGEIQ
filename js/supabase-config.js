@@ -1,4 +1,5 @@
-// FORGEIQ — Supabase Configuration
+// The Doc Lovato Method — Supabase Configuration
+// Note: Internal `FORGEIQ_CONFIG` namespace and `forgeiq_*` localStorage keys preserved (see FORGEIQ_SESSION_NOTES.md → BRAND HISTORY).
 // ─────────────────────────────────────────────────────────────────
 // IMPORTANT: Never hardcode real keys here.
 // Set these in Netlify Environment Variables:
@@ -15,7 +16,7 @@ const FORGEIQ_CONFIG = {
   supabaseUrl:  'https://fxbzjuefctqsoypwhlha.supabase.co',
   supabaseKey:  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4YnpqdWVmY3Rxc295cHdobGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMTUwMzcsImV4cCI6MjA4OTc5MTAzN30.QfKJ41fhuwd8-3e354jMlgUkh_Z7uDDWxl6xgTyF6Oc',
 
-  appName:      'FORGEIQ',
+  appName:      'The Doc Lovato Method',
   appVersion:   '1.0.0',
   supportEmail: 'support@forgeiq.app',
   founders: {

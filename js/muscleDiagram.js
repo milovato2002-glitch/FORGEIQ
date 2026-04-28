@@ -1,5 +1,5 @@
 /**
- * FORGEIQ SVG Muscle Diagram — Front + Back, Interactive
+ * The Doc Lovato Method — SVG Muscle Diagram — Front + Back, Interactive
  * Usage: renderMuscleDiagram(containerId) then activateMuscles([...primary], [...secondary])
  */
 

@@ -1,3 +1,4 @@
+// The Doc Lovato Method — Anthropic chat proxy
 // Netlify synchronous function limit: 26 seconds
 exports.config = { maxDuration: 26 };
 
@@ -25,11 +26,11 @@ exports.handler = async function(event, context) {
     const text = await r.text();
     let data;
     try { data = JSON.parse(text); } catch(e) {
-      console.error('[FORGEIQ chat] Anthropic returned non-JSON:', text.slice(0, 500));
+      console.error('[chat] Anthropic returned non-JSON:', text.slice(0, 500));
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Anthropic returned non-JSON response', status: r.status, raw: text.slice(0, 500) }) };
     }
     if (data.error) {
-      console.error('[FORGEIQ chat] Anthropic API error:', JSON.stringify(data.error));
+      console.error('[chat] Anthropic API error:', JSON.stringify(data.error));
       return { statusCode: r.status, headers, body: JSON.stringify({ error: data.error.message || data.error.type || 'Anthropic API error', type: data.error.type, anthropic_status: r.status }) };
     }
     return { statusCode: r.status, headers, body: JSON.stringify(data) };

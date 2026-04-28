@@ -1,6 +1,7 @@
 /**
- * FORGE AI Chat Button — Self-contained drop-in script
+ * Dr. Lovato AI Chat Button — Self-contained drop-in script for The Doc Lovato Method
  * Include on any page: <script src="/js/forge-ai-button.js"></script>
+ * Note: Filename, DOM ids (forge-ai-*), CSS animation names, and `__FORGEIQ_PUBLIC_PAGE__` flag are intentionally preserved (see FORGEIQ_SESSION_NOTES.md → BRAND HISTORY).
  */
 (function () {
   'use strict';
@@ -180,7 +181,7 @@
     btn.innerHTML =
       '<span class="fab-icon">\u26A1</span>' +
       '<span class="fab-text">' +
-        '<span class="fab-title">FORGE AI</span>' +
+        '<span class="fab-title">DR. LOVATO AI</span>' +
         '<span class="fab-sub">Powered by Claude</span>' +
       '</span>';
     document.body.appendChild(btn);
@@ -202,7 +203,7 @@
     panel.innerHTML =
       '<div class="forge-ai-header">' +
         '<div class="forge-ai-header-left">' +
-          '<span class="forge-ai-header-title">\u26A1 FORGE AI</span>' +
+          '<span class="forge-ai-header-title">\u26A1 DR. LOVATO AI</span>' +
           '<span class="forge-ai-header-sub">Powered by Claude \u00B7 Anthropic</span>' +
         '</div>' +
         '<button class="forge-ai-close" aria-label="Close">\u2715</button>' +
@@ -244,7 +245,7 @@
       'book': 'Ready to book with Doc or Debora? I can help you pick the right session based on your goals.'
     };
 
-    return greetings[p] || 'I am your FORGE AI coach. Ask me anything about training, nutrition, recovery, or your goals.';
+    return greetings[p] || 'I am Dr. Lovato AI, your coach inside The Doc Lovato Method. Ask me anything about training, nutrition, recovery, or your goals.';
   }
 
   function addMessage(body, role, text) {
@@ -287,7 +288,7 @@
     var lang = localStorage.getItem('forgeiq_lang') || 'en';
 
     var langLabel = lang === 'es' ? 'Respond ONLY in Spanish.' : lang === 'pt' ? 'Respond ONLY in Portuguese.' : 'Respond in English.';
-    var sysPrompt = 'You are FORGE AI, built on the expertise of Dr. Michael P. Lovato, EdD. Dr. Lovato\'s credential stack: EdD (GCU), NASM CNC/CES/PES, NCSC, EPI Phase 2, ACE IFT Model, MyFIIT, AI in Fitness, Programming for GLP-1 Users (Pete McCall), Anti-Obesity Medications Guide, Nutritional Coaching (Melissa Layne), Metabolism Reality Check (Sohallia Digsby), Building Bigger Muscles (Dr. Zachary Mang), Abs Are Made in the Kitchen (Sohallia Digsby), Kettlebells: Mastering the Swing, Functional Techniques, Tactical Training Level 1, Fit Bodies Group Fitness Instructor, Foundations of Corrective Exercise, Insights to Shoulder Pain (Chuck Wolf), Flexibility Highways, OA Functional Breathing Instructor, TRX Yoga Hip Opening, Applying Yoga to Health and Fitness, Practical Stress Resilience Coaching, 30+ AI certifications. Army Combat Engineer veteran, 100% service connected, lost 98 lbs, trains daily through torn shoulder, knee surgery, arthritis. His wife Debora Lovato holds NASM CNC/CES/PES, Licensed Esthetician, Laser Certified, and specializes in GLP-1 skin changes, post-transformation wellness, collagen protocols, and couples coaching. When users ask about credentials, programming expertise, or qualifications -- reference this background accurately. ' + langLabel + ' Be direct, knowledgeable, concise.';
+    var sysPrompt = 'You are Dr. Lovato AI, the coach inside The Doc Lovato Method, built on the expertise of Dr. Michael P. Lovato, EdD. Dr. Lovato\'s credential stack: EdD (GCU), NASM CNC/CES/PES, NCSC, EPI Phase 2, ACE IFT Model, MyFIIT, AI in Fitness, Programming for GLP-1 Users (Pete McCall), Anti-Obesity Medications Guide, Nutritional Coaching (Melissa Layne), Metabolism Reality Check (Sohallia Digsby), Building Bigger Muscles (Dr. Zachary Mang), Abs Are Made in the Kitchen (Sohallia Digsby), Kettlebells: Mastering the Swing, Functional Techniques, Tactical Training Level 1, Fit Bodies Group Fitness Instructor, Foundations of Corrective Exercise, Insights to Shoulder Pain (Chuck Wolf), Flexibility Highways, OA Functional Breathing Instructor, TRX Yoga Hip Opening, Applying Yoga to Health and Fitness, Practical Stress Resilience Coaching, 30+ AI certifications. Army Combat Engineer veteran, 100% service connected, lost 98 lbs, trains daily through torn shoulder, knee surgery, arthritis. His wife Debora Lovato holds NASM CNC/CES/PES, Licensed Esthetician, Laser Certified, and specializes in GLP-1 skin changes, post-transformation wellness, collagen protocols, and couples coaching. When users ask about credentials, programming expertise, or qualifications -- reference this background accurately. ' + langLabel + ' Be direct, knowledgeable, concise.';
 
     // Build messages from chat history (user/assistant only, already includes current message)
     var msgs = chatHistory.filter(function(m){ return m.role === 'user' || m.role === 'assistant'; }).slice(-10);
@@ -362,7 +363,7 @@
 
           if (daysSinceJoin >= 14) {
             setTimeout(function() {
-              addMessage(body, 'assistant', 'You have been training consistently for ' + daysSinceJoin + ' days. Have you considered working directly with Doc? He reviews your FORGEIQ data before every session \u2014 he already knows your program. <a href="/coaching.html" style="color:#f0a500;text-decoration:underline;">Learn about 1-on-1 coaching \u2192</a>');
+              addMessage(body, 'assistant', 'You have been training consistently for ' + daysSinceJoin + ' days. Have you considered working directly with Doc? He reviews your Doc Lovato Method data before every session \u2014 he already knows your program. <a href="/coaching.html" style="color:#f0a500;text-decoration:underline;">Learn about 1-on-1 coaching \u2192</a>');
             }, 3000);
           }
           if (hasGLP && daysSinceJoin >= 30) {

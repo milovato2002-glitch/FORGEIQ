@@ -1,5 +1,6 @@
-// ForgeIQ Core Utilities
+// The Doc Lovato Method — Core Utilities
 // Language (en, es, pt), Profile, AI Coach, Navigation, Helpers
+// Note: Internal namespace `ForgeIQ` and `forgeiq_*` localStorage keys are intentionally preserved (see FORGEIQ_SESSION_NOTES.md → BRAND HISTORY).
 
 const ForgeIQ = (() => {
 
@@ -94,7 +95,7 @@ const ForgeIQ = (() => {
       content: userMessage
     });
 
-    const systemPrompt = `You are FORGE AI Coach, built by Dr. Michael P. Lovato, EdD. Dr. Lovato's credential stack: EdD, NASM CNC/CES/PES, NCSC, EPI Phase 2, ACE IFT, MyFIIT, Programming for GLP-1 Users (Pete McCall), Nutritional Coaching (Melissa Layne), Metabolism (Sohallia Digsby), Building Bigger Muscles (Dr. Zachary Mang), Corrective Exercise, Shoulder Pain Specialist (Chuck Wolf), Functional Techniques, Kettlebells, Tactical Training, Group Fitness, Flexibility, OA Breathing Instructor, TRX Yoga, Applying Yoga, Anti-Obesity Medications, AI in Fitness, 30+ AI certs. Army Combat Engineer veteran, 100% service connected, lost 98 lbs, trains daily through torn shoulder, knee surgery, arthritis. ${langLabel} Be direct, specific, and warm. Keep answers under 4 sentences unless detail is needed. User profile: ${JSON.stringify(profile)}`;
+    const systemPrompt = `You are Dr. Lovato AI, the coach inside The Doc Lovato Method, built by Dr. Michael P. Lovato, EdD. Dr. Lovato's credential stack: EdD, NASM CNC/CES/PES, NCSC, EPI Phase 2, ACE IFT, MyFIIT, Programming for GLP-1 Users (Pete McCall), Nutritional Coaching (Melissa Layne), Metabolism (Sohallia Digsby), Building Bigger Muscles (Dr. Zachary Mang), Corrective Exercise, Shoulder Pain Specialist (Chuck Wolf), Functional Techniques, Kettlebells, Tactical Training, Group Fitness, Flexibility, OA Breathing Instructor, TRX Yoga, Applying Yoga, Anti-Obesity Medications, AI in Fitness, 30+ AI certs. Army Combat Engineer veteran, 100% service connected, lost 98 lbs, trains daily through torn shoulder, knee surgery, arthritis. ${langLabel} Be direct, specific, and warm. Keep answers under 4 sentences unless detail is needed. User profile: ${JSON.stringify(profile)}`;
 
     try {
       const res = await fetch('/.netlify/functions/chat', {
@@ -196,7 +197,7 @@ const ForgeIQ = (() => {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>${title} — FORGEIQ</title>
+        <title>${title} — The Doc Lovato Method</title>
         <style>
           body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #222; padding: 40px; max-width: 800px; margin: 0 auto; }
           .pdf-header { border-bottom: 2px solid #c9a84c; padding-bottom: 16px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; }
@@ -214,14 +215,14 @@ const ForgeIQ = (() => {
       </head>
       <body>
         <div class="pdf-header">
-          <div class="pdf-logo">FORGE<span>IQ</span></div>
+          <div class="pdf-logo">DOC LOVATO <span>METHOD</span></div>
           <div class="pdf-date">${formatDate(new Date())}</div>
         </div>
         <div class="pdf-title">${title}</div>
         <div class="pdf-content">${content}</div>
         <div class="pdf-footer">
-          FORGEIQ — AI Fitness Coaching by Dr. Michael and Debora Lovato
-          <br/>forgeiq.com — We never have to quit.
+          The Doc Lovato Method — Doctor-Led AI Fitness Coaching by Dr. Michael and Debora Lovato
+          <br/>forgeiq.netlify.app — We never have to quit.
         </div>
       </body>
       </html>
