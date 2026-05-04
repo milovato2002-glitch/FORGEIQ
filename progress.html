@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/auth-guard.js"></script>
   <title>The Doc Lovato Method — Progress Tracking</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -1097,16 +1099,12 @@
     document.getElementById("wt-input").value = "";
     wtCard.style.display = "none";
 
-    // Also update profile current weight
+    // Also update profile current weight (canonical: forgeiq_profile)
     try {
       var p = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}");
       p.currentWeight = val;
       p.bodyweight = val;
       localStorage.setItem("forgeiq_profile", JSON.stringify(p));
-      var p1 = JSON.parse(localStorage.getItem("forgeiq_profile_v1") || "{}");
-      p1.currentWeight = val;
-      p1.bodyweight = val;
-      localStorage.setItem("forgeiq_profile_v1", JSON.stringify(p1));
     } catch(e){}
 
     renderWeightTracking();
@@ -1800,8 +1798,6 @@
 })();
 </script>
 
-<script src="/js/supabase-config.js"></script>
-<script src="/js/auth-guard.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/forge-ai-button.js"></script>

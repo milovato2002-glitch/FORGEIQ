@@ -552,7 +552,6 @@
       localStorage.setItem('forgeiq_token', id);
       localStorage.setItem('forgeiq_auth_method', 'guest');
       localStorage.setItem('forgeiq_user', JSON.stringify({ id: id, email: email || '', isGuest: true }));
-      localStorage.removeItem('forgeiq_profile_v1');
       localStorage.setItem('forgeiq_profile', JSON.stringify({ email: email || '', isGuest: true, signupDate: new Date().toISOString() }));
       window.location.href = '/onboarding.html';
     }

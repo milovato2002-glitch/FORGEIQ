@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/auth-guard.js"></script>
   <title>The Doc Lovato Method — Multi-Day Plan Builder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -800,11 +802,11 @@ window.toggleDay = function(dayNum){
 
 window.savePlanAndGoDashboard = function(){
   var profile = {};
-  try { profile = JSON.parse(localStorage.getItem("forgeiq_profile_v1") || "{}"); } catch(e){}
+  try { profile = JSON.parse(localStorage.getItem("forgeiq_profile") || "{}"); } catch(e){}
   profile.onboardingComplete = true;
   profile.planGenerated = true;
   profile.planGeneratedDate = new Date().toISOString();
-  localStorage.setItem("forgeiq_profile_v1", JSON.stringify(profile));
+  localStorage.setItem("forgeiq_profile", JSON.stringify(profile));
 
   var planData = {
     type: planDuration + "-day",
@@ -1018,8 +1020,6 @@ if(urlParams.get("plans") === "1"){
 })();
 </script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
-<script src="/js/supabase-config.js"></script>
-<script src="/js/auth-guard.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/forge-ai-button.js"></script>

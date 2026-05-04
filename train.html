@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/auth-guard.js"></script>
   <title>The Doc Lovato Method — Train</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -2422,7 +2424,7 @@
   function saveToday(){ ls("forgeiq_day_" + todayKey(), todayData); }
 
   /* ── WORKOUT HISTORY STORAGE ── */
-  var HISTORY_KEY = "forgeiq_workout_history_v1";
+  var HISTORY_KEY = "forgeiq_workout_history";
   function getHistory(){ return ls(HISTORY_KEY) || []; }
   function saveHistory(hist){ ls(HISTORY_KEY, hist); }
 
@@ -2686,7 +2688,7 @@
   /* ── EXPERIENCE-BASED ROUTING ── */
   (function() {
     var p = {};
-    try { p = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || localStorage.getItem('forgeiq_profile') || '{}'); } catch(e){}
+    try { p = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}'); } catch(e){}
     var exp = p.experience || 'beginner';
     var isAdvanced = ['1to3','3plus'].indexOf(exp) >= 0;
 
@@ -3845,11 +3847,11 @@
   $("#btn-save-orm").addEventListener("click", function(){
     if(!lastORM) return;
     var lifts = {};
-    try { lifts = JSON.parse(localStorage.getItem("forgeiq_lift_maxes") || "{}"); } catch(e){}
+    try { lifts = JSON.parse(localStorage.getItem("forgeiq_orm_history") || "{}"); } catch(e){}
     var key = lastORMExercise.toLowerCase().replace(/[^a-z0-9]/g, "_");
     if(!lifts[key]) lifts[key] = [];
     lifts[key].push({ exercise: lastORMExercise, orm: lastORM, date: new Date().toISOString().slice(0,10) });
-    localStorage.setItem("forgeiq_lift_maxes", JSON.stringify(lifts));
+    localStorage.setItem("forgeiq_orm_history", JSON.stringify(lifts));
     var msg = $("#orm-saved-msg");
     msg.textContent = "\u2713 " + lastORMExercise + " 1RM: " + lastORM + " lbs saved";
     msg.style.display = "block";
@@ -4278,7 +4280,7 @@
 
   function renderWeekPlanner() {
     var plan = ls("forgeiq_weekly_plan") || {};
-    var wkLog = ls("forgeiq_workouts") || {};
+    var wkLog = ls("forgeiq_workout_log") || {};
     var today = new Date();
     var monday = getMonday(today);
     var dayNames = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
@@ -4368,7 +4370,7 @@
     var entry = plan[dateStr] || {};
     if (!entry.type || entry.type === "rest" || entry.type === "Rest") return;
 
-    var wkLog = ls("forgeiq_workouts") || {};
+    var wkLog = ls("forgeiq_workout_log") || {};
     var isDone = wkLog[dateStr] === true || wkLog[dateStr] === "done" || (typeof wkLog[dateStr] === "object" && wkLog[dateStr] && wkLog[dateStr].completed);
 
     var container = document.getElementById("week-planner");
@@ -4940,8 +4942,6 @@ function getMusclesForExercise(name) {
 </script>
 
 <script src="js/muscleDiagram.js"></script>
-<script src="js/supabase-config.js"></script>
-<script src="/js/auth-guard.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 <script src="js/forge-ai-button.js"></script>

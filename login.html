@@ -559,10 +559,9 @@
         if (typeof SupabaseClient !== 'undefined') {
           const result = await SupabaseClient.signIn(email, pass);
           if (result.access_token) {
-            // Check if onboarding complete — check BOTH profile keys
-            var pv1 = {}; try { pv1 = JSON.parse(localStorage.getItem('forgeiq_profile_v1') || '{}'); } catch(e) {}
+            // Check if onboarding complete — canonical forgeiq_profile
             var pv0 = {}; try { pv0 = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}'); } catch(e) {}
-            if (pv1.onboardingComplete === true || pv0.onboardingComplete === true) {
+            if (pv0.onboardingComplete === true) {
               window.location.href = '/dashboard.html';
             } else {
               window.location.href = '/onboarding.html';
@@ -605,7 +604,6 @@
         email: '',
         isGuest: true
       }));
-      localStorage.removeItem('forgeiq_profile_v1');
       localStorage.removeItem('forgeiq_profile');
       window.location.href = '/onboarding.html';
     }

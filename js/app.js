@@ -2,6 +2,69 @@
 // Language (en, es, pt), Profile, AI Coach, Navigation, Helpers
 // Note: Internal namespace `ForgeIQ` and `forgeiq_*` localStorage keys are intentionally preserved (see FORGEIQ_SESSION_NOTES.md → BRAND HISTORY).
 
+// ─── One-Time localStorage Key Migration ──────────────────────────
+// Multiple keys had drifted across pages (forgeiq_profile_v1 vs forgeiq_profile,
+// forgeiq_max_lifts vs forgeiq_lift_maxes, forgeiq_nutrition vs forgeiq_nutrition_log,
+// forgeiq_meals → forgeiq_nutrition_log, forgeiq_workouts → forgeiq_workout_log,
+// forgeiq_workout_history_v1 → forgeiq_workout_history). This consolidates them
+// to canonical names without losing data. Runs once per browser, gated by
+// forgeiq_keys_migrated_v1.
+(function migrateLegacyKeys(){
+  try {
+    if (localStorage.getItem('forgeiq_keys_migrated_v1') === '1') return;
+    function mergeObject(fromKey, toKey){
+      var fromRaw = localStorage.getItem(fromKey);
+      if (fromRaw == null) return;
+      var toRaw = localStorage.getItem(toKey);
+      if (toRaw == null || toRaw === '{}' || toRaw === 'null') {
+        localStorage.setItem(toKey, fromRaw);
+      } else {
+        try {
+          var fromObj = JSON.parse(fromRaw); var toObj = JSON.parse(toRaw);
+          if (fromObj && typeof fromObj === 'object' && toObj && typeof toObj === 'object') {
+            Object.keys(fromObj).forEach(function(k){ if (!(k in toObj)) toObj[k] = fromObj[k]; });
+            localStorage.setItem(toKey, JSON.stringify(toObj));
+          }
+        } catch(e){}
+      }
+      localStorage.removeItem(fromKey);
+    }
+    function mergeArray(fromKey, toKey){
+      var fromRaw = localStorage.getItem(fromKey);
+      if (fromRaw == null) return;
+      var toRaw = localStorage.getItem(toKey);
+      if (toRaw == null || toRaw === '[]' || toRaw === 'null') {
+        localStorage.setItem(toKey, fromRaw);
+      } else {
+        try {
+          var a1 = JSON.parse(fromRaw) || []; var a2 = JSON.parse(toRaw) || [];
+          if (Array.isArray(a1) && Array.isArray(a2)) {
+            var seen = {}; var merged = [];
+            a2.concat(a1).forEach(function(item){ var s = JSON.stringify(item); if (!seen[s]) { seen[s] = 1; merged.push(item); } });
+            localStorage.setItem(toKey, JSON.stringify(merged));
+          }
+        } catch(e){}
+      }
+      localStorage.removeItem(fromKey);
+    }
+
+    // Profile: forgeiq_profile_v1 → forgeiq_profile (merge missing keys, canonical wins on conflict)
+    mergeObject('forgeiq_profile_v1', 'forgeiq_profile');
+    // Lifts/PRs: forgeiq_max_lifts → forgeiq_lift_maxes
+    mergeObject('forgeiq_max_lifts', 'forgeiq_lift_maxes');
+    // Nutrition daily totals: forgeiq_nutrition and forgeiq_meals → forgeiq_nutrition_log
+    mergeObject('forgeiq_nutrition', 'forgeiq_nutrition_log');
+    mergeObject('forgeiq_meals', 'forgeiq_nutrition_log');
+    // Per-day workout map: forgeiq_workouts → forgeiq_workout_log
+    mergeObject('forgeiq_workouts', 'forgeiq_workout_log');
+    // Workout history list: forgeiq_workout_history_v1 → forgeiq_workout_history
+    mergeArray('forgeiq_workout_history_v1', 'forgeiq_workout_history');
+
+    localStorage.setItem('forgeiq_keys_migrated_v1', '1');
+    console.log('[migration] localStorage canonical keys consolidated');
+  } catch(e) { console.error('[migration] failed:', e); }
+})();
+
 const ForgeIQ = (() => {
 
   // ─── Language Engine ───────────────────────────────────────────

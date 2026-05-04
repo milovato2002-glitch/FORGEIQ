@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<script src="/js/supabase-config.js"></script>
+<script src="/js/auth-guard.js"></script>
 <title>The Doc Lovato Method — Active Workout</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -512,8 +514,6 @@ body {
   <div class="rest-complete-msg" id="restCompleteMsg">REST COMPLETE &mdash; NEXT SET</div>
 </div>
 
-<script src="/js/supabase-config.js"></script>
-<script src="/js/auth-guard.js"></script>
 <script>
 (function() {
   // ── Bootstrap: Try multiple sources ──
@@ -592,7 +592,7 @@ body {
     return [];
   }
   function getMaxLifts() {
-    return JSON.parse(localStorage.getItem('forgeiq_max_lifts') || '{}');
+    return JSON.parse(localStorage.getItem('forgeiq_lift_maxes') || '{}');
   }
 
   // ── Elapsed Timer ──
@@ -901,7 +901,9 @@ body {
     const caloriesBurned = Math.round(4.0 * bodyWeightKg * hours);
     const muscleGroups = [...new Set(exerciseData.map(e => e.muscleGroup).filter(Boolean))];
 
-    // 1. forgeiq_workout_history
+    const todayStr = new Date().toISOString().slice(0, 10);
+
+    // 1. forgeiq_workout_history (canonical, all completed workouts)
     const history = getHistory();
     history.unshift({
       id: Date.now(),
@@ -916,7 +918,7 @@ body {
     if (history.length > 200) history.length = 200;
     localStorage.setItem('forgeiq_workout_history', JSON.stringify(history));
 
-    // 2. forgeiq_max_lifts
+    // 2. forgeiq_lift_maxes (canonical, per-exercise top weight)
     const maxLifts = getMaxLifts();
     exerciseData.forEach(ex => {
       const maxWeight = Math.max(0, ...ex.completedSets.map(s => s.weight));
@@ -925,30 +927,30 @@ body {
         maxLifts[ex.name] = { weight: maxWeight, reps: maxReps, date: new Date().toISOString() };
       }
     });
-    localStorage.setItem('forgeiq_max_lifts', JSON.stringify(maxLifts));
+    localStorage.setItem('forgeiq_lift_maxes', JSON.stringify(maxLifts));
 
-    // 3. forgeiq_exercise_calories
+    // 3. forgeiq_exercise_calories (per-day exercise calorie burn)
     const calLog = JSON.parse(localStorage.getItem('forgeiq_exercise_calories') || '{}');
-    const todayStr = new Date().toISOString().slice(0, 10);
     calLog[todayStr] = (calLog[todayStr] || 0) + caloriesBurned;
     localStorage.setItem('forgeiq_exercise_calories', JSON.stringify(calLog));
 
-    // 4. forgeiq_workouts
-    const wkLog = JSON.parse(localStorage.getItem('forgeiq_workouts') || '{}');
-    wkLog[todayStr] = { completed: true, name: workoutName, volume: totalVolume };
-    localStorage.setItem('forgeiq_workouts', JSON.stringify(wkLog));
-
-    // 5. forgeiq_workout_log (per-day set-level data)
+    // 4. forgeiq_workout_log (canonical per-day workout: dashboard streak + weekly volume read this)
     const workoutLog = JSON.parse(localStorage.getItem('forgeiq_workout_log') || '{}');
-    workoutLog[todayStr] = exercisesPayload.flatMap(function(ex) {
-      return ex.sets.map(function(s) {
-        return { exercise: ex.name, set: s.set, weight: s.weight, reps: s.reps, rpe: s.rpe || null, completed: s.completed, timestamp: new Date().toISOString() };
-      });
-    });
+    workoutLog[todayStr] = {
+      completed: true,
+      name: workoutName,
+      volume: totalVolume,
+      caloriesBurned: caloriesBurned,
+      duration: elapsedSeconds,
+      sets: exercisesPayload.flatMap(function(ex) {
+        return ex.sets.map(function(s) {
+          return { exercise: ex.name, set: s.set, weight: s.weight, reps: s.reps, rpe: s.rpe || null, completed: s.completed, timestamp: new Date().toISOString() };
+        });
+      })
+    };
     localStorage.setItem('forgeiq_workout_log', JSON.stringify(workoutLog));
 
-    // 6. forgeiq_prs (recent PRs list)
-    const maxLifts = getMaxLifts();
+    // 5. forgeiq_prs (recent PRs list — reuse maxLifts from step 2)
     const prsList = JSON.parse(localStorage.getItem('forgeiq_prs') || '[]');
     exerciseData.forEach(function(ex) {
       const maxWeight = Math.max(0, ...ex.completedSets.map(s => s.weight));

@@ -95,3 +95,21 @@
   from = "/macro-plan"
   to = "/macro-plan.html"
   status = 200
+
+[[redirects]]
+  from = "/workout-logger"
+  to = "/workout-logger.html"
+  status = 200
+
+# ─── Security headers ─────────────────────────────────────────────
+# CSP starts in Report-Only mode so we don't break inline scripts/3rd-party widgets
+# (Crisp, Quagga, Chart.js CDN, Google Fonts). Tighten and switch to enforce after launch.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://client.crisp.chat https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co https://api.anthropic.com https://client.crisp.chat wss://client.relay.crisp.chat; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"

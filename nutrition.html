@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/auth-guard.js"></script>
   <title>The Doc Lovato Method — Nutrition System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -528,7 +530,7 @@ function $$(s,c){return Array.from((c||document).querySelectorAll(s));}
 function ls(k,v){if(v===undefined){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}localStorage.setItem(k,JSON.stringify(v));}
 function todayKey(){return new Date().toISOString().slice(0,10);}
 
-var profile = ls("forgeiq_profile") || ls("forgeiq_profile_v1") || {};
+var profile = ls("forgeiq_profile") || {};
 var todayData = ls("forgeiq_day_" + todayKey()) || {meals:[],water:0,supps:{}};
 var currentMealSlot = "meal";
 var selectedSearchFood = null;
@@ -1084,10 +1086,17 @@ function logEntry(entry){
   var log = JSON.parse(localStorage.getItem("forgeiq_food_log") || "[]");
   log.unshift(entry);
   localStorage.setItem("forgeiq_food_log", JSON.stringify(log.slice(0,500)));
-  // Mark nutrition logged for today
-  var nLog = JSON.parse(localStorage.getItem("forgeiq_nutrition") || "{}");
-  nLog[todayKey()] = true;
-  localStorage.setItem("forgeiq_nutrition", JSON.stringify(nLog));
+  // Update canonical forgeiq_nutrition_log (date-keyed totals — dashboard reads this for calorie ring)
+  var nLog = JSON.parse(localStorage.getItem("forgeiq_nutrition_log") || "{}");
+  var totals = (todayData.meals || []).reduce(function(acc, m){
+    acc.calories += (m.calories || 0);
+    acc.protein += (m.protein || 0);
+    acc.carbs += (m.carbs || 0);
+    acc.fat += (m.fat || 0);
+    return acc;
+  }, {calories:0, protein:0, carbs:0, fat:0});
+  nLog[todayKey()] = totals;
+  localStorage.setItem("forgeiq_nutrition_log", JSON.stringify(nLog));
   // Update UI
   updateDashboard();
 }
@@ -1310,7 +1319,7 @@ window.generateWeeklyReport = function(reportType){
   var muscleGroups = {};
   weekWorkouts.forEach(function(w){(w.muscleGroups||[]).forEach(function(mg){muscleGroups[mg]=(muscleGroups[mg]||0)+1;});});
   var prs = [];
-  try { var maxLifts = JSON.parse(localStorage.getItem("forgeiq_max_lifts")||"{}"); for(var k in maxLifts){ if(maxLifts[k].date && new Date(maxLifts[k].date) > sevenDaysAgo) prs.push(k + ": " + maxLifts[k].weight + "lbs"); } } catch(e){}
+  try { var maxLifts = JSON.parse(localStorage.getItem("forgeiq_lift_maxes")||"{}"); for(var k in maxLifts){ if(maxLifts[k].date && new Date(maxLifts[k].date) > sevenDaysAgo) prs.push(k + ": " + maxLifts[k].weight + "lbs"); } } catch(e){}
   var profileGoal = "";
   try { var pp = JSON.parse(localStorage.getItem("forgeiq_profile")||"{}"); profileGoal = pp.goal || pp.primaryGoal || "general"; } catch(e){}
 
@@ -1419,7 +1428,6 @@ function renderTargetsDisplay(){
 window.setNutritionMode = function(mode){
   profile.nutritionMode = mode;
   localStorage.setItem("forgeiq_profile", JSON.stringify(profile));
-  try{var p1 = JSON.parse(localStorage.getItem("forgeiq_profile_v1")||"{}");p1.nutritionMode=mode;localStorage.setItem("forgeiq_profile_v1",JSON.stringify(p1));}catch(e){}
   renderSettings();
   updateDashboard();
 };
@@ -1428,7 +1436,6 @@ window.saveBodyweight = function(){
   if(!bw || bw < 50 || bw > 500){alert("Enter a valid bodyweight (50-500 lbs).");return;}
   profile.bodyweight = bw;
   localStorage.setItem("forgeiq_profile", JSON.stringify(profile));
-  try{var p1 = JSON.parse(localStorage.getItem("forgeiq_profile_v1")||"{}");p1.bodyweight=bw;localStorage.setItem("forgeiq_profile_v1",JSON.stringify(p1));}catch(e){}
   renderSettings();
   updateDashboard();
 };
@@ -1467,8 +1474,6 @@ checkPostWorkoutBrief();
 })();
 </script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="f3a92795-b22b-4f85-867b-ffb0516c84d3";(function(){var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
-<script src="/js/supabase-config.js"></script>
-<script src="/js/auth-guard.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/forge-ai-button.js"></script>
