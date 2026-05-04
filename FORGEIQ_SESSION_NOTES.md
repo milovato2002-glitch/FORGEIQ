@@ -33,8 +33,9 @@ Last updated: 2026-05-04
 - progress.html — tracking with charts
 - nutrition.html — calorie/macro logging with visual budget graph, 4-option weekly reports
 - macro-plan.html — macro calculator with educational calorie slider
-- coaching.html / debora.html — coach bio pages (NOTE: gated by auth-guard as of 2026-05-04 — see 2026-05-04 sprint, may need to revert if SEO is a priority)
-- resources.html / glp-hub.html / peptide-library.html — gated content
+- coaching.html / debora.html — public coach bio pages (SEO lead-gen, public-page flag set)
+- resources.html / glp-hub.html / peptide-library.html — public lead-gen content (reclassified from "gated content" 2026-05-04: SEO discoverability prioritized pre-launch)
+- macro-plan.html — public macro calculator (SEO lead-gen). DOCX generation gated separately via email-capture or Supabase session — see 2026-05-04 sprint.
 - book.html / pricing.html — public
 - js/auth-guard.js — session gating, hides `<html>` until auth confirmed (loaded synchronously in `<head>` of every protected page)
 - js/supabase-config.js — Supabase client init
@@ -61,6 +62,7 @@ Active canonical keys in use:
 - forgeiq_exercise_calories, forgeiq_food_log, forgeiq_nutrition_log, forgeiq_day_<date>
 - forgeiq_weight_log, forgeiq_bodyfat_log, forgeiq_goal_weight, forgeiq_progress_v2, forgeiq_goals
 - forgeiq_lang, forgeiq_language, forgeiq_onboard_date, forgeiq_coach_notifications
+- forgeiq_lead_email, forgeiq_lead_capture_date (macro-plan DOCX gate; TODO: sync to Supabase leads table)
 - forgeiq_keys_migrated_v1 (migration sentinel)
 
 ## MODEL NAME STRINGS PASSED TO chat.js (audited 2026-05-04)
@@ -101,6 +103,10 @@ Audit-driven critical/high fixes. All 7 verified PASS unless noted.
 
 7. **generate-docx function exists** (PASS)
    - File: netlify/functions/generate-docx.js — present, uses `require("docx")`. The `docx@^9.6.1` dependency is in netlify/functions/package.json and the build command (`cd netlify/functions && npm install`) installs it. node_modules/docx confirmed present locally.
+
+## 2026-05-04 — PUBLIC PAGE FLAGS FOR LEAD-GEN
+Added `__FORGEIQ_PUBLIC_PAGE__ = true` to coaching.html, debora.html, glp-hub.html, peptide-library.html, resources.html, macro-plan.html. SEO discoverability prioritized pre-launch — these pages are public lead-gen, indexable by search engines.
+- macro-plan.html DOCX download (`fetch /.netlify/functions/generate-docx`) is **gated separately** at the action level (not the page): requires either a signed-in `forgeiq_user` OR a captured `forgeiq_lead_email`. Email captured on first download attempt via `prompt()` and persisted to `forgeiq_lead_email` + `forgeiq_lead_capture_date`. **TODO**: POST captured emails to a Supabase `leads` table once that schema is wired; also add server-side rate-limiting on the generate-docx function (CORS pin alone doesn't stop server-side abuse).
 
 ## WHAT WAS DONE IN PRIOR SPRINTS
 1. Verified auth-guard works: added console.log debugging, added to workout-logger.html and macro-plan.html

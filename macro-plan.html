@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>window.__FORGEIQ_PUBLIC_PAGE__ = true;</script>
   <script src="/js/supabase-config.js"></script>
   <script src="/js/auth-guard.js"></script>
   <title>The Doc Lovato Method — Macro Plan Generator</title>
@@ -924,9 +925,29 @@ function initSlider(){
   updateReadout();
 }
 
-/* ── DOWNLOAD ── */
+/* ── DOWNLOAD ──
+   Page is public for SEO, but the .docx download is a lead-gen gate:
+   require either a signed-in user OR a captured email before generation.
+   Server-side rate-limiting on /.netlify/functions/generate-docx is a separate follow-up. */
 function downloadPlan(){
   if(!planData){ toast("NO PLAN", "Generate a plan first."); return; }
+
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('forgeiq_user') || 'null'); } catch(e){}
+  var leadEmail = localStorage.getItem('forgeiq_lead_email');
+  if(!(user && user.id) && !leadEmail){
+    var entered = window.prompt("Enter your email to download your macro plan as a Word document. We'll save your plan to your email.");
+    if(entered === null) return; // user cancelled
+    entered = (entered || '').trim().toLowerCase();
+    if(!entered || entered.indexOf('@') < 1 || entered.indexOf('.') < 0){
+      toast("EMAIL REQUIRED", "A valid email is required to download.", 3000);
+      return;
+    }
+    localStorage.setItem('forgeiq_lead_email', entered);
+    localStorage.setItem('forgeiq_lead_capture_date', new Date().toISOString());
+    // TODO: POST to Supabase leads table once CRM/leads schema is wired
+  }
+
   toast("DOWNLOADING", "Generating your Doc Lovato Method .docx — this may take a moment.", 5000);
   fetch("/.netlify/functions/generate-docx", {
     method:"POST",
