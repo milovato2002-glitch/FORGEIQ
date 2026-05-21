@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
-    "docx": "^9.6.1"
+    "docx": "^9.6.1",
+    "stripe": "^14.25.0"
   }
 }

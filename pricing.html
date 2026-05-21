@@ -663,7 +663,7 @@
             <li><span class="check">&#10003;</span> 21-day challenge access</li>
             <li><span class="check">&#10003;</span> AI coach chat</li>
           </ul>
-          <a href="signup.html" class="btn-gold">Get Started</a>
+          <button type="button" class="btn-gold" onclick="startCheckout('forge')">Get Started</button>
         </div>
 
         <!-- FORGE+ -->
@@ -699,7 +699,7 @@
             <li><span class="check">&#10003;</span> Couples challenge mode</li>
             <li><span class="check">&#10003;</span> Priority AI responses</li>
           </ul>
-          <a href="signup.html" class="btn-gold">Get Started</a>
+          <button type="button" class="btn-gold" onclick="startCheckout('forgeplus')">Get Started</button>
         </div>
 
       </div>
@@ -864,6 +864,52 @@
         annualEl.style.display = 'none';
         if (saveBadge) saveBadge.style.display = 'none';
       }
+    }
+
+    /* ── Stripe Checkout ──
+       Plan name (not raw priceId) is sent to the server; the server
+       maps it to the actual Stripe price from a hardcoded allowlist.
+       NOTE: monthly/annual toggle is currently cosmetic — both feed the
+       same Stripe price ID until separate annual prices are added. */
+    var ALLOWED_PLANS = ['forge', 'forgeplus'];
+
+    function startCheckout(plan) {
+      if (ALLOWED_PLANS.indexOf(plan) === -1) return;
+
+      var token = localStorage.getItem('forgeiq_token');
+      // Guest tokens cannot complete checkout (webhook can't link them) —
+      // send straight to signup so they create a real account first.
+      if (!token || token.indexOf('guest_') === 0) {
+        window.location.href = '/signup.html?plan=' + plan;
+        return;
+      }
+
+      var user = null;
+      try { user = JSON.parse(localStorage.getItem('forgeiq_user') || 'null'); } catch (e) {}
+      var email = (user && user.email) || '';
+      var userId = (user && user.id) || '';
+
+      var btns = document.querySelectorAll('.btn-gold');
+      btns.forEach(function(b) { b.disabled = true; b.style.opacity = '0.6'; });
+
+      fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: plan, userEmail: email, userId: userId })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert('Could not start checkout. Please try again.');
+          btns.forEach(function(b) { b.disabled = false; b.style.opacity = '1'; });
+        }
+      })
+      .catch(function() {
+        alert('Could not start checkout. Please try again.');
+        btns.forEach(function(b) { b.disabled = false; b.style.opacity = '1'; });
+      });
     }
   </script>
 

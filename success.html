@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGEIQ — Payment Confirmed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-primary: #0a1628;
+      --bg-secondary: #0e1e36;
+      --card-bg: #142444;
+      --gold: #f0a500;
+      --gold-hover: #ffb820;
+      --gold-dim: rgba(240,165,0,0.12);
+      --green: #2dc653;
+      --text-primary: #e8edf5;
+      --text-secondary: #8fa3c0;
+      --text-muted: #4a6080;
+      --border-gold: rgba(240,165,0,0.18);
+      --border-subtle: rgba(255,255,255,0.07);
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-condensed: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+    }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(45,198,83,0.1);
+      border: 2px solid var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      font-size: 2.4rem;
+      color: var(--green);
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      letter-spacing: 6px;
+      margin-bottom: 16px;
+    }
+    .sub {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin: 0 auto 12px;
+      line-height: 1.7;
+    }
+    .redirect-note {
+      color: var(--text-muted);
+      font-family: var(--font-condensed);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin-top: 24px;
+    }
+    .btn-gold {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg-primary);
+      padding: 16px 48px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-condensed);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      margin-top: 32px;
+    }
+    .btn-gold:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="success-icon">&#10003;</div>
+  <h1>YOU'RE IN.</h1>
+  <p class="sub">Payment confirmed. Your subscription is active.</p>
+  <p class="sub">Let's build your personalized training plan.</p>
+
+  <a href="/onboarding.html" class="btn-gold" id="continueBtn">CONTINUE TO ONBOARDING</a>
+
+  <p class="redirect-note">Redirecting in <span id="countdown">5</span> seconds...</p>
+
+  <script>
+    // Save tier to localStorage based on session
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var sessionId = params.get('session_id');
+      if (sessionId) {
+        localStorage.setItem('forgeiq_checkout_session', sessionId);
+      }
+
+      // Mark subscription as active in local profile
+      try {
+        var profile = JSON.parse(localStorage.getItem('forgeiq_profile') || '{}');
+        profile.subscription_status = 'active';
+        localStorage.setItem('forgeiq_profile', JSON.stringify(profile));
+      } catch (e) {}
+
+      // Countdown redirect
+      var seconds = 5;
+      var el = document.getElementById('countdown');
+      var timer = setInterval(function () {
+        seconds--;
+        if (el) el.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(timer);
+          window.location.href = '/onboarding.html';
+        }
+      }, 1000);
+    })();
+  </script>
+
+</body>
+</html>

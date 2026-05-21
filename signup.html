@@ -456,8 +456,8 @@
       <div class="auth-box">
 
         <div class="auth-label">DR. LOVATO AI</div>
-        <h1 class="auth-title">START FREE</h1>
-        <p class="auth-sub">No credit card. No commitment. Just results.</p>
+        <h1 class="auth-title" id="authTitle">START FREE</h1>
+        <p class="auth-sub" id="authSub">No credit card. No commitment. Just results.</p>
 
         <div class="global-error" id="globalError"></div>
 
@@ -521,11 +521,43 @@
   <script>
     /* ══════════════════════════════════════════════════════════
        THE DOC LOVATO METHOD — SIGNUP — BULLETPROOF VERSION v3
-       NEVER shows error. ALWAYS gets user to /onboarding.
-       Supabase success → save token → onboarding
-       Supabase fail → guest mode → onboarding
-       No network → guest mode → onboarding
+       NEVER shows error. ALWAYS gets user moving.
+       Free path (no ?plan):  signup → onboarding
+       Paid path (?plan=…):   signup → Stripe checkout → success
+       Supabase fail → guest mode (intentional — see session notes)
        ══════════════════════════════════════════════════════════ */
+
+    // Plan key recognised by /.netlify/functions/create-checkout-session.
+    // The server maps these to actual Stripe price IDs; clients never see them.
+    var ALLOWED_PLANS = { forge: true, forgeplus: true };
+
+    // Check for plan param from pricing page
+    var urlParams = new URLSearchParams(window.location.search);
+    var selectedPlan = urlParams.get('plan'); // 'forge' or 'forgeplus' or null
+
+    function redirectToCheckout(email, userId) {
+      if (!selectedPlan || !ALLOWED_PLANS[selectedPlan]) {
+        window.location.href = '/onboarding.html';
+        return;
+      }
+      fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: selectedPlan, userEmail: email, userId: userId || '' })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          // Checkout couldn't start — still get the user into the app.
+          window.location.href = '/onboarding.html';
+        }
+      })
+      .catch(function() {
+        window.location.href = '/onboarding.html';
+      });
+    }
 
     // Password strength meter
     function checkStrength(val) {
@@ -652,16 +684,30 @@
 
         // Success: got access token
         if (result.access_token) {
-          console.log('[SIGNUP] Step 7: Got token! Saving and going to onboarding');
+          console.log('[SIGNUP] Step 7: Got token! Saving');
           localStorage.setItem('forgeiq_token', result.access_token);
           localStorage.setItem('forgeiq_auth_method', 'supabase');
           localStorage.setItem('forgeiq_user', JSON.stringify(result.user || { email: email }));
           localStorage.setItem('forgeiq_profile', JSON.stringify({ email: email, signupDate: new Date().toISOString() }));
-          window.location.href = '/onboarding.html';
+
+          // If a plan was selected from /pricing, hand off to Stripe; otherwise onboarding.
+          if (selectedPlan && ALLOWED_PLANS[selectedPlan]) {
+            var newUserId = (result.user && result.user.id) || '';
+            redirectToCheckout(email, newUserId);
+          } else {
+            window.location.href = '/onboarding.html';
+          }
           return;
         }
 
-        // User created but no token — go guest (will upgrade later)
+        // User created but no token — email confirmation may be required.
+        // For paid signup still try checkout (Stripe will collect email anyway);
+        // otherwise fall back to guest mode (intentional resilience path).
+        if (selectedPlan && ALLOWED_PLANS[selectedPlan]) {
+          console.log('[SIGNUP] Step 7: No token but plan selected — trying checkout with email');
+          redirectToCheckout(email, '');
+          return;
+        }
         console.log('[SIGNUP] Step 7: No token in response — going guest');
         goGuest(email);
       })
@@ -673,6 +719,15 @@
         console.log('[SIGNUP] Step 5 ERROR: ' + err.message + ' — going guest');
         goGuest(email);
       });
+    }
+
+    // Update heading if coming from pricing page with a plan
+    if (selectedPlan && ALLOWED_PLANS[selectedPlan]) {
+      var titleEl = document.getElementById('authTitle');
+      var subEl = document.getElementById('authSub');
+      var planLabel = selectedPlan === 'forgeplus' ? 'FORGE+' : 'FORGE';
+      if (titleEl) titleEl.textContent = 'JOIN ' + planLabel;
+      if (subEl) subEl.textContent = 'Create your account, then complete payment.';
     }
 
     // Wire up the button — do this IMMEDIATELY, not in DOMContentLoaded
