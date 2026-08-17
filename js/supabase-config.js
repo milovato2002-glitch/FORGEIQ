@@ -1,18 +1,13 @@
 // The Doc Lovato Method — Supabase Configuration
 // Note: Internal `FORGEIQ_CONFIG` namespace and `forgeiq_*` localStorage keys preserved (see FORGEIQ_SESSION_NOTES.md → BRAND HISTORY).
 // ─────────────────────────────────────────────────────────────────
-// IMPORTANT: Never hardcode real keys here.
-// Set these in Netlify Environment Variables:
-//   SUPABASE_URL       → your project URL (https://xxxx.supabase.co)
-//   SUPABASE_ANON_KEY  → your project anon/public key
-//
-// These are injected into the window object via a Netlify edge
-// function or set as meta tags. For local dev, replace the
-// placeholder strings below temporarily — never commit real keys.
+// The anon/public key below is safe to ship to the browser by design — it is
+// the publishable key and is protected by Row Level Security. It is NOT the
+// service_role key, which must never appear in client code.
 // ─────────────────────────────────────────────────────────────────
 
 const FORGEIQ_CONFIG = {
-  
+
   supabaseUrl:  'https://fxbzjuefctqsoypwhlha.supabase.co',
   supabaseKey:  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4YnpqdWVmY3Rxc295cHdobGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMTUwMzcsImV4cCI6MjA4OTc5MTAzN30.QfKJ41fhuwd8-3e354jMlgUkh_Z7uDDWxl6xgTyF6Oc',
 
@@ -35,26 +30,90 @@ const FORGEIQ_CONFIG = {
   }
 };
 
+// ─── Supabase client bootstrap ─────────────────────────────────────
+// 2026-08-17 FIX: `window.forgeiqSupabase` was read by auth-guard.js and app.js but
+// NEVER assigned anywhere in the codebase, and the Supabase SDK was never loaded.
+// That caused every protected page to fail its auth check and bounce to /login.html.
+// The SDK UMD bundle is now loaded in <head> immediately before this file, exposing
+// the `supabase` global; we create the real client from it here.
+(function initSupabaseClient(){
+  try {
+    var sdk = window.supabase;
+    if (sdk && typeof sdk.createClient === 'function') {
+      window.forgeiqSupabase = sdk.createClient(
+        FORGEIQ_CONFIG.supabaseUrl,
+        FORGEIQ_CONFIG.supabaseKey,
+        {
+          auth: {
+            persistSession:     true,   // survive page navigation (this app is multi-page)
+            autoRefreshToken:   true,   // fixes "Session expiry / no refresh token handling" in AUTH_STATUS.md
+            detectSessionInUrl: true,   // required for the Google OAuth redirect callback
+            storageKey:         'forgeiq_sb_auth'
+          }
+        }
+      );
+      console.log('[supabase-config] client ready');
+
+      // Keep the legacy forgeiq_* keys in sync so every existing page keeps working.
+      window.forgeiqSupabase.auth.onAuthStateChange(function(event, session){
+        if (session && session.access_token) {
+          localStorage.setItem('forgeiq_token', session.access_token);
+          localStorage.setItem('forgeiq_user', JSON.stringify(session.user));
+        } else if (event === 'SIGNED_OUT') {
+          localStorage.removeItem('forgeiq_token');
+          localStorage.removeItem('forgeiq_user');
+          localStorage.removeItem('forgeiq_profile');
+        }
+      });
+    } else {
+      console.warn('[supabase-config] Supabase SDK not found — falling back to REST helpers. Check the CDN <script> tag in <head>.');
+    }
+  } catch (e) {
+    console.error('[supabase-config] client init failed:', e);
+  }
+})();
+
 // ─── Supabase Auth Helpers ─────────────────────────────────────────
 const SupabaseClient = {
 
   async signUp(email, password, metadata = {}) {
+    if (window.forgeiqSupabase) {
+      const { data, error } = await window.forgeiqSupabase.auth.signUp({
+        email, password, options: { data: metadata }
+      });
+      if (error) return { error_description: error.message, msg: error.message };
+      if (data && data.session) {
+        localStorage.setItem('forgeiq_token', data.session.access_token);
+        localStorage.setItem('forgeiq_user', JSON.stringify(data.user));
+        localStorage.setItem('forgeiq_auth_method', 'password');
+        return { access_token: data.session.access_token, user: data.user };
+      }
+      // Email-confirmation flow: user created, no session yet.
+      return { user: data ? data.user : null, confirmation_required: true };
+    }
     const res = await fetch(`${FORGEIQ_CONFIG.supabaseUrl}/auth/v1/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'apikey': FORGEIQ_CONFIG.supabaseKey
       },
-      body: JSON.stringify({
-        email,
-        password,
-        data: metadata
-      })
+      body: JSON.stringify({ email, password, data: metadata })
     });
     return res.json();
   },
 
   async signIn(email, password) {
+    if (window.forgeiqSupabase) {
+      const { data, error } = await window.forgeiqSupabase.auth.signInWithPassword({ email, password });
+      if (error) return { error_description: error.message, msg: error.message };
+      if (data && data.session) {
+        localStorage.setItem('forgeiq_token', data.session.access_token);
+        localStorage.setItem('forgeiq_user', JSON.stringify(data.user));
+        localStorage.setItem('forgeiq_auth_method', 'password');
+        return { access_token: data.session.access_token, user: data.user };
+      }
+      return { error_description: 'Login failed. Check your email and password.' };
+    }
     const res = await fetch(`${FORGEIQ_CONFIG.supabaseUrl}/auth/v1/token?grant_type=password`, {
       method: 'POST',
       headers: {
@@ -67,20 +126,41 @@ const SupabaseClient = {
     if (data.access_token) {
       localStorage.setItem('forgeiq_token', data.access_token);
       localStorage.setItem('forgeiq_user', JSON.stringify(data.user));
+      localStorage.setItem('forgeiq_auth_method', 'password');
     }
     return data;
   },
 
+  // Google OAuth — requires the Google provider to be enabled in the Supabase dashboard
+  // and this site's URL added to the allowed redirect list.
+  async signInWithGoogle(nextPath) {
+    if (!window.forgeiqSupabase) {
+      return { error_description: 'Sign-in service is still loading. Please try again in a moment.' };
+    }
+    localStorage.setItem('forgeiq_auth_method', 'google');
+    const redirectTo = window.location.origin + (nextPath || '/dashboard.html');
+    const { error } = await window.forgeiqSupabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo }
+    });
+    if (error) return { error_description: error.message };
+    return { redirecting: true };
+  },
+
   async signOut() {
-    const token = localStorage.getItem('forgeiq_token');
-    if (token) {
-      await fetch(`${FORGEIQ_CONFIG.supabaseUrl}/auth/v1/logout`, {
-        method: 'POST',
-        headers: {
-          'apikey': FORGEIQ_CONFIG.supabaseKey,
-          'Authorization': `Bearer ${token}`
-        }
-      });
+    if (window.forgeiqSupabase) {
+      try { await window.forgeiqSupabase.auth.signOut(); } catch (e) { console.error('[auth] signOut:', e); }
+    } else {
+      const token = localStorage.getItem('forgeiq_token');
+      if (token) {
+        await fetch(`${FORGEIQ_CONFIG.supabaseUrl}/auth/v1/logout`, {
+          method: 'POST',
+          headers: {
+            'apikey': FORGEIQ_CONFIG.supabaseKey,
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      }
     }
     localStorage.removeItem('forgeiq_token');
     localStorage.removeItem('forgeiq_user');
