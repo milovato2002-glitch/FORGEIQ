@@ -2,3 +2,4 @@ node_modules/
 .netlify/
 netlify/functions/.netlify/
 package-lock.json
+.backup-preauth/
